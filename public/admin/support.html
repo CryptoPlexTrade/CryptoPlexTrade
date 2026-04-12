@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Support - Admin</title>
+    <link rel="stylesheet" href="admin.css">
+    <style>
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.6); display: flex; align-items: center; justify-content: center;
+            z-index: 1000; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .modal-overlay.show { opacity: 1; visibility: visible; }
+        .modal-content {
+            background-color: #fff; padding: 30px; border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2); width: 90%; max-width: 700px;
+            transform: scale(0.95); transition: transform 0.3s ease;
+        }
+        .modal-overlay.show .modal-content { transform: scale(1); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 15px; margin-bottom: 20px; }
+        .modal-header h2 { margin: 0; color: #1e293b; }
+        .close-btn { background: none; border: none; font-size: 2rem; cursor: pointer; color: #64748b; }
+        .message-list { margin-bottom: 30px; max-height: 300px; overflow-y: auto; padding-right: 10px; }
+        .message-item { margin-bottom: 15px; padding: 15px; border-radius: 10px; }
+        .message-item.user { background-color: #f0f7ff; border-left: 3px solid #005baa; }
+        .message-item.admin { background-color: #f8f9fa; border-left: 3px solid #64748b; }
+        .reply-form h3 { margin-top: 0; margin-bottom: 15px; color: #1e293b; }
+        .reply-form textarea { width: 100%; padding: 12px 15px; border: 1px solid var(--border-medium); border-radius: 8px; font-size: 1rem; box-sizing: border-box; font-family: 'Poppins', sans-serif; min-height: 100px; resize: vertical; }
+        .reply-form .btn-primary { margin-top: 10px; }
+        .message { padding: 15px; border-radius: 8px; margin-top: 20px; font-weight: 500; display: none; }
+        .message.error { background-color: #fbe9e7; color: #dc3545; }
+    </style>
+</head>
+<body>
+    <!-- Mobile Hamburger Button -->
+    <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open menu">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+        </svg>
+    </button>
+    <!-- Sidebar overlay -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <!-- Mobile Top Bar -->
+    <div class="mobile-topbar">
+        <span class="mobile-page-title">Support Tickets</span>
+    </div>
+    <div class="admin-layout">
+        <aside class="admin-sidebar" id="admin-sidebar">
+            <button class="sidebar-close-btn" id="sidebar-close-btn" aria-label="Close menu">&times;</button>
+            <div class="sidebar-header">
+                <a href="index.html" class="logo-wrapper">
+                    <div class="logo">CE</div>
+                    <span class="logo-name">Admin Portal</span>
+                </a>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="index.html">Dashboard</a></li>
+                    <li><a href="transactions.html">Transactions</a></li>
+                    <li><a href="users.html">Users</a></li>
+                    <li><a href="support.html" class="active">Support Tickets</a></li>
+                    <li><a href="referrals.html">Referrals</a></li>
+                    <li><a href="rates.html">Manage Rates</a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="#" id="logout-btn">Logout</a>
+            </div>
+        </aside>
+        <main class="admin-content">
+            <div class="admin-header">
+                <h1>Support Tickets</h1>
+                <p>View and respond to user support requests.</p>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Ticket ID</th>
+                            <th>User Email</th>
+                            <th>Subject</th>
+                            <th>Status</th>
+                            <th>Last Updated</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tickets-tbody">
+                        <!-- Tickets will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Ticket Details Modal -->
+    <div id="details-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-ticket-subject"></h2>
+                <button id="close-modal-btn" class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body" id="modal-body-content">
+                <!-- Replies will be injected here -->
+            </div>
+            <div class="modal-footer">
+                <form id="reply-form" class="reply-form">
+                    <h3>Post a Reply</h3>
+                    <textarea id="reply-message" placeholder="Type your response here..." required></textarea>
+                    <button type="submit" class="btn-primary">Send Reply</button>
+                    <div id="form-message" class="message"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="admin.js"></script>
+    <script>
+        // Mobile sidebar toggle
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const sidebar = document.getElementById('admin-sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        const closeBtn = document.getElementById('sidebar-close-btn');
+        function openSidebar() {
+            sidebar.classList.add('sidebar-open');
+            overlay.classList.add('show');
+            overlay.style.display = 'block';
+        }
+        function closeSidebar() {
+            sidebar.classList.remove('sidebar-open');
+            overlay.classList.remove('show');
+            setTimeout(() => { overlay.style.display = 'none'; }, 300);
+        }
+        menuBtn.addEventListener('click', openSidebar);
+        closeBtn.addEventListener('click', closeSidebar);
+        overlay.addEventListener('click', closeSidebar);
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            const tbody = document.getElementById('tickets-tbody');
+            async function fetchTickets() {
+                try {
+                    tbody.innerHTML = '<tr><td colspan="6">Loading...</td></tr>';
+                    const response = await fetch('/api/admin/tickets', { credentials: 'include' });
+                    if (response.status === 401 || response.status === 403) {
+                        window.location.href = '/admin-login';
+                        return;
+                    }
+                    if (!response.ok) throw new Error('Failed to fetch tickets');
+                    const tickets = await response.json();
+                    renderTickets(tickets);
+                } catch (error) {
+                    tbody.innerHTML = `<tr><td colspan="6" class="error-message">${error.message}</td></tr>`;
+                }
+            }
+
+            function renderTickets(tickets) {
+                const modal = document.getElementById('details-modal');
+                const closeModalBtn = document.getElementById('close-modal-btn');
+                const modalSubject = document.getElementById('modal-ticket-subject');
+                const modalBody = document.getElementById('modal-body-content');
+
+                tbody.innerHTML = '';
+                if (tickets.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6">No support tickets found.</td></tr>';
+                    return;
+                }
+                tickets.forEach(ticket => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td data-label="Ticket ID">${ticket.id}</td>
+                        <td data-label="User Email">${ticket.email}</td>
+                        <td data-label="Subject">${ticket.subject}</td>
+                        <td data-label="Status"><span class="status-badge status-${ticket.status}">${ticket.status}</span></td>
+                        <td data-label="Last Updated">${new Date(ticket.updated_at).toLocaleString()}</td>
+                        <td data-label="Action"><button class="action-btn" data-ticket-id="${ticket.id}">View</button></td>
+                    `;
+                    tbody.appendChild(row);
+                });
+
+                const replyForm = document.getElementById('reply-form');
+                const formMessage = document.getElementById('form-message');
+
+                replyForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    const ticketId = this.dataset.ticketId;
+                    const messageTextarea = document.getElementById('reply-message');
+                    const message = messageTextarea.value;
+
+                    if (!ticketId || !message.trim()) return;
+
+                    try {
+                        const csrfToken = getCookie('csrf-token');
+                        const response = await fetch(`/api/admin/tickets/${ticketId}/reply`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrfToken },
+                            body: JSON.stringify({ message })
+                        });
+                        if (!response.ok) throw new Error('Failed to send reply.');
+
+                        messageTextarea.value = ''; // Clear textarea
+                        formMessage.style.display = 'none';
+                        await openTicketModal(ticketId); // Refresh modal content
+                        fetchTickets(); // Refresh the main ticket list to update status/date
+                    } catch (error) {
+                        formMessage.textContent = error.message;
+                        formMessage.className = 'message error';
+                        formMessage.style.display = 'block';
+                    }
+                });
+
+                document.querySelectorAll('.action-btn').forEach(button => {
+                    button.addEventListener('click', async function() {
+                        const ticketId = this.dataset.ticketId;
+                        // Use the dedicated function to open the modal, which correctly sets the ticket ID on the form.
+                        await openTicketModal(ticketId);
+                    });
+                });
+                closeModalBtn.addEventListener('click', () => modal.classList.remove('show'));
+                modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('show'); });
+            }
+
+            async function openTicketModal(ticketId) {
+                const modal = document.getElementById('details-modal');
+                const modalSubject = document.getElementById('modal-ticket-subject');
+                const modalBody = document.getElementById('modal-body-content');
+                const replyForm = document.getElementById('reply-form');
+
+                try {
+                    const detailResponse = await fetch(`/api/admin/tickets/${ticketId}`, { credentials: 'include' });
+                    if (!detailResponse.ok) throw new Error('Could not load ticket details.');
+                    const detailData = await detailResponse.json();
+
+                    modalSubject.textContent = `Ticket #${detailData.ticket.id}: ${detailData.ticket.subject}`;
+                    modalBody.innerHTML = ''; // Clear previous content
+
+                    const messageListDiv = document.createElement('div');
+                    messageListDiv.className = 'message-list';
+
+                    detailData.replies.forEach(reply => {
+                        const replyItem = document.createElement('div');
+                        replyItem.className = `message-item ${reply.is_admin ? 'admin' : 'user'}`;
+                        replyItem.innerHTML = `<div><span class="message-author">${reply.is_admin ? 'Admin' : 'User'}</span> <span class="message-date">${new Date(reply.created_at).toLocaleString()}</span></div><div class="message-body"></div>`;
+                        replyItem.querySelector('.message-body').textContent = reply.message;
+                        messageListDiv.appendChild(replyItem);
+                    });
+
+                    modalBody.appendChild(messageListDiv);
+                    replyForm.dataset.ticketId = ticketId; // Set ticket ID on the form for submission
+                    modal.classList.add('show');
+                } catch (detailError) {
+                    alert(detailError.message);
+                }
+            }
+
+            fetchTickets();
+        });
+    </script>
+</body>
+</html>

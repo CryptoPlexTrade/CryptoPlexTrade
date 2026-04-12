@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trade - CryptoPlexTrade</title>
+    <meta name="description" content="Buy and sell crypto instantly on CryptoPlexTrade.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+<div class="app-shell">
+
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="sidebar" id="sidebar">
+        <a href="dashboard.html" class="sidebar-brand">
+            <div class="sidebar-brand__orb">CP</div>
+            <span class="sidebar-brand__name">CryptoPlexTrade</span>
+        </a>
+        <nav class="sidebar-nav">
+            <ul>
+                <li><a href="dashboard.html">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11.47 3.841a.75.75 0 0 1 1.06 0l8.69 8.69a.75.75 0 1 0 1.06-1.061l-8.689-8.69a2.25 2.25 0 0 0-3.182 0l-8.69 8.69a.75.75 0 1 0 1.061 1.06l8.69-8.689Z"/><path d="m12 5.432 8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 0 1-.75-.75v-4.5a.75.75 0 0 0-.75-.75h-3a.75.75 0 0 0-.75.75V21a.75.75 0 0 1-.75.75H5.625a1.875 1.875 0 0 1-1.875-1.875v-6.198a2.29 2.29 0 0 0 .091-.086L12 5.432Z"/></svg>
+                    Dashboard
+                </a></li>
+                <li><a href="trade.html" class="active">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M3 4.5h18v15H3v-15Zm6.75 10.5a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM12 15a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM15.75 15a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM9.75 9a.75.75 0 0 0-1.5 0v4.5a.75.75 0 0 0 1.5 0V9Zm3.75-3a.75.75 0 0 0-1.5 0v7.5a.75.75 0 0 0 1.5 0V6Zm2.25 1.5a.75.75 0 0 0-1.5 0v6a.75.75 0 0 0 1.5 0v-6Z"/></svg>
+                    Trade
+                </a></li>
+                <li><a href="transactions.html">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clip-rule="evenodd"/></svg>
+                    Transactions
+                </a></li>
+                <li><a href="profile.html">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd"/></svg>
+                    Profile
+                </a></li>
+                <li><a href="support.html">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm11.378-3.917c-.89-.777-2.366-.777-3.255 0a.75.75 0 0 1-1.06-1.06c2.298-2.013 5.824-2.013 8.122 0a.75.75 0 0 1-1.06 1.06ZM12 15.75a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" clip-rule="evenodd"/></svg>
+                    Support
+                </a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <div class="main-wrap">
+        <header class="topbar">
+            <div class="topbar-left">
+                <button class="hamburger-btn" id="hamburger-btn" aria-label="Toggle sidebar">
+                    <span></span><span></span><span></span>
+                </button>
+                <span class="topbar-title">Trade</span>
+            </div>
+            <div class="topbar-right">
+                <a href="#" id="logout-btn" class="btn btn-danger btn-sm">Logout</a>
+            </div>
+        </header>
+
+        <main class="page-content">
+            <div class="page-header">
+                <h1>Buy &amp; Sell Crypto</h1>
+                <p>Instantly trade digital assets at competitive rates.</p>
+            </div>
+
+            <div class="trade-wrapper">
+                <div class="card">
+                    <div class="trade-rate-banner">
+                        <span id="rate-info">Loading rates…</span>
+                    </div>
+
+                    <div class="trade-tabs">
+                        <button id="buy-tab" class="trade-tab active">Buy Crypto</button>
+                        <button id="sell-tab" class="trade-tab">Sell Crypto</button>
+                    </div>
+
+                    <form id="trade-form" novalidate>
+                        <!-- Custom Asset Selector -->
+                        <div class="asset-select-wrap" id="asset-select-wrap">
+                            <span class="asset-select-label">Select Asset</span>
+                            <div class="asset-select-trigger" id="asset-select-trigger" role="button" tabindex="0" aria-haspopup="listbox" aria-expanded="false">
+                                <div class="asset-select-current">
+                                    <div class="asset-badge asset-badge--btc" id="asset-badge">BTC</div>
+                                    <span class="asset-select-name" id="asset-select-name">Bitcoin (BTC)</span>
+                                </div>
+                                <svg class="dropdown-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>
+                            </div>
+                            <ul class="asset-select-dropdown" id="asset-select-dropdown" role="listbox">
+                                <li class="asset-option selected" data-value="BTC" data-badge-class="asset-badge--btc" data-label="Bitcoin (BTC)" role="option">
+                                    <div class="asset-badge asset-badge--btc">BTC</div>
+                                    <div class="asset-option__info">
+                                        <span class="asset-option__name">Bitcoin</span>
+                                        <span class="asset-option__ticker">BTC</span>
+                                    </div>
+                                </li>
+                                <li class="asset-option" data-value="ETH" data-badge-class="asset-badge--eth" data-label="Ethereum (ETH)" role="option">
+                                    <div class="asset-badge asset-badge--eth">ETH</div>
+                                    <div class="asset-option__info">
+                                        <span class="asset-option__name">Ethereum</span>
+                                        <span class="asset-option__ticker">ETH</span>
+                                    </div>
+                                </li>
+                                <li class="asset-option" data-value="USDT_TRC20" data-badge-class="asset-badge--trc20" data-label="Tether (TRC-20)" role="option">
+                                    <div class="asset-badge asset-badge--trc20">USDT</div>
+                                    <div class="asset-option__info">
+                                        <span class="asset-option__name">Tether (TRC-20)</span>
+                                        <span class="asset-option__ticker">USDT_TRC20</span>
+                                    </div>
+                                </li>
+                                <li class="asset-option" data-value="USDT_ERC20" data-badge-class="asset-badge--erc20" data-label="Tether (ERC-20)" role="option">
+                                    <div class="asset-badge asset-badge--erc20">USDT</div>
+                                    <div class="asset-option__info">
+                                        <span class="asset-option__name">Tether (ERC-20)</span>
+                                        <span class="asset-option__ticker">USDT_ERC20</span>
+                                    </div>
+                                </li>
+                            </ul>
+                            <!-- Hidden native select — JS reads productSelect.value from here -->
+                            <select id="product" name="product" class="asset-select-native">
+                                <option value="BTC" selected>Bitcoin (BTC)</option>
+                                <option value="ETH">Ethereum (ETH)</option>
+                                <option value="USDT_TRC20">Tether (TRC-20)</option>
+                                <option value="USDT_ERC20">Tether (ERC-20)</option>
+                            </select>
+                        </div>
+
+                        <div class="float-group">
+                            <input type="number" id="usd-amount" name="usd-amount" required placeholder=" " step="0.01" min="0">
+                            <label for="usd-amount" id="usd-label">Amount (USD)</label>
+                        </div>
+
+                        <div class="float-group">
+                            <input type="number" id="ghs-amount" name="ghs-amount" required placeholder=" " step="0.01" min="0">
+                            <label for="ghs-amount" id="ghs-label">Amount (GH₵)</label>
+                        </div>
+
+                        <!-- Custom Miner Fee Selector -->
+                        <div class="asset-select-wrap" id="miner-fee-group">
+                            <span class="asset-select-label">Miner Fee</span>
+                            <div class="asset-select-trigger" id="miner-trigger" role="button" tabindex="0" aria-haspopup="listbox" aria-expanded="false">
+                                <div class="asset-select-current">
+                                    <div class="asset-badge" id="miner-badge" style="background:linear-gradient(135deg,#f7931a,#fbbf24);">⚡</div>
+                                    <span class="asset-select-name" id="miner-name">Select fee tier</span>
+                                </div>
+                                <svg class="dropdown-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>
+                            </div>
+                            <ul class="asset-select-dropdown" id="miner-dropdown" role="listbox"></ul>
+                            <!-- Hidden native select — JS reads minerFeeSelect.value from here -->
+                            <select id="miner-fee" name="miner-fee" class="asset-select-native"></select>
+                        </div>
+
+                        <div class="float-group">
+                            <input type="text" id="fee-ghs" name="fee-ghs" placeholder=" " readonly>
+                            <label for="fee-ghs">Fee (GH₵)</label>
+                        </div>
+
+                        <div class="float-group">
+                            <input type="text" id="total-pay" name="total-pay" placeholder=" " readonly>
+                            <label for="total-pay">Total to Pay (GH₵)</label>
+                        </div>
+
+                        <div class="float-group" id="wallet-address-group">
+                            <input type="text" id="wallet-address" name="wallet-address" required placeholder=" ">
+                            <label for="wallet-address" id="wallet-label">Your Wallet Address</label>
+                        </div>
+
+                        <label class="trade-checkbox">
+                            <input type="checkbox" id="terms" name="terms" required>
+                            I agree to the <a href="terms.html" target="_blank">Terms &amp; Agreement</a>
+                        </label>
+
+                        <button type="submit" id="proceed-btn" class="btn btn-primary btn-full btn-lg">
+                            Proceed →
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<div class="ticker-tape"><div class="ticker-tape__track"></div></div>
+
+<script src="inactivity-timer.js"></script>
+<script>
+(function () {
+    // --- Sidebar ---
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+    document.getElementById('hamburger-btn').addEventListener('click', () => { sidebar.classList.add('open'); overlay.classList.add('open'); });
+    overlay.addEventListener('click', () => { sidebar.classList.remove('open'); overlay.classList.remove('open'); });
+
+    // --- Logout ---
+    document.getElementById('logout-btn').addEventListener('click', async (e) => {
+        e.preventDefault();
+        try { const r = await fetch('/api/logout', { method: 'POST' }); if (r.ok) window.location.href = 'login.html'; }
+        catch (err) { console.error(err); }
+    });
+
+    // --- Trade Logic (preserved exactly) ---
+    const buyTab           = document.getElementById('buy-tab');
+    const sellTab          = document.getElementById('sell-tab');
+    const usdAmountInput   = document.getElementById('usd-amount');
+    const ghsAmountInput   = document.getElementById('ghs-amount');
+    const minerFeeSelect   = document.getElementById('miner-fee');
+    const feeGhsInput      = document.getElementById('fee-ghs');
+    const totalPayInput    = document.getElementById('total-pay');
+    const walletLabel      = document.getElementById('wallet-label');
+    const rateInfo         = document.getElementById('rate-info');
+    const usdLabel         = document.getElementById('usd-label');
+    const ghsLabel         = document.getElementById('ghs-label');
+    const minerFeeGroup    = document.getElementById('miner-fee-group');
+    const feeGhsGroup      = feeGhsInput.parentElement;
+    const totalPayGroup    = totalPayInput.parentElement;
+    const walletAddressGroup = document.getElementById('wallet-address-group');
+    const productSelect    = document.getElementById('product');
+    const tradeForm        = document.getElementById('trade-form');
+
+    let currentMode = 'buy';
+    let rates = {};
+
+    async function fetchRates() {
+        try {
+            const r = await fetch('/api/rates');
+            if (r.status === 401 || r.status === 403) { window.location.href = 'login.html'; return; }
+            if (!r.ok) throw new Error('Could not fetch rates');
+            rates = await r.json();
+            populateMinerFees();
+            updateUI();
+        } catch (e) { console.error(e); rateInfo.textContent = 'Could not load rates.'; }
+    }
+
+    const FEE_META = {
+        'Priority': { bg: 'linear-gradient(135deg,#f7931a,#fbbf24)', emoji: '🔥' },
+        'Standard': { bg: 'linear-gradient(135deg,var(--primary),var(--primary-light))', emoji: '⚡' },
+        'Economy':  { bg: 'linear-gradient(135deg,#16a34a,#22c55e)', emoji: '🌱' },
+    };
+
+    function populateMinerFees() {
+        if (!minerFeeSelect) return;
+        const p = productSelect.value;
+        if (!rates[p] || !rates[p].minerFees) return;
+
+        minerFeeSelect.innerHTML = '';
+        const dropdownList = document.getElementById('miner-dropdown');
+        if (!dropdownList) return;
+        dropdownList.innerHTML = '';
+
+        rates[p].minerFees.forEach((fee, idx) => {
+            // Hidden native option
+            const opt = document.createElement('option');
+            opt.value = fee.value;
+            opt.textContent = `${fee.name} ($${fee.value})`;
+            if (idx === 0) opt.selected = true;
+            minerFeeSelect.appendChild(opt);
+
+            // Custom list item
+            const meta = FEE_META[fee.name] || { bg: 'linear-gradient(135deg,var(--primary),var(--primary-light))', emoji: '⚡' };
+            const li = document.createElement('li');
+            li.className = 'asset-option' + (idx === 0 ? ' selected' : '');
+            li.dataset.value   = fee.value;
+            li.dataset.name    = `${fee.name} ($${fee.value})`;
+            li.dataset.badgeBg = meta.bg;
+            li.dataset.emoji   = meta.emoji;
+            li.setAttribute('role', 'option');
+            li.innerHTML = `
+                <div class="asset-badge" style="background:${meta.bg};font-size:1rem;">${meta.emoji}</div>
+                <div class="asset-option__info">
+                    <span class="asset-option__name">${fee.name}</span>
+                    <span class="asset-option__ticker">$${fee.value} USD</span>
+                </div>
+            `;
+            dropdownList.appendChild(li);
+        });
+
+        // Set initial trigger display to first fee
+        const first = rates[p].minerFees[0];
+        if (first) {
+            const meta = FEE_META[first.name] || FEE_META['Standard'];
+            document.getElementById('miner-badge').style.background = meta.bg;
+            document.getElementById('miner-badge').textContent = meta.emoji;
+            document.getElementById('miner-name').textContent = `${first.name} ($${first.value})`;
+        }
+
+        // Wire up click events on newly built items
+        dropdownList.querySelectorAll('.asset-option').forEach(opt => {
+            opt.addEventListener('click', () => {
+                const val   = opt.dataset.value;
+                const name  = opt.dataset.name;
+                const bg    = opt.dataset.badgeBg;
+                const emoji = opt.dataset.emoji;
+
+                document.getElementById('miner-badge').style.background = bg;
+                document.getElementById('miner-badge').textContent = emoji;
+                document.getElementById('miner-name').textContent = name;
+
+                dropdownList.querySelectorAll('.asset-option').forEach(o => o.classList.remove('selected'));
+                opt.classList.add('selected');
+
+                minerFeeSelect.value = val;
+                minerFeeSelect.dispatchEvent(new Event('change'));
+
+                const wrap = document.getElementById('miner-fee-group');
+                const trigger = document.getElementById('miner-trigger');
+                if (wrap && trigger) {
+                    wrap.classList.remove('open');
+                    trigger.setAttribute('aria-expanded', 'false');
+                }
+            });
+        });
+        
+        // Retrigger calculation so the USD amount parses the new fee immediately
+        calculate('usd');
+    }
+
+    function calculate(source) {
+        const p = productSelect.value;
+        if (!rates[p]) return;
+        const usd = parseFloat(usdAmountInput.value) || 0;
+        const ghs = parseFloat(ghsAmountInput.value) || 0;
+        const minerFeeUSD = parseFloat(minerFeeSelect.value) || 0;
+        const rate = currentMode === 'buy' ? rates[p].buy : rates[p].sell;
+
+        if (currentMode === 'buy') {
+            if (source === 'usd') { ghsAmountInput.value = (usd * rate).toFixed(2); }
+            else { usdAmountInput.value = (ghs / rate).toFixed(2); }
+            const finalGhs = parseFloat(ghsAmountInput.value) || 0;
+            const minerGhs = minerFeeUSD * rate;
+            feeGhsInput.value = minerGhs.toFixed(2);
+            totalPayInput.value = (finalGhs + minerGhs).toFixed(2);
+        } else {
+            if (source === 'usd') { ghsAmountInput.value = (usd * rate).toFixed(2); }
+            else { usdAmountInput.value = (ghs / rate).toFixed(8); }
+            feeGhsInput.value = '0.00';
+            totalPayInput.value = ghsAmountInput.value;
+        }
+    }
+
+    function updateUI() {
+        const p = productSelect.value;
+        if (!rates[p]) return;
+        if (currentMode === 'buy') {
+            rateInfo.textContent = `Buying ${p} @ ₵${rates[p].buy.toFixed(2)} / $`;
+            usdLabel.textContent = 'Enter Amount to Buy';
+            ghsLabel.textContent = 'GH₵ to Pay';
+            walletLabel.textContent = `Your ${p} Address`;
+            minerFeeGroup.style.display = '';
+            feeGhsGroup.style.display = '';
+            totalPayGroup.style.display = '';
+            walletAddressGroup.style.display = '';
+        } else {
+            rateInfo.textContent = `Selling ${p} @ ₵${rates[p].sell.toFixed(2)} / $`;
+            usdLabel.textContent = 'Amount to Sell';
+            ghsLabel.textContent = 'You Will Receive (GH₵)';
+            minerFeeGroup.style.display = 'none';
+            feeGhsGroup.style.display = 'none';
+            totalPayGroup.style.display = 'none';
+            walletAddressGroup.style.display = 'none';
+        }
+        calculate('usd');
+    }
+
+    buyTab.addEventListener('click', () => {
+        currentMode = 'buy'; buyTab.classList.add('active'); sellTab.classList.remove('active');
+        usdAmountInput.value = ''; ghsAmountInput.value = ''; updateUI();
+    });
+    sellTab.addEventListener('click', () => {
+        currentMode = 'sell'; sellTab.classList.add('active'); buyTab.classList.remove('active');
+        usdAmountInput.value = ''; ghsAmountInput.value = ''; updateUI();
+    });
+
+    usdAmountInput.addEventListener('input', () => calculate('usd'));
+    ghsAmountInput.addEventListener('input', () => calculate('ghs'));
+    productSelect.addEventListener('change', updateUI);
+
+    tradeForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const usdAmount = parseFloat(usdAmountInput.value);
+        const walletAddress = document.getElementById('wallet-address').value;
+        const termsChecked = document.getElementById('terms').checked;
+
+        if (currentMode === 'buy') {
+            if (!usdAmount || usdAmount <= 0) { alert('Please enter a valid amount to buy.'); return; }
+            if (!walletAddress.trim()) { alert('Please enter your wallet address.'); return; }
+            if (!termsChecked) { alert('You must agree to the Terms & Agreement.'); return; }
+            const p = productSelect.value;
+            localStorage.setItem('buyOrderDetails', JSON.stringify({
+                product: p, usdAmount: usdAmountInput.value, productAmount: usdAmount,
+                ghsAmount: ghsAmountInput.value, feeGhs: feeGhsInput.value,
+                totalPay: totalPayInput.value, minerFeeValue: parseFloat(minerFeeSelect.value) || 0,
+                walletAddress: walletAddress.trim(), rate: rates[p].buy
+            }));
+            window.location.href = 'order_summary.html';
+        } else {
+            if (!usdAmount || usdAmount <= 0) { alert('Please enter a valid amount to sell.'); return; }
+            if (!termsChecked) { alert('You must agree to the Terms & Agreement.'); return; }
+            const p = productSelect.value;
+            localStorage.setItem('sellOrderDetails', JSON.stringify({
+                product: p, productAmount: usdAmountInput.value,
+                ghsToReceive: ghsAmountInput.value, rate: rates[p].sell
+            }));
+            window.location.href = 'sell_order_summary.html';
+        }
+    });
+
+    fetchRates();
+
+    // --- Ticker ---
+    const tickerTrack = document.querySelector('.ticker-tape__track');
+    const coinSymbols = ['BTC','ETH','SOL','BNB','XRP','LTC','ADA','DOGE'];
+    async function fetchLiveRates() {
+        try {
+            const r = await fetch(`https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${coinSymbols.join(',')}&tsyms=USD`);
+            if (!r.ok) throw new Error();
+            const data = await r.json();
+            let html = '';
+            coinSymbols.forEach(s => {
+                const c = data.RAW[s]?.USD;
+                if (!c) return;
+                const dir = c.CHANGEPCT24HOUR >= 0 ? 'up' : 'down';
+                const sign = dir === 'up' ? '+' : '';
+                html += `<div class="ticker-tape__item"><span class="pair">${s}/USD</span><span class="price">${c.PRICE.toLocaleString('en-US',{style:'currency',currency:'USD',minimumFractionDigits:2})}</span><span class="change ${dir}">${sign}${c.CHANGEPCT24HOUR.toFixed(2)}% ${dir==='up'?'▲':'▼'}</span></div>`;
+            });
+            tickerTrack.innerHTML = html + html;
+        } catch (e) { console.error('Ticker error', e); }
+    }
+    fetchLiveRates();
+    setInterval(fetchLiveRates, 60000);
+
+    // --- Custom Asset Dropdown ---
+    (function () {
+        const wrap     = document.getElementById('asset-select-wrap');
+        const trigger  = document.getElementById('asset-select-trigger');
+        const dropdown = document.getElementById('asset-select-dropdown');
+        const badge    = document.getElementById('asset-badge');
+        const nameEl   = document.getElementById('asset-select-name');
+        const options  = dropdown.querySelectorAll('.asset-option');
+
+        function openDropdown() {
+            wrap.classList.add('open');
+            trigger.setAttribute('aria-expanded', 'true');
+        }
+        function closeDropdown() {
+            wrap.classList.remove('open');
+            trigger.setAttribute('aria-expanded', 'false');
+        }
+
+        trigger.addEventListener('click', () => {
+            wrap.classList.contains('open') ? closeDropdown() : openDropdown();
+        });
+        trigger.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); wrap.classList.contains('open') ? closeDropdown() : openDropdown(); }
+            if (e.key === 'Escape') closeDropdown();
+        });
+
+        options.forEach(opt => {
+            opt.addEventListener('click', () => {
+                const val       = opt.dataset.value;
+                const badgeCls  = opt.dataset.badgeClass;
+                const label     = opt.dataset.label;
+
+                // Update visible trigger
+                badge.className = `asset-badge ${badgeCls}`;
+                badge.textContent = val;
+                nameEl.textContent = label;
+
+                // Mark selected
+                options.forEach(o => o.classList.remove('selected'));
+                opt.classList.add('selected');
+
+                // Sync hidden select and fire change event (existing JS listens to this)
+                productSelect.value = val;
+                productSelect.dispatchEvent(new Event('change'));
+
+                populateMinerFees();
+                closeDropdown();
+            });
+        });
+
+        // Close on outside click / scroll
+        document.addEventListener('click', (e) => {
+            if (!wrap.contains(e.target)) closeDropdown();
+        });
+        document.addEventListener('scroll', closeDropdown, { passive: true });
+        
+        if(minerFeeSelect) {
+           minerFeeSelect.addEventListener('change', () => calculate('usd'));
+        }
+    })();
+
+    // --- Custom Miner Fee Dropdown toggle ---
+    (function() {
+        const minerWrap    = document.getElementById('miner-fee-group');
+        const minerTrigger = document.getElementById('miner-trigger');
+        if(!minerTrigger) return;
+        
+        minerTrigger.addEventListener('click', () => {
+            const isOpen = minerWrap.classList.contains('open');
+            minerWrap.classList.toggle('open', !isOpen);
+            minerTrigger.setAttribute('aria-expanded', String(!isOpen));
+        });
+        minerTrigger.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); minerTrigger.click(); }
+            if (e.key === 'Escape') { minerWrap.classList.remove('open'); minerTrigger.setAttribute('aria-expanded', 'false'); }
+        });
+        document.addEventListener('click', (e) => {
+            if (!minerWrap.contains(e.target)) { minerWrap.classList.remove('open'); minerTrigger.setAttribute('aria-expanded', 'false'); }
+        });
+    })();
+})();
+</script>
+</body>
+</html>

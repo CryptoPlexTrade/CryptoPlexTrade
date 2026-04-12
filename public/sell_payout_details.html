@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payout Details - CryptoPlexTrade</title>
+    <meta name="description" content="Enter your payout details to complete your crypto sell order on CryptoPlexTrade.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/app.css">
+    <style>
+        body { overflow-y: auto; }
+        .os-wrap { min-height: 100vh; background: var(--bg); display: flex; flex-direction: column; }
+
+        /* Topbar */
+        .os-topbar {
+            background: var(--bg-white); border-bottom: 1px solid var(--border);
+            padding: 0 32px; height: 62px;
+            display: flex; align-items: center; justify-content: space-between;
+            flex-shrink: 0; position: sticky; top: 0; z-index: 100;
+        }
+        .os-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .os-brand__orb {
+            width: 34px; height: 34px; border-radius: 9px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.72rem; font-weight: 800; color: white;
+        }
+        .os-brand__name { font-size: 0.9rem; font-weight: 700; color: var(--text-1); }
+        .os-topbar-right { display: flex; gap: 12px; align-items: center; }
+
+        .os-main {
+            flex: 1; display: flex; align-items: flex-start;
+            justify-content: center; padding: 40px 20px 100px;
+        }
+        .os-container { width: 100%; max-width: 560px; }
+
+        /* Steps */
+        .steps { display: flex; align-items: flex-start; margin-bottom: 32px; }
+        .step-item { flex: 1; display: flex; flex-direction: column; align-items: center; position: relative; }
+        .step-item:not(:last-child)::after {
+            content: ''; position: absolute; top: 18px; left: 50%;
+            width: 100%; height: 2px; background: var(--green); z-index: 0;
+        }
+        .step-num {
+            width: 36px; height: 36px; border-radius: 50%;
+            border: 2px solid var(--border-mid); background: white;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.8rem; font-weight: 700; color: var(--text-3);
+            position: relative; z-index: 1; transition: all 0.25s;
+        }
+        .step-item.active .step-num {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            border-color: transparent; color: white;
+            box-shadow: 0 0 0 4px rgba(0,91,170,0.15);
+        }
+        .step-item.done .step-num {
+            background: var(--green); border-color: transparent; color: white;
+        }
+        .step-label {
+            font-size: 0.72rem; font-weight: 600; color: var(--text-3);
+            margin-top: 8px; text-align: center; white-space: nowrap;
+        }
+        .step-item.active .step-label { color: var(--primary-dark); }
+        .step-item.done .step-label { color: var(--green); }
+
+        /* Main card */
+        .summary-card {
+            background: var(--bg-white); border: 1px solid var(--border);
+            border-radius: 16px; box-shadow: var(--shadow-md); overflow: hidden;
+        }
+
+        .summary-card__header {
+            padding: 22px 28px 18px; border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; gap: 14px;
+            background: linear-gradient(135deg, #f0fff4 0%, white 100%);
+        }
+        .summary-card__icon {
+            width: 50px; height: 50px; border-radius: 14px;
+            background: linear-gradient(135deg, #16a34a, #22c55e);
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .summary-card__icon svg { width: 24px; height: 24px; color: white; }
+        .summary-card__titles h2 { font-size: 1.1rem; font-weight: 800; color: var(--text-1); margin: 0 0 2px; }
+        .summary-card__titles p { font-size: 0.8rem; color: var(--text-3); margin: 0; }
+
+        /* Section label */
+        .payout-section { padding: 22px 28px; border-bottom: 1px solid var(--border); }
+        .payout-section-title {
+            font-size: 0.78rem; font-weight: 700; color: var(--text-3);
+            text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 14px;
+        }
+
+        /* Payout method cards */
+        .payout-options {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 0;
+        }
+        .payout-option-card {
+            background: var(--bg-white); border: 2px solid var(--border);
+            border-radius: 12px; padding: 18px 14px;
+            text-align: center; cursor: pointer;
+            transition: all 0.2s; display: flex; flex-direction: column;
+            align-items: center; gap: 8px;
+        }
+        .payout-option-card:hover { border-color: var(--border-mid); box-shadow: var(--shadow-md); transform: translateY(-2px); }
+        .payout-option-card.selected {
+            border-color: var(--primary); background: var(--primary-pale);
+            box-shadow: 0 0 0 3px rgba(0,91,170,0.12); transform: translateY(-2px);
+        }
+        .poc-icon {
+            width: 44px; height: 44px; border-radius: 11px;
+            background: var(--primary-pale);
+            display: flex; align-items: center; justify-content: center;
+            transition: background 0.2s;
+        }
+        .payout-option-card.selected .poc-icon {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+        }
+        .poc-icon svg { width: 22px; height: 22px; color: var(--primary); }
+        .payout-option-card.selected .poc-icon svg { color: white; }
+        .poc-label { font-size: 0.84rem; font-weight: 700; color: var(--text-1); }
+
+        /* Payout form */
+        .payout-form-section {
+            padding: 22px 28px; border-bottom: 1px solid var(--border);
+            animation: form-in 0.28s ease;
+        }
+        @keyframes form-in { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+
+        .form-row { margin-bottom: 16px; }
+        .form-row:last-child { margin-bottom: 0; }
+        .form-row label {
+            display: block; font-size: 0.8rem; font-weight: 700;
+            color: var(--text-2); margin-bottom: 6px;
+        }
+        .form-row input {
+            width: 100%; padding: 10px 13px; box-sizing: border-box;
+            border: 1.5px solid var(--border-mid); border-radius: 9px;
+            font-size: 0.875rem; font-family: 'Poppins', sans-serif; color: var(--text-1);
+            background: white; transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .form-row input:focus {
+            outline: none; border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0,91,170,0.12);
+        }
+        .form-row input::placeholder { color: var(--text-3); }
+
+        /* Server message */
+        #server-message {
+            margin: 0 28px 20px; padding: 13px 16px; border-radius: 10px;
+            font-size: 0.83rem; font-weight: 600; display: none;
+        }
+        #server-message.success { background: #f0fff4; color: #15803d; border: 1px solid #bbf7d0; }
+        #server-message.error { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+
+        .os-cta { padding: 22px 28px; background: white; }
+
+        @media (max-width: 540px) {
+            .os-topbar { padding: 0 16px; }
+            .os-brand__name { display: none; }
+            .summary-card__header, .payout-section, .payout-form-section, .os-cta { padding-left: 18px; padding-right: 18px; }
+            #server-message { margin-left: 18px; margin-right: 18px; }
+            .step-label { font-size: 0.65rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="os-wrap">
+
+    <header class="os-topbar">
+        <a href="dashboard.html" class="os-brand">
+            <div class="os-brand__orb">CP</div>
+            <span class="os-brand__name">CryptoPlexTrade</span>
+        </a>
+        <div class="os-topbar-right">
+            <a href="dashboard.html" class="btn btn-ghost btn-sm">Dashboard</a>
+            <a href="#" id="logout-btn" class="btn btn-danger btn-sm">Logout</a>
+        </div>
+    </header>
+
+    <main class="os-main">
+        <div class="os-container">
+
+            <!-- Steps — both 1 & 2 done, 3 active -->
+            <div class="steps">
+                <div class="step-item done">
+                    <div class="step-num">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" style="width:14px;height:14px;"><path fill-rule="evenodd" d="M12.416 3.376a.75.75 0 0 1 .208 1.04l-5 7.5a.75.75 0 0 1-1.154.114l-3-3a.75.75 0 0 1 1.06-1.06l2.353 2.353 4.493-6.74a.75.75 0 0 1 1.04-.207Z" clip-rule="evenodd"/></svg>
+                    </div>
+                    <span class="step-label">Verify Order</span>
+                </div>
+                <div class="step-item done">
+                    <div class="step-num">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" style="width:14px;height:14px;"><path fill-rule="evenodd" d="M12.416 3.376a.75.75 0 0 1 .208 1.04l-5 7.5a.75.75 0 0 1-1.154.114l-3-3a.75.75 0 0 1 1.06-1.06l2.353 2.353 4.493-6.74a.75.75 0 0 1 1.04-.207Z" clip-rule="evenodd"/></svg>
+                    </div>
+                    <span class="step-label">Send Crypto</span>
+                </div>
+                <div class="step-item active">
+                    <div class="step-num">3</div>
+                    <span class="step-label">Payout Details</span>
+                </div>
+            </div>
+
+            <form id="payout-form">
+                <div class="summary-card">
+                    <div class="summary-card__header">
+                        <div class="summary-card__icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M2.273 5.625A4.483 4.483 0 0 1 5.25 4.5h13.5c1.141 0 2.183.425 2.977 1.125A3 3 0 0 0 18.75 3H5.25a3 3 0 0 0-2.977 2.625ZM2.273 8.625A4.483 4.483 0 0 1 5.25 7.5h13.5c1.141 0 2.183.425 2.977 1.125A3 3 0 0 0 18.75 6H5.25a3 3 0 0 0-2.977 2.625ZM5.25 9a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h13.5a3 3 0 0 0 3-3v-6a3 3 0 0 0-3-3H5.25Z"/></svg>
+                        </div>
+                        <div class="summary-card__titles">
+                            <h2>Confirm Payout Details</h2>
+                            <p>Where should we send your GHS funds?</p>
+                        </div>
+                    </div>
+
+                    <!-- Payout method selector -->
+                    <div class="payout-section">
+                        <p class="payout-section-title">Select payout method</p>
+                        <div class="payout-options">
+                            <div class="payout-option-card" data-value="momo">
+                                <div class="poc-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M10.5 18.75a.75.75 0 0 0 0 1.5h3a.75.75 0 0 0 0-1.5h-3Z"/><path fill-rule="evenodd" d="M8.625.75A3.375 3.375 0 0 0 5.25 4.125v15.75a3.375 3.375 0 0 0 3.375 3.375h6.75a3.375 3.375 0 0 0 3.375-3.375V4.125A3.375 3.375 0 0 0 15.375.75h-6.75ZM7.5 4.125C7.5 3.504 8.004 3 8.625 3h6.75C15.996 3 16.5 3.504 16.5 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-6.75A1.125 1.125 0 0 1 7.5 19.875V4.125Z" clip-rule="evenodd"/></svg>
+                                </div>
+                                <span class="poc-label">Mobile Money</span>
+                            </div>
+                            <div class="payout-option-card" data-value="bank">
+                                <div class="poc-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11.584 2.376a.75.75 0 0 1 .832 0l9 6a.75.75 0 1 1-.832 1.248L12 3.901 3.416 9.624a.75.75 0 0 1-.832-1.248l9-6Z"/><path fill-rule="evenodd" d="M20.25 10.332v9.918H21a.75.75 0 0 1 0 1.5H3a.75.75 0 0 1 0-1.5h.75v-9.918a.75.75 0 0 1 0-1.498l8.25-5.5 8.25 5.5a.75.75 0 0 1 0 1.498ZM8.25 15a.75.75 0 0 1 .75-.75h6a.75.75 0 0 1 0 1.5h-6a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd"/></svg>
+                                </div>
+                                <span class="poc-label">Bank Account</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mobile Money form -->
+                    <div id="momo-form" class="payout-form-section" style="display:none;">
+                        <div class="form-row">
+                            <label for="momo-number">Mobile Money Number</label>
+                            <input type="tel" id="momo-number" name="momo-number" placeholder="e.g. 024 000 0000">
+                        </div>
+                        <div class="form-row">
+                            <label for="momo-name">Account Name</label>
+                            <input type="text" id="momo-name" name="momo-name" placeholder="Name on the MoMo account">
+                        </div>
+                    </div>
+
+                    <!-- Bank form -->
+                    <div id="bank-form" class="payout-form-section" style="display:none;">
+                        <div class="form-row">
+                            <label for="bank-name">Bank Name</label>
+                            <input type="text" id="bank-name" name="bank-name" placeholder="e.g. GCB Bank">
+                        </div>
+                        <div class="form-row">
+                            <label for="account-name">Account Name</label>
+                            <input type="text" id="account-name" name="account-name" placeholder="Name on the bank account">
+                        </div>
+                        <div class="form-row">
+                            <label for="account-number">Account Number</label>
+                            <input type="text" id="account-number" name="account-number" placeholder="Enter account number">
+                        </div>
+                    </div>
+
+                    <!-- Server message -->
+                    <div id="server-message"></div>
+
+                    <div class="os-cta">
+                        <button type="submit" id="submit-sell-order-btn" class="btn btn-primary btn-full btn-lg" disabled>
+                            Submit Sell Order →
+                        </button>
+                        <p style="text-align:center;font-size:0.76rem;color:var(--text-3);margin-top:14px;">
+                            By submitting, you confirm your payout details are correct. Funds will be sent within 1–2 business hours.
+                        </p>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </main>
+</div>
+
+<div class="ticker-tape"><div class="ticker-tape__track"></div></div>
+
+<script src="inactivity-timer.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+    const csrfToken = getCookie('csrf-token');
+
+    const orderDetails = JSON.parse(localStorage.getItem('sellOrderDetails'));
+    if (!orderDetails) { window.location.href = 'login.html'; return; }
+
+    // Logout
+    document.getElementById('logout-btn').addEventListener('click', async (e) => {
+        e.preventDefault();
+        await fetch('/api/logout', { method: 'POST', headers: { 'X-CSRF-Token': csrfToken } });
+        localStorage.removeItem('sellOrderDetails');
+        window.location.href = 'login.html';
+    });
+
+    const paymentOptionCards = document.querySelectorAll('.payout-option-card');
+    const momoForm  = document.getElementById('momo-form');
+    const bankForm  = document.getElementById('bank-form');
+    const submitBtn = document.getElementById('submit-sell-order-btn');
+    const payoutForm = document.getElementById('payout-form');
+    const serverMessageDiv = document.getElementById('server-message');
+    let selectedPayoutMethod = '';
+
+    paymentOptionCards.forEach(card => {
+        card.addEventListener('click', function() {
+            paymentOptionCards.forEach(c => c.classList.remove('selected'));
+            this.classList.add('selected');
+            selectedPayoutMethod = this.dataset.value;
+            if (selectedPayoutMethod === 'momo') { momoForm.style.display = 'block'; bankForm.style.display = 'none'; }
+            else if (selectedPayoutMethod === 'bank') { momoForm.style.display = 'none'; bankForm.style.display = 'block'; }
+            submitBtn.disabled = false;
+        });
+    });
+
+    payoutForm.addEventListener('submit', async function(event) {
+        event.preventDefault();
+
+        let payoutInfo = {};
+        if (selectedPayoutMethod === 'momo') {
+            payoutInfo = { method: 'momo', number: document.getElementById('momo-number').value, name: document.getElementById('momo-name').value };
+            if (!payoutInfo.number || !payoutInfo.name) { alert('Please fill all Mobile Money fields.'); return; }
+        } else if (selectedPayoutMethod === 'bank') {
+            payoutInfo = { method: 'bank', bankName: document.getElementById('bank-name').value, accountName: document.getElementById('account-name').value, accountNumber: document.getElementById('account-number').value };
+            if (!payoutInfo.bankName || !payoutInfo.accountName || !payoutInfo.accountNumber) { alert('Please fill all Bank Account fields.'); return; }
+        } else { alert('Please select a payout method.'); return; }
+
+        const finalSellOrder = { ...orderDetails, payoutInfo };
+
+        try {
+            const response = await fetch('/api/orders/create-sell-order', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrfToken },
+                body: JSON.stringify(finalSellOrder)
+            });
+
+            if (response.status === 401 || response.status === 403) { window.location.href = 'login.html'; return; }
+
+            const result = await response.json();
+            if (response.ok) {
+                serverMessageDiv.textContent = 'Success! Your sell order has been submitted. You will be notified once the funds are sent. Redirecting to dashboard...';
+                serverMessageDiv.className = 'success';
+                serverMessageDiv.style.display = 'block';
+                localStorage.removeItem('sellOrderDetails');
+                setTimeout(() => { window.location.href = 'dashboard.html'; }, 4000);
+            } else {
+                throw new Error(result.message || 'An unknown error occurred.');
+            }
+        } catch (error) {
+            serverMessageDiv.textContent = `Error: ${error.message}`;
+            serverMessageDiv.className = 'error';
+            serverMessageDiv.style.display = 'block';
+        }
+    });
+
+    // Ticker Tape
+    const tickerTrack = document.querySelector('.ticker-tape__track');
+    const coinSymbols = ['BTC', 'ETH', 'SOL', 'BNB', 'XRP', 'LTC', 'ADA', 'DOGE'];
+    async function fetchLiveRates() {
+        try {
+            const r = await fetch(`https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${coinSymbols.join(',')}&tsyms=USD`);
+            if (!r.ok) throw new Error();
+            const data = await r.json();
+            let html = '';
+            coinSymbols.forEach(s => {
+                const c = data.RAW[s]?.USD; if (!c) return;
+                const dir = c.CHANGEPCT24HOUR >= 0 ? 'up' : 'down';
+                const sign = dir === 'up' ? '+' : '';
+                html += `<div class="ticker-tape__item"><span class="pair">${s}/USD</span><span class="price">${c.PRICE.toLocaleString('en-US',{style:'currency',currency:'USD',minimumFractionDigits:2})}</span><span class="change ${dir}">${sign}${c.CHANGEPCT24HOUR.toFixed(2)}% ${dir==='up'?'▲':'▼'}</span></div>`;
+            });
+            tickerTrack.innerHTML = html + html;
+        } catch(e) { console.error('Ticker error', e); }
+    }
+    fetchLiveRates();
+    setInterval(fetchLiveRates, 60000);
+});
+</script>
+</body>
+</html>

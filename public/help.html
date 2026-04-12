@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help Centre - CryptoPlexTrade</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #005baa;
+            --secondary-color: #00a9e0;
+            --primary-dark: #004a8a;
+            --bg-white: #ffffff;
+            --bg-light: #f8fafc;
+            --bg-highlight: #f0f7ff;
+            --border-light: #e2e8f0;
+            --border-medium: #cbd5e1;
+            --text-primary: #1e293b;
+            --text-body: #475569;
+            --text-secondary: #64748b;
+            --accent-green: #28a745;
+            --accent-red: #dc3545;
+            --shadow-subtle: rgba(0, 0, 0, 0.05);
+            --shadow-medium: rgba(0, 0, 0, 0.1);
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            background-color: var(--bg-light);
+            color: var(--text-body);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-circle {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            font-size: 0.9rem;
+        }
+
+        .brand-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .header-nav {
+            display: flex;
+            align-items: center;
+            gap: 22px;
+            flex-wrap: wrap;
+        }
+
+        .header-nav a {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-body);
+            transition: color 0.2s ease;
+        }
+
+        .header-nav a:hover {
+            color: var(--primary-color);
+        }
+
+        .btn-cta {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 24px;
+            border-radius: 50px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: #fff;
+            font-weight: 600;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .btn-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 22px rgba(0, 91, 170, 0.18);
+        }
+
+        .hero {
+            text-align: center;
+            padding: 100px 20px 80px;
+            background: radial-gradient(circle at top, rgba(0, 169, 224, 0.14), transparent 45%), radial-gradient(circle at 80% 10%, rgba(0, 91, 170, 0.18), transparent 30%), #001228;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero h1 {
+            font-size: 3.2rem;
+            line-height: 1.05;
+            max-width: 760px;
+            margin: 0 auto 22px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ffffff 0%, #a8d8f0 50%, var(--secondary-color) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero h1 span {
+            color: inherit;
+        }
+
+        .hero p {
+            max-width: 640px;
+            margin: 0 auto;
+            color: rgba(235, 245, 255, 0.85);
+            font-size: 1rem;
+        }
+
+        .cards-wrap {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(4, minmax(220px, 1fr));
+            gap: 24px;
+        }
+
+        .help-card {
+            background: var(--bg-white);
+            border: 1px solid var(--border-light);
+            border-radius: 24px;
+            padding: 28px;
+            box-shadow: 0 18px 48px rgba(15, 23, 42, 0.05);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .help-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 26px 50px rgba(15, 23, 42, 0.08);
+        }
+
+        .card-icon-wrap {
+            width: 54px;
+            height: 54px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            box-shadow: 0 10px 24px rgba(0, 91, 170, 0.12);
+        }
+
+        .card-icon-wrap svg {
+            width: 26px;
+            height: 26px;
+            color: #fff;
+        }
+
+        .help-card h3 {
+            font-size: 1.05rem;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+
+        .help-card p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            font-size: 0.95rem;
+        }
+
+        .faq-wrap {
+            max-width: 980px;
+            margin: 48px auto 0;
+            padding: 0 20px 100px;
+        }
+
+        .faq-wrap h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 24px;
+        }
+
+        .faq-card {
+            background: var(--bg-white);
+            border: 1px solid var(--border-light);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 16px 40px rgba(15, 23, 42, 0.06);
+            margin-bottom: 18px;
+        }
+
+        .faq-q {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 24px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text-primary);
+            background: var(--bg-white);
+            transition: background 0.2s ease;
+        }
+
+        .faq-q:hover {
+            background: var(--bg-highlight);
+        }
+
+        .faq-q .chevron {
+            width: 18px;
+            height: 18px;
+            color: var(--primary-color);
+            flex-shrink: 0;
+            transition: transform 0.3s ease;
+        }
+
+        .faq-card.open .faq-q .chevron {
+            transform: rotate(180deg);
+        }
+
+        .faq-a {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s ease;
+        }
+
+        .faq-card.open .faq-a {
+            max-height: 260px;
+        }
+
+        .faq-a-inner {
+            padding: 0 24px 22px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            font-size: 0.95rem;
+        }
+
+        .faq-a-inner a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .contact-cta {
+            max-width: 980px;
+            margin: 28px auto 100px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 28px;
+            padding: 38px 32px;
+            text-align: center;
+            color: #fff;
+        }
+
+        .contact-cta h3 {
+            font-size: 1.35rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .contact-cta p {
+            font-size: 0.96rem;
+            opacity: 0.9;
+            margin-bottom: 22px;
+        }
+
+        .contact-cta a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 28px;
+            border-radius: 999px;
+            background: #fff;
+            color: var(--primary-color);
+            font-weight: 700;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .contact-cta a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(0, 91, 170, 0.15);
+        }
+
+        footer {
+            background: var(--bg-white);
+            padding: 28px 20px;
+            text-align: center;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border-light);
+        }
+
+        .ticker-tape {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--text-primary);
+            color: var(--bg-white);
+            padding: 10px 0;
+            z-index: 300;
+            overflow: hidden;
+            white-space: nowrap;
+            border-top: 2px solid var(--primary-color);
+        }
+
+        .ticker-tape__track {
+            display: inline-block;
+            animation: scroll-ticker 40s linear infinite;
+        }
+
+        .ticker-tape__item {
+            display: inline-flex;
+            align-items: center;
+            padding: 0 18px;
+            font-size: 0.85rem;
+        }
+
+        .ticker-tape__item .pair {
+            font-weight: 600;
+            margin-right: 10px;
+            color: var(--text-secondary);
+        }
+
+        .ticker-tape__item .price {
+            font-weight: 500;
+            margin-right: 8px;
+            color: var(--bg-white);
+        }
+
+        .ticker-tape__item .change {
+            font-weight: 600;
+        }
+
+        .change.up {
+            color: var(--accent-green);
+        }
+
+        .change.down {
+            color: var(--accent-red);
+        }
+
+        @keyframes scroll-ticker {
+            to {
+                transform: translateX(-50%);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .container {
+                padding: 0 16px;
+            }
+
+            .header {
+                padding: 18px 0;
+            }
+
+            .header-nav {
+                gap: 14px;
+            }
+
+            .hero {
+                padding: 90px 16px 60px;
+            }
+
+            .hero h1 {
+                font-size: 2.4rem;
+            }
+
+            .cards-wrap {
+                gap: 18px;
+            }
+
+            .faq-wrap {
+                padding: 0 16px 80px;
+            }
+
+            .contact-cta {
+                padding: 32px 24px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .header {
+                padding: 16px 12px;
+            }
+
+            .header-nav {
+                gap: 10px;
+                flex-wrap: wrap;
+            }
+
+            .hero {
+                padding: 70px 12px 50px;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 0.95rem;
+            }
+
+            .cards-wrap {
+                grid-template-columns: 1fr;
+                padding: 0 12px;
+            }
+
+            .help-card {
+                padding: 24px;
+            }
+
+            .faq-wrap {
+                padding: 0 12px 60px;
+            }
+
+            .faq-q {
+                padding: 16px 18px;
+                font-size: 0.96rem;
+            }
+
+            .faq-a-inner {
+                padding: 0 18px 18px;
+                font-size: 0.92rem;
+            }
+
+            .contact-cta {
+                padding: 24px 18px;
+            }
+
+            .ticker-tape__item {
+                padding: 0 12px;
+                font-size: 0.78rem;
+            }
+        }
+    </style>
+<link rel="stylesheet" href="/css/responsive.css">
+</head>
+<body>
+<header class="header">
+    <a href="index.html" class="brand"><div class="brand-circle">CP</div><span class="brand-name">CryptoPlexTrade</span></a>
+    <nav class="header-nav">
+        <a href="index.html#rates">Rates</a>
+        <a href="faq.html">FAQ</a>
+        <a href="contact.html">Contact</a>
+        <a href="login.html">Login</a>
+        <a href="register.html" class="btn-cta">Get Started</a>
+    </nav>
+</header>
+
+<div class="hero">
+    <h1>Help <span>Centre</span></h1>
+    <p>Find answers, guides, and everything you need to trade with confidence.</p>
+</div>
+
+<div class="cards-wrap">
+    <a href="faq.html" class="help-card">
+        <div class="card-icon-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm11.378-3.917c-.89-.777-2.366-.777-3.255 0a.75.75 0 0 1-1.06-1.06c2.298-2.013 5.824-2.013 8.122 0a.75.75 0 0 1-1.06 1.06ZM12 15.75a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" clip-rule="evenodd"/></svg></div>
+        <h3>FAQs</h3>
+        <p>Quick answers to the most common questions about accounts, trading, and payments.</p>
+    </a>
+    <a href="contact.html" class="help-card">
+        <div class="card-icon-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M1.5 8.67v8.58a3 3 0 0 0 3 3h15a3 3 0 0 0 3-3V8.67l-8.928 5.493a3 3 0 0 1-3.144 0L1.5 8.67Z"/><path d="M22.5 6.908V6.75a3 3 0 0 0-3-3h-15a3 3 0 0 0-3 3v.158l9.714 5.978a1.5 1.5 0 0 0 1.572 0L22.5 6.908Z"/></svg></div>
+        <h3>Contact Support</h3>
+        <p>Send a message to our team. We typically respond within 1 business day.</p>
+    </a>
+    <a href="support.html" class="help-card">
+        <div class="card-icon-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M4.848 2.771A49.144 49.144 0 0 1 12 2.25c2.43 0 4.817.178 7.152.52 1.978.292 3.348 2.024 3.348 3.97v6.02c0 1.946-1.37 3.678-3.348 3.97a48.901 48.901 0 0 1-3.476.383.39.39 0 0 0-.297.17l-2.755 4.133a.75.75 0 0 1-1.248 0l-2.755-4.133a.39.39 0 0 0-.297-.17 48.9 48.9 0 0 1-3.476-.384c-1.978-.29-3.348-2.024-3.348-3.97V6.741c0-1.946 1.37-3.68 3.348-3.97Z" clip-rule="evenodd"/></svg></div>
+        <h3>My Tickets</h3>
+        <p>View and manage your open support tickets and previous conversations.</p>
+    </a>
+    <a href="profile.html" class="help-card">
+        <div class="card-icon-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd"/></svg></div>
+        <h3>Account Settings</h3>
+        <p>Update your profile, change your password, and manage security settings.</p>
+    </a>
+</div>
+
+<div class="faq-wrap">
+    <h2>Common Questions</h2>
+    <div class="faq-card"><div class="faq-q">How long do transactions take?<svg class="chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12.53 16.28a.75.75 0 0 1-1.06 0l-7.5-7.5a.75.75 0 0 1 1.06-1.06L12 14.69l6.97-6.97a.75.75 0 1 1 1.06 1.06l-7.5 7.5Z" clip-rule="evenodd"/></svg></div><div class="faq-a"><div class="faq-a-inner">Buy orders are typically processed within 5–15 minutes after payment confirmation. Sell orders are processed once we receive your crypto, which varies by network congestion.</div></div></div>
+    <div class="faq-card"><div class="faq-q">What are the fees?<svg class="chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12.53 16.28a.75.75 0 0 1-1.06 0l-7.5-7.5a.75.75 0 0 1 1.06-1.06L12 14.69l6.97-6.97a.75.75 0 1 1 1.06 1.06l-7.5 7.5Z" clip-rule="evenodd"/></svg></div><div class="faq-a"><div class="faq-a-inner">Our rates are competitive and updated in real-time. For buy orders, you choose a miner fee (Economy, Standard, Priority). All fees are shown before you confirm.</div></div></div>
+    <div class="faq-card"><div class="faq-q">Is my information secure?<svg class="chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12.53 16.28a.75.75 0 0 1-1.06 0l-7.5-7.5a.75.75 0 0 1 1.06-1.06L12 14.69l6.97-6.97a.75.75 0 1 1 1.06 1.06l-7.5 7.5Z" clip-rule="evenodd"/></svg></div><div class="faq-a"><div class="faq-a-inner">Yes. We use 256-bit SSL encryption for all data. Your information is stored securely and we never store full payment details on our servers.</div></div></div>
+    <div class="faq-card"><div class="faq-q">How do I change my password?<svg class="chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12.53 16.28a.75.75 0 0 1-1.06 0l-7.5-7.5a.75.75 0 0 1 1.06-1.06L12 14.69l6.97-6.97a.75.75 0 1 1 1.06 1.06l-7.5 7.5Z" clip-rule="evenodd"/></svg></div><div class="faq-a"><div class="faq-a-inner">If logged in, go to your <a href="profile.html">Profile page</a> and use the security section. If you forgot your password, use the <a href="forgot-password.html">Forgot Password</a> link on the login page.</div></div></div>
+
+    <div class="contact-cta">
+        <h3>Can't find what you're looking for?</h3>
+        <p>Our support team is available Monday to Saturday to help you with anything.</p>
+        <a href="contact.html">Contact Support →</a>
+    </div>
+</div>
+
+<footer>&copy; 2026 CryptoPlexTrade &middot; <a href="privacy.html" style="color:inherit;">Privacy</a> &middot; <a href="terms.html" style="color:inherit;">Terms</a></footer>
+<div class="ticker-tape"><div class="ticker-tape__track" id="ticker-track"></div></div>
+
+<script>
+document.querySelectorAll('.faq-q').forEach(q => {
+    q.addEventListener('click', () => {
+        const card = q.parentElement;
+        const isOpen = card.classList.contains('open');
+        document.querySelectorAll('.faq-card.open').forEach(c => c.classList.remove('open'));
+        if (!isOpen) card.classList.add('open');
+    });
+});
+(async()=>{const track=document.getElementById('ticker-track');const syms=['BTC','ETH','SOL','BNB','XRP','LTC','ADA','DOGE'];try{const r=await fetch(`https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${syms.join(',')}&tsyms=USD`);const d=await r.json();let html='';syms.forEach(s=>{const c=d.RAW?.[s]?.USD;if(!c)return;const dir=c.CHANGEPCT24HOUR>=0?'up':'down';html+=`<div class="ticker-tape__item"><span class="pair">${s}/USD</span><span class="price">${c.PRICE.toLocaleString('en-US',{style:'currency',currency:'USD'})}</span><span class="change ${dir}">${dir==='up'?'+':''}${c.CHANGEPCT24HOUR.toFixed(2)}% ${dir==='up'?'▲':'▼'}</span></div>`;});track.innerHTML=html+html;}catch(e){}})();
+</script>
+</body>
+</html>

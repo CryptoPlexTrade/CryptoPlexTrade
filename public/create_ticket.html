@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Ticket - CryptoPlexTrade</title>
+    <style>
+        :root {
+            --primary-color: #005baa; --primary-dark: #004a8a; --secondary-color: #00a9e0; --bg-highlight: #f0f7ff;
+            --bg-white: #ffffff; --bg-light: #f8fafc; --border-light: #e2e8f0; --border-medium: #cbd5e1;
+            --text-secondary: #64748b; --text-body: #475569; --text-primary: #1e293b;
+            --accent-green: #28a745; --accent-red: #dc3545;
+            --shadow-subtle: rgba(0, 0, 0, 0.05); --shadow-medium: rgba(0, 0, 0, 0.1); --shadow-blue: rgba(0, 91, 170, 0.2);
+        }
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Poppins', sans-serif; background-color: var(--bg-light); color: var(--text-body); margin: 0; padding: 0;
+            background: linear-gradient(-45deg, #f0f7ff, #e2e8f0, #f0f7ff, #00a9e0); background-size: 400% 400%; animation: gradientBG 20s ease infinite;
+        }
+        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .header { padding: 20px 0; background: rgba(255, 255, 255, 0.5); backdrop-filter: blur(8px); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border-light); }
+        .logo-wrapper { display: flex; align-items: center; text-decoration: none; }
+        .logo-name {
+            font-size: 1.8rem; font-weight: 700; color: var(--text-primary);
+            text-decoration: none; margin-left: 12px;
+        }
+        .header .container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.8rem; font-weight: 700; color: var(--text-primary); text-decoration: none; }
+        .logo {
+            font-size: 1.2rem; font-weight: 700; color: var(--bg-white); text-decoration: none;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            width: 45px; height: 45px; border-radius: 50%; display: flex;
+            align-items: center; justify-content: center;
+            box-shadow: 0 2px 8px var(--shadow-blue);
+            transition: transform 0.3s ease;
+        }
+        .logo:hover { transform: scale(1.1); }
+        .header-nav a { color: var(--text-body); text-decoration: none; margin-left: 30px; font-weight: 500; }
+        .dashboard-layout { display: flex; height: calc(100vh - 81px); }
+        .dashboard-sidebar { width: 260px; background-color: rgba(255, 255, 255, 0.4); backdrop-filter: blur(10px); border-right: 1px solid var(--border-light); padding: 30px 20px; flex-shrink: 0; }
+        .sidebar-nav ul { list-style: none; padding: 0; margin: 0; }
+        .sidebar-nav a { display: flex; align-items: center; padding: 15px; text-decoration: none; color: var(--text-secondary); font-weight: 500; border-radius: 8px; margin-bottom: 5px; }
+        .sidebar-nav a svg { width: 20px; height: 20px; margin-right: 15px; }
+        .sidebar-nav a.active { background: linear-gradient(90deg, var(--primary-color), var(--secondary-color)); color: var(--bg-white); box-shadow: 0 5px 15px var(--shadow-blue); }
+        .dashboard-content { flex-grow: 1; padding: 40px; overflow-y: auto; }
+        .dashboard-header { margin-bottom: 40px; }
+        .dashboard-header h1 { font-size: 2.5rem; color: var(--text-primary); margin: 0 0 5px 0; }
+        .form-card { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); padding: 30px; border-radius: 16px; box-shadow: 0 8px 25px var(--shadow-subtle); }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px; font-size: 0.9rem; }
+        .form-group input, .form-group textarea { width: 100%; padding: 12px 15px; border: 1px solid var(--border-medium); border-radius: 8px; font-size: 1rem; box-sizing: border-box; background-color: var(--bg-white); font-family: 'Poppins', sans-serif; }
+        .form-group textarea { min-height: 150px; resize: vertical; }
+        .btn-primary { background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)); color: white; padding: 12px 25px; border-radius: 8px; text-decoration: none; font-weight: 600; border: none; cursor: pointer; }
+        .message { padding: 15px; border-radius: 8px; margin-top: 20px; font-weight: 500; display: none; }
+        .message.success { background-color: #e9f5ec; color: #28a745; }
+        .message.error { background-color: #fbe9e7; color: #dc3545; }
+    </style>
+<link rel="stylesheet" href="/css/responsive.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <a href="dashboard.html" class="logo-wrapper">
+                <div class="logo">CE</div>
+                <span class="logo-name">CryptoPlexTrade</span>
+            </a>
+            <nav class="header-nav">
+                <a href="#" id="logout-btn">Logout</a>
+            </nav>
+        </div>
+    </header>
+    <div class="dashboard-layout">
+        <aside class="dashboard-sidebar">
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="dashboard.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M10.5 18.75a.75.75 0 0 0 0 1.5h3a.75.75 0 0 0 0-1.5h-3Z" /><path fill-rule="evenodd" d="M8.625.75A3.375 3.375 0 0 0 5.25 4.125v15.75a3.375 3.375 0 0 0 3.375 3.375h6.75a3.375 3.375 0 0 0 3.375-3.375V4.125A3.375 3.375 0 0 0 15.375.75h-6.75ZM7.5 4.125C7.5 3.504 8.004 3 8.625 3h6.75C15.996 3 16.5 3.504 16.5 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-6.75A1.125 1.125 0 0 1 7.5 19.875V4.125Z" clip-rule="evenodd" /></svg>Dashboard</a></li>
+                    <li><a href="trade.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M3 4.5h18v15H3v-15Zm6.75 10.5a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM12 15a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM15.75 15a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM9.75 9a.75.75 0 0 0-1.5 0v4.5a.75.75 0 0 0 1.5 0V9Zm3.75-3a.75.75 0 0 0-1.5 0v7.5a.75.75 0 0 0 1.5 0V6Zm2.25 1.5a.75.75 0 0 0-1.5 0v6a.75.75 0 0 0 1.5 0v-6Z" /></svg>Trade</a></li>
+                    <li><a href="transactions.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clip-rule="evenodd" /></svg>Transactions</a></li>
+                    <li><a href="profile.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd" /></svg>Profile</a></li>
+                    <li><a href="support.html" class="active"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm11.378-3.917c-.89-.777-2.366-.777-3.255 0a.75.75 0 0 1-1.06-1.06c2.298-2.013 5.824-2.013 8.122 0a.75.75 0 0 1-1.06 1.06ZM12 15.75a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" clip-rule="evenodd" /></svg>Support</a></li>
+                </ul>
+            </nav>
+        </aside>
+        <main class="dashboard-content">
+            <div class="dashboard-header">
+                <h1>Create a New Support Ticket</h1>
+                <p>Describe your issue below and our team will get back to you shortly.</p>
+            </div>
+            <div class="form-card">
+                <form id="create-ticket-form">
+                    <div class="form-group">
+                        <label for="subject">Subject</label>
+                        <input type="text" id="subject" name="subject" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Describe your issue</label>
+                        <textarea id="message" name="message" required></textarea>
+                    </div>
+                    <button type="submit" class="btn-primary">Submit Ticket</button>
+                    <div id="form-message" class="message"></div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script src="inactivity-timer.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+    const csrfToken = getCookie('csrf-token');
+
+    const logoutBtn = document.getElementById('logout-btn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            try {
+                const response = await fetch('/api/logout', { method: 'POST', headers: { 'X-CSRF-Token': csrfToken } });
+                if (response.ok) {
+                    window.location.href = 'login.html';
+                } else {
+                    console.error('Logout failed');
+                }
+            } catch (error) {
+                console.error('Error during logout:', error);
+            }
+        });
+    }
+
+    const ticketForm = document.getElementById('create-ticket-form');
+    const formMessage = document.getElementById('form-message');
+
+    ticketForm.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const subject = document.getElementById('subject').value;
+        const message = document.getElementById('message').value;
+
+        if (!subject.trim() || !message.trim()) {
+            alert('Please fill out both subject and message fields.');
+            return;
+        }
+
+        const data = { subject, message };
+
+        try {
+            const response = await fetch('/api/support/tickets', {
+                method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrfToken }, body: JSON.stringify(data)
+            });
+            if (response.status === 401 || response.status === 403) {
+                window.location.href = 'login.html';
+                return;
+            }
+            const result = await response.json();
+            if (!response.ok) throw new Error(result.message);
+
+            formMessage.textContent = 'Ticket created successfully! Redirecting...';
+            formMessage.className = 'message success';
+            formMessage.style.display = 'block';
+            setTimeout(() => {
+                window.location.href = 'support.html';
+            }, 2000);
+
+        } catch (error) {
+            formMessage.textContent = error.message;
+            formMessage.className = 'message error';
+            formMessage.style.display = 'block';
+        }
+    });
+});
+    </script>
+</body>
+</html>

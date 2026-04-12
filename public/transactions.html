@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transactions - CryptoPlexTrade</title>
+    <meta name="description" content="View and filter all your CryptoPlexTrade transaction history.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/app.css">
+    <style>
+        /* Keep Action column visible on smaller screens when table overflows */
+        .data-table th:last-child,
+        .data-table tbody td:last-child {
+            position: sticky;
+            right: 0;
+            background: #fff;
+            z-index: 2;
+            box-shadow: -2px 0 5px rgba(0,0,0,0.03);
+        }
+        .data-table th:last-child {
+            background: #fafcff;
+            z-index: 3;
+        }
+        .data-table tbody tr:hover td:last-child {
+            background: var(--primary-pale);
+        }
+        @media (max-width: 640px) {
+            .data-table th:last-child,
+            .data-table tbody td:last-child {
+                position: static;
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+<div class="app-shell">
+
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="sidebar" id="sidebar">
+        <a href="dashboard.html" class="sidebar-brand">
+            <div class="sidebar-brand__orb">CP</div>
+            <span class="sidebar-brand__name">CryptoPlexTrade</span>
+        </a>
+        <nav class="sidebar-nav">
+            <ul>
+                <li><a href="dashboard.html">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11.47 3.841a.75.75 0 0 1 1.06 0l8.69 8.69a.75.75 0 1 0 1.06-1.061l-8.689-8.69a2.25 2.25 0 0 0-3.182 0l-8.69 8.69a.75.75 0 1 0 1.061 1.06l8.69-8.689Z"/><path d="m12 5.432 8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 0 1-.75-.75v-4.5a.75.75 0 0 0-.75-.75h-3a.75.75 0 0 0-.75.75V21a.75.75 0 0 1-.75.75H5.625a1.875 1.875 0 0 1-1.875-1.875v-6.198a2.29 2.29 0 0 0 .091-.086L12 5.432Z"/></svg>
+                    Dashboard
+                </a></li>
+                <li><a href="trade.html">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M3 4.5h18v15H3v-15Zm6.75 10.5a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM12 15a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM15.75 15a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM9.75 9a.75.75 0 0 0-1.5 0v4.5a.75.75 0 0 0 1.5 0V9Zm3.75-3a.75.75 0 0 0-1.5 0v7.5a.75.75 0 0 0 1.5 0V6Zm2.25 1.5a.75.75 0 0 0-1.5 0v6a.75.75 0 0 0 1.5 0v-6Z"/></svg>
+                    Trade
+                </a></li>
+                <li><a href="transactions.html" class="active">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clip-rule="evenodd"/></svg>
+                    Transactions
+                </a></li>
+                <li><a href="profile.html">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd"/></svg>
+                    Profile
+                </a></li>
+                <li><a href="support.html">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm11.378-3.917c-.89-.777-2.366-.777-3.255 0a.75.75 0 0 1-1.06-1.06c2.298-2.013 5.824-2.013 8.122 0a.75.75 0 0 1-1.06 1.06ZM12 15.75a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" clip-rule="evenodd"/></svg>
+                    Support
+                </a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <div class="main-wrap">
+        <header class="topbar">
+            <div class="topbar-left">
+                <button class="hamburger-btn" id="hamburger-btn" aria-label="Toggle sidebar">
+                    <span></span><span></span><span></span>
+                </button>
+                <span class="topbar-title">Transactions</span>
+            </div>
+            <div class="topbar-right">
+                <a href="#" id="logout-btn" class="btn btn-danger btn-sm">Logout</a>
+            </div>
+        </header>
+
+        <main class="page-content">
+            <div class="page-header">
+                <h1>Transaction History</h1>
+                <p>View and filter all your past orders.</p>
+            </div>
+
+            <div class="filter-bar">
+                <div class="filter-group">
+                    <label>Order Type</label>
+                    <div class="csd-wrapper" id="filter-type-csd" data-value="all">
+                        <button type="button" class="csd-trigger">
+                            <span class="csd-label">All Types</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        </button>
+                        <div class="csd-dropdown">
+                            <div class="csd-option csd-active" data-value="all">All Types</div>
+                            <div class="csd-option" data-value="buy">Buy</div>
+                            <div class="csd-option" data-value="sell">Sell</div>
+                        </div>
+                        <select id="filter-type" style="display:none">
+                            <option value="all" selected>All Types</option>
+                            <option value="buy">Buy</option>
+                            <option value="sell">Sell</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <label>Status</label>
+                    <div class="csd-wrapper" id="filter-status-csd" data-value="all">
+                        <button type="button" class="csd-trigger">
+                            <span class="csd-label">All Statuses</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        </button>
+                        <div class="csd-dropdown">
+                            <div class="csd-option csd-active" data-value="all">All Statuses</div>
+                            <div class="csd-option" data-value="completed"><span class="csd-dot" style="background:#16a34a"></span>Completed</div>
+                            <div class="csd-option" data-value="pending_confirmation"><span class="csd-dot" style="background:var(--primary)"></span>Pending Confirmation</div>
+                        </div>
+                        <select id="filter-status" style="display:none">
+                            <option value="all" selected>All Statuses</option>
+                            <option value="completed">Completed</option>
+                            <option value="pending_confirmation">Pending Confirmation</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="card" style="padding:0;overflow:hidden;">
+                <div class="table-wrap">
+                    <table class="data-table data-table--cards">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Type</th>
+                                <th>Product</th>
+                                <th>Amount (GH₵)</th>
+                                <th>Details</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactions-tbody">
+                            <tr><td colspan="7" style="text-align:center;color:var(--text-3);padding:24px;">Loading…</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- Transaction Detail Modal -->
+<div id="details-modal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Transaction Details</h2>
+            <button id="close-modal-btn" class="close-btn">&times;</button>
+        </div>
+        <div class="modal-body" id="modal-body-content"></div>
+    </div>
+</div>
+
+<div class="ticker-tape"><div class="ticker-tape__track"></div></div>
+
+<script src="inactivity-timer.js"></script>
+<script>
+(function () {
+    // --- Sidebar ---
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+    document.getElementById('hamburger-btn').addEventListener('click', () => { sidebar.classList.add('open'); overlay.classList.add('open'); });
+    overlay.addEventListener('click', () => { sidebar.classList.remove('open'); overlay.classList.remove('open'); });
+
+    // --- Logout ---
+    document.getElementById('logout-btn').addEventListener('click', async (e) => {
+        e.preventDefault();
+        try { const r = await fetch('/api/logout', { method: 'POST' }); if (r.ok) window.location.href = 'login.html'; }
+        catch (err) { console.error(err); }
+    });
+
+    let allTransactions = [];
+    const tbody       = document.getElementById('transactions-tbody');
+    const filterType   = document.getElementById('filter-type');
+    const filterStatus = document.getElementById('filter-status');
+    const modal        = document.getElementById('details-modal');
+    const closeModal   = document.getElementById('close-modal-btn');
+
+    function renderTransactions(txs) {
+        tbody.innerHTML = '';
+        if (txs.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--text-3);padding:24px;">No transactions match the current filters.</td></tr>';
+            return;
+        }
+        txs.forEach(tx => {
+            const date   = new Date(tx.created_at).toLocaleString();
+            const type   = tx.order_type.charAt(0).toUpperCase() + tx.order_type.slice(1);
+            const status = tx.status.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+            const statusCls = `status-${tx.status.toLowerCase()}`;
+            let detailsCell = '';
+            if (tx.order_type === 'buy') {
+                detailsCell = `<td data-label="Details" title="${tx.wallet_address}">${tx.wallet_address.substring(0,10)}…</td>`;
+            } else {
+                try {
+                    const p = JSON.parse(tx.wallet_address);
+                    detailsCell = `<td data-label="Details">Payout to ${p.method === 'momo' ? 'MoMo' : 'Bank'}</td>`;
+                } catch { detailsCell = '<td data-label="Details">—</td>'; }
+            }
+            tbody.innerHTML += `<tr>
+                <td data-label="Date">${date}</td>
+                <td data-label="Type">${type}</td>
+                <td data-label="Product"><strong>${tx.product}</strong></td>
+                <td data-label="Amount">₵ ${parseFloat(tx.total_paid).toFixed(2)}</td>
+                ${detailsCell}
+                <td data-label="Status"><span class="status-badge ${statusCls}">${status}</span></td>
+                <td data-label="Action"><button type="button" class="btn-view" data-tx-id="${tx.id}">View</button></td>
+            </tr>`;
+        });
+
+        document.querySelectorAll('.btn-view').forEach(btn => {
+            btn.addEventListener('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                const tx = allTransactions.find(t => t.id === parseInt(this.dataset.txId, 10));
+                if (tx) { populateModal(tx); modal.classList.add('show'); }
+            });
+        });
+    }
+
+    function populateModal(tx) {
+        const body = document.getElementById('modal-body-content');
+        body.innerHTML = '';
+        const row = (label, value, cls = '') => {
+            const d = document.createElement('div');
+            d.className = 'detail-item';
+            d.innerHTML = `<span class="label">${label}</span><span class="value ${cls}">${value}</span>`;
+            return d;
+        };
+        body.appendChild(row('Order ID', '#' + tx.id));
+        body.appendChild(row('Date', new Date(tx.created_at).toLocaleString()));
+        body.appendChild(row('Type', tx.order_type.charAt(0).toUpperCase() + tx.order_type.slice(1)));
+        body.appendChild(row('Product', tx.product));
+        body.appendChild(row('Amount (GH₵)', `₵ ${parseFloat(tx.total_paid).toFixed(2)}`));
+        body.appendChild(row('Status', tx.status.replace(/_/g,' ').replace(/\b\w/g,l=>l.toUpperCase()), `status-badge status-${tx.status.toLowerCase()}`));
+        if (tx.order_type === 'buy') {
+            body.appendChild(row('Wallet Address', tx.wallet_address));
+            body.appendChild(row('Transaction ID', tx.transaction_id || 'N/A'));
+        } else {
+            body.appendChild(row('Crypto Sent', `${tx.product_amount} ${tx.product}`));
+            body.appendChild(row('Your TXID', tx.transaction_id || 'N/A'));
+            try {
+                const p = JSON.parse(tx.wallet_address);
+                if (p.method === 'momo') {
+                    body.appendChild(row('Payout Method', 'Mobile Money'));
+                    body.appendChild(row('MoMo Number', p.number));
+                    body.appendChild(row('MoMo Name', p.name));
+                } else {
+                    body.appendChild(row('Payout Method', 'Bank Transfer'));
+                    body.appendChild(row('Bank Name', p.bankName));
+                    body.appendChild(row('Account Name', p.accountName));
+                    body.appendChild(row('Account Number', p.accountNumber));
+                }
+            } catch { body.appendChild(row('Payout Info', 'Error parsing details')); }
+        }
+    }
+
+    function applyFilters() {
+        let filtered = [...allTransactions];
+        if (filterType.value   !== 'all') filtered = filtered.filter(t => t.order_type === filterType.value);
+        if (filterStatus.value !== 'all') filtered = filtered.filter(t => t.status === filterStatus.value);
+        renderTransactions(filtered);
+    }
+
+    // --- Custom Status Dropdown Logic ---
+    function closeAllDropdowns(except) {
+        document.querySelectorAll('.csd-wrapper.csd-open').forEach(el => {
+            if (el !== except) el.classList.remove('csd-open');
+        });
+    }
+
+    function positionCSD(wrapper) {
+        const trigger  = wrapper.querySelector('.csd-trigger');
+        const dropdown = wrapper.querySelector('.csd-dropdown');
+        const rect     = trigger.getBoundingClientRect();
+        const maxH     = 260;
+        const gap      = 6;
+        const spaceBelow = window.innerHeight - rect.bottom;
+        const spaceAbove = rect.top;
+
+        dropdown.style.left  = rect.left + 'px';
+        dropdown.style.width = Math.max(rect.width, 160) + 'px';
+
+        if (spaceBelow >= Math.min(maxH, 120) + gap || spaceBelow >= spaceAbove) {
+            dropdown.style.top    = (rect.bottom + gap) + 'px';
+            dropdown.style.bottom = 'auto';
+            dropdown.style.maxHeight = Math.min(maxH, spaceBelow - gap - 8) + 'px';
+        } else {
+            dropdown.style.bottom = (window.innerHeight - rect.top + gap) + 'px';
+            dropdown.style.top    = 'auto';
+            dropdown.style.maxHeight = Math.min(maxH, spaceAbove - gap - 8) + 'px';
+        }
+    }
+
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.csd-wrapper')) closeAllDropdowns(null);
+    });
+
+    document.querySelector('.filter-bar').addEventListener('click', function(e) {
+        if (e.target.closest('.csd-trigger')) {
+            e.preventDefault(); e.stopPropagation();
+            const wrapper = e.target.closest('.csd-wrapper');
+            const isOpen = wrapper.classList.contains('csd-open');
+            closeAllDropdowns(null);
+            if (!isOpen) { positionCSD(wrapper); wrapper.classList.add('csd-open'); }
+            return;
+        }
+
+        if (e.target.closest('.csd-option')) {
+            e.preventDefault(); e.stopPropagation();
+            const option = e.target.closest('.csd-option');
+            const wrapper = option.closest('.csd-wrapper');
+            const value = option.dataset.value;
+
+            // Update trigger label identically, but we need to keep dot if it exists
+            const triggerLabel = wrapper.querySelector('.csd-label');
+            const dotMatch = option.innerHTML.match(/<span[^>]*class="csd-dot"[^>]*><\/span>/);
+            triggerLabel.innerHTML = (dotMatch ? dotMatch[0] : '') + option.textContent.trim();
+            triggerLabel.style.display = 'flex';
+            triggerLabel.style.alignItems = 'center';
+            triggerLabel.style.gap = '6px';
+
+            wrapper.querySelectorAll('.csd-option').forEach(o => o.classList.remove('csd-active'));
+            option.classList.add('csd-active');
+
+            const hiddenSelect = wrapper.querySelector('select');
+            hiddenSelect.value = value;
+            wrapper.dataset.value = value;
+            wrapper.classList.remove('csd-open');
+
+            applyFilters();
+        }
+    });
+
+    async function fetchAllTransactions() {
+        try {
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--text-3);padding:24px;">Loading…</td></tr>';
+            const r = await fetch('/api/orders/history', { credentials: 'include' });
+            if (r.status === 401 || r.status === 403) { window.location.href = 'login.html'; return; }
+            if (!r.ok) throw new Error('Failed');
+            allTransactions = await r.json();
+            renderTransactions(allTransactions);
+        } catch (e) {
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--red);padding:24px;">Could not load transaction history.</td></tr>';
+        }
+    }
+
+    filterType.addEventListener('change', applyFilters);
+    filterStatus.addEventListener('change', applyFilters);
+    closeModal.addEventListener('click', () => modal.classList.remove('show'));
+    modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('show'); });
+
+    fetchAllTransactions();
+
+    // --- Ticker ---
+    const tickerTrack = document.querySelector('.ticker-tape__track');
+    const coins = ['BTC','ETH','SOL','BNB','XRP','LTC','ADA','DOGE'];
+    async function fetchTicker() {
+        try {
+            const r = await fetch(`https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${coins.join(',')}&tsyms=USD`);
+            if (!r.ok) throw new Error();
+            const data = await r.json();
+            let html = '';
+            coins.forEach(s => {
+                const c = data.RAW[s]?.USD;
+                if (!c) return;
+                const dir = c.CHANGEPCT24HOUR >= 0 ? 'up' : 'down';
+                html += `<div class="ticker-tape__item"><span class="pair">${s}/USD</span><span class="price">${c.PRICE.toLocaleString('en-US',{style:'currency',currency:'USD',minimumFractionDigits:2})}</span><span class="change ${dir}">${dir==='up'?'+':''}${c.CHANGEPCT24HOUR.toFixed(2)}% ${dir==='up'?'▲':'▼'}</span></div>`;
+            });
+            tickerTrack.innerHTML = html + html;
+        } catch (e) { console.error(e); }
+    }
+    fetchTicker();
+    setInterval(fetchTicker, 60000);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Users - Admin</title>
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <!-- Mobile Hamburger Button -->
+    <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open menu">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+        </svg>
+    </button>
+    <!-- Sidebar overlay -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <!-- Mobile Top Bar -->
+    <div class="mobile-topbar">
+        <span class="mobile-page-title">Manage Users</span>
+    </div>
+    <div class="admin-layout">
+        <aside class="admin-sidebar" id="admin-sidebar">
+            <button class="sidebar-close-btn" id="sidebar-close-btn" aria-label="Close menu">&times;</button>
+            <div class="sidebar-header">
+                <a href="index.html" class="logo-wrapper">
+                    <div class="logo">CE</div>
+                    <span class="logo-name">Admin Portal</span>
+                </a>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="index.html">Dashboard</a></li>
+                    <li><a href="transactions.html">Transactions</a></li>
+                    <li><a href="users.html" class="active">Users</a></li>
+                    <li><a href="support.html">Support Tickets</a></li>
+                    <li><a href="referrals.html">Referrals</a></li>
+                    <li><a href="rates.html">Manage Rates</a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="#" id="logout-btn">Logout</a>
+            </div>
+        </aside>
+        <main class="admin-content">
+            <div class="admin-header">
+                <h1>Manage Users</h1>
+                <p>View and manage all registered users.</p>
+            </div>
+
+            <div class="filter-controls">
+                <div class="filter-group" style="flex-grow: 1;">
+                    <label for="search-user">Search by Name or Email</label>
+                    <input type="text" id="search-user" placeholder="Start typing to filter users...">
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>User ID</th>
+                            <th>Full Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Role</th>
+                            <th>Date Joined</th>
+                        </tr>
+                    </thead>
+                    <tbody id="users-tbody">
+                        <!-- Users will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <script src="admin.js"></script>
+    <script>
+        // Mobile sidebar toggle
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const sidebar = document.getElementById('admin-sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        const closeBtn = document.getElementById('sidebar-close-btn');
+        function openSidebar() {
+            sidebar.classList.add('sidebar-open');
+            overlay.classList.add('show');
+            overlay.style.display = 'block';
+        }
+        function closeSidebar() {
+            sidebar.classList.remove('sidebar-open');
+            overlay.classList.remove('show');
+            setTimeout(() => { overlay.style.display = 'none'; }, 300);
+        }
+        menuBtn.addEventListener('click', openSidebar);
+        closeBtn.addEventListener('click', closeSidebar);
+        overlay.addEventListener('click', closeSidebar);
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            const tbody = document.getElementById('users-tbody');
+            let allUsers = []; // Store all fetched users
+
+            async function fetchUsers() {
+                try {
+                    tbody.innerHTML = '<tr><td colspan="6">Loading...</td></tr>';
+                    const response = await fetch('/api/admin/users', { credentials: 'include' });
+                    if (response.status === 401 || response.status === 403) {
+                        window.location.href = '/admin-login';
+                        return;
+                    }
+                    if (!response.ok) throw new Error('Failed to fetch users');
+                    allUsers = await response.json();
+                    renderUsers(allUsers);
+                } catch (error) {
+                    tbody.innerHTML = `<tr><td colspan="6" class="error-message">${error.message}</td></tr>`;
+                }
+            }
+
+            function renderUsers(users) {
+                tbody.innerHTML = '';
+                if (users.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6">No users found.</td></tr>';
+                    return;
+                }
+                users.forEach(user => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td data-label="User ID">${user.id}</td>
+                        <td data-label="Full Name">${user.fullname}</td>
+                        <td data-label="Email">${user.email}</td>
+                        <td data-label="Phone">${user.phone || 'N/A'}</td>
+                        <td data-label="Role"><span class="status-badge status-${user.role === 'admin' ? 'completed' : 'open'}">${user.role}</span></td>
+                        <td data-label="Date Joined">${new Date(user.created_at).toLocaleString()}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }
+
+            function applyFilters() {
+                const searchTerm = document.getElementById('search-user').value.toLowerCase();
+                
+                const filteredUsers = allUsers.filter(user => {
+                    const nameMatch = user.fullname.toLowerCase().includes(searchTerm);
+                    const emailMatch = user.email.toLowerCase().includes(searchTerm);
+                    return nameMatch || emailMatch;
+                });
+
+                renderUsers(filteredUsers);
+            }
+
+            // Initial fetch
+            fetchUsers();
+
+            // Add event listener for the search input
+            document.getElementById('search-user').addEventListener('input', applyFilters);
+        });
+    </script>
+</body>
+</html>

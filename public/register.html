@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account - CryptoPlexTrade</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --blue-deep:  #004a8a;
+            --blue-main:  #005baa;
+            --blue-light: #00a9e0;
+            --blue-pale:  #e8f4fe;
+            --white:      #ffffff;
+            --text-dark:  #0f172a;
+            --text-mid:   #334155;
+            --text-muted: #94a3b8;
+            --border:     #dde9f7;
+            --shadow-b:   rgba(0,91,170,0.14);
+            --green:      #16a34a;
+            --red:        #dc2626;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh; display: flex;
+            background: #fff;
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        /* ---- LEFT PANEL ---- */
+        .left {
+            flex: 0 0 48%;
+            position: relative;
+            display: flex; flex-direction: column;
+            justify-content: space-between;
+            padding: 36px 50px 30px;
+            background: linear-gradient(145deg, #dbeefa 0%, #b8dbf5 35%, #8dc8f0 65%, #5aaee0 100%);
+            overflow: hidden;
+        }
+        .deco-circle { position: absolute; border-radius: 50%; pointer-events: none; }
+        .deco-circle:nth-child(1) { width:480px;height:480px;top:-130px;right:-120px;background:radial-gradient(circle,rgba(255,255,255,.45) 0%,transparent 70%); }
+        .deco-circle:nth-child(2) { width:300px;height:300px;bottom:-60px;left:-60px;background:radial-gradient(circle,rgba(0,74,138,.18) 0%,transparent 70%); }
+        .left::before {
+            content:''; position:absolute; inset:0;
+            background-image:radial-gradient(rgba(0,74,138,.1) 1.5px,transparent 1.5px);
+            background-size:28px 28px; pointer-events:none;
+        }
+        .left-brand { position:relative;z-index:2;display:flex;align-items:center;gap:10px;text-decoration:none; }
+        .brand-orb { width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,var(--blue-main),var(--blue-light));display:flex;align-items:center;justify-content:center;font-size:.9rem;font-weight:800;color:#fff;box-shadow:0 6px 18px rgba(0,91,170,.35); }
+        .brand-txt { font-size:1.15rem;font-weight:700;color:var(--blue-deep); }
+        .left-body { position:relative;z-index:2;flex:1;display:flex;flex-direction:column;justify-content:center;padding:20px 0; }
+        .left-headline { font-size:2.8rem;font-weight:800;line-height:1.15;color:var(--blue-deep);margin-bottom:14px; }
+        .left-headline em { font-style:normal;background:linear-gradient(90deg,var(--blue-main),var(--blue-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text; }
+        .left-sub { font-size:.95rem;color:var(--blue-deep);opacity:.7;line-height:1.7;max-width:360px;margin-bottom:32px; }
+        .benefit-list { list-style:none;display:flex;flex-direction:column;gap:12px; }
+        .benefit-list li { display:flex;align-items:center;gap:10px;font-size:.88rem;color:var(--blue-deep);opacity:.85;font-weight:500; }
+        .benefit-list li::before { content:'✓';width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.6);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:var(--blue-deep);flex-shrink:0; }
+        .stat-row { position:relative;z-index:2;display:flex;gap:10px; }
+        .stat-card { flex:1;background:rgba(255,255,255,.55);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.7);border-radius:14px;padding:12px 14px;box-shadow:0 4px 16px rgba(0,91,170,.1); }
+        .stat-card .s-val { font-size:1.2rem;font-weight:700;color:var(--blue-deep);display:block; }
+        .stat-card .s-lbl { font-size:.68rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.8px; }
+
+        /* ---- RIGHT PANEL ---- */
+        .right {
+            flex:1;
+            display:flex;flex-direction:column;
+            justify-content:space-between;
+            padding:36px 50px 30px;
+            background:#fff;
+            overflow-y:auto;
+        }
+        .right-top-nav { display:flex;align-items:center;justify-content:flex-end;gap:24px; }
+        .right-top-nav a { font-size:.85rem;color:var(--text-muted);text-decoration:none;font-weight:500;transition:color .2s; }
+        .right-top-nav a:hover { color:var(--blue-main); }
+        .right-top-nav .nav-cta { background:var(--blue-pale);color:var(--blue-main);font-weight:600;padding:8px 20px;border-radius:50px;border:1.5px solid rgba(0,91,170,.15);transition:background .2s,border-color .2s; }
+        .right-top-nav .nav-cta:hover { background:#d3eaf9;border-color:var(--blue-main); }
+        .form-area { flex:1;display:flex;flex-direction:column;justify-content:center;max-width:380px;margin:0 auto;width:100%;padding:8px 0; }
+        .form-pretag { display:inline-flex;align-items:center;gap:7px;background:var(--blue-pale);color:var(--blue-main);border-radius:50px;padding:4px 12px;font-size:.72rem;font-weight:600;letter-spacing:.4px;margin-bottom:12px; }
+        .form-pretag .dot { width:7px;height:7px;border-radius:50%;background:var(--blue-light);animation:dot-blink 1.5s infinite; }
+        @keyframes dot-blink { 0%,100%{opacity:1;}50%{opacity:.3;} }
+        .form-title { font-size:1.6rem;font-weight:700;color:var(--text-dark);margin-bottom:2px; }
+        .form-sub { font-size:.82rem;color:var(--text-muted);margin-bottom:14px; }
+
+        #server-error { background:rgba(220,38,38,.07);border:1px solid rgba(220,38,38,.2);color:var(--red);border-radius:10px;padding:8px 12px;font-size:.8rem;font-weight:500;margin-bottom:12px;display:none; }
+
+        .field { margin-bottom:10px; }
+        .field-label { display:block;font-size:.75rem;font-weight:600;color:var(--text-mid);margin-bottom:4px;letter-spacing:.3px; }
+        .field-wrap { position:relative; }
+        .field-icon { position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--text-muted);display:flex;pointer-events:none; }
+        .field-icon svg { width:16px;height:16px; }
+        .field-wrap input {
+            width:100%;padding:10px 42px 10px 40px;
+            border:1.5px solid var(--border);border-radius:10px;
+            font-family:'Poppins',sans-serif;font-size:.88rem;color:var(--text-dark);
+            background:#fafcff;outline:none;
+            transition:border-color .2s,box-shadow .2s,background .2s;
+        }
+        .field-wrap input::placeholder { color:var(--text-muted); }
+        .field-wrap input:focus { border-color:var(--blue-main);background:#fff;box-shadow:0 0 0 3px rgba(0,91,170,.1); }
+        .field-wrap input.is-error { border-color:var(--red); }
+        .error-msg { font-size:.72rem;color:var(--red);margin-top:2px;min-height:0; }
+        .pw-eye { position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text-muted);padding:0;display:flex;transition:color .2s; }
+        .pw-eye:hover { color:var(--blue-main); }
+        .pw-eye svg { width:17px;height:17px; }
+
+        /* Terms checkbox */
+        .terms-row { display:flex;align-items:flex-start;gap:8px;margin:2px 0 12px; }
+        .terms-row input[type=checkbox] { accent-color:var(--blue-main);width:15px;height:15px;margin-top:2px;flex-shrink:0;cursor:pointer; }
+        .terms-row label { font-size:.78rem;color:var(--text-mid);line-height:1.4; }
+        .terms-row label a { color:var(--blue-main);font-weight:600;text-decoration:none; }
+        .terms-row label a:hover { text-decoration:underline; }
+        .terms-error { font-size:.72rem;color:var(--red);margin-top:-10px;margin-bottom:10px;display:none; }
+
+        .btn-submit { width:100%;padding:12px;border:none;border-radius:10px;font-family:'Poppins',sans-serif;font-size:.95rem;font-weight:700;color:#fff;background:linear-gradient(90deg,var(--blue-main) 0%,var(--blue-light) 100%);background-size:200% 100%;cursor:pointer;position:relative;overflow:hidden;box-shadow:0 6px 20px var(--shadow-b);transition:background-position .35s,transform .2s,box-shadow .2s; }
+        .btn-submit:hover { background-position:100% 0;transform:translateY(-2px);box-shadow:0 10px 28px rgba(0,91,170,.28); }
+        .btn-submit:active { transform:translateY(0); }
+        .btn-submit::after { content:'';position:absolute;top:0;left:-100%;width:55%;height:100%;background:linear-gradient(120deg,transparent,rgba(255,255,255,.3),transparent);transition:left .45s; }
+        .btn-submit:hover::after { left:140%; }
+
+        .login-line { text-align:center;font-size:0.8rem;color:var(--text-muted);margin-top:12px; }
+        .login-line a { color:var(--blue-main);font-weight:600;text-decoration:none; }
+        .login-line a:hover { text-decoration:underline; }
+        .right-footer { text-align:center;font-size:.7rem;color:var(--text-muted); }
+
+        /* Ticker */
+        .ticker-tape { position:fixed;bottom:0;left:0;right:0;background:var(--text-dark);border-top:2px solid var(--blue-main);padding:8px 0;z-index:300;overflow:hidden;white-space:nowrap; }
+        .ticker-tape__track { display:inline-block;animation:ticker 40s linear infinite; }
+        @keyframes ticker { to { transform:translateX(-50%); } }
+        .ticker-tape__item { display:inline-flex;align-items:center;padding:0 22px;font-size:.83rem; }
+        .ticker-tape__item .pair { font-weight:600;margin-right:9px;color:#64748b; }
+        .ticker-tape__item .price { font-weight:500;margin-right:7px;color:#e2e8f0; }
+        .change.up { color:#22d3a5;font-weight:600; }
+        .change.down { color:#f87171;font-weight:600; }
+
+        @media(max-width:860px){.left{display:none;}.right{padding:30px 24px;}}
+    </style>
+<link rel="stylesheet" href="/css/responsive.css">
+</head>
+<body>
+
+<div class="left">
+    <div class="deco-circle"></div>
+    <div class="deco-circle"></div>
+    <a href="index.html" class="left-brand">
+        <div class="brand-orb">CP</div>
+        <span class="brand-txt">CryptoPlexTrade</span>
+    </a>
+    <div class="left-body">
+        <h1 class="left-headline">Join the Future<br>of <em>Trading.</em></h1>
+        <p class="left-sub">Create your free account and start trading Bitcoin, Ethereum, USDT and other digital currencies in minutes.</p>
+        <ul class="benefit-list">
+            <li>Instant account setup — no waiting</li>
+            <li>Buy &amp; sell at live market rates</li>
+            <li>Bank-grade security &amp; SSL encryption</li>
+            <li>24/7 expert customer support</li>
+            <li>Fast local currency settlements</li>
+        </ul>
+    </div>
+    </div>
+</div>
+
+<div class="right">
+    <nav class="right-top-nav">
+        <a href="index.html#rates">Rates</a>
+        <a href="contact.html">Support</a>
+        <a href="login.html" class="nav-cta">Sign In</a>
+    </nav>
+
+    <div class="form-area">
+        <div class="form-pretag"><span class="dot"></span> Free Account</div>
+        <h2 class="form-title">Create Account</h2>
+        <p class="form-sub">Quick sign-up — takes less than 2 minutes</p>
+
+        <div id="server-error"></div>
+
+        <form id="register-form" novalidate>
+            <div class="field">
+                <label class="field-label" for="fullname">Full Name</label>
+                <div class="field-wrap">
+                    <span class="field-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd"/></svg></span>
+                    <input type="text" id="fullname" name="fullname" placeholder="Your full name" required autocomplete="name">
+                </div>
+                <div class="error-msg" id="fullname-error"></div>
+            </div>
+
+            <div class="field">
+                <label class="field-label" for="phone">Phone Number</label>
+                <div class="field-wrap">
+                    <span class="field-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M1.5 4.5a3 3 0 0 1 3-3h1.372c.86 0 1.61.586 1.819 1.42l1.105 4.423a1.875 1.875 0 0 1-.694 1.955l-1.293.97c-.135.101-.164.249-.126.352a11.285 11.285 0 0 0 6.697 6.697c.103.038.25.009.352-.126l.97-1.293a1.875 1.875 0 0 1 1.955-.694l4.423 1.105c.834.209 1.42.959 1.42 1.82V19.5a3 3 0 0 1-3 3h-2.25C8.552 22.5 1.5 15.448 1.5 6.75V4.5Z" clip-rule="evenodd"/></svg></span>
+                    <input type="tel" id="phone" name="phone" placeholder="+1 000 000 0000" required autocomplete="tel">
+                </div>
+                <div class="error-msg" id="phone-error"></div>
+            </div>
+
+            <div class="field">
+                <label class="field-label" for="email">Email Address</label>
+                <div class="field-wrap">
+                    <span class="field-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M1.5 8.67v8.58a3 3 0 0 0 3 3h15a3 3 0 0 0 3-3V8.67l-8.928 5.493a3 3 0 0 1-3.144 0L1.5 8.67Z"/><path d="M22.5 6.908V6.75a3 3 0 0 0-3-3h-15a3 3 0 0 0-3 3v.158l9.714 5.978a1.5 1.5 0 0 0 1.572 0L22.5 6.908Z"/></svg></span>
+                    <input type="email" id="email" name="email" placeholder="you@example.com" required autocomplete="email">
+                </div>
+                <div class="error-msg" id="email-error"></div>
+            </div>
+
+            <div class="field">
+                <label class="field-label" for="password">Password</label>
+                <div class="field-wrap">
+                    <span class="field-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 1.5a5.25 5.25 0 0 0-5.25 5.25v3a3 3 0 0 0-3 3v6.75a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3v-6.75a3 3 0 0 0-3-3v-3A5.25 5.25 0 0 0 12 1.5Zm3.75 8.25v-3a3.75 3.75 0 1 0-7.5 0v3h7.5Z" clip-rule="evenodd"/></svg></span>
+                    <input type="password" id="password" name="password" placeholder="Min. 8 characters" required>
+                    <button type="button" class="pw-eye" data-target="password" aria-label="Toggle password">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M3.53 2.47a.75.75 0 0 0-1.06 1.06l18 18a.75.75 0 1 0 1.06-1.06l-18-18ZM22.676 12.553a11.249 11.249 0 0 1-2.631 4.31l-3.099-3.099a5.25 5.25 0 0 0-6.71-6.71L7.759 4.577a11.217 11.217 0 0 1 4.242-.827c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113Z"/><path d="M15.75 12c0 .18-.013.357-.037.53l-4.244-4.243A3.75 3.75 0 0 1 15.75 12ZM12.25 15.75l-4.243-4.244a3.75 3.75 0 0 0 4.243 4.244ZM4.867 16.842l-1.634-1.635a11.25 11.25 0 0 1-1.909-3.655.75.75 0 0 1 0-.553C2.816 6.723 7.03 3.5 12.001 3.5c1.457 0 2.85.294 4.116.826L14.53 5.916A5.251 5.251 0 0 0 8.25 12a5.21 5.21 0 0 0 .617 2.47L4.867 16.842Z"/></svg>
+                    </button>
+                </div>
+                <div class="error-msg" id="password-error"></div>
+            </div>
+
+            <div class="field">
+                <label class="field-label" for="confirm-password">Confirm Password</label>
+                <div class="field-wrap">
+                    <span class="field-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 1.5a5.25 5.25 0 0 0-5.25 5.25v3a3 3 0 0 0-3 3v6.75a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3v-6.75a3 3 0 0 0-3-3v-3A5.25 5.25 0 0 0 12 1.5Zm3.75 8.25v-3a3.75 3.75 0 1 0-7.5 0v3h7.5Z" clip-rule="evenodd"/></svg></span>
+                    <input type="password" id="confirm-password" name="confirm-password" placeholder="Repeat password" required>
+                    <button type="button" class="pw-eye" data-target="confirm-password" aria-label="Toggle confirm password">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M3.53 2.47a.75.75 0 0 0-1.06 1.06l18 18a.75.75 0 1 0 1.06-1.06l-18-18ZM22.676 12.553a11.249 11.249 0 0 1-2.631 4.31l-3.099-3.099a5.25 5.25 0 0 0-6.71-6.71L7.759 4.577a11.217 11.217 0 0 1 4.242-.827c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113Z"/><path d="M15.75 12c0 .18-.013.357-.037.53l-4.244-4.243A3.75 3.75 0 0 1 15.75 12ZM12.25 15.75l-4.243-4.244a3.75 3.75 0 0 0 4.243 4.244ZM4.867 16.842l-1.634-1.635a11.25 11.25 0 0 1-1.909-3.655.75.75 0 0 1 0-.553C2.816 6.723 7.03 3.5 12.001 3.5c1.457 0 2.85.294 4.116.826L14.53 5.916A5.251 5.251 0 0 0 8.25 12a5.21 5.21 0 0 0 .617 2.47L4.867 16.842Z"/></svg>
+                    </button>
+                </div>
+                <div class="error-msg" id="confirm-password-error"></div>
+            </div>
+
+            <div class="field">
+                <label class="field-label" for="referral-code">Referral Code <span style="font-weight:400;color:var(--text-muted)">(Optional)</span></label>
+                <div class="field-wrap">
+                    <span class="field-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M19.902 4.098a3.75 3.75 0 0 0-5.304 0l-4.5 4.5a3.75 3.75 0 0 0 1.035 6.037.75.75 0 0 1-.646 1.353 5.25 5.25 0 0 1-1.449-8.45l4.5-4.5a5.25 5.25 0 1 1 7.424 7.424l-1.757 1.757a.75.75 0 1 1-1.06-1.06l1.757-1.757a3.75 3.75 0 0 0 0-5.304Zm-7.389 4.267a.75.75 0 0 1 1-.353 5.25 5.25 0 0 1 1.449 8.45l-4.5 4.5a5.25 5.25 0 1 1-7.424-7.424l1.757-1.757a.75.75 0 1 1 1.06 1.06l-1.757 1.757a3.75 3.75 0 1 0 5.304 5.304l4.5-4.5a3.75 3.75 0 0 0-.627-5.971.75.75 0 0 1-.354-1Z" clip-rule="evenodd"/></svg></span>
+                    <input type="text" id="referral-code" name="referral-code" placeholder="Enter referral code">
+                </div>
+            </div>
+
+            <div class="terms-row">
+                <input type="checkbox" id="terms" name="terms" required>
+                <label for="terms">I have read and agree to the <a href="terms.html" target="_blank">Terms of Service</a> &amp; <a href="privacy.html" target="_blank">Privacy Policy</a></label>
+            </div>
+            <div class="terms-error" id="terms-error">You must agree to the terms and conditions.</div>
+
+            <button type="submit" class="btn-submit" id="submit-btn">Create Free Account →</button>
+        </form>
+        <p class="login-line">Already have an account? <a href="login.html">Sign in →</a></p>
+    </div>
+
+    <p class="right-footer">&copy; 2026 CryptoPlexTrade &middot; <a href="privacy.html" style="color:inherit;">Privacy</a> &middot; <a href="terms.html" style="color:inherit;">Terms</a></p>
+</div>
+
+<div class="ticker-tape"><div class="ticker-tape__track" id="ticker-track"></div></div>
+
+<script>
+/* Password toggles */
+document.querySelectorAll('.pw-eye').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const inp = document.getElementById(btn.dataset.target);
+        inp.type = inp.type === 'password' ? 'text' : 'password';
+    });
+});
+
+/* Pre-fill referral from URL */
+const refCode = new URLSearchParams(window.location.search).get('ref');
+if (refCode) document.getElementById('referral-code').value = refCode;
+
+/* Form submit */
+document.getElementById('register-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    document.querySelectorAll('.error-msg').forEach(el => el.textContent = '');
+    document.querySelectorAll('input').forEach(el => el.classList.remove('is-error'));
+    document.getElementById('terms-error').style.display = 'none';
+
+    const fullname = document.getElementById('fullname');
+    const phone = document.getElementById('phone');
+    const email = document.getElementById('email');
+    const password = document.getElementById('password');
+    const confirmPw = document.getElementById('confirm-password');
+    const terms = document.getElementById('terms');
+    let valid = true;
+
+    if (!fullname.value.trim()) { document.getElementById('fullname-error').textContent = 'Full name is required.'; fullname.classList.add('is-error'); valid = false; }
+    if (!phone.value.trim()) { document.getElementById('phone-error').textContent = 'Phone number is required.'; phone.classList.add('is-error'); valid = false; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) { document.getElementById('email-error').textContent = 'Enter a valid email address.'; email.classList.add('is-error'); valid = false; }
+    if (password.value.length < 8) { document.getElementById('password-error').textContent = 'Password must be at least 8 characters.'; password.classList.add('is-error'); valid = false; }
+    if (confirmPw.value !== password.value) { document.getElementById('confirm-password-error').textContent = 'Passwords do not match.'; confirmPw.classList.add('is-error'); valid = false; }
+    if (!terms.checked) { document.getElementById('terms-error').style.display = 'block'; valid = false; }
+
+    if (!valid) return;
+
+    const btn = document.getElementById('submit-btn');
+    btn.textContent = 'Creating account…'; btn.disabled = true;
+
+    try {
+        const res = await fetch('/api/register', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ fullname: fullname.value.trim(), phone: phone.value.trim(), email: email.value.trim(), password: password.value, referralCode: document.getElementById('referral-code').value.trim() || null })
+        });
+        const data = await res.json();
+        if (res.status === 201) { window.location.href = 'register-success.html'; }
+        else { document.getElementById('server-error').textContent = data.message || 'An error occurred.'; document.getElementById('server-error').style.display = 'block'; btn.textContent = 'Create Free Account →'; btn.disabled = false; }
+    } catch { document.getElementById('server-error').textContent = 'Could not connect. Please try again.'; document.getElementById('server-error').style.display = 'block'; btn.textContent = 'Create Free Account →'; btn.disabled = false; }
+});
+
+/* Ticker */
+document.addEventListener('DOMContentLoaded', async () => {
+    const track = document.getElementById('ticker-track');
+    const syms = ['BTC','ETH','SOL','BNB','XRP','LTC','ADA','DOGE'];
+    async function load() {
+        try {
+            const r = await fetch(`https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${syms.join(',')}&tsyms=USD`);
+            const d = await r.json(); let html = '';
+            syms.forEach(s => { const c = d.RAW?.[s]?.USD; if(!c) return; const dir = c.CHANGEPCT24HOUR>=0?'up':'down'; html += `<div class="ticker-tape__item"><span class="pair">${s}/USD</span><span class="price">${c.PRICE.toLocaleString('en-US',{style:'currency',currency:'USD'})}</span><span class="change ${dir}">${dir==='up'?'+':''}${c.CHANGEPCT24HOUR.toFixed(2)}% ${dir==='up'?'▲':'▼'}</span></div>`; });
+            track.innerHTML = html + html;
+        } catch(e) {}
+    }
+    load(); setInterval(load, 60000);
+});
+</script>
+</body>
+</html>

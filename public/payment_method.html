@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Make Payment - CryptoPlexTrade</title>
+    <meta name="description" content="Choose your payment method and complete your crypto purchase on CryptoPlexTrade.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/app.css">
+    <style>
+        body { overflow-y: auto; }
+
+        .os-wrap { min-height: 100vh; background: var(--bg); display: flex; flex-direction: column; }
+
+        /* ── Topbar ─────────────────────────────────────── */
+        .os-topbar {
+            background: var(--bg-white); border-bottom: 1px solid var(--border);
+            padding: 0 32px; height: 62px;
+            display: flex; align-items: center; justify-content: space-between;
+            flex-shrink: 0; position: sticky; top: 0; z-index: 100;
+        }
+        .os-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .os-brand__orb {
+            width: 34px; height: 34px; border-radius: 9px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.72rem; font-weight: 800; color: white;
+        }
+        .os-brand__name { font-size: 0.9rem; font-weight: 700; color: var(--text-1); }
+        .os-topbar-right { display: flex; gap: 12px; align-items: center; }
+
+        /* ── Main ───────────────────────────────────────── */
+        .os-main {
+            flex: 1; display: flex; align-items: flex-start;
+            justify-content: center; padding: 40px 20px 100px;
+        }
+        .os-container { width: 100%; max-width: 560px; }
+
+        /* ── Steps ──────────────────────────────────────── */
+        .steps { display: flex; align-items: flex-start; gap: 0; margin-bottom: 32px; }
+        .step-item { flex: 1; display: flex; flex-direction: column; align-items: center; position: relative; }
+        .step-item:not(:last-child)::after {
+            content: ''; position: absolute; top: 18px; left: 50%;
+            width: 100%; height: 2px; background: var(--border); z-index: 0;
+        }
+        .step-item.done:not(:last-child)::after { background: var(--green); }
+        .step-num {
+            width: 36px; height: 36px; border-radius: 50%;
+            border: 2px solid var(--border-mid); background: white;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.8rem; font-weight: 700; color: var(--text-3);
+            position: relative; z-index: 1; transition: all 0.25s;
+        }
+        .step-item.active .step-num {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            border-color: transparent; color: white;
+            box-shadow: 0 0 0 4px rgba(0,91,170,0.15);
+        }
+        .step-item.done .step-num {
+            background: var(--green); border-color: transparent; color: white;
+        }
+        .step-label {
+            font-size: 0.72rem; font-weight: 600; color: var(--text-3);
+            margin-top: 8px; text-align: center; white-space: nowrap;
+        }
+        .step-item.active .step-label { color: var(--primary-dark); }
+        .step-item.done .step-label { color: var(--green); }
+
+        /* ── Payment Method Cards ────────────────────────── */
+        .section-label {
+            font-size: 0.72rem; font-weight: 700; color: var(--text-3);
+            text-transform: uppercase; letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .payment-options {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .payment-option-card {
+            background: var(--bg-white); border: 2px solid var(--border);
+            border-radius: 14px; padding: 22px 16px;
+            text-align: center; cursor: pointer;
+            transition: all 0.22s; display: flex; flex-direction: column;
+            align-items: center; gap: 10px;
+        }
+        .payment-option-card:hover {
+            border-color: var(--border-mid);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+        .payment-option-card.selected {
+            border-color: var(--primary);
+            background: var(--primary-pale);
+            box-shadow: 0 0 0 3px rgba(0,91,170,0.12);
+            transform: translateY(-2px);
+        }
+        .poc-icon {
+            width: 48px; height: 48px; border-radius: 12px;
+            background: var(--primary-pale);
+            display: flex; align-items: center; justify-content: center;
+            transition: background 0.2s;
+        }
+        .payment-option-card.selected .poc-icon {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+        }
+        .poc-icon svg { width: 24px; height: 24px; color: var(--primary); }
+        .payment-option-card.selected .poc-icon svg { color: white; }
+        .poc-label { font-size: 0.88rem; font-weight: 700; color: var(--text-1); }
+
+        /* ── Payment Details Panel ───────────────────────── */
+        .payment-details-panel {
+            background: var(--bg-white); border: 1px solid var(--border);
+            border-radius: 14px; box-shadow: var(--shadow-sm);
+            overflow: hidden; margin-bottom: 20px;
+            animation: panel-in 0.28s ease;
+        }
+        @keyframes panel-in { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .panel-header {
+            padding: 16px 22px; background: var(--primary-pale);
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; gap: 10px;
+        }
+        .panel-header h3 { font-size: 0.9rem; font-weight: 700; color: var(--primary-dark); margin: 0; }
+        .panel-header p { font-size: 0.78rem; color: var(--text-3); margin: 2px 0 0; }
+        .panel-header-text { flex: 1; }
+
+        .panel-rows { padding: 4px 0; }
+        .panel-row {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 13px 22px; border-bottom: 1px solid var(--border); gap: 12px;
+        }
+        .panel-row:last-child { border-bottom: none; }
+        .panel-row__label {
+            font-size: 0.78rem; font-weight: 600; color: var(--text-3);
+            flex-shrink: 0; white-space: nowrap;
+        }
+        .panel-row__value {
+            font-size: 0.875rem; font-weight: 600; color: var(--text-1);
+            text-align: right;
+        }
+        .panel-row__value.ref {
+            font-family: 'Courier New', monospace;
+            font-size: 1rem; color: var(--red);
+            letter-spacing: 2px; display: flex; align-items: center; gap: 10px;
+        }
+
+        /* Reference row: always stacked so Copy button never gets squeezed */
+        .panel-row--ref {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        .panel-row--ref .panel-row__label { white-space: normal; }
+        .ref-value-wrap {
+            display: flex; align-items: center; gap: 10px; width: 100%;
+        }
+        .ref-code {
+            font-family: 'Courier New', monospace;
+            font-size: 1rem; font-weight: 700;
+            color: var(--red); letter-spacing: 2px;
+            flex: 1;
+        }
+        .panel-network { display: flex; align-items: center; gap: 8px; }
+        .panel-network svg { border-radius: 3px; }
+
+        .copy-ref-btn {
+            background: var(--primary-pale); border: 1px solid rgba(0,91,170,0.2);
+            color: var(--primary); border-radius: 6px; padding: 4px 10px;
+            font-size: 0.73rem; font-weight: 700; cursor: pointer;
+            font-family: 'Poppins', sans-serif; transition: background 0.2s, color 0.2s;
+            white-space: nowrap;
+        }
+        .copy-ref-btn:hover { background: var(--primary); color: white; }
+
+        /* ── CTA ─────────────────────────────────────────── */
+        .os-cta { margin-top: 8px; }
+
+        /* mobile */
+        @media (max-width: 540px) {
+            .os-topbar { padding: 0 16px; }
+            .os-brand__name { display: none; }
+            .payment-options { grid-template-columns: 1fr 1fr; gap: 10px; }
+            .payment-option-card { padding: 16px 10px; }
+            .poc-label { font-size: 0.8rem; }
+            .panel-row { padding: 12px 16px; }
+            .panel-header { padding: 14px 16px; }
+            .step-label { font-size: 0.65rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="os-wrap">
+
+    <!-- Topbar -->
+    <header class="os-topbar">
+        <a href="dashboard.html" class="os-brand">
+            <div class="os-brand__orb">CP</div>
+            <span class="os-brand__name">CryptoPlexTrade</span>
+        </a>
+        <div class="os-topbar-right">
+            <a href="dashboard.html" class="btn btn-ghost btn-sm">Dashboard</a>
+            <a href="#" id="logout-btn" class="btn btn-danger btn-sm">Logout</a>
+        </div>
+    </header>
+
+    <main class="os-main">
+        <div class="os-container">
+
+            <!-- Step indicator -->
+            <div class="steps">
+                <div class="step-item done">
+                    <div class="step-num">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" style="width:14px;height:14px;"><path fill-rule="evenodd" d="M12.416 3.376a.75.75 0 0 1 .208 1.04l-5 7.5a.75.75 0 0 1-1.154.114l-3-3a.75.75 0 0 1 1.06-1.06l2.353 2.353 4.493-6.74a.75.75 0 0 1 1.04-.207Z" clip-rule="evenodd"/></svg>
+                    </div>
+                    <span class="step-label">Verify Order</span>
+                </div>
+                <div class="step-item active">
+                    <div class="step-num">2</div>
+                    <span class="step-label">Make Payment</span>
+                </div>
+                <div class="step-item">
+                    <div class="step-num">3</div>
+                    <span class="step-label">Confirm ID</span>
+                </div>
+            </div>
+
+            <!-- Method picker -->
+            <p class="section-label">Select a payment method</p>
+            <div class="payment-options">
+                <div class="payment-option-card" data-value="momo">
+                    <div class="poc-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M10.5 18.75a.75.75 0 0 0 0 1.5h3a.75.75 0 0 0 0-1.5h-3Z"/><path fill-rule="evenodd" d="M8.625.75A3.375 3.375 0 0 0 5.25 4.125v15.75a3.375 3.375 0 0 0 3.375 3.375h6.75a3.375 3.375 0 0 0 3.375-3.375V4.125A3.375 3.375 0 0 0 15.375.75h-6.75ZM7.5 4.125C7.5 3.504 8.004 3 8.625 3h6.75C15.996 3 16.5 3.504 16.5 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-6.75A1.125 1.125 0 0 1 7.5 19.875V4.125Z" clip-rule="evenodd"/></svg>
+                    </div>
+                    <span class="poc-label">Mobile Money</span>
+                </div>
+                <div class="payment-option-card" data-value="bank">
+                    <div class="poc-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11.584 2.376a.75.75 0 0 1 .832 0l9 6a.75.75 0 1 1-.832 1.248L12 3.901 3.416 9.624a.75.75 0 0 1-.832-1.248l9-6Z"/><path fill-rule="evenodd" d="M20.25 10.332v9.918H21a.75.75 0 0 1 0 1.5H3a.75.75 0 0 1 0-1.5h.75v-9.918a.75.75 0 0 1 0-1.498l8.25-5.5 8.25 5.5a.75.75 0 0 1 0 1.498ZM8.25 15a.75.75 0 0 1 .75-.75h6a.75.75 0 0 1 0 1.5h-6a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd"/></svg>
+                    </div>
+                    <span class="poc-label">Bank Transfer</span>
+                </div>
+            </div>
+
+            <!-- Mobile Money Details -->
+            <div id="momo-details" class="payment-details-panel" style="display:none;">
+                <div class="panel-header">
+                    <div class="panel-header-text">
+                        <h3>Mobile Money Instructions</h3>
+                        <p>Send the exact total to the number below and use the reference code.</p>
+                    </div>
+                </div>
+                <div class="panel-rows">
+                    <div class="panel-row">
+                        <span class="panel-row__label">Network</span>
+                        <span class="panel-row__value">
+                            <div class="panel-network">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 150" height="18" style="border-radius:3px;"><rect width="150" height="150" fill="#ffcc00"/><path d="M75 35c-22.1 0-40 17.9-40 40s17.9 40 40 40 40-17.9 40-40-17.9-40-40-40zm0 75c-19.3 0-35-15.7-35-35s15.7-35 35-35 35 15.7 35 35-15.7 35-35 35z" fill="#005baa"/><circle cx="75" cy="75" r="18" fill="#fff"/><circle cx="75" cy="75" r="12" fill="#005baa"/></svg>
+                                MTN Ghana
+                            </div>
+                        </span>
+                    </div>
+                    <div class="panel-row">
+                        <span class="panel-row__label">Recipient Name</span>
+                        <span class="panel-row__value">CryptoPlexTrade Ltd.</span>
+                    </div>
+                    <div class="panel-row">
+                        <span class="panel-row__label">MoMo Number</span>
+                        <span class="panel-row__value">024 123 4567</span>
+                    </div>
+                    <div class="panel-row panel-row--ref">
+                        <span class="panel-row__label">Payment Reference <span style="color:var(--red);">(Required)</span></span>
+                        <div class="ref-value-wrap">
+                            <span class="ref-code" id="payment-reference"></span>
+                            <button class="copy-ref-btn" id="copy-ref-btn">Copy</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bank Transfer Details -->
+            <div id="bank-details" class="payment-details-panel" style="display:none;">
+                <div class="panel-header">
+                    <div class="panel-header-text">
+                        <h3>Bank Transfer Instructions</h3>
+                        <p>Send the exact total to the account below via your bank app or branch.</p>
+                    </div>
+                </div>
+                <div class="panel-rows">
+                    <div class="panel-row">
+                        <span class="panel-row__label">Bank Name</span>
+                        <span class="panel-row__value">Global Trust Bank</span>
+                    </div>
+                    <div class="panel-row">
+                        <span class="panel-row__label">Account Name</span>
+                        <span class="panel-row__value">CryptoPlexTrade Ltd.</span>
+                    </div>
+                    <div class="panel-row">
+                        <span class="panel-row__label">Account Number</span>
+                        <span class="panel-row__value" style="font-family:monospace;letter-spacing:1px;">9040001234567</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CTA -->
+            <div class="os-cta">
+                <button id="proceed-to-confirmation" class="btn btn-primary btn-full btn-lg" disabled>
+                    Proceed to Confirmation →
+                </button>
+                <p style="text-align:center;font-size:0.76rem;color:var(--text-3);margin-top:14px;">
+                    By proceeding, you confirm that you have made the payment using the correct reference.
+                </p>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<!-- Ticker Tape -->
+<div class="ticker-tape"><div class="ticker-tape__track"></div></div>
+
+<script src="inactivity-timer.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+    // Logout
+    document.getElementById('logout-btn').addEventListener('click', async (e) => {
+        e.preventDefault();
+        await fetch('/api/logout', { method: 'POST' });
+        localStorage.removeItem('buyOrderDetails');
+        window.location.href = 'login.html';
+    });
+
+    // Generate Random Token
+    function generateToken(length = 8) {
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let result = '';
+        for (let i = 0; i < length; i++) {
+            result += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        return result;
+    }
+    document.getElementById('payment-reference').textContent = generateToken();
+
+    // UI elements
+    const paymentOptionCards = document.querySelectorAll('.payment-option-card');
+    const momoDetails  = document.getElementById('momo-details');
+    const bankDetails  = document.getElementById('bank-details');
+    const proceedBtn   = document.getElementById('proceed-to-confirmation');
+    const copyBtn      = document.getElementById('copy-ref-btn');
+
+    paymentOptionCards.forEach(card => {
+        card.addEventListener('click', function() {
+            paymentOptionCards.forEach(c => c.classList.remove('selected'));
+            this.classList.add('selected');
+            const val = this.dataset.value;
+            if (val === 'momo') { momoDetails.style.display = 'block'; bankDetails.style.display = 'none'; }
+            else if (val === 'bank') { momoDetails.style.display = 'none'; bankDetails.style.display = 'block'; }
+            proceedBtn.disabled = false;
+        });
+    });
+
+    proceedBtn.addEventListener('click', function() {
+        window.location.href = 'confirm_id.html';
+    });
+
+    copyBtn.addEventListener('click', function() {
+        const refText = document.getElementById('payment-reference').textContent;
+        navigator.clipboard.writeText(refText).then(() => {
+            const orig = this.textContent;
+            this.textContent = 'Copied!';
+            setTimeout(() => this.textContent = orig, 1500);
+        }).catch(err => console.error('Failed to copy:', err));
+    });
+
+    // --- Ticker Tape ---
+    const tickerTrack = document.querySelector('.ticker-tape__track');
+    const coinSymbols = ['BTC', 'ETH', 'SOL', 'BNB', 'XRP', 'LTC', 'ADA', 'DOGE'];
+
+    async function fetchLiveRates() {
+        try {
+            const r = await fetch(`https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${coinSymbols.join(',')}&tsyms=USD`);
+            if (!r.ok) throw new Error();
+            const data = await r.json();
+            let html = '';
+            coinSymbols.forEach(s => {
+                const c = data.RAW[s]?.USD; if (!c) return;
+                const dir = c.CHANGEPCT24HOUR >= 0 ? 'up' : 'down';
+                const sign = dir === 'up' ? '+' : '';
+                html += `<div class="ticker-tape__item"><span class="pair">${s}/USD</span><span class="price">${c.PRICE.toLocaleString('en-US',{style:'currency',currency:'USD',minimumFractionDigits:2})}</span><span class="change ${dir}">${sign}${c.CHANGEPCT24HOUR.toFixed(2)}% ${dir==='up'?'▲':'▼'}</span></div>`;
+            });
+            tickerTrack.innerHTML = html + html;
+        } catch(e) { console.error('Ticker error', e); }
+    }
+    fetchLiveRates();
+    setInterval(fetchLiveRates, 60000);
+});
+</script>
+
+</body>
+</html>

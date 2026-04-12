@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Rates - Admin</title>
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <!-- Mobile Hamburger Button -->
+    <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open menu">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+        </svg>
+    </button>
+    <!-- Sidebar overlay -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <!-- Mobile Top Bar -->
+    <div class="mobile-topbar">
+        <span class="mobile-page-title">Manage Rates</span>
+    </div>
+    <div class="admin-layout">
+        <aside class="admin-sidebar" id="admin-sidebar">
+            <button class="sidebar-close-btn" id="sidebar-close-btn" aria-label="Close menu">&times;</button>
+            <div class="sidebar-header">
+                <a href="index.html" class="logo-wrapper">
+                    <div class="logo">CE</div>
+                    <span class="logo-name">Admin Portal</span>
+                </a>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="index.html">Dashboard</a></li>
+                    <li><a href="transactions.html">Transactions</a></li>
+                    <li><a href="users.html">Users</a></li>
+                    <li><a href="support.html">Support Tickets</a></li>
+                    <li><a href="referrals.html">Referrals</a></li>
+                    <li><a href="rates.html" class="active">Manage Rates</a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="#" id="logout-btn">Logout</a>
+            </div>
+        </aside>
+        <main class="admin-content">
+            <div class="admin-header">
+                <h1>Manage Exchange Rates</h1>
+                <p>Update the platform's rates and fees.</p>
+            </div>
+
+            <div class="form-card">
+                <form id="rates-form">
+                    <h3>₿ Bitcoin (BTC) Rates</h3>
+                    <div class="form-group-inline">
+                        <div class="form-group">
+                            <label for="btc-buy-rate">We Sell At (GHS per $1)</label>
+                            <input type="number" id="btc-buy-rate" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="btc-sell-rate">We Buy At (GHS per $1)</label>
+                            <input type="number" id="btc-sell-rate" step="0.01" required>
+                        </div>
+                    </div>
+                    <h4>Mining Fees (USD)</h4>
+                    <div class="form-group-tri">
+                        <div class="form-group">
+                            <label for="btc-fee-priority">Priority 🔥</label>
+                            <input type="number" id="btc-fee-priority" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="btc-fee-standard">Standard ⚡</label>
+                            <input type="number" id="btc-fee-standard" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="btc-fee-economy">Economy 🌱</label>
+                            <input type="number" id="btc-fee-economy" step="0.01" required>
+                        </div>
+                    </div>
+
+                    <h3>Ξ Ethereum (ETH) Rates</h3>
+                    <div class="form-group-inline">
+                        <div class="form-group">
+                            <label for="eth-buy-rate">We Sell At (GHS per $1)</label>
+                            <input type="number" id="eth-buy-rate" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="eth-sell-rate">We Buy At (GHS per $1)</label>
+                            <input type="number" id="eth-sell-rate" step="0.01" required>
+                        </div>
+                    </div>
+                    <h4>Mining Fees (USD)</h4>
+                    <div class="form-group-tri">
+                        <div class="form-group">
+                            <label for="eth-fee-priority">Priority 🔥</label>
+                            <input type="number" id="eth-fee-priority" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="eth-fee-standard">Standard ⚡</label>
+                            <input type="number" id="eth-fee-standard" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="eth-fee-economy">Economy 🌱</label>
+                            <input type="number" id="eth-fee-economy" step="0.01" required>
+                        </div>
+                    </div>
+
+                    <h3>₮ USDT (TRC-20) Rates</h3>
+                    <div class="form-group-inline">
+                        <div class="form-group">
+                            <label for="usdt-trc20-buy-rate">We Sell At (GHS per $1)</label>
+                            <input type="number" id="usdt-trc20-buy-rate" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="usdt-trc20-sell-rate">We Buy At (GHS per $1)</label>
+                            <input type="number" id="usdt-trc20-sell-rate" step="0.01" required>
+                        </div>
+                    </div>
+                    <h4>Mining Fees (USD)</h4>
+                    <div class="form-group-tri">
+                        <div class="form-group">
+                            <label for="usdt-trc20-fee-priority">Priority 🔥</label>
+                            <input type="number" id="usdt-trc20-fee-priority" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="usdt-trc20-fee-standard">Standard ⚡</label>
+                            <input type="number" id="usdt-trc20-fee-standard" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="usdt-trc20-fee-economy">Economy 🌱</label>
+                            <input type="number" id="usdt-trc20-fee-economy" step="0.01" required>
+                        </div>
+                    </div>
+
+                    <h3>₮ USDT (ERC-20) Rates</h3>
+                    <div class="form-group-inline">
+                        <div class="form-group">
+                            <label for="usdt-erc20-buy-rate">We Sell At (GHS per $1)</label>
+                            <input type="number" id="usdt-erc20-buy-rate" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="usdt-erc20-sell-rate">We Buy At (GHS per $1)</label>
+                            <input type="number" id="usdt-erc20-sell-rate" step="0.01" required>
+                        </div>
+                    </div>
+                    <h4>Mining Fees (USD)</h4>
+                    <div class="form-group-tri">
+                        <div class="form-group">
+                            <label for="usdt-erc20-fee-priority">Priority 🔥</label>
+                            <input type="number" id="usdt-erc20-fee-priority" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="usdt-erc20-fee-standard">Standard ⚡</label>
+                            <input type="number" id="usdt-erc20-fee-standard" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="usdt-erc20-fee-economy">Economy 🌱</label>
+                            <input type="number" id="usdt-erc20-fee-economy" step="0.01" required>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-primary">Update Rates</button>
+                    <div id="form-message" class="message"></div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script src="admin.js"></script>
+    <script>
+        // Mobile sidebar toggle
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const sidebar = document.getElementById('admin-sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        const closeBtn = document.getElementById('sidebar-close-btn');
+        function openSidebar() {
+            sidebar.classList.add('sidebar-open');
+            overlay.classList.add('show');
+            overlay.style.display = 'block';
+        }
+        function closeSidebar() {
+            sidebar.classList.remove('sidebar-open');
+            overlay.classList.remove('show');
+            setTimeout(() => { overlay.style.display = 'none'; }, 300);
+        }
+        menuBtn.addEventListener('click', openSidebar);
+        closeBtn.addEventListener('click', closeSidebar);
+        overlay.addEventListener('click', closeSidebar);
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            const btcBuyRateInput = document.getElementById('btc-buy-rate');
+            const btcSellRateInput = document.getElementById('btc-sell-rate');
+            const ethBuyRateInput = document.getElementById('eth-buy-rate');
+            const ethSellRateInput = document.getElementById('eth-sell-rate');
+            const usdtTrc20BuyRateInput = document.getElementById('usdt-trc20-buy-rate');
+            const usdtTrc20SellRateInput = document.getElementById('usdt-trc20-sell-rate');
+            const usdtErc20BuyRateInput = document.getElementById('usdt-erc20-buy-rate');
+            const usdtErc20SellRateInput = document.getElementById('usdt-erc20-sell-rate');
+            const ratesForm = document.getElementById('rates-form');
+            const formMessage = document.getElementById('form-message');
+
+            const getFee = (coin, tier) => parseFloat(document.getElementById(`${coin}-fee-${tier}`).value) || 0;
+            const setFee = (coin, tier, val) => document.getElementById(`${coin}-fee-${tier}`).value = val || 0;
+
+            async function fetchCurrentRates() {
+                try {
+                    const response = await fetch('/api/admin/rates', { credentials: 'include' });
+                    if (response.status === 401 || response.status === 403) {
+                        window.location.href = '/admin-login';
+                        return;
+                    }
+                    if (!response.ok) throw new Error('Failed to fetch rates');
+                    const rates = await response.json();
+
+                    btcBuyRateInput.value = rates.BTC?.buy || 0;
+                    btcSellRateInput.value = rates.BTC?.sell || 0;
+                    
+                    ethBuyRateInput.value = rates.ETH?.buy || 0;
+                    ethSellRateInput.value = rates.ETH?.sell || 0;
+                    
+                    usdtTrc20BuyRateInput.value = rates.USDT_TRC20?.buy || 0;
+                    usdtTrc20SellRateInput.value = rates.USDT_TRC20?.sell || 0;
+                    
+                    usdtErc20BuyRateInput.value = rates.USDT_ERC20?.buy || 0;
+                    usdtErc20SellRateInput.value = rates.USDT_ERC20?.sell || 0;
+
+                    const safeSetFees = (coinId, dbKey) => {
+                        if(rates[dbKey] && rates[dbKey].minerFees) {
+                            setFee(coinId, 'priority', rates[dbKey].minerFees.find(f => f.name === 'Priority')?.value);
+                            setFee(coinId, 'standard', rates[dbKey].minerFees.find(f => f.name === 'Standard')?.value);
+                            setFee(coinId, 'economy', rates[dbKey].minerFees.find(f => f.name === 'Economy')?.value);
+                        }
+                    };
+
+                    safeSetFees('btc', 'BTC');
+                    safeSetFees('eth', 'ETH');
+                    safeSetFees('usdt-trc20', 'USDT_TRC20');
+                    safeSetFees('usdt-erc20', 'USDT_ERC20');
+
+                } catch (error) {
+                    formMessage.textContent = error.message;
+                    formMessage.className = 'message error';
+                }
+            }
+
+            ratesForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                formMessage.style.display = 'none';
+
+                const buildFeeObj = (coinId) => [
+                    { name: 'Priority', value: getFee(coinId, 'priority') },
+                    { name: 'Standard', value: getFee(coinId, 'standard') },
+                    { name: 'Economy',  value: getFee(coinId, 'economy') }
+                ];
+
+                const newRates = {
+                    BTC: {
+                        buy: parseFloat(btcBuyRateInput.value),
+                        sell: parseFloat(btcSellRateInput.value),
+                        minerFees: buildFeeObj('btc')
+                    },
+                    ETH: {
+                        buy: parseFloat(ethBuyRateInput.value),
+                        sell: parseFloat(ethSellRateInput.value),
+                        minerFees: buildFeeObj('eth')
+                    },
+                    USDT_TRC20: {
+                        buy: parseFloat(usdtTrc20BuyRateInput.value),
+                        sell: parseFloat(usdtTrc20SellRateInput.value),
+                        minerFees: buildFeeObj('usdt-trc20')
+                    },
+                    USDT_ERC20: {
+                        buy: parseFloat(usdtErc20BuyRateInput.value),
+                        sell: parseFloat(usdtErc20SellRateInput.value),
+                        minerFees: buildFeeObj('usdt-erc20')
+                    }
+                };
+
+                try {
+                    const csrfToken = getCookie('csrf-token');
+                    const response = await fetch('/api/admin/rates', {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrfToken },
+                        body: JSON.stringify(newRates)
+                    });
+                    if (response.status === 401 || response.status === 403) {
+                        window.location.href = '/admin-login';
+                        return;
+                    }
+                    const result = await response.json();
+                    if (!response.ok) throw new Error(result.message);
+
+                    formMessage.textContent = result.message;
+                    formMessage.className = 'message success';
+                } catch (error) {
+                    formMessage.textContent = `Error: ${error.message}`;
+                    formMessage.className = 'message error';
+                }
+                formMessage.style.display = 'block';
+            });
+
+            fetchCurrentRates();
+        });
+    </script>
+</body>
+</html>

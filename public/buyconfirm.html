@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirm Payment - CryptoPlexTrade</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        /* --- Main Content --- */
+        .main-content { flex-grow: 1; padding: 60px 0; }
+        .confirmation-wrapper {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 40px 50px; 
+            border-radius: 20px; 
+            box-shadow: 0 15px 35px var(--shadow-medium);
+            animation: fade-in-up 0.8s ease-out;
+        }
+        .confirmation-wrapper h1 { font-size: 2.5rem; color: var(--text-primary); margin-top: 0; margin-bottom: 30px; text-align: center; }
+        
+        /* Stepper */
+        .stepper { display: flex; justify-content: space-between; margin-bottom: 40px; position: relative; }
+        .stepper::before { content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 2px; background: var(--border-medium); transform: translateY(-50%); z-index: 1; }
+        .step { display: flex; flex-direction: column; align-items: center; z-index: 2; }
+        .step-number { width: 30px; height: 30px; border-radius: 50%; background: var(--border-medium); color: var(--bg-white); display: flex; align-items: center; justify-content: center; font-weight: 600; margin-bottom: 10px; transition: all 0.4s ease; }
+        .step-title { font-size: 0.9rem; font-weight: 500; color: var(--text-secondary); }
+        .step.active .step-number { background: var(--primary-color); transform: scale(1.2); }
+        .step.active .step-title { color: var(--primary-dark); }
+
+        .confirmation-section {
+            margin-bottom: 40px;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .confirmation-section h2 { font-size: 1.5rem; color: var(--text-primary); margin-top: 0; margin-bottom: 20px; border-bottom: 2px solid var(--border-light); padding-bottom: 10px; }
+        
+        /* Order Summary */
+        .summary-item { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border-light); }
+        .summary-item:last-child { border-bottom: none; }
+        .summary-item .label { color: var(--text-secondary); font-weight: 500; }
+        .summary-item .value { color: var(--text-primary); font-weight: 600; }
+        .summary-item .value.total { font-size: 1.2rem; color: var(--primary-dark); }
+        .summary-item .wallet { word-break: break-all; font-size: 0.9rem; }
+
+        /* Form Groups */
+        .form-group { position: relative; margin-bottom: 20px; }
+        .form-group label { display: block; font-weight: 600; color: var(--text-primary); margin-bottom: 8px; }
+        .form-group input, .form-group select { width: 100%; padding: 12px 15px; border: 1px solid var(--border-medium); border-radius: 8px; font-size: 1rem; box-sizing: border-box; transition: border-color 0.3s ease, box-shadow 0.3s ease; background-color: var(--bg-white); }
+        .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px var(--shadow-blue); }
+        
+        /* Payment Details Display */
+        .payment-details-display { margin-top: 20px; background-color: var(--bg-highlight); padding: 20px; border-radius: 8px; border-left: 4px solid var(--primary-color); }
+        .detail-item { margin-bottom: 15px; }
+        .detail-item .label { font-weight: 600; color: var(--text-primary); display: block; margin-bottom: 5px; }
+        .detail-item .value { background-color: var(--bg-white); padding: 10px; border-radius: 8px; font-weight: 500; border: 1px solid var(--border-light); }
+        .detail-item .value.reference { font-family: 'Courier New', Courier, monospace; font-size: 1.1rem; color: var(--accent-red); letter-spacing: 2px; }
+
+        #confirm-payment-btn { width: 100%; padding: 15px; font-size: 1.1rem; }
+
+        #server-message { padding: 15px; border-radius: 8px; margin-bottom: 20px; font-weight: 500; display: none; }
+        #server-message.success { background-color: #e9f5ec; color: #28a745; }
+        #server-message.error { background-color: #fbe9e7; color: #dc3545; }
+
+    </style>
+<link rel="stylesheet" href="/css/responsive.css">
+</head>
+<body class="animated-background">
+    <header class="header" style="background: transparent;">
+        <div class="container">
+            <a href="dashboard.html" class="logo-wrapper">
+                <div class="logo">CE</div>
+                <span class="logo-name">CryptoPlexTrade</span>
+            </a>
+            <nav class="nav">
+                <a href="dashboard.html">Dashboard</a>
+                <a href="#" id="logout-btn">Logout</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="confirmation-wrapper">
+                <h1>Confirm Your Payment</h1>
+                
+                <div class="stepper">
+                    <div class="step active">
+                        <div class="step-number">1</div>
+                        <div class="step-title">Verify Order</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-title">Make Payment</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-title">Confirm ID</div>
+                    </div>
+                </div>
+
+                <div id="server-message"></div>
+
+                <div class="confirmation-section" id="order-summary-section">
+                    <div class="order-summary">
+                        <h2>Order Summary</h2>
+                        <div class="summary-item">
+                            <span class="label">You are buying</span>
+                            <span class="value" id="summary-product"></span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="label">Amount (USD)</span>
+                            <span class="value" id="summary-usd"></span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="label">Miner Fee</span>
+                            <span class="value" id="summary-fee"></span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="label">Total to Pay</span>
+                            <span class="value total" id="summary-total"></span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="label">Receiving Wallet</span>
+                            <span class="value wallet" id="summary-wallet"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="confirmation-section" id="payment-method-section">
+                    <h2>Choose Payment Method</h2>
+                    <div class="form-group">
+                        <label for="payment-method">Select how you will pay:</label>
+                        <select id="payment-method">
+                            <option value="">-- Select a method --</option>
+                            <option value="momo">Mobile Money</option>
+                            <option value="bank">Bank Transfer</option>
+                        </select>
+                    </div>
+
+                    <!-- Mobile Money Details -->
+                    <div id="momo-details" class="payment-details-display" style="display: none;">
+                        <h3>Mobile Money Instructions</h3>
+                        <p>Please send the exact total amount to the details below and use the reference code.</p>
+                        <div class="detail-item">
+                            <span class="label">Recipient Name:</span>
+                            <span class="value">CryptoPlexTrade Ltd.</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">Number:</span>
+                            <span class="value">024 123 4567</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">Payment Reference (Required):</span>
+                            <span class="value reference" id="payment-reference"></span>
+                        </div>
+                    </div>
+
+                    <!-- Bank Details -->
+                    <div id="bank-details" class="payment-details-display" style="display: none;">
+                        <h3>Bank Transfer Instructions</h3>
+                        <p>Please send the exact total amount to the bank account below.</p>
+                        <div class="detail-item">
+                            <span class="label">Bank Name:</span>
+                            <span class="value">Global Trust Bank</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">Account Name:</span>
+                            <span class="value">CryptoPlexTrade Ltd.</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">Account Number:</span>
+                            <span class="value">9040001234567</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="confirmation-section" id="transaction-form-section">
+                    <h2>Confirm Your Transaction</h2>
+                    <form id="transaction-id-form">
+                        <div class="form-group">
+                            <label for="transaction-id">Enter Your Payment Transaction ID</label>
+                            <input type="text" id="transaction-id" name="transaction-id" required>
+                        </div>
+                        <button type="submit" id="confirm-payment-btn" class="btn-primary">I Have Paid, Confirm Now</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2026 CryptoPlexTrade. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <div class="ticker-tape">
+        <div class="ticker-tape__track"></div>
+    </div>
+
+    <script src="/js/ticker.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // ... (existing script logic)
+        });
+    </script>
+
+</body>
+</html>

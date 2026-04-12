@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - CryptoPlexTrade</title>
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <!-- Mobile Hamburger Button -->
+    <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open menu">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+        </svg>
+    </button>
+    <!-- Sidebar overlay -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <!-- Mobile Top Bar -->
+    <div class="mobile-topbar">
+        <span class="mobile-page-title">Dashboard</span>
+    </div>
+    <div class="admin-layout">
+        <aside class="admin-sidebar" id="admin-sidebar">
+            <button class="sidebar-close-btn" id="sidebar-close-btn" aria-label="Close menu">&times;</button>
+            <div class="sidebar-header">
+                <a href="index.html" class="logo-wrapper">
+                    <div class="logo">CE</div>
+                    <span class="logo-name">Admin Portal</span>
+                </a>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="index.html" class="active"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M10.5 18.75a.75.75 0 0 0 0 1.5h3a.75.75 0 0 0 0-1.5h-3Z" /><path fill-rule="evenodd" d="M8.625.75A3.375 3.375 0 0 0 5.25 4.125v15.75a3.375 3.375 0 0 0 3.375 3.375h6.75a3.375 3.375 0 0 0 3.375-3.375V4.125A3.375 3.375 0 0 0 15.375.75h-6.75ZM7.5 4.125C7.5 3.504 8.004 3 8.625 3h6.75C15.996 3 16.5 3.504 16.5 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-6.75A1.125 1.125 0 0 1 7.5 19.875V4.125Z" clip-rule="evenodd" /></svg>Dashboard</a></li>
+                    <li><a href="transactions.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M3 4.5h18v15H3v-15Zm6.75 10.5a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM12 15a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM15.75 15a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM9.75 9a.75.75 0 0 0-1.5 0v4.5a.75.75 0 0 0 1.5 0V9Zm3.75-3a.75.75 0 0 0-1.5 0v7.5a.75.75 0 0 0 1.5 0V6Zm2.25 1.5a.75.75 0 0 0-1.5 0v6a.75.75 0 0 0 1.5 0v-6Z" /></svg>Transactions</a></li>
+                    <li><a href="users.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M4.5 6.375a4.125 4.125 0 1 1 8.25 0 4.125 4.125 0 0 1-8.25 0ZM14.25 8.625a3.375 3.375 0 1 1 6.75 0 3.375 3.375 0 0 1-6.75 0ZM1.5 19.125a7.125 7.125 0 0 1 14.25 0v.003l-.001.119a.75.75 0 0 1-.363.63l-2.693 1.5c-.25.142-.565.142-.815 0l-2.693-1.5a.75.75 0 0 1-.363-.63V19.125Zm15.75 0v.003l-.001.119a.75.75 0 0 1-.363.63l-2.693 1.5c-.25.142-.565.142-.815 0l-2.693-1.5a.75.75 0 0 1-.363-.63V19.125a7.125 7.125 0 0 1 14.25 0Z" /></svg>Users</a></li>
+                    <li><a href="support.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm11.378-3.917c-.89-.777-2.366-.777-3.255 0a.75.75 0 0 1-1.06-1.06c2.298-2.013 5.824-2.013 8.122 0a.75.75 0 0 1-1.06 1.06ZM12 15.75a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" clip-rule="evenodd" /></svg>Support Tickets</a></li>
+                    <li><a href="referrals.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M10.5 4.5a.75.75 0 0 0 0 1.5h3a.75.75 0 0 0 0-1.5h-3Z" /><path fill-rule="evenodd" d="M12 1.5a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V2.25A.75.75 0 0 1 12 1.5ZM10.5 18a.75.75 0 0 0 0 1.5h3a.75.75 0 0 0 0-1.5h-3Zm1.5-1.5a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V17.25a.75.75 0 0 1 .75-.75ZM4.5 10.5a.75.75 0 0 0-1.5 0v3a.75.75 0 0 0 1.5 0v-3Zm1.5.75a.75.75 0 0 1 2.25-1.5h2.25a.75.75 0 0 1 0 1.5H7.5a.75.75 0 0 1-.75-.75Zm15-1.5a.75.75 0 0 0-1.5 0v3a.75.75 0 0 0 1.5 0v-3Zm-1.5.75a.75.75 0 0 1 .75-.75h2.25a.75.75 0 0 1 0 1.5H19.5a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" /></svg>Referrals</a></li>
+                    <li><a href="rates.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM9 7.5a.75.75 0 0 0 0 1.5h3.94l-1.72 1.72a.75.75 0 1 0 1.06 1.06l2.5-2.5a.75.75 0 0 0 0-1.06l-2.5-2.5a.75.75 0 0 0-1.06 1.06L12.94 7.5H9Zm6 9a.75.75 0 0 0 0-1.5h-3.94l1.72-1.72a.75.75 0 1 0-1.06-1.06l-2.5 2.5a.75.75 0 0 0 0 1.06l2.5 2.5a.75.75 0 1 0 1.06-1.06L11.06 16.5H15Z" clip-rule="evenodd" /></svg>Manage Rates</a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="#" id="logout-btn">Logout</a>
+            </div>
+        </aside>
+        <main class="admin-content">
+            <div class="admin-header">
+                <h1>Dashboard</h1>
+                <p>Overview of platform activity.</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Total Users</h3>
+                    <p id="stats-users">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Orders</h3>
+                    <p id="stats-orders">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Open Tickets</h3>
+                    <p id="stats-tickets">0</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="admin.js"></script>
+    <script>
+        // Mobile sidebar toggle
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const sidebar = document.getElementById('admin-sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        const closeBtn = document.getElementById('sidebar-close-btn');
+        function openSidebar() {
+            sidebar.classList.add('sidebar-open');
+            overlay.classList.add('show');
+            overlay.style.display = 'block';
+        }
+        function closeSidebar() {
+            sidebar.classList.remove('sidebar-open');
+            overlay.classList.remove('show');
+            setTimeout(() => { overlay.style.display = 'none'; }, 300);
+        }
+        menuBtn.addEventListener('click', openSidebar);
+        closeBtn.addEventListener('click', closeSidebar);
+        overlay.addEventListener('click', closeSidebar);
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                const response = await fetch('/api/admin/stats', { credentials: 'include' });
+                if (response.status === 401 || response.status === 403) {
+                    window.location.href = '/admin-login'; // Redirect to admin login
+                    return;
+                }
+                if (!response.ok) throw new Error('Failed to fetch stats');
+
+                const stats = await response.json();
+                document.getElementById('stats-users').textContent = stats.users;
+                document.getElementById('stats-orders').textContent = stats.orders;
+                document.getElementById('stats-tickets').textContent = stats.openTickets;
+
+            } catch (error) {
+                console.error('Error fetching dashboard stats:', error);
+                document.querySelector('.stats-grid').innerHTML = '<p class="error-message">Could not load dashboard stats.</p>';
+            }
+        });
+    </script>
+</body>
+</html>

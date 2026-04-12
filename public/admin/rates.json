@@ -1,0 +1,17 @@
+{
+  "btcToGhs": 13.01,
+  "minerFees": [
+    {
+      "name": "Priority",
+      "value": 0.99
+    },
+    {
+      "name": "Standard",
+      "value": 0.74
+    },
+    {
+      "name": "Economy",
+      "value": 0.5
+    }
+  ]
+}

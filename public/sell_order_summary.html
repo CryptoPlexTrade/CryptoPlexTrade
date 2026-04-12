@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Sell Order - CryptoPlexTrade</title>
+    <meta name="description" content="Review and verify your sell order before proceeding to send crypto.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/app.css">
+    <style>
+        body { overflow-y: auto; }
+        .os-wrap { min-height: 100vh; background: var(--bg); display: flex; flex-direction: column; }
+
+        .os-topbar {
+            background: var(--bg-white); border-bottom: 1px solid var(--border);
+            padding: 0 32px; height: 62px;
+            display: flex; align-items: center; justify-content: space-between;
+            flex-shrink: 0; position: sticky; top: 0; z-index: 100;
+        }
+        .os-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .os-brand__orb {
+            width: 34px; height: 34px; border-radius: 9px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.72rem; font-weight: 800; color: white;
+        }
+        .os-brand__name { font-size: 0.9rem; font-weight: 700; color: var(--text-1); }
+        .os-topbar-right { display: flex; gap: 12px; align-items: center; }
+
+        .os-main {
+            flex: 1; display: flex; align-items: flex-start;
+            justify-content: center; padding: 40px 20px 100px;
+        }
+        .os-container { width: 100%; max-width: 560px; }
+
+        /* Steps */
+        .steps { display: flex; align-items: flex-start; margin-bottom: 32px; }
+        .step-item { flex: 1; display: flex; flex-direction: column; align-items: center; position: relative; }
+        .step-item:not(:last-child)::after {
+            content: ''; position: absolute; top: 18px; left: 50%;
+            width: 100%; height: 2px; background: var(--border); z-index: 0;
+        }
+        .step-item.active:not(:last-child)::after { background: var(--primary); }
+        .step-num {
+            width: 36px; height: 36px; border-radius: 50%;
+            border: 2px solid var(--border-mid); background: white;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.8rem; font-weight: 700; color: var(--text-3);
+            position: relative; z-index: 1; transition: all 0.25s;
+        }
+        .step-item.active .step-num {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            border-color: transparent; color: white;
+            box-shadow: 0 0 0 4px rgba(0,91,170,0.15);
+        }
+        .step-label {
+            font-size: 0.72rem; font-weight: 600; color: var(--text-3);
+            margin-top: 8px; text-align: center; white-space: nowrap;
+        }
+        .step-item.active .step-label { color: var(--primary-dark); }
+
+        /* Summary Card */
+        .summary-card {
+            background: var(--bg-white); border: 1px solid var(--border);
+            border-radius: 16px; box-shadow: var(--shadow-md); overflow: hidden;
+        }
+        .summary-card__header {
+            padding: 22px 28px 18px; border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; gap: 14px;
+            background: linear-gradient(135deg, #f0fff4 0%, white 100%);
+        }
+        .summary-card__icon {
+            width: 50px; height: 50px; border-radius: 14px;
+            background: linear-gradient(135deg, #16a34a, #22c55e);
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .summary-card__icon svg { width: 24px; height: 24px; color: white; }
+        .summary-card__titles h2 { font-size: 1.1rem; font-weight: 800; color: var(--text-1); margin: 0 0 2px; }
+        .summary-card__titles p { font-size: 0.8rem; color: var(--text-3); margin: 0; }
+
+        .summary-rows { padding: 6px 0; }
+        .summary-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 14px 28px; border-bottom: 1px solid var(--border);
+            opacity: 0; transform: translateX(-12px);
+            animation: row-in 0.4s ease forwards;
+        }
+        .summary-row:last-child { border-bottom: none; }
+        .summary-row:nth-child(1) { animation-delay: 0.05s; }
+        .summary-row:nth-child(2) { animation-delay: 0.12s; }
+        @keyframes row-in { to { opacity: 1; transform: translateX(0); } }
+        .summary-row__label { font-size: 0.825rem; font-weight: 600; color: var(--text-3); }
+        .summary-row__value { font-size: 0.9rem; font-weight: 700; color: var(--text-1); text-align: right; }
+        .summary-row--total { background: #f0fff4; }
+        .summary-row--total .summary-row__label { font-size: 0.875rem; font-weight: 700; color: #15803d; }
+        .summary-row--total .summary-row__value { font-size: 1.25rem; color: #16a34a; }
+
+        .os-cta { padding: 22px 28px; border-top: 1px solid var(--border); background: white; }
+
+        @media (max-width: 540px) {
+            .os-topbar { padding: 0 16px; }
+            .os-brand__name { display: none; }
+            .summary-card__header, .summary-row, .os-cta { padding-left: 18px; padding-right: 18px; }
+            .step-label { font-size: 0.65rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="os-wrap">
+
+    <header class="os-topbar">
+        <a href="dashboard.html" class="os-brand">
+            <div class="os-brand__orb">CP</div>
+            <span class="os-brand__name">CryptoPlexTrade</span>
+        </a>
+        <div class="os-topbar-right">
+            <a href="dashboard.html" class="btn btn-ghost btn-sm">Dashboard</a>
+            <a href="#" id="logout-btn" class="btn btn-danger btn-sm">Logout</a>
+        </div>
+    </header>
+
+    <main class="os-main">
+        <div class="os-container">
+
+            <div class="steps">
+                <div class="step-item active">
+                    <div class="step-num">1</div>
+                    <span class="step-label">Verify Order</span>
+                </div>
+                <div class="step-item">
+                    <div class="step-num">2</div>
+                    <span class="step-label">Send Crypto</span>
+                </div>
+                <div class="step-item">
+                    <div class="step-num">3</div>
+                    <span class="step-label">Payout Details</span>
+                </div>
+            </div>
+
+            <div class="summary-card">
+                <div class="summary-card__header">
+                    <div class="summary-card__icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 7.5a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5Z"/><path fill-rule="evenodd" d="M1.5 4.875C1.5 3.839 2.34 3 3.375 3h17.25c1.035 0 1.875.84 1.875 1.875v9.75c0 1.036-.84 1.875-1.875 1.875H3.375A1.875 1.875 0 0 1 1.5 14.625v-9.75ZM8.25 9.75a3.75 3.75 0 1 1 7.5 0 3.75 3.75 0 0 1-7.5 0ZM18.75 9a.75.75 0 0 0-.75.75v.008c0 .414.336.75.75.75h.008a.75.75 0 0 0 .75-.75V9.75a.75.75 0 0 0-.75-.75h-.008ZM4.5 9.75A.75.75 0 0 1 5.25 9h.008a.75.75 0 0 1 .75.75v.008a.75.75 0 0 1-.75.75H5.25a.75.75 0 0 1-.75-.75V9.75Z" clip-rule="evenodd"/><path d="M2.25 18a.75.75 0 0 0 0 1.5c5.4 0 10.63.722 15.6 2.075 1.19.324 2.4-.558 2.4-1.82V18.75a.75.75 0 0 0-.75-.75H2.25Z"/></svg>
+                    </div>
+                    <div class="summary-card__titles">
+                        <h2>Sell Order Summary</h2>
+                        <p>Please review your details before proceeding</p>
+                    </div>
+                </div>
+
+                <div class="summary-rows">
+                    <div class="summary-row">
+                        <span class="summary-row__label">You are selling</span>
+                        <span class="summary-row__value" id="summary-product-amount">—</span>
+                    </div>
+                    <div class="summary-row summary-row--total">
+                        <span class="summary-row__label">You Will Receive</span>
+                        <span class="summary-row__value" id="summary-ghs">—</span>
+                    </div>
+                </div>
+
+                <div class="os-cta">
+                    <button id="proceed-to-payment" class="btn btn-primary btn-full btn-lg">
+                        Proceed to Send Crypto →
+                    </button>
+                    <div style="display:flex;gap:18px;justify-content:center;margin-top:16px;flex-wrap:wrap;">
+                        <div style="display:flex;align-items:center;gap:5px;font-size:0.72rem;color:var(--text-3);font-weight:500;">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" style="width:13px;height:13px;color:var(--green);"><path fill-rule="evenodd" d="M12 1.5a5.25 5.25 0 0 0-5.25 5.25v3a3 3 0 0 0-3 3v6.75a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3v-6.75a3 3 0 0 0-3-3v-3A5.25 5.25 0 0 0 12 1.5Z" clip-rule="evenodd"/></svg>
+                            256-bit SSL
+                        </div>
+                        <div style="display:flex;align-items:center;gap:5px;font-size:0.72rem;color:var(--text-3);font-weight:500;">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" style="width:13px;height:13px;color:var(--green);"><path fill-rule="evenodd" d="M12.516 2.17a.75.75 0 0 0-1.032 0 11.209 11.209 0 0 1-7.877 3.08.75.75 0 0 0-.722.515A12.74 12.74 0 0 0 2.25 9.75c0 5.942 4.064 10.933 9.563 12.348a.749.749 0 0 0 .374 0c5.499-1.415 9.563-6.406 9.563-12.348 0-1.39-.223-2.73-.635-3.985a.75.75 0 0 0-.722-.516l-.143.001c-2.996 0-5.717-1.17-7.734-3.08Z" clip-rule="evenodd"/></svg>
+                            Secured &amp; Trusted
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<div class="ticker-tape"><div class="ticker-tape__track"></div></div>
+
+<script src="inactivity-timer.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const orderDetails = JSON.parse(localStorage.getItem('sellOrderDetails'));
+    if (!orderDetails) {
+        alert('No sell order details found. Redirecting to trade page.');
+        window.location.href = 'trade.html';
+        return;
+    }
+
+    // Logout
+    document.getElementById('logout-btn').addEventListener('click', async (e) => {
+        e.preventDefault();
+        await fetch('/api/logout', { method: 'POST' });
+        localStorage.removeItem('sellOrderDetails');
+        window.location.href = 'login.html';
+    });
+
+    // Populate summary
+    document.getElementById('summary-product-amount').textContent = `${parseFloat(orderDetails.productAmount).toFixed(8)} ${orderDetails.product}`;
+    document.getElementById('summary-ghs').textContent = `₵ ${parseFloat(orderDetails.ghsToReceive).toFixed(2)}`;
+
+    document.getElementById('proceed-to-payment').addEventListener('click', function() {
+        window.location.href = 'sell_send_crypto.html';
+    });
+
+    // Ticker Tape
+    const tickerTrack = document.querySelector('.ticker-tape__track');
+    const coinSymbols = ['BTC', 'ETH', 'SOL', 'BNB', 'XRP', 'LTC', 'ADA', 'DOGE'];
+    async function fetchLiveRates() {
+        try {
+            const r = await fetch(`https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${coinSymbols.join(',')}&tsyms=USD`);
+            if (!r.ok) throw new Error();
+            const data = await r.json();
+            let html = '';
+            coinSymbols.forEach(s => {
+                const c = data.RAW[s]?.USD; if (!c) return;
+                const dir = c.CHANGEPCT24HOUR >= 0 ? 'up' : 'down';
+                const sign = dir === 'up' ? '+' : '';
+                html += `<div class="ticker-tape__item"><span class="pair">${s}/USD</span><span class="price">${c.PRICE.toLocaleString('en-US',{style:'currency',currency:'USD',minimumFractionDigits:2})}</span><span class="change ${dir}">${sign}${c.CHANGEPCT24HOUR.toFixed(2)}% ${dir==='up'?'▲':'▼'}</span></div>`;
+            });
+            tickerTrack.innerHTML = html + html;
+        } catch(e) { console.error('Ticker error', e); }
+    }
+    fetchLiveRates();
+    setInterval(fetchLiveRates, 60000);
+});
+</script>
+</body>
+</html>

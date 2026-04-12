@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send Crypto - CryptoPlexTrade</title>
+    <meta name="description" content="Send your cryptocurrency to complete your sell order on CryptoPlexTrade.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/app.css">
+    <style>
+        body { overflow-y: auto; }
+        .os-wrap { min-height: 100vh; background: var(--bg); display: flex; flex-direction: column; }
+
+        /* Topbar */
+        .os-topbar {
+            background: var(--bg-white); border-bottom: 1px solid var(--border);
+            padding: 0 32px; height: 62px;
+            display: flex; align-items: center; justify-content: space-between;
+            flex-shrink: 0; position: sticky; top: 0; z-index: 100;
+        }
+        .os-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .os-brand__orb {
+            width: 34px; height: 34px; border-radius: 9px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.72rem; font-weight: 800; color: white;
+        }
+        .os-brand__name { font-size: 0.9rem; font-weight: 700; color: var(--text-1); }
+        .os-topbar-right { display: flex; gap: 12px; align-items: center; }
+
+        .os-main {
+            flex: 1; display: flex; align-items: flex-start;
+            justify-content: center; padding: 40px 20px 100px;
+        }
+        .os-container { width: 100%; max-width: 560px; }
+
+        /* Steps */
+        .steps { display: flex; align-items: flex-start; margin-bottom: 32px; }
+        .step-item { flex: 1; display: flex; flex-direction: column; align-items: center; position: relative; }
+        .step-item:not(:last-child)::after {
+            content: ''; position: absolute; top: 18px; left: 50%;
+            width: 100%; height: 2px; background: var(--border); z-index: 0;
+        }
+        .step-item.done:not(:last-child)::after { background: var(--green); }
+        .step-num {
+            width: 36px; height: 36px; border-radius: 50%;
+            border: 2px solid var(--border-mid); background: white;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.8rem; font-weight: 700; color: var(--text-3);
+            position: relative; z-index: 1; transition: all 0.25s;
+        }
+        .step-item.active .step-num {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            border-color: transparent; color: white;
+            box-shadow: 0 0 0 4px rgba(0,91,170,0.15);
+        }
+        .step-item.done .step-num {
+            background: var(--green); border-color: transparent; color: white;
+        }
+        .step-label {
+            font-size: 0.72rem; font-weight: 600; color: var(--text-3);
+            margin-top: 8px; text-align: center; white-space: nowrap;
+        }
+        .step-item.active .step-label { color: var(--primary-dark); }
+        .step-item.done .step-label { color: var(--green); }
+
+        /* Main card */
+        .summary-card {
+            background: var(--bg-white); border: 1px solid var(--border);
+            border-radius: 16px; box-shadow: var(--shadow-md); overflow: hidden;
+        }
+        .summary-card__header {
+            padding: 22px 28px 18px; border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; gap: 14px;
+            background: linear-gradient(135deg, #f0f7ff 0%, white 100%);
+        }
+        .summary-card__icon {
+            width: 50px; height: 50px; border-radius: 14px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .summary-card__icon svg { width: 24px; height: 24px; color: white; }
+        .summary-card__titles h2 { font-size: 1.1rem; font-weight: 800; color: var(--text-1); margin: 0 0 2px; }
+        .summary-card__titles p { font-size: 0.8rem; color: var(--text-3); margin: 0; }
+
+        /* Address box */
+        .address-section { padding: 24px 28px; border-bottom: 1px solid var(--border); }
+        .address-label {
+            font-size: 0.78rem; font-weight: 600; color: var(--text-3);
+            margin-bottom: 10px;
+        }
+        .address-box {
+            background: var(--primary-pale);
+            border: 1.5px dashed rgba(0,91,170,0.35);
+            border-radius: 12px; padding: 16px 18px;
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 12px;
+        }
+        .address-code {
+            font-family: 'Courier New', monospace;
+            font-size: 0.82rem; font-weight: 700;
+            color: var(--primary-dark); word-break: break-all; flex: 1;
+        }
+        .copy-addr-btn {
+            background: var(--primary); color: white;
+            border: none; border-radius: 8px; padding: 7px 14px;
+            font-size: 0.73rem; font-weight: 700; cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            white-space: nowrap; flex-shrink: 0;
+            transition: opacity 0.2s;
+        }
+        .copy-addr-btn:hover { opacity: 0.85; }
+        .address-warning {
+            display: flex; align-items: flex-start; gap: 8px;
+            margin-top: 10px; padding: 10px 14px;
+            background: #fff7ed; border: 1px solid #fed7aa;
+            border-radius: 8px; font-size: 0.76rem; color: #9a3412; font-weight: 500;
+        }
+        .address-warning svg { width: 14px; height: 14px; flex-shrink: 0; margin-top: 1px; }
+
+        /* TXID form */
+        .txid-section { padding: 22px 28px; border-bottom: 1px solid var(--border); }
+        .txid-section label {
+            display: block; font-size: 0.82rem; font-weight: 700;
+            color: var(--text-1); margin-bottom: 8px;
+        }
+        .txid-section input {
+            width: 100%; padding: 11px 14px; box-sizing: border-box;
+            border: 1.5px solid var(--border-mid); border-radius: 10px;
+            font-size: 0.875rem; font-family: 'Poppins', sans-serif; color: var(--text-1);
+            background: white; transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .txid-section input:focus {
+            outline: none; border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0,91,170,0.12);
+        }
+        .txid-section input::placeholder { color: var(--text-3); }
+
+        .os-cta { padding: 22px 28px; background: white; }
+
+        @media (max-width: 540px) {
+            .os-topbar { padding: 0 16px; }
+            .os-brand__name { display: none; }
+            .summary-card__header, .address-section, .txid-section, .os-cta { padding-left: 18px; padding-right: 18px; }
+            .step-label { font-size: 0.65rem; }
+            .address-code { font-size: 0.72rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="os-wrap">
+
+    <header class="os-topbar">
+        <a href="dashboard.html" class="os-brand">
+            <div class="os-brand__orb">CP</div>
+            <span class="os-brand__name">CryptoPlexTrade</span>
+        </a>
+        <div class="os-topbar-right">
+            <a href="dashboard.html" class="btn btn-ghost btn-sm">Dashboard</a>
+            <a href="#" id="logout-btn" class="btn btn-danger btn-sm">Logout</a>
+        </div>
+    </header>
+
+    <main class="os-main">
+        <div class="os-container">
+
+            <!-- Steps -->
+            <div class="steps">
+                <div class="step-item done">
+                    <div class="step-num">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" style="width:14px;height:14px;"><path fill-rule="evenodd" d="M12.416 3.376a.75.75 0 0 1 .208 1.04l-5 7.5a.75.75 0 0 1-1.154.114l-3-3a.75.75 0 0 1 1.06-1.06l2.353 2.353 4.493-6.74a.75.75 0 0 1 1.04-.207Z" clip-rule="evenodd"/></svg>
+                    </div>
+                    <span class="step-label">Verify Order</span>
+                </div>
+                <div class="step-item active">
+                    <div class="step-num">2</div>
+                    <span class="step-label">Send Crypto</span>
+                </div>
+                <div class="step-item">
+                    <div class="step-num">3</div>
+                    <span class="step-label">Payout Details</span>
+                </div>
+            </div>
+
+            <form id="send-crypto-form">
+                <div class="summary-card">
+                    <div class="summary-card__header">
+                        <div class="summary-card__icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M3.478 2.405a.75.75 0 0 0-.926.94l2.432 7.905H13.5a.75.75 0 0 1 0 1.5H4.984l-2.432 7.905a.75.75 0 0 0 .926.94 60.519 60.519 0 0 0 18.445-8.986.75.75 0 0 0 0-1.218A60.517 60.517 0 0 0 3.478 2.405Z"/></svg>
+                        </div>
+                        <div class="summary-card__titles">
+                            <h2>Send Your Crypto</h2>
+                            <p id="deposit-label">Please send the exact amount to the address below</p>
+                        </div>
+                    </div>
+
+                    <!-- Deposit Address -->
+                    <div class="address-section">
+                        <p class="address-label">Our receiving address</p>
+                        <div class="address-box">
+                            <span class="address-code" id="deposit-address">—</span>
+                            <button type="button" class="copy-addr-btn" id="copy-addr-btn">Copy</button>
+                        </div>
+                        <div class="address-warning">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" clip-rule="evenodd"/></svg>
+                            Ensure you are sending on the correct network. Sending to the wrong network will result in the permanent loss of your funds.
+                        </div>
+                    </div>
+
+                    <!-- TXID Input -->
+                    <div class="txid-section">
+                        <label for="transaction-id">Your Crypto Transaction ID (TXID)</label>
+                        <input type="text" id="transaction-id" name="transaction-id"
+                               placeholder="Enter the TXID from your wallet after sending" required>
+                    </div>
+
+                    <div class="os-cta">
+                        <button type="submit" id="proceed-to-payout" class="btn btn-primary btn-full btn-lg">
+                            Next: Enter Payout Details →
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </main>
+</div>
+
+<div class="ticker-tape"><div class="ticker-tape__track"></div></div>
+
+<script src="inactivity-timer.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+    const csrfToken = getCookie('csrf-token');
+
+    const orderDetails = JSON.parse(localStorage.getItem('sellOrderDetails'));
+    fetch('/api/user/me', { credentials: 'include' })
+        .then(response => {
+            if (response.status === 401 || response.status === 403 || !orderDetails) {
+                window.location.href = 'login.html';
+            }
+        }).catch(() => window.location.href = 'login.html');
+
+    // Logout
+    document.getElementById('logout-btn').addEventListener('click', async (e) => {
+        e.preventDefault();
+        const response = await fetch('/api/logout', { method: 'POST', headers: { 'X-CSRF-Token': csrfToken } });
+        if (!response.ok) return;
+        localStorage.removeItem('sellOrderDetails');
+        window.location.href = 'login.html';
+    });
+
+    // Wallet addresses per product
+    const walletAddresses = {
+        BTC: 'bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh',
+        ETH: '0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B'
+    };
+
+    const product = orderDetails?.product || 'BTC';
+    const depositAddress = walletAddresses[product];
+
+    document.getElementById('deposit-label').textContent = `Please send the exact amount of ${product} to the address below:`;
+    document.getElementById('deposit-address').textContent = depositAddress;
+
+    // Copy address button
+    document.getElementById('copy-addr-btn').addEventListener('click', function() {
+        navigator.clipboard.writeText(depositAddress).then(() => {
+            const orig = this.textContent;
+            this.textContent = 'Copied!';
+            setTimeout(() => this.textContent = orig, 1500);
+        }).catch(err => console.error('Copy failed:', err));
+    });
+
+    // Form submit
+    const transactionIdInput = document.getElementById('transaction-id');
+    document.getElementById('send-crypto-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const transactionId = transactionIdInput.value.trim();
+        if (!transactionId) {
+            alert('Please enter your crypto transaction ID to proceed.');
+            transactionIdInput.focus();
+            return;
+        }
+        const updatedOrderDetails = { ...orderDetails, transactionId };
+        localStorage.setItem('sellOrderDetails', JSON.stringify(updatedOrderDetails));
+        window.location.href = 'sell_payout_details.html';
+    });
+
+    // Ticker Tape
+    const tickerTrack = document.querySelector('.ticker-tape__track');
+    const coinSymbols = ['BTC', 'ETH', 'SOL', 'BNB', 'XRP', 'LTC', 'ADA', 'DOGE'];
+    async function fetchLiveRates() {
+        try {
+            const r = await fetch(`https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${coinSymbols.join(',')}&tsyms=USD`);
+            if (!r.ok) throw new Error();
+            const data = await r.json();
+            let html = '';
+            coinSymbols.forEach(s => {
+                const c = data.RAW[s]?.USD; if (!c) return;
+                const dir = c.CHANGEPCT24HOUR >= 0 ? 'up' : 'down';
+                const sign = dir === 'up' ? '+' : '';
+                html += `<div class="ticker-tape__item"><span class="pair">${s}/USD</span><span class="price">${c.PRICE.toLocaleString('en-US',{style:'currency',currency:'USD',minimumFractionDigits:2})}</span><span class="change ${dir}">${sign}${c.CHANGEPCT24HOUR.toFixed(2)}% ${dir==='up'?'▲':'▼'}</span></div>`;
+            });
+            tickerTrack.innerHTML = html + html;
+        } catch(e) { console.error('Ticker error', e); }
+    }
+    fetchLiveRates();
+    setInterval(fetchLiveRates, 60000);
+});
+</script>
+</body>
+</html>

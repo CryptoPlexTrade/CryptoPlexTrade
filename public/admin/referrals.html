@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Referrals - Admin</title>
+    <link rel="stylesheet" href="admin.css?v=2">
+</head>
+<body>
+    <!-- Mobile Hamburger Button -->
+    <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open menu">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+        </svg>
+    </button>
+    <!-- Sidebar overlay -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <!-- Mobile Top Bar -->
+    <div class="mobile-topbar">
+        <span class="mobile-page-title">Referral Tracking</span>
+    </div>
+    <div class="admin-layout">
+        <aside class="admin-sidebar" id="admin-sidebar">
+            <button class="sidebar-close-btn" id="sidebar-close-btn" aria-label="Close menu">&times;</button>
+            <div class="sidebar-header">
+                <a href="index.html" class="logo-wrapper">
+                    <div class="logo">CE</div>
+                    <span class="logo-name">Admin Portal</span>
+                </a>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="index.html">Dashboard</a></li>
+                    <li><a href="transactions.html">Transactions</a></li>
+                    <li><a href="users.html">Users</a></li>
+                    <li><a href="support.html">Support Tickets</a></li>
+                    <li><a href="referrals.html" class="active">Referrals</a></li>
+                    <li><a href="rates.html">Manage Rates</a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="#" id="logout-btn">Logout</a>
+            </div>
+        </aside>
+        <main class="admin-content">
+            <div class="admin-header">
+                <h1>Referral Tracking</h1>
+                <p>Monitor successful referrals and user activity.</p>
+            </div>
+
+            <div class="filter-controls">
+                <div class="filter-group">
+                    <label>Filter by Transaction Status</label>
+                    <div class="csd-wrapper" id="filter-transacted-csd" data-value="all">
+                        <button type="button" class="csd-trigger">
+                            <span class="csd-label">All Referrals</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        </button>
+                        <div class="csd-dropdown">
+                            <div class="csd-option csd-active" data-value="all">All Referrals</div>
+                            <div class="csd-option" data-value="yes">Has Transacted</div>
+                            <div class="csd-option" data-value="no">Has Not Transacted</div>
+                        </div>
+                        <select id="filter-transacted" style="display:none">
+                            <option value="all" selected>All Referrals</option>
+                            <option value="yes">Has Transacted</option>
+                            <option value="no">Has Not Transacted</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Referrer</th>
+                            <th>Referred User</th>
+                            <th>Referred User Joined</th>
+                            <th>Has Transacted?</th>
+                        </tr>
+                    </thead>
+                    <tbody id="referrals-tbody">
+                        <!-- Referral data will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <script src="admin.js"></script>
+    <script>
+        // Mobile sidebar toggle
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const sidebar = document.getElementById('admin-sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        const closeBtn = document.getElementById('sidebar-close-btn');
+        function openSidebar() {
+            sidebar.classList.add('sidebar-open');
+            overlay.classList.add('show');
+            overlay.style.display = 'block';
+        }
+        function closeSidebar() {
+            sidebar.classList.remove('sidebar-open');
+            overlay.classList.remove('show');
+            setTimeout(() => { overlay.style.display = 'none'; }, 300);
+        }
+        menuBtn.addEventListener('click', openSidebar);
+        closeBtn.addEventListener('click', closeSidebar);
+        overlay.addEventListener('click', closeSidebar);
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            const tbody = document.getElementById('referrals-tbody');
+            let allReferrals = []; // Store all fetched data
+
+            async function fetchReferrals() {
+                try {
+                    tbody.innerHTML = '<tr><td colspan="4">Loading...</td></tr>';
+                    const response = await fetch('/api/admin/referrals', { credentials: 'include' });
+                    if (response.status === 401 || response.status === 403) {
+                        window.location.href = '/admin-login';
+                        return;
+                    }
+                    if (!response.ok) throw new Error('Failed to fetch referral data');
+                    allReferrals = await response.json();
+                    renderReferrals(allReferrals);
+                } catch (error) {
+                    tbody.innerHTML = `<tr><td colspan="4" class="error-message">${error.message}</td></tr>`;
+                }
+            }
+
+            function renderReferrals(referrals) {
+                tbody.innerHTML = '';
+                if (referrals.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4">No referral data found.</td></tr>';
+                    return;
+                }
+                referrals.forEach(ref => {
+                    const row = document.createElement('tr');
+                    const hasTransacted = ref.has_transacted;
+                    row.innerHTML = `
+                        <td data-label="Referrer">${ref.referrer_name} (${ref.referrer_email})</td>
+                        <td data-label="Referred User">${ref.referred_name} (${ref.referred_email})</td>
+                        <td data-label="Date Joined">${new Date(ref.referred_join_date).toLocaleString()}</td>
+                        <td data-label="Has Transacted?">
+                            <span class="status-badge status-${hasTransacted ? 'completed' : 'failed'}">
+                                ${hasTransacted ? 'Yes' : 'No'}
+                            </span>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }
+
+            function applyFilters() {
+                const filterValue = document.getElementById('filter-transacted').value;
+                let filteredReferrals = [...allReferrals];
+
+                if (filterValue === 'yes') {
+                    filteredReferrals = allReferrals.filter(ref => ref.has_transacted);
+                } else if (filterValue === 'no') {
+                    filteredReferrals = allReferrals.filter(ref => !ref.has_transacted);
+                }
+
+                renderReferrals(filteredReferrals);
+            }
+
+            // ── Custom Status Dropdown Logic ────────────────────────────
+            function closeAllDropdowns(except) {
+                document.querySelectorAll('.csd-wrapper.csd-open').forEach(el => {
+                    if (el !== except) el.classList.remove('csd-open');
+                });
+            }
+
+            function positionCSD(wrapper) {
+                const trigger  = wrapper.querySelector('.csd-trigger');
+                const dropdown = wrapper.querySelector('.csd-dropdown');
+                const rect     = trigger.getBoundingClientRect();
+                const maxH     = 260; // matches CSS max-height
+                const gap      = 6;
+                const spaceBelow = window.innerHeight - rect.bottom;
+                const spaceAbove = rect.top;
+
+                dropdown.style.left  = rect.left + 'px';
+                dropdown.style.width = Math.max(rect.width, 160) + 'px';
+
+                if (spaceBelow >= Math.min(maxH, 120) + gap || spaceBelow >= spaceAbove) {
+                    // Open downward
+                    dropdown.style.top    = (rect.bottom + gap) + 'px';
+                    dropdown.style.bottom = 'auto';
+                    dropdown.style.maxHeight = Math.min(maxH, spaceBelow - gap - 8) + 'px';
+                } else {
+                    // Flip upward
+                    dropdown.style.bottom = (window.innerHeight - rect.top + gap) + 'px';
+                    dropdown.style.top    = 'auto';
+                    dropdown.style.maxHeight = Math.min(maxH, spaceAbove - gap - 8) + 'px';
+                }
+            }
+
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.csd-wrapper')) closeAllDropdowns(null);
+            });
+
+            document.querySelector('.filter-controls').addEventListener('click', function(e) {
+                // Toggle trigger
+                if (e.target.closest('.csd-trigger')) {
+                    e.preventDefault(); e.stopPropagation();
+                    const wrapper = e.target.closest('.csd-wrapper');
+                    const isOpen = wrapper.classList.contains('csd-open');
+                    closeAllDropdowns(null);
+                    if (!isOpen) { positionCSD(wrapper); wrapper.classList.add('csd-open'); }
+                    return;
+                }
+                // Select an option
+                if (e.target.closest('.csd-option')) {
+                    e.preventDefault(); e.stopPropagation();
+                    const option = e.target.closest('.csd-option');
+                    const wrapper = option.closest('.csd-wrapper');
+                    const value = option.dataset.value;
+
+                    // Update trigger UI
+                    wrapper.querySelector('.csd-label').textContent = option.textContent.trim();
+                    wrapper.querySelectorAll('.csd-option').forEach(o => o.classList.remove('csd-active'));
+                    option.classList.add('csd-active');
+
+                    // Sync hidden select and refilter
+                    const hiddenSelect = wrapper.querySelector('select');
+                    hiddenSelect.value = value;
+                    wrapper.dataset.value = value;
+                    wrapper.classList.remove('csd-open');
+                    
+                    applyFilters();
+                }
+            });
+
+            // Initial fetch
+            fetchReferrals();
+        });
+    </script>
+</body>
+</html>

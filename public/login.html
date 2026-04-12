@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - CryptoPlexTrade</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --blue-deep:  #004a8a;
+            --blue-main:  #005baa;
+            --blue-light: #00a9e0;
+            --blue-pale:  #e8f4fe;
+            --blue-soft:  #c8e5f8;
+            --white:      #ffffff;
+            --text-dark:  #0f172a;
+            --text-mid:   #334155;
+            --text-muted: #94a3b8;
+            --border:     #dde9f7;
+            --shadow-b:   rgba(0,91,170,0.15);
+            --green:      #16a34a;
+            --red:        #dc2626;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh; display: flex;
+            background: var(--white);
+            color: var(--text-dark);
+            overflow: hidden;
+        }
+
+        /* ============================================
+           LEFT  — visual showcase panel
+        ============================================ */
+        .left {
+            flex: 0 0 52%;
+            position: relative;
+            display: flex; flex-direction: column;
+            justify-content: space-between;
+            padding: 36px 50px 30px;
+            background: linear-gradient(145deg, #dbeefa 0%, #b8dbf5 35%, #8dc8f0 65%, #5aaee0 100%);
+            overflow: hidden;
+        }
+
+        /* Decorative circles */
+        .deco-circle {
+            position: absolute; border-radius: 50%;
+            pointer-events: none;
+        }
+        .deco-circle:nth-child(1) {
+            width: 520px; height: 520px;
+            top: -160px; right: -140px;
+            background: radial-gradient(circle, rgba(255,255,255,.45) 0%, transparent 70%);
+        }
+        .deco-circle:nth-child(2) {
+            width: 340px; height: 340px;
+            bottom: -80px; left: -80px;
+            background: radial-gradient(circle, rgba(0,91,170,.18) 0%, transparent 70%);
+        }
+        .deco-circle:nth-child(3) {
+            width: 200px; height: 200px;
+            bottom: 120px; right: 60px;
+            background: radial-gradient(circle, rgba(255,255,255,.3) 0%, transparent 70%);
+        }
+
+        /* Grid dots pattern */
+        .left::before {
+            content: '';
+            position: absolute; inset: 0;
+            background-image: radial-gradient(rgba(0,74,138,.12) 1.5px, transparent 1.5px);
+            background-size: 28px 28px;
+            pointer-events: none;
+        }
+
+        /* ---- Brand ---- */
+        .left-brand {
+            position: relative; z-index: 2;
+            display: flex; align-items: center; gap: 10px;
+            text-decoration: none;
+        }
+        .brand-orb {
+            width: 44px; height: 44px; border-radius: 14px;
+            background: linear-gradient(135deg, var(--blue-main), var(--blue-light));
+            display: flex; align-items: center; justify-content: center;
+            font-size: .9rem; font-weight: 800; color: #fff;
+            box-shadow: 0 6px 18px rgba(0,91,170,.35);
+        }
+        .brand-txt { font-size: 1.15rem; font-weight: 700; color: var(--blue-deep); }
+
+        /* ---- Centre visual ---- */
+        .left-visual {
+            position: relative; z-index: 2;
+            flex: 1; display: flex; flex-direction: column;
+            justify-content: center; padding: 20px 0;
+        }
+
+        .left-headline {
+            font-size: 3rem; font-weight: 800;
+            line-height: 1.15;
+            color: var(--blue-deep);
+            margin-bottom: 14px;
+        }
+        .left-headline em {
+            font-style: normal;
+            background: linear-gradient(90deg, var(--blue-main), var(--blue-light));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .left-sub {
+            font-size: 1rem; color: var(--blue-deep);
+            opacity: .7; line-height: 1.7; max-width: 380px;
+            margin-bottom: 36px;
+        }
+
+        /* Coin orbit ring */
+        .orbit-stage {
+            position: relative;
+            width: 220px; height: 220px;
+            margin: 4px auto 0;
+        }
+        .orbit-ring {
+            position: absolute; inset: 0;
+            border-radius: 50%;
+            border: 1.5px dashed rgba(0,74,138,.25);
+        }
+        .orbit-ring:nth-child(2) { inset: 30px; animation: spin-cw  14s linear infinite; }
+        .orbit-ring:nth-child(3) { inset: 60px; animation: spin-ccw 10s linear infinite; }
+        @keyframes spin-cw  { to { transform: rotate(360deg);  } }
+        @keyframes spin-ccw { to { transform: rotate(-360deg); } }
+
+        .hub {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%,-50%);
+            width: 70px; height: 70px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--blue-main), var(--blue-light));
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.6rem; color: #fff;
+            box-shadow: 0 0 0 12px rgba(0,91,170,.1), 0 8px 28px rgba(0,91,170,.35);
+            animation: hub-pulse 3s ease-in-out infinite;
+            z-index: 2;
+        }
+        @keyframes hub-pulse {
+            0%,100% { box-shadow: 0 0 0 12px rgba(0,91,170,.1), 0 8px 28px rgba(0,91,170,.35); }
+            50%      { box-shadow: 0 0 0 22px rgba(0,91,170,.06), 0 8px 36px rgba(0,91,170,.45); }
+        }
+
+        /* Orbiting coin badges */
+        .coin-node {
+            position: absolute;
+            width: 38px; height: 38px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: .72rem; font-weight: 700; color: #fff;
+            background: var(--blue-main);
+            box-shadow: 0 4px 12px rgba(0,91,170,.3);
+            transform-origin: center;
+        }
+        /* BTC top of outer ring */
+        .orbit-ring:nth-child(2) .coin-node:nth-child(1) { top:-19px; left:50%; margin-left:-19px; background:linear-gradient(135deg,#005baa,#0077cc); }
+        .orbit-ring:nth-child(2) .coin-node:nth-child(2) { bottom:-19px; left:50%; margin-left:-19px; background:linear-gradient(135deg,#0077b6,#00a9e0); }
+        .orbit-ring:nth-child(3) .coin-node:nth-child(1) { top:-19px; left:50%; margin-left:-19px; background:linear-gradient(135deg,#004e89,#0096c7); }
+        .orbit-ring:nth-child(3) .coin-node:nth-child(2) { bottom:-19px; left:50%; margin-left:-19px; background:linear-gradient(135deg,#0066aa,#48cae4); }
+
+
+
+        /* ============================================
+           RIGHT — form panel
+        ============================================ */
+        .right {
+            flex: 1;
+            display: flex; flex-direction: column;
+            justify-content: space-between;
+            padding: 36px 50px 30px;
+            background: #fff;
+            overflow-y: auto;
+        }
+
+        .right-top-nav {
+            display: flex; align-items: center; justify-content: flex-end;
+            gap: 24px;
+        }
+        .right-top-nav a {
+            font-size: .85rem; color: var(--text-muted);
+            text-decoration: none; font-weight: 500;
+            transition: color .2s;
+        }
+        .right-top-nav a:hover { color: var(--blue-main); }
+        .right-top-nav .nav-cta {
+            background: var(--blue-pale);
+            color: var(--blue-main); font-weight: 600;
+            padding: 8px 20px; border-radius: 50px;
+            border: 1.5px solid rgba(0,91,170,.15);
+            transition: background .2s, border-color .2s;
+        }
+        .right-top-nav .nav-cta:hover { background: #d3eaf9; border-color: var(--blue-main); }
+
+        /* Form area */
+        .form-area {
+            flex: 1; display: flex; flex-direction: column;
+            justify-content: center; max-width: 360px;
+            margin: 0 auto; width: 100%;
+            padding: 20px 0;
+        }
+
+        .form-pretag {
+            display: inline-flex; align-items: center; gap: 7px;
+            background: var(--blue-pale);
+            color: var(--blue-main); border-radius: 50px;
+            padding: 5px 14px; font-size: .75rem; font-weight: 600;
+            letter-spacing: .4px; margin-bottom: 22px;
+        }
+        .form-pretag .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--blue-light); animation: dot-blink 1.5s infinite; }
+        @keyframes dot-blink { 0%,100%{opacity:1;} 50%{opacity:.3;} }
+
+        .form-title  { font-size: 2rem; font-weight: 700; color: var(--text-dark); margin-bottom: 6px; }
+        .form-sub    { font-size: .88rem; color: var(--text-muted); margin-bottom: 32px; }
+
+        /* Error */
+        #server-error {
+            background: rgba(220,38,38,.07);
+            border: 1px solid rgba(220,38,38,.2);
+            color: var(--red); border-radius: 10px;
+            padding: 10px 14px; font-size: .83rem; font-weight: 500;
+            margin-bottom: 18px; display: none;
+        }
+
+        /* Fields */
+        .field { margin-bottom: 18px; }
+        .field-label {
+            display: block; font-size: .8rem; font-weight: 600;
+            color: var(--text-mid); margin-bottom: 8px;
+        }
+        .field-input-wrap { position: relative; }
+        .field-icon {
+            position: absolute; left: 14px; top: 50%;
+            transform: translateY(-50%); color: var(--text-muted);
+            display: flex; pointer-events: none;
+        }
+        .field-icon svg { width: 17px; height: 17px; }
+        .field-input-wrap input {
+            width: 100%;
+            padding: 13px 44px 13px 42px;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: .93rem; color: var(--text-dark);
+            background: #fafcff; outline: none;
+            transition: border-color .2s, box-shadow .2s, background .2s;
+        }
+        .field-input-wrap input::placeholder { color: var(--text-muted); }
+        .field-input-wrap input:focus {
+            border-color: var(--blue-main);
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(0,91,170,.1);
+        }
+        .pw-eye {
+            position: absolute; right: 13px; top: 50%;
+            transform: translateY(-50%);
+            background: none; border: none; cursor: pointer;
+            color: var(--text-muted); padding: 0; display: flex;
+            transition: color .2s;
+        }
+        .pw-eye:hover { color: var(--blue-main); }
+        .pw-eye svg { width: 18px; height: 18px; }
+
+        /* Row beneath password */
+        .field-meta {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-top: 6px; margin-bottom: 26px;
+        }
+        .check-label {
+            display: flex; align-items: center; gap: 7px;
+            font-size: .8rem; color: var(--text-mid); cursor: pointer;
+        }
+        .check-label input { accent-color: var(--blue-main); width: 14px; height: 14px; }
+        .field-meta a {
+            font-size: .8rem; color: var(--blue-main); font-weight: 600;
+            text-decoration: none; transition: opacity .2s;
+        }
+        .field-meta a:hover { opacity: .7; }
+
+        /* Submit */
+        .btn-submit {
+            width: 100%; padding: 14px;
+            border: none; border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem; font-weight: 700; color: #fff;
+            background: linear-gradient(90deg, var(--blue-main) 0%, var(--blue-light) 100%);
+            background-size: 200% 100%;
+            cursor: pointer; position: relative; overflow: hidden;
+            box-shadow: 0 6px 20px var(--shadow-b);
+            transition: background-position .35s, transform .2s, box-shadow .2s;
+        }
+        .btn-submit:hover {
+            background-position: 100% 0;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 28px rgba(0,91,170,.28);
+        }
+        .btn-submit:active { transform: translateY(0); }
+        .btn-submit::after {
+            content: ''; position: absolute; top: 0; left: -100%;
+            width: 55%; height: 100%;
+            background: linear-gradient(120deg, transparent, rgba(255,255,255,.3), transparent);
+            transition: left .45s;
+        }
+        .btn-submit:hover::after { left: 140%; }
+
+        /* Divider */
+        .divider {
+            display: flex; align-items: center; gap: 12px;
+            font-size: .75rem; color: var(--text-muted);
+            margin: 20px 0;
+        }
+        .divider::before, .divider::after {
+            content: ''; flex: 1; height: 1px; background: var(--border);
+        }
+
+        .signup-line {
+            text-align: center; font-size: .85rem; color: var(--text-muted);
+        }
+        .signup-line a { color: var(--blue-main); font-weight: 600; text-decoration: none; }
+        .signup-line a:hover { text-decoration: underline; }
+
+        /* Trust icons row */
+        .trust-strip {
+            display: flex; gap: 18px; flex-wrap: wrap;
+            justify-content: center; margin-top: 28px;
+        }
+        .trust-item {
+            display: flex; align-items: center; gap: 5px;
+            font-size: .7rem; color: var(--text-muted);
+        }
+        .trust-item svg { width: 13px; height: 13px; color: var(--green); }
+
+        /* Bottom footer of right */
+        .right-footer {
+            text-align: center;
+            font-size: .75rem; color: var(--text-muted);
+        }
+
+        /* ============================================
+           TICKER TAPE
+        ============================================ */
+        .ticker-tape {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: var(--text-dark);
+            border-top: 2px solid var(--blue-main);
+            padding: 8px 0; z-index: 300;
+            overflow: hidden; white-space: nowrap;
+        }
+        .ticker-tape__track { display: inline-block; animation: ticker 40s linear infinite; }
+        @keyframes ticker { to { transform: translateX(-50%); } }
+        .ticker-tape__item { display: inline-flex; align-items: center; padding: 0 22px; font-size: .83rem; }
+        .ticker-tape__item .pair  { font-weight: 600; margin-right: 9px; color: #64748b; }
+        .ticker-tape__item .price { font-weight: 500; margin-right: 7px; color: #e2e8f0; }
+        .change.up   { color: #22d3a5; font-weight: 600; }
+        .change.down { color: #f87171; font-weight: 600; }
+
+        /* Responsive */
+        @media (max-width:860px) {
+            .left { display: none; }
+            .right { padding: 30px 24px; }
+        }
+    </style>
+<link rel="stylesheet" href="/css/responsive.css">
+</head>
+<body>
+
+<!-- ======================================
+     LEFT PANEL
+======================================= -->
+<div class="left">
+    <!-- decorative circles -->
+    <div class="deco-circle"></div>
+    <div class="deco-circle"></div>
+    <div class="deco-circle"></div>
+
+    <!-- brand -->
+    <a href="index.html" class="left-brand">
+        <div class="brand-orb">CP</div>
+        <span class="brand-txt">CryptoPlexTrade</span>
+    </a>
+
+    <!-- centre visual -->
+    <div class="left-visual">
+        <h1 class="left-headline">
+            Trade Smarter.<br>
+            <em>Earn Bigger.</em>
+        </h1>
+        <p class="left-sub">Join thousands of traders transacting billions in digital assets every day — securely, instantly, in your local currency.</p>
+
+        <!-- Orbit visual -->
+        <div class="orbit-stage">
+            <div class="orbit-ring"></div> <!-- static outer ring -->
+            <div class="orbit-ring">
+                <div class="coin-node">₿</div>
+                <div class="coin-node">Ξ</div>
+            </div>
+            <div class="orbit-ring">
+                <div class="coin-node">₮</div>
+                <div class="coin-node">◎</div>
+            </div>
+            <div class="hub">₿</div>
+        </div>
+    </div>
+
+
+</div>
+
+<!-- ======================================
+     RIGHT PANEL
+======================================= -->
+<div class="right">
+    <!-- Top nav -->
+    <nav class="right-top-nav">
+        <a href="index.html#rates">Rates</a>
+        <a href="contact.html">Support</a>
+        <a href="register.html" class="nav-cta">Create Account</a>
+    </nav>
+
+    <!-- Form -->
+    <div class="form-area">
+        <div class="form-pretag">
+            <span class="dot"></span>
+            Secure Login
+        </div>
+
+        <h2 class="form-title">Sign in</h2>
+        <p class="form-sub">Welcome back — enter your details to continue</p>
+
+        <div id="server-error"></div>
+
+        <form id="login-form" novalidate>
+            <!-- Email -->
+            <div class="field">
+                <label class="field-label" for="email">Email Address</label>
+                <div class="field-input-wrap">
+                    <span class="field-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M1.5 8.67v8.58a3 3 0 0 0 3 3h15a3 3 0 0 0 3-3V8.67l-8.928 5.493a3 3 0 0 1-3.144 0L1.5 8.67Z"/>
+                            <path d="M22.5 6.908V6.75a3 3 0 0 0-3-3h-15a3 3 0 0 0-3 3v.158l9.714 5.978a1.5 1.5 0 0 0 1.572 0L22.5 6.908Z"/>
+                        </svg>
+                    </span>
+                    <input type="email" id="email" name="email" placeholder="you@example.com" required autocomplete="email">
+                </div>
+            </div>
+
+            <!-- Password -->
+            <div class="field">
+                <label class="field-label" for="password">Password</label>
+                <div class="field-input-wrap">
+                    <span class="field-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path fill-rule="evenodd" d="M12 1.5a5.25 5.25 0 0 0-5.25 5.25v3a3 3 0 0 0-3 3v6.75a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3v-6.75a3 3 0 0 0-3-3v-3A5.25 5.25 0 0 0 12 1.5Zm3.75 8.25v-3a3.75 3.75 0 1 0-7.5 0v3h7.5Z" clip-rule="evenodd"/>
+                        </svg>
+                    </span>
+                    <input type="password" id="password" name="password" placeholder="••••••••" required autocomplete="current-password">
+                    <button type="button" class="pw-eye" id="pw-btn" aria-label="Toggle password">
+                        <svg id="eye-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M3.53 2.47a.75.75 0 0 0-1.06 1.06l18 18a.75.75 0 1 0 1.06-1.06l-18-18ZM22.676 12.553a11.249 11.249 0 0 1-2.631 4.31l-3.099-3.099a5.25 5.25 0 0 0-6.71-6.71L7.759 4.577a11.217 11.217 0 0 1 4.242-.827c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113Z"/><path d="M15.75 12c0 .18-.013.357-.037.53l-4.244-4.243A3.75 3.75 0 0 1 15.75 12ZM12.25 15.75l-4.243-4.244a3.75 3.75 0 0 0 4.243 4.244ZM4.867 16.842l-1.634-1.635a11.25 11.25 0 0 1-1.909-3.655.75.75 0 0 1 0-.553C2.816 6.723 7.03 3.5 12.001 3.5c1.457 0 2.85.294 4.116.826L14.53 5.916A5.251 5.251 0 0 0 8.25 12a5.21 5.21 0 0 0 .617 2.47L4.867 16.842Z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Remember / Forgot -->
+            <div class="field-meta">
+                <label class="check-label">
+                    <input type="checkbox" id="remember">
+                    Remember me
+                </label>
+                <a href="forgot-password.html">Forgot password?</a>
+            </div>
+
+            <button type="submit" class="btn-submit" id="submit-btn">Sign In to Account</button>
+        </form>
+
+        <div class="divider">or</div>
+
+        <p class="signup-line">New here? <a href="register.html">Create a free account →</a></p>
+
+        <!-- Trust -->
+        <div class="trust-strip">
+            <div class="trust-item">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 1.5a5.25 5.25 0 0 0-5.25 5.25v3a3 3 0 0 0-3 3v6.75a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3v-6.75a3 3 0 0 0-3-3v-3A5.25 5.25 0 0 0 12 1.5Z" clip-rule="evenodd"/></svg>
+                256-bit SSL
+            </div>
+            <div class="trust-item">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M8.603 3.799A4.49 4.49 0 0 1 12 2.25c1.357 0 2.573.6 3.397 1.549a4.49 4.49 0 0 1 3.498 1.307 4.491 4.491 0 0 1 1.307 3.497A4.49 4.49 0 0 1 21.75 12a4.49 4.49 0 0 1-1.549 3.397 4.491 4.491 0 0 1-1.307 3.497 4.491 4.491 0 0 1-3.497 1.307A4.49 4.49 0 0 1 12 21.75a4.49 4.49 0 0 1-3.397-1.549 4.49 4.49 0 0 1-3.498-1.306 4.491 4.491 0 0 1-1.307-3.498A4.49 4.49 0 0 1 2.25 12c0-1.357.6-2.573 1.549-3.397a4.49 4.49 0 0 1 1.307-3.497 4.49 4.49 0 0 1 3.497-1.307Zm7.007 6.387a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd"/></svg>
+                Verified & Trusted
+            </div>
+            <div class="trust-item">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12.516 2.17a.75.75 0 0 0-1.032 0 11.209 11.209 0 0 1-7.877 3.08.75.75 0 0 0-.722.515A12.74 12.74 0 0 0 2.25 9.75c0 5.942 4.064 10.933 9.563 12.348a.749.749 0 0 0 .374 0c5.499-1.415 9.563-6.406 9.563-12.348 0-1.39-.223-2.73-.635-3.985a.75.75 0 0 0-.722-.516l-.143.001c-2.996 0-5.717-1.17-7.734-3.08Z" clip-rule="evenodd"/></svg>
+                2FA Protected
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <p class="right-footer">&copy; 2026 CryptoPlexTrade &middot; <a href="privacy.html" style="color:inherit;">Privacy</a> &middot; <a href="terms.html" style="color:inherit;">Terms</a></p>
+</div>
+
+<!-- Ticker Tape -->
+<div class="ticker-tape">
+    <div class="ticker-tape__track" id="ticker-track"></div>
+</div>
+
+<script>
+/* ---- Password toggle ---- */
+(function(){
+    const btn = document.getElementById('pw-btn');
+    const inp = document.getElementById('password');
+    const svg = document.getElementById('eye-svg');
+    const OPEN = '<path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path fill-rule="evenodd" d="M1.323 11.447C2.811 6.976 7.028 3.75 12.001 3.75c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113-1.487 4.471-5.705 7.697-10.677 7.697-4.97 0-9.186-3.223-10.675-7.69a.75.75 0 0 1 0-1.113ZM17.25 12a5.25 5.25 0 1 1-10.5 0 5.25 5.25 0 0 1 10.5 0Z" clip-rule="evenodd"/>';
+    const CLOSED = '<path d="M3.53 2.47a.75.75 0 0 0-1.06 1.06l18 18a.75.75 0 1 0 1.06-1.06l-18-18ZM22.676 12.553a11.249 11.249 0 0 1-2.631 4.31l-3.099-3.099a5.25 5.25 0 0 0-6.71-6.71L7.759 4.577a11.217 11.217 0 0 1 4.242-.827c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113Z"/><path d="M15.75 12c0 .18-.013.357-.037.53l-4.244-4.243A3.75 3.75 0 0 1 15.75 12ZM12.25 15.75l-4.243-4.244a3.75 3.75 0 0 0 4.243 4.244ZM4.867 16.842l-1.634-1.635a11.25 11.25 0 0 1-1.909-3.655.75.75 0 0 1 0-.553C2.816 6.723 7.03 3.5 12.001 3.5c1.457 0 2.85.294 4.116.826L14.53 5.916A5.251 5.251 0 0 0 8.25 12a5.21 5.21 0 0 0 .617 2.47L4.867 16.842Z"/>';
+    btn.addEventListener('click', () => {
+        const show = inp.type === 'password';
+        inp.type = show ? 'text' : 'password';
+        svg.innerHTML = show ? OPEN : CLOSED;
+    });
+})();
+
+/* ---- Login submit ---- */
+document.getElementById('login-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const btn = document.getElementById('submit-btn');
+    const err = document.getElementById('server-error');
+    err.style.display = 'none';
+    btn.textContent = 'Signing in…'; btn.disabled = true;
+    try {
+        const res = await fetch('/api/login', {
+            method: 'POST', credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value
+            })
+        });
+        const data = await res.json();
+        if (res.ok) {
+            window.location.href = 'dashboard.html';
+        } else {
+            err.textContent = data.message || 'Invalid credentials. Please try again.';
+            err.style.display = 'block';
+            btn.textContent = 'Sign In to Account'; btn.disabled = false;
+        }
+    } catch {
+        err.textContent = 'Could not connect to the server. Please try again.';
+        err.style.display = 'block';
+        btn.textContent = 'Sign In to Account'; btn.disabled = false;
+    }
+});
+
+/* ---- Ticker tape ---- */
+document.addEventListener('DOMContentLoaded', async () => {
+    const track = document.getElementById('ticker-track');
+    const syms = ['BTC','ETH','SOL','BNB','XRP','LTC','ADA','DOGE'];
+    async function loadTicker() {
+        try {
+            const r = await fetch(`https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${syms.join(',')}&tsyms=USD`);
+            const d = await r.json();
+            let html = '';
+            syms.forEach(s => {
+                const c = d.RAW?.[s]?.USD; if (!c) return;
+                const dir = c.CHANGEPCT24HOUR >= 0 ? 'up' : 'down';
+                const sign = dir === 'up' ? '+' : '';
+                html += `<div class="ticker-tape__item"><span class="pair">${s}/USD</span><span class="price">${c.PRICE.toLocaleString('en-US',{style:'currency',currency:'USD'})}</span><span class="change ${dir}">${sign}${c.CHANGEPCT24HOUR.toFixed(2)}% ${dir==='up'?'▲':'▼'}</span></div>`;
+            });
+            track.innerHTML = html + html;
+        } catch(e) {}
+    }
+    loadTicker();
+    setInterval(loadTicker, 60000);
+});
+</script>
+
+</body>
+</html>
