@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maintenance Mode - Admin</title>
+    <link rel="stylesheet" href="admin.css">
+    <style>
+        .maint-card { max-width: 700px; }
+        .toggle-row { display: flex; align-items: center; gap: 14px; margin-bottom: 22px; }
+        .toggle-switch { position: relative; width: 52px; height: 28px; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .toggle-slider {
+            position: absolute; cursor: pointer; inset: 0; background: var(--border-medium);
+            border-radius: 28px; transition: .3s;
+        }
+        .toggle-slider::before {
+            content: ''; position: absolute; height: 22px; width: 22px; left: 3px; bottom: 3px;
+            background: #fff; border-radius: 50%; transition: .3s; box-shadow: 0 2px 4px rgba(0,0,0,.15);
+        }
+        .toggle-switch input:checked + .toggle-slider { background: #dc3545; }
+        .toggle-switch input:checked + .toggle-slider::before { transform: translateX(24px); }
+        .toggle-label { font-weight: 600; font-size: .95rem; color: var(--text-primary); }
+        .status-indicator { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 20px; font-size: .8rem; font-weight: 600; }
+        .status-indicator.live { background: rgba(220,53,69,.12); color: #dc3545; }
+        .status-indicator.off { background: rgba(40,167,69,.1); color: #28a745; }
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; }
+        .status-indicator.live .status-dot { background: #dc3545; animation: pulse 1.5s infinite; }
+        .status-indicator.off .status-dot { background: #28a745; }
+        @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .4; } }
+
+        .maint-card textarea {
+            width: 100%; min-height: 100px; padding: 14px; border: 1px solid var(--border-medium);
+            border-radius: 10px; font-family: 'Poppins', sans-serif; font-size: .95rem;
+            resize: vertical; transition: border-color .2s;
+        }
+        .maint-card textarea:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(0,91,170,.12); }
+
+        .warning-box {
+            background: rgba(220,53,69,.06); border: 1px solid rgba(220,53,69,.2);
+            border-radius: 12px; padding: 16px 20px; margin-bottom: 22px;
+            display: none; align-items: flex-start; gap: 12px;
+        }
+        .warning-box.show { display: flex; }
+        .warning-box svg { width: 22px; height: 22px; flex-shrink: 0; color: #dc3545; margin-top: 2px; }
+        .warning-box p { font-size: .88rem; color: #64748b; line-height: 1.6; }
+        .warning-box strong { color: #dc3545; }
+
+        .save-row { display: flex; align-items: center; gap: 16px; margin-top: 24px; }
+        .save-row .btn-save {
+            padding: 12px 32px; background: var(--primary-color); color: #fff; border: none;
+            border-radius: 10px; font-weight: 600; font-size: .95rem; cursor: pointer;
+            transition: background .2s, transform .15s;
+        }
+        .save-row .btn-save:hover { background: var(--primary-dark); transform: translateY(-1px); }
+        .save-row .btn-save.danger { background: #dc3545; }
+        .save-row .btn-save.danger:hover { background: #c82333; }
+        .save-msg { font-size: .88rem; font-weight: 500; }
+        .save-msg.success { color: #28a745; }
+        .save-msg.error { color: #dc3545; }
+    </style>
+</head>
+<body>
+    <!-- Mobile Hamburger Button -->
+    <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open menu">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+        </svg>
+    </button>
+    <!-- Sidebar overlay -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <!-- Mobile Top Bar -->
+    <div class="mobile-topbar">
+        <span class="mobile-page-title">Maintenance Mode</span>
+    </div>
+    <div class="admin-layout">
+        <aside class="admin-sidebar" id="admin-sidebar">
+            <button class="sidebar-close-btn" id="sidebar-close-btn" aria-label="Close menu">&times;</button>
+            <div class="sidebar-header">
+                <a href="index.html" class="logo-wrapper">
+                    <img src="../css/logo.jpg" alt="Logo" class="logo" style="width: auto !important; height: 44px !important; max-height: 44px; border-radius: 16px !important; object-fit: contain !important; background: none !important; box-shadow: none !important; overflow: visible !important;">
+                    <span class="logo-name">Admin Portal</span>
+                </a>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="index.html">Dashboard</a></li>
+                    <li><a href="transactions.html">Transactions</a></li>
+                    <li><a href="users.html">Users</a></li>
+                    <li><a href="support.html">Support Tickets</a></li>
+                    <li><a href="referrals.html">Referrals</a></li>
+                    <li><a href="rates.html">Manage Rates</a></li>
+                    <li><a href="announcements.html">Announcements</a></li>
+                    <li><a href="maintenance.html" class="active">Maintenance</a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="#" id="logout-btn">Logout</a>
+            </div>
+        </aside>
+        <main class="admin-content">
+            <div class="admin-header">
+                <h1>🔧 Maintenance Mode</h1>
+                <p>Take the site offline for updates. Admin portal stays accessible.</p>
+            </div>
+
+            <div class="form-card maint-card">
+                <div class="warning-box" id="warning-box">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" clip-rule="evenodd"/></svg>
+                    <p><strong>Site is currently offline!</strong> All user-facing pages are redirecting to the maintenance screen. The admin portal remains accessible. Toggle off when you're done.</p>
+                </div>
+
+                <div class="toggle-row">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="maint-active">
+                        <span class="toggle-slider"></span>
+                    </label>
+                    <span class="toggle-label">Enable Maintenance Mode</span>
+                    <span class="status-indicator off" id="status-badge">
+                        <span class="status-dot"></span>
+                        <span id="status-text">Site Online</span>
+                    </span>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 18px;">
+                    <label for="maint-message" style="font-weight:600; margin-bottom:6px; display:block;">Message shown to visitors</label>
+                    <textarea id="maint-message" placeholder="We're performing scheduled maintenance. We'll be back shortly!"></textarea>
+                </div>
+
+                <div class="save-row">
+                    <button class="btn-save" id="save-btn">💾 Save Settings</button>
+                    <span class="save-msg" id="save-msg"></span>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="admin.js"></script>
+    <script>
+    (function() {
+        const activeToggle = document.getElementById('maint-active');
+        const messageInput = document.getElementById('maint-message');
+        const saveBtn = document.getElementById('save-btn');
+        const saveMsg = document.getElementById('save-msg');
+        const statusBadge = document.getElementById('status-badge');
+        const statusText = document.getElementById('status-text');
+        const warningBox = document.getElementById('warning-box');
+
+        function updateUI() {
+            if (activeToggle.checked) {
+                statusBadge.className = 'status-indicator live';
+                statusText.textContent = 'Site Offline';
+                warningBox.classList.add('show');
+                saveBtn.className = 'btn-save danger';
+            } else {
+                statusBadge.className = 'status-indicator off';
+                statusText.textContent = 'Site Online';
+                warningBox.classList.remove('show');
+                saveBtn.className = 'btn-save';
+            }
+        }
+
+        activeToggle.addEventListener('change', updateUI);
+
+        // Load current state
+        async function load() {
+            try {
+                const r = await fetch('/api/admin/maintenance', { credentials: 'include' });
+                if (!r.ok) throw new Error();
+                const data = await r.json();
+                activeToggle.checked = data.active;
+                messageInput.value = data.message || '';
+                updateUI();
+            } catch (e) {
+                console.error('Failed to load maintenance state:', e);
+            }
+        }
+
+        // Save
+        saveBtn.addEventListener('click', async () => {
+            saveMsg.textContent = '';
+            try {
+                saveBtn.disabled = true;
+                saveBtn.textContent = 'Saving…';
+                const r = await fetch('/api/admin/maintenance', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        active: activeToggle.checked,
+                        message: messageInput.value.trim()
+                    })
+                });
+                if (!r.ok) throw new Error();
+                const result = await r.json();
+                saveMsg.className = 'save-msg success';
+                saveMsg.textContent = activeToggle.checked ? '⚠️ Maintenance mode enabled!' : '✅ Site is back online!';
+                setTimeout(() => saveMsg.textContent = '', 4000);
+            } catch (e) {
+                saveMsg.className = 'save-msg error';
+                saveMsg.textContent = '❌ Failed to save. Please try again.';
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.textContent = '💾 Save Settings';
+                updateUI();
+            }
+        });
+
+        load();
+    })();
+    </script>
+</body>
+</html>

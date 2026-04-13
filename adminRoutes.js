@@ -166,5 +166,76 @@ router.get('/referrals', async (req, res) => {
         res.status(500).json({ message: 'Server error while fetching referral data.' });
     }
 });
+// === ANNOUNCEMENT MANAGEMENT ===
+const fs = require('fs');
+const path = require('path');
+const announcementPath = path.join(__dirname, 'announcements.json');
+
+function getAnnouncement() {
+    try {
+        return JSON.parse(fs.readFileSync(announcementPath, 'utf8'));
+    } catch {
+        return { active: false, title: '', message: '', updatedAt: '' };
+    }
+}
+
+function saveAnnouncement(data) {
+    fs.writeFileSync(announcementPath, JSON.stringify(data, null, 2), 'utf8');
+}
+
+// Admin: Get current announcement
+router.get('/announcement', (req, res) => {
+    res.json(getAnnouncement());
+});
+
+// Admin: Update announcement
+router.put('/announcement', (req, res) => {
+    const { active, title, message } = req.body;
+    if (active && (!title || !message)) {
+        return res.status(400).json({ message: 'Title and message are required for an active announcement.' });
+    }
+    const data = {
+        active: !!active,
+        title: title || '',
+        message: message || '',
+        updatedAt: new Date().toISOString()
+    };
+    saveAnnouncement(data);
+    logger.info(`Announcement updated: active=${data.active}, title="${data.title}"`);
+    res.json({ message: 'Announcement saved successfully.', data });
+});
+
+// === MAINTENANCE MODE ===
+const maintenancePath = path.join(__dirname, 'maintenance.json');
+
+function getMaintenance() {
+    try {
+        return JSON.parse(fs.readFileSync(maintenancePath, 'utf8'));
+    } catch {
+        return { active: false, message: '', updatedAt: '' };
+    }
+}
+
+function saveMaintenance(data) {
+    fs.writeFileSync(maintenancePath, JSON.stringify(data, null, 2), 'utf8');
+}
+
+// Admin: Get maintenance status
+router.get('/maintenance', (req, res) => {
+    res.json(getMaintenance());
+});
+
+// Admin: Toggle maintenance mode
+router.put('/maintenance', (req, res) => {
+    const { active, message } = req.body;
+    const data = {
+        active: !!active,
+        message: message || 'We\'re performing scheduled maintenance. We\'ll be back shortly!',
+        updatedAt: new Date().toISOString()
+    };
+    saveMaintenance(data);
+    logger.info(`Maintenance mode ${data.active ? 'ENABLED' : 'DISABLED'} by admin`);
+    res.json({ message: `Maintenance mode ${data.active ? 'enabled' : 'disabled'}.`, data });
+});
 
 module.exports = router;

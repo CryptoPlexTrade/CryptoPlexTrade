@@ -6,113 +6,108 @@
     <title>Contact Us - CryptoPlexTrade</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/app.css">
     <style>
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        :root { --blue-main:#005baa;--blue-light:#00a9e0;--blue-pale:#e8f4fe;--blue-deep:#004a8a;--white:#ffffff;--text-dark:#0f172a;--text-mid:#334155;--text-muted:#94a3b8;--border:#dde9f7;--shadow-b:rgba(0,91,170,0.14);--green:#16a34a;--red:#dc2626; }
-        body { font-family:'Poppins',sans-serif;min-height:100vh;display:flex;flex-direction:column;background:linear-gradient(135deg,#e8f4fe 0%,#f0f7ff 40%,#dbeef9 70%,#c8e5f5 100%);background-size:300% 300%;animation:bg-shift 18s ease infinite;color:var(--text-dark); }
-        @keyframes bg-shift{0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
-        .float-bg{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0;}
-        .float-bg svg{position:absolute;color:var(--blue-main);opacity:0.06;animation:icon-rise linear infinite;}
-        .float-bg svg:nth-child(1){width:54px;left:4%;animation-duration:28s;animation-delay:-4s;}
-        .float-bg svg:nth-child(2){width:38px;left:20%;animation-duration:35s;animation-delay:-11s;}
-        .float-bg svg:nth-child(3){width:60px;left:50%;animation-duration:22s;animation-delay:-7s;}
-        .float-bg svg:nth-child(4){width:44px;left:75%;animation-duration:30s;animation-delay:-18s;}
-        .float-bg svg:nth-child(5){width:36px;left:88%;animation-duration:25s;animation-delay:-3s;}
-        @keyframes icon-rise{0%{transform:translateY(110vh) rotate(0deg);opacity:0;}10%{opacity:0.06;}90%{opacity:0.06;}100%{transform:translateY(-10vh) rotate(540deg);opacity:0;}}
-
-        /* Header */
-        .header{position:sticky;top:0;z-index:100;padding:16px 40px;display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.7);backdrop-filter:blur(12px);border-bottom:1px solid rgba(0,91,170,.1);}
-        .brand{display:flex;align-items:center;gap:10px;text-decoration:none;}
-        .brand-circle{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--blue-main),var(--blue-light));display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;color:#fff;box-shadow:0 4px 12px var(--shadow-b);}
-        .brand-name{font-size:1.1rem;font-weight:700;color:var(--text-dark);}
-        .header-nav{display:flex;align-items:center;gap:24px;}
-        .header-nav a{font-size:.85rem;color:var(--text-muted);text-decoration:none;font-weight:500;transition:color .2s;}
-        .header-nav a:hover{color:var(--blue-main);}
-        .header-nav .btn-cta{background:linear-gradient(90deg,var(--blue-main),var(--blue-light));color:#fff;font-weight:600;padding:8px 20px;border-radius:50px;box-shadow:0 4px 12px var(--shadow-b);transition:transform .2s,box-shadow .2s;}
-        .header-nav .btn-cta:hover{transform:translateY(-1px);box-shadow:0 6px 18px var(--shadow-b);}
-
         /* Hero Banner */
-        .hero-banner{position:relative;z-index:1;text-align:center;padding:60px 20px 40px;}
-        .hero-banner h1{font-size:2.6rem;font-weight:800;color:var(--text-dark);margin-bottom:10px;}
-        .hero-banner h1 span{background:linear-gradient(90deg,var(--blue-main),var(--blue-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-        .hero-banner p{font-size:1rem;color:var(--text-muted);max-width:480px;margin:0 auto;}
+        .hero-banner{text-align:center;padding:40px 20px 28px;}
+        .hero-banner h1{font-size:2.2rem;font-weight:800;color:#0f172a;margin-bottom:10px;}
+        .hero-banner h1 span{background:linear-gradient(90deg,#005baa,#00a9e0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+        .hero-banner p{font-size:.95rem;color:#94a3b8;max-width:480px;margin:0 auto;}
 
         /* Main content */
-        .content-wrap{flex:1;position:relative;z-index:1;max-width:1100px;margin:0 auto;width:100%;padding:0 24px 100px;display:grid;grid-template-columns:1.4fr 1fr;gap:28px;align-items:start;}
+        .content-wrap{max-width:1100px;margin:0 auto;width:100%;padding:0 24px 60px;display:grid;grid-template-columns:1.4fr 1fr;gap:28px;align-items:start;}
 
         /* Info column */
         .info-col{display:flex;flex-direction:column;gap:16px;}
         .info-card{background:rgba(255,255,255,.82);backdrop-filter:blur(16px);border:1px solid rgba(0,91,170,.1);border-radius:18px;padding:24px;box-shadow:0 4px 20px rgba(0,91,170,.08);}
-        .info-card-icon{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--blue-main),var(--blue-light));display:flex;align-items:center;justify-content:center;margin-bottom:14px;box-shadow:0 4px 12px var(--shadow-b);}
+        .info-card-icon{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#005baa,#00a9e0);display:flex;align-items:center;justify-content:center;margin-bottom:14px;box-shadow:0 4px 12px rgba(0,91,170,.14);}
         .info-card-icon svg{width:22px;height:22px;color:#fff;}
-        .info-card h3{font-size:.95rem;font-weight:700;color:var(--text-dark);margin-bottom:4px;}
-        .info-card p,.info-card a{font-size:.85rem;color:var(--text-muted);text-decoration:none;line-height:1.6;}
-        .info-card a:hover{color:var(--blue-main);}
+        .info-card h3{font-size:.95rem;font-weight:700;color:#0f172a;margin-bottom:4px;}
+        .info-card p,.info-card a{font-size:.85rem;color:#94a3b8;text-decoration:none;line-height:1.6;}
+        .info-card a:hover{color:#005baa;}
         .hours-grid{display:flex;flex-direction:column;gap:6px;margin-top:8px;}
-        .hours-row{display:flex;justify-content:space-between;font-size:.82rem;color:var(--text-mid);}
-        .hours-row span:last-child{font-weight:600;color:var(--blue-main);}
+        .hours-row{display:flex;justify-content:space-between;font-size:.82rem;color:#334155;}
+        .hours-row span:last-child{font-weight:600;color:#005baa;}
 
         /* Form column */
         .form-col{background:rgba(255,255,255,.88);backdrop-filter:blur(20px);border:1px solid rgba(0,91,170,.1);border-radius:22px;padding:36px 38px;box-shadow:0 8px 32px rgba(0,91,170,.1);animation:card-in .6s cubic-bezier(.34,1.4,.64,1) both;}
         @keyframes card-in{from{opacity:0;transform:translateY(20px) scale(.97);}to{opacity:1;transform:translateY(0) scale(1);}}
-        .form-col h2{font-size:1.5rem;font-weight:700;color:var(--text-dark);margin-bottom:4px;}
-        .form-col .form-sub{font-size:.85rem;color:var(--text-muted);margin-bottom:24px;}
+        .form-col h2{font-size:1.5rem;font-weight:700;color:#0f172a;margin-bottom:4px;}
+        .form-col .form-sub{font-size:.85rem;color:#94a3b8;margin-bottom:24px;}
 
         .field{margin-bottom:16px;}
-        .field label{display:block;font-size:.78rem;font-weight:600;color:var(--text-mid);margin-bottom:6px;letter-spacing:.3px;}
+        .field label{display:block;font-size:.78rem;font-weight:600;color:#334155;margin-bottom:6px;letter-spacing:.3px;}
         .field-wrap{position:relative;}
-        .field-icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--text-muted);display:flex;pointer-events:none;}
+        .field-icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:#94a3b8;display:flex;pointer-events:none;}
         .field-icon svg{width:16px;height:16px;}
-        .field-wrap input,.field-wrap textarea,.field-wrap select{width:100%;padding:12px 16px 12px 40px;background:#fafcff;border:1.5px solid var(--border);border-radius:10px;font-family:'Poppins',sans-serif;font-size:.9rem;color:var(--text-dark);outline:none;transition:border-color .2s,box-shadow .2s;}
+        .field-wrap input,.field-wrap textarea,.field-wrap select{width:100%;padding:12px 16px 12px 40px;background:#fafcff;border:1.5px solid #dde9f7;border-radius:10px;font-family:'Poppins',sans-serif;font-size:.9rem;color:#0f172a;outline:none;transition:border-color .2s,box-shadow .2s;}
         .field-wrap textarea{padding-top:12px;height:120px;resize:vertical;}
         .field-wrap.no-icon input,.field-wrap.no-icon textarea{padding-left:16px;}
-        .field-wrap input::placeholder,.field-wrap textarea::placeholder{color:var(--text-muted);}
-        .field-wrap input:focus,.field-wrap textarea:focus{border-color:var(--blue-main);background:#fff;box-shadow:0 0 0 3px rgba(0,91,170,.1);}
+        .field-wrap input::placeholder,.field-wrap textarea::placeholder{color:#94a3b8;}
+        .field-wrap input:focus,.field-wrap textarea:focus{border-color:#005baa;background:#fff;box-shadow:0 0 0 3px rgba(0,91,170,.1);}
 
-        .btn-send{width:100%;padding:14px;border:none;border-radius:10px;font-family:'Poppins',sans-serif;font-size:1rem;font-weight:700;color:#fff;background:linear-gradient(90deg,var(--blue-main) 0%,var(--blue-light) 100%);background-size:200% 100%;cursor:pointer;position:relative;overflow:hidden;box-shadow:0 6px 20px var(--shadow-b);transition:background-position .35s,transform .2s,box-shadow .2s;margin-top:6px;}
+        .btn-send{width:100%;padding:14px;border:none;border-radius:10px;font-family:'Poppins',sans-serif;font-size:1rem;font-weight:700;color:#fff;background:linear-gradient(90deg,#005baa,#00a9e0);background-size:200% 100%;cursor:pointer;box-shadow:0 6px 20px rgba(0,91,170,.14);transition:background-position .35s,transform .2s,box-shadow .2s;margin-top:6px;}
         .btn-send:hover{background-position:100% 0;transform:translateY(-2px);box-shadow:0 10px 28px rgba(0,91,170,.28);}
-        .btn-send::after{content:'';position:absolute;top:0;left:-100%;width:55%;height:100%;background:linear-gradient(120deg,transparent,rgba(255,255,255,.3),transparent);transition:left .45s;}
-        .btn-send:hover::after{left:140%;}
-
-        footer{text-align:center;padding:16px;font-size:.76rem;color:var(--text-muted);position:relative;z-index:1;}
 
         /* Toast */
-        #toast{visibility:hidden;min-width:300px;background:linear-gradient(90deg,var(--blue-main),var(--blue-light));color:#fff;text-align:center;border-radius:12px;padding:16px 24px;position:fixed;z-index:1000;left:50%;bottom:90px;transform:translateX(-50%);opacity:0;transition:opacity .5s,bottom .5s;box-shadow:0 8px 24px rgba(0,91,170,.3);font-weight:500;font-size:.9rem;}
+        #toast{visibility:hidden;min-width:300px;background:linear-gradient(90deg,#005baa,#00a9e0);color:#fff;text-align:center;border-radius:12px;padding:16px 24px;position:fixed;z-index:1000;left:50%;bottom:90px;transform:translateX(-50%);opacity:0;transition:opacity .5s,bottom .5s;box-shadow:0 8px 24px rgba(0,91,170,.3);font-weight:500;font-size:.9rem;}
         #toast.show{visibility:visible;opacity:1;bottom:110px;}
-
-        /* Ticker */
-        .ticker-tape{position:fixed;bottom:0;left:0;right:0;background:#0f172a;border-top:2px solid var(--blue-main);padding:8px 0;z-index:300;overflow:hidden;white-space:nowrap;}
-        .ticker-tape__track{display:inline-block;animation:ticker 40s linear infinite;}
-        @keyframes ticker{to{transform:translateX(-50%);}}
-        .ticker-tape__item{display:inline-flex;align-items:center;padding:0 22px;font-size:.83rem;}
-        .ticker-tape__item .pair{font-weight:600;margin-right:9px;color:#64748b;}.ticker-tape__item .price{font-weight:500;margin-right:7px;color:#e2e8f0;}
-        .change.up{color:#22d3a5;font-weight:600;}.change.down{color:#f87171;font-weight:600;}
 
         @media(max-width:800px){.content-wrap{grid-template-columns:1fr;}.hero-banner h1{font-size:1.9rem;}}
     </style>
-<link rel="stylesheet" href="/css/responsive.css">
 </head>
 <body>
-<div class="float-bg" aria-hidden="true">
-    <svg viewBox="0 0 32 32" fill="currentColor"><path d="M21.94,13.11A7.49,7.49,0,0,0,16,4a7.5,7.5,0,0,0-6,12.22L5,21.27V24H7.6l4.49-4.49a7.5,7.5,0,0,0,10-6.39Z"/></svg>
-    <svg viewBox="0 0 32 32" fill="currentColor"><path d="M16,2,6,17.2l10,12.8,10-12.8Z"/></svg>
-    <svg viewBox="0 0 32 32" fill="currentColor"><path d="M16,2A14,14,0,1,0,30,16,14,14,0,0,0,16,2Zm0,26A12,12,0,1,1,28,16,12,12,0,0,1,16,28Z"/></svg>
-    <svg viewBox="0 0 32 32" fill="currentColor"><path d="M16,2,6,12l10,10L26,12Z"/></svg>
-    <svg viewBox="0 0 32 32" fill="currentColor"><path d="M6,10h9.43v3.43H6Zm0,8.57h9.43V22H6Zm12.57-8.57H28v3.43H18.57Zm0,8.57H28V22H18.57Z"/></svg>
-</div>
 
-<header class="header">
-    <a href="index.html" class="brand">
-        <div class="brand-circle">CP</div>
-        <span class="brand-name">CryptoPlexTrade</span>
-    </a>
-    <nav class="header-nav">
-        <a href="index.html#rates">Rates</a>
-        <a href="faq.html">FAQ</a>
-        <a href="login.html">Login</a>
-        <a href="register.html" class="btn-cta">Get Started</a>
-    </nav>
-</header>
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+<div class="app-shell">
+
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="sidebar" id="sidebar">
+        <a href="dashboard.html" class="sidebar-brand">
+            <img src="css/logo.jpg" alt="Logo" class="sidebar-brand__orb" style="width: auto !important; height: 44px !important; max-height: 44px; border-radius: 16px !important; object-fit: contain !important; background: none !important; padding: 0 !important; box-shadow: none !important; overflow: visible !important;">
+            <span class="sidebar-brand__name">CryptoPlexTrade</span>
+        </a>
+        <nav class="sidebar-nav">
+            <ul>
+                <li><a href="dashboard.html">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11.47 3.841a.75.75 0 0 1 1.06 0l8.69 8.69a.75.75 0 1 0 1.06-1.061l-8.689-8.69a2.25 2.25 0 0 0-3.182 0l-8.69 8.69a.75.75 0 1 0 1.061 1.06l8.69-8.689Z"/><path d="m12 5.432 8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 0 1-.75-.75v-4.5a.75.75 0 0 0-.75-.75h-3a.75.75 0 0 0-.75.75V21a.75.75 0 0 1-.75.75H5.625a1.875 1.875 0 0 1-1.875-1.875v-6.198a2.29 2.29 0 0 0 .091-.086L12 5.432Z"/></svg>
+                    Dashboard
+                </a></li>
+                <li><a href="trade.html">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M3 4.5h18v15H3v-15Zm6.75 10.5a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM12 15a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM15.75 15a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM9.75 9a.75.75 0 0 0-1.5 0v4.5a.75.75 0 0 0 1.5 0V9Zm3.75-3a.75.75 0 0 0-1.5 0v7.5a.75.75 0 0 0 1.5 0V6Zm2.25 1.5a.75.75 0 0 0-1.5 0v6a.75.75 0 0 0 1.5 0v-6Z"/></svg>
+                    Trade
+                </a></li>
+                <li><a href="transactions.html">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clip-rule="evenodd"/></svg>
+                    Transactions
+                </a></li>
+                <li><a href="profile.html">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd"/></svg>
+                    Profile
+                </a></li>
+                <li><a href="support.html">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm11.378-3.917c-.89-.777-2.366-.777-3.255 0a.75.75 0 0 1-1.06-1.06c2.298-2.013 5.824-2.013 8.122 0a.75.75 0 0 1-1.06 1.06ZM12 15.75a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" clip-rule="evenodd"/></svg>
+                    Support
+                </a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <div class="main-wrap">
+        <header class="topbar">
+            <div class="topbar-left">
+                <button class="hamburger-btn" id="hamburger-btn" aria-label="Toggle sidebar">
+                    <span></span><span></span><span></span>
+                </button>
+                <span class="topbar-title">Contact Us</span>
+            </div>
+            <div class="topbar-right">
+                <a href="#" id="logout-btn" class="btn btn-danger btn-sm">Logout</a>
+            </div>
+        </header>
+
+        <main class="page-content">
 
 <div class="hero-banner">
     <h1>Get in <span>Touch</span></h1>
@@ -193,13 +188,36 @@
     </div>
 </div>
 
-<footer>&copy; 2026 CryptoPlexTrade &middot; <a href="privacy.html" style="color:inherit;">Privacy</a> &middot; <a href="terms.html" style="color:inherit;">Terms</a></footer>
+        </main><!-- /page-content -->
+    </div><!-- /main-wrap -->
+</div><!-- /app-shell -->
+
 <div id="toast">✓ Your message has been sent! An agent will get in touch shortly.</div>
+
+<!-- Ticker Tape -->
 <div class="ticker-tape"><div class="ticker-tape__track" id="ticker-track"></div></div>
 
+<script src="inactivity-timer.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    /* Toast on return from form submit */
+(function() {
+    // Sidebar toggle
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+    const hamburger = document.getElementById('hamburger-btn');
+    if (hamburger) hamburger.addEventListener('click', () => { sidebar.classList.add('open'); overlay.classList.add('open'); });
+    if (overlay) overlay.addEventListener('click', () => { sidebar.classList.remove('open'); overlay.classList.remove('open'); });
+
+    // Logout
+    function getCookie(name) { const v = `; ${document.cookie}`, p = v.split(`; ${name}=`); if (p.length === 2) return p.pop().split(';').shift(); }
+    document.getElementById('logout-btn').addEventListener('click', async (e) => {
+        e.preventDefault();
+        try {
+            const r = await fetch('/api/logout', { method: 'POST', headers: { 'X-CSRF-Token': getCookie('csrf-token') } });
+            if (r.ok) window.location.href = 'login.html';
+        } catch (err) { console.error(err); }
+    });
+
+    // Toast on return from form submit
     const params = new URLSearchParams(window.location.search);
     if (params.has('fullname') && params.has('email') && params.has('message')) {
         const toast = document.getElementById('toast');
@@ -208,7 +226,7 @@ document.addEventListener('DOMContentLoaded', function() {
         window.history.replaceState({}, document.title, window.location.pathname);
     }
 
-    /* Ticker */
+    // Ticker
     (async () => {
         const track = document.getElementById('ticker-track');
         const syms = ['BTC','ETH','SOL','BNB','XRP','LTC','ADA','DOGE'];
@@ -218,9 +236,8 @@ document.addEventListener('DOMContentLoaded', function() {
             syms.forEach(s => { const c=d.RAW?.[s]?.USD; if(!c) return; const dir=c.CHANGEPCT24HOUR>=0?'up':'down'; html+=`<div class="ticker-tape__item"><span class="pair">${s}/USD</span><span class="price">${c.PRICE.toLocaleString('en-US',{style:'currency',currency:'USD'})}</span><span class="change ${dir}">${dir==='up'?'+':''}${c.CHANGEPCT24HOUR.toFixed(2)}% ${dir==='up'?'▲':'▼'}</span></div>`; });
             track.innerHTML = html + html;
         } catch(e) {}
-        setInterval(async()=>{try{const r=await fetch(`https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${syms.join(',')}&tsyms=USD`);const d=await r.json();let html='';syms.forEach(s=>{const c=d.RAW?.[s]?.USD;if(!c)return;const dir=c.CHANGEPCT24HOUR>=0?'up':'down';html+=`<div class="ticker-tape__item"><span class="pair">${s}/USD</span><span class="price">${c.PRICE.toLocaleString('en-US',{style:'currency',currency:'USD'})}</span><span class="change ${dir}">${dir==='up'?'+':''}${c.CHANGEPCT24HOUR.toFixed(2)}% ${dir==='up'?'▲':'▼'}</span></div>`;});track.innerHTML=html+html;}catch(e){}},60000);
     })();
-});
+})();
 </script>
 </body>
 </html>

@@ -7,7 +7,7 @@
     <meta name="description" content="Send your cryptocurrency to complete your sell order on CryptoPlexTrade.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/css/app.css">
+    <link rel="stylesheet" href="css/app.css">
     <style>
         body { overflow-y: auto; }
         .os-wrap { min-height: 100vh; background: var(--bg); display: flex; flex-direction: column; }
@@ -20,12 +20,8 @@
             flex-shrink: 0; position: sticky; top: 0; z-index: 100;
         }
         .os-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-        .os-brand__orb {
-            width: 34px; height: 34px; border-radius: 9px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            display: flex; align-items: center; justify-content: center;
-            font-size: 0.72rem; font-weight: 800; color: white;
-        }
+        .os-brand__orb { text-decoration: none; }
+        img.os-brand__orb { width: auto; height: 44px; border-radius: 16px; object-fit: contain; background: none !important; box-shadow: none !important; }
         .os-brand__name { font-size: 0.9rem; font-weight: 700; color: var(--text-1); }
         .os-topbar-right { display: flex; gap: 12px; align-items: center; }
 
@@ -44,7 +40,7 @@
         }
         .step-item.done:not(:last-child)::after { background: var(--green); }
         .step-num {
-            width: 36px; height: 36px; border-radius: 50%;
+            width: 36px; height: 44px; border-radius: 50%;
             border: 2px solid var(--border-mid); background: white;
             display: flex; align-items: center; justify-content: center;
             font-size: 0.8rem; font-weight: 700; color: var(--text-3);
@@ -153,7 +149,7 @@
 
     <header class="os-topbar">
         <a href="dashboard.html" class="os-brand">
-            <div class="os-brand__orb">CP</div>
+            <img src="css/logo.jpg" alt="Logo" class="os-brand__orb" style="width: auto !important; height: 44px !important; max-height: 44px; border-radius: 16px !important; object-fit: contain !important; background: none !important; padding: 0 !important; box-shadow: none !important; overflow: visible !important;">
             <span class="os-brand__name">CryptoPlexTrade</span>
         </a>
         <div class="os-topbar-right">

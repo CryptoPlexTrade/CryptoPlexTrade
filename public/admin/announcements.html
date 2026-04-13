@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Announcements - Admin</title>
+    <link rel="stylesheet" href="admin.css">
+    <style>
+        .announcement-form { max-width: 700px; }
+        .announcement-form textarea {
+            width: 100%; min-height: 120px; padding: 14px; border: 1px solid var(--border-medium);
+            border-radius: 10px; font-family: 'Poppins', sans-serif; font-size: .95rem;
+            resize: vertical; transition: border-color .2s;
+        }
+        .announcement-form textarea:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(0,91,170,.12); }
+        .announcement-form input[type="text"] {
+            width: 100%; padding: 12px 14px; border: 1px solid var(--border-medium);
+            border-radius: 10px; font-family: 'Poppins', sans-serif; font-size: .95rem;
+            transition: border-color .2s;
+        }
+        .announcement-form input[type="text"]:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(0,91,170,.12); }
+        .toggle-row { display: flex; align-items: center; gap: 14px; margin-bottom: 22px; }
+        .toggle-switch { position: relative; width: 52px; height: 28px; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .toggle-slider {
+            position: absolute; cursor: pointer; inset: 0; background: var(--border-medium);
+            border-radius: 28px; transition: .3s;
+        }
+        .toggle-slider::before {
+            content: ''; position: absolute; height: 22px; width: 22px; left: 3px; bottom: 3px;
+            background: #fff; border-radius: 50%; transition: .3s; box-shadow: 0 2px 4px rgba(0,0,0,.15);
+        }
+        .toggle-switch input:checked + .toggle-slider { background: var(--primary-color); }
+        .toggle-switch input:checked + .toggle-slider::before { transform: translateX(24px); }
+        .toggle-label { font-weight: 600; font-size: .95rem; color: var(--text-primary); }
+        .status-indicator { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 20px; font-size: .8rem; font-weight: 600; }
+        .status-indicator.live { background: rgba(40,167,69,.12); color: #28a745; }
+        .status-indicator.off { background: rgba(100,116,139,.1); color: #64748b; }
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; }
+        .status-indicator.live .status-dot { background: #28a745; animation: pulse 1.5s infinite; }
+        .status-indicator.off .status-dot { background: #94a3b8; }
+        @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .4; } }
+        .preview-box {
+            background: linear-gradient(135deg, rgba(0,91,170,.06), rgba(0,169,224,.06));
+            border: 1px solid rgba(0,91,170,.15); border-radius: 16px; padding: 24px;
+            margin-top: 28px;
+        }
+        .preview-box h4 { color: var(--text-primary); margin-bottom: 8px; font-size: .85rem; text-transform: uppercase; letter-spacing: .5px; }
+        .preview-popup {
+            background: #fff; border-radius: 14px; padding: 20px 24px;
+            box-shadow: 0 8px 32px rgba(0,0,0,.1); border-left: 4px solid var(--primary-color);
+        }
+        .preview-popup h3 { font-size: 1rem; color: var(--text-primary); margin-bottom: 6px; }
+        .preview-popup p { font-size: .9rem; color: var(--text-secondary); line-height: 1.6; }
+        .preview-empty { color: var(--text-secondary); font-style: italic; font-size: .9rem; }
+        .save-row { display: flex; align-items: center; gap: 16px; margin-top: 24px; }
+        .save-row .btn-save {
+            padding: 12px 32px; background: var(--primary-color); color: #fff; border: none;
+            border-radius: 10px; font-weight: 600; font-size: .95rem; cursor: pointer;
+            transition: background .2s, transform .15s;
+        }
+        .save-row .btn-save:hover { background: var(--primary-dark); transform: translateY(-1px); }
+        .save-msg { font-size: .88rem; font-weight: 500; }
+        .save-msg.success { color: #28a745; }
+        .save-msg.error { color: #dc3545; }
+    </style>
+</head>
+<body>
+    <!-- Mobile Hamburger Button -->
+    <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open menu">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+        </svg>
+    </button>
+    <!-- Sidebar overlay -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <!-- Mobile Top Bar -->
+    <div class="mobile-topbar">
+        <span class="mobile-page-title">Announcements</span>
+    </div>
+    <div class="admin-layout">
+        <aside class="admin-sidebar" id="admin-sidebar">
+            <button class="sidebar-close-btn" id="sidebar-close-btn" aria-label="Close menu">&times;</button>
+            <div class="sidebar-header">
+                <a href="index.html" class="logo-wrapper">
+                    <img src="../css/logo.jpg" alt="Logo" class="logo" style="width: auto !important; height: 44px !important; max-height: 44px; border-radius: 16px !important; object-fit: contain !important; background: none !important; box-shadow: none !important; overflow: visible !important;">
+                    <span class="logo-name">Admin Portal</span>
+                </a>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="index.html">Dashboard</a></li>
+                    <li><a href="transactions.html">Transactions</a></li>
+                    <li><a href="users.html">Users</a></li>
+                    <li><a href="support.html">Support Tickets</a></li>
+                    <li><a href="referrals.html">Referrals</a></li>
+                    <li><a href="rates.html">Manage Rates</a></li>
+                    <li><a href="announcements.html">Announcements</a></li>
+                    <li><a href="maintenance.html">Maintenance</a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="#" id="logout-btn">Logout</a>
+            </div>
+        </aside>
+        <main class="admin-content">
+            <div class="admin-header">
+                <h1>📢 Announcements</h1>
+                <p>Create an announcement that appears as a popup on the user dashboard.</p>
+            </div>
+
+            <div class="form-card announcement-form">
+                <div class="toggle-row">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="ann-active">
+                        <span class="toggle-slider"></span>
+                    </label>
+                    <span class="toggle-label">Announcement Active</span>
+                    <span class="status-indicator off" id="status-badge">
+                        <span class="status-dot"></span>
+                        <span id="status-text">Inactive</span>
+                    </span>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 18px;">
+                    <label for="ann-title" style="font-weight:600; margin-bottom:6px; display:block;">Title</label>
+                    <input type="text" id="ann-title" placeholder="e.g. 🎉 New Feature Launch!">
+                </div>
+
+                <div class="form-group" style="margin-bottom: 18px;">
+                    <label for="ann-message" style="font-weight:600; margin-bottom:6px; display:block;">Message</label>
+                    <textarea id="ann-message" placeholder="Write your announcement message here..."></textarea>
+                </div>
+
+                <div class="save-row">
+                    <button class="btn-save" id="save-btn">💾 Save Announcement</button>
+                    <span class="save-msg" id="save-msg"></span>
+                </div>
+
+                <!-- Live Preview -->
+                <div class="preview-box">
+                    <h4>👁 Live Preview</h4>
+                    <div id="preview-content">
+                        <span class="preview-empty">Fill in the title and message above to see a preview.</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="admin.js"></script>
+    <script>
+    (function() {
+        const activeToggle = document.getElementById('ann-active');
+        const titleInput = document.getElementById('ann-title');
+        const messageInput = document.getElementById('ann-message');
+        const saveBtn = document.getElementById('save-btn');
+        const saveMsg = document.getElementById('save-msg');
+        const statusBadge = document.getElementById('status-badge');
+        const statusText = document.getElementById('status-text');
+        const previewContent = document.getElementById('preview-content');
+
+        function updateStatusBadge() {
+            if (activeToggle.checked) {
+                statusBadge.className = 'status-indicator live';
+                statusText.textContent = 'Live';
+            } else {
+                statusBadge.className = 'status-indicator off';
+                statusText.textContent = 'Inactive';
+            }
+        }
+
+        function updatePreview() {
+            const title = titleInput.value.trim();
+            const message = messageInput.value.trim();
+            if (!title && !message) {
+                previewContent.innerHTML = '<span class="preview-empty">Fill in the title and message above to see a preview.</span>';
+                return;
+            }
+            previewContent.innerHTML = `
+                <div class="preview-popup">
+                    <h3>${title || 'Untitled'}</h3>
+                    <p>${message || 'No message yet...'}</p>
+                </div>`;
+        }
+
+        activeToggle.addEventListener('change', updateStatusBadge);
+        titleInput.addEventListener('input', updatePreview);
+        messageInput.addEventListener('input', updatePreview);
+
+        // Load existing announcement
+        async function loadAnnouncement() {
+            try {
+                const r = await fetch('/api/admin/announcement', { credentials: 'include' });
+                if (!r.ok) throw new Error();
+                const data = await r.json();
+                activeToggle.checked = data.active;
+                titleInput.value = data.title || '';
+                messageInput.value = data.message || '';
+                updateStatusBadge();
+                updatePreview();
+            } catch (e) {
+                console.error('Failed to load announcement:', e);
+            }
+        }
+
+        // Save announcement
+        saveBtn.addEventListener('click', async () => {
+            saveMsg.textContent = '';
+            const payload = {
+                active: activeToggle.checked,
+                title: titleInput.value.trim(),
+                message: messageInput.value.trim()
+            };
+            if (payload.active && (!payload.title || !payload.message)) {
+                saveMsg.className = 'save-msg error';
+                saveMsg.textContent = '⚠ Title and message are required when active.';
+                return;
+            }
+            try {
+                saveBtn.disabled = true;
+                saveBtn.textContent = 'Saving…';
+                const r = await fetch('/api/admin/announcement', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify(payload)
+                });
+                if (!r.ok) throw new Error();
+                saveMsg.className = 'save-msg success';
+                saveMsg.textContent = '✅ Announcement saved!';
+                setTimeout(() => saveMsg.textContent = '', 3000);
+            } catch (e) {
+                saveMsg.className = 'save-msg error';
+                saveMsg.textContent = '❌ Failed to save. Please try again.';
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.textContent = '💾 Save Announcement';
+            }
+        });
+
+        loadAnnouncement();
+    })();
+    </script>
+</body>
+</html>

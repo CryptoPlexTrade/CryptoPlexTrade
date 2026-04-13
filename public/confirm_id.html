@@ -50,14 +50,8 @@
         }
         .header .container { display: flex; justify-content: space-between; align-items: center; }
         .logo { font-size: 1.8rem; font-weight: 700; color: var(--text-primary); text-decoration: none; }
-        .logo {
-            font-size: 1.2rem; font-weight: 700; color: var(--bg-white); text-decoration: none;
-            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-            width: 45px; height: 45px; border-radius: 50%; display: flex;
-            align-items: center; justify-content: center;
-            box-shadow: 0 2px 8px var(--shadow-blue);
-            transition: transform 0.3s ease;
-        }
+        .logo { text-decoration: none; }
+        img.logo { width: auto; height: 44px; border-radius: 16px; object-fit: contain; background: none; box-shadow: none; }
         .logo:hover { transform: scale(1.1); }
         .nav a { color: var(--text-body); text-decoration: none; margin-left: 30px; font-weight: 400; transition: color 0.3s ease; }
         .nav a:hover { color: var(--primary-color); }
@@ -69,14 +63,8 @@
         .header { padding: 20px 0; background: transparent; position: sticky; top: 0; z-index: 100; }
         .header .container { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; }
         .logo { font-size: 1.8rem; font-weight: 700; color: var(--text-primary); text-decoration: none; }
-        .logo {
-            font-size: 1.2rem; font-weight: 700; color: var(--bg-white); text-decoration: none;
-            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-            width: 45px; height: 45px; border-radius: 50%; display: flex;
-            align-items: center; justify-content: center;
-            box-shadow: 0 2px 8px var(--shadow-blue);
-            transition: transform 0.3s ease;
-        }
+        .logo { text-decoration: none; }
+        img.logo { width: auto; height: 44px; border-radius: 16px; object-fit: contain; background: none; box-shadow: none; }
         .logo:hover { transform: scale(1.1); }
         .nav a { color: var(--text-body); text-decoration: none; margin-left: 30px; font-weight: 400; transition: color 0.3s ease; }
         .nav a:hover { color: var(--primary-color); }
@@ -105,7 +93,7 @@
         .stepper-line { position: absolute; top: 19px; left: 10%; right: 10%; height: 4px; background: var(--border-light); z-index: 1; }
         .stepper-progress { position: absolute; top: 19px; left: 10%; height: 4px; background: var(--primary-color); z-index: 2; width: 0; transition: width 0.5s ease-in-out; }
         .step { display: flex; flex-direction: column; align-items: center; z-index: 3; background-color: var(--bg-light); padding: 0 10px; }
-        .step-number { width: 40px; height: 40px; border-radius: 50%; background: var(--bg-white); border: 3px solid var(--border-medium); color: var(--text-secondary); display: flex; align-items: center; justify-content: center; font-weight: 700; margin-bottom: 10px; transition: all 0.4s ease; }
+        .step-number { width: 40px; height: 44px; border-radius: 50%; background: var(--bg-white); border: 3px solid var(--border-medium); color: var(--text-secondary); display: flex; align-items: center; justify-content: center; font-weight: 700; margin-bottom: 10px; transition: all 0.4s ease; }
         .step-title { font-size: 0.9rem; font-weight: 500; color: var(--text-secondary); }
         .step.active .step-number { border-color: var(--primary-color); background: var(--primary-color); color: white; transform: scale(1.1); box-shadow: 0 0 15px var(--shadow-blue); }
         .step.active .step-title { color: var(--primary-dark); }
@@ -153,13 +141,13 @@
         @keyframes scroll-ticker { 0% { transform: translateX(0%); } 100% { transform: translateX(-50%); } }
 
     </style>
-<link rel="stylesheet" href="/css/responsive.css">
+<link rel="stylesheet" href="css/responsive.css">
 </head>
 <body>
     <header class="header">
         <div class="container">
             <a href="dashboard.html" class="logo-wrapper">
-                <div class="logo">CE</div>
+                <img src="css/logo.jpg" alt="Logo" class="logo" style="width: auto !important; height: 44px !important; max-height: 44px; border-radius: 16px !important; object-fit: contain !important; background: none !important; box-shadow: none !important; overflow: visible !important;">
                 <span class="logo-name">CryptoPlexTrade</span>
             </a>
             <nav class="nav">

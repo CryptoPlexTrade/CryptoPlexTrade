@@ -7,14 +7,70 @@
     <meta name="description" content="Your CryptoPlexTrade dashboard — overview of trades, portfolio, and market data.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/css/app.css">
+    <link rel="stylesheet" href="css/app.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         /* Dashboard-specific extras */
         .chart-container { position: relative; height: 220px; }
+
+        /* Announcement Popup */
+        .ann-overlay {
+            position: fixed; inset: 0; background: rgba(15,23,42,.45);
+            backdrop-filter: blur(4px); z-index: 9999;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; visibility: hidden; transition: opacity .3s, visibility .3s;
+        }
+        .ann-overlay.show { opacity: 1; visibility: visible; }
+        .ann-popup {
+            background: #fff; border-radius: 20px; padding: 32px 28px 24px;
+            max-width: 460px; width: 92%; position: relative;
+            box-shadow: 0 24px 64px rgba(0,0,0,.18);
+            transform: translateY(20px) scale(.96); transition: transform .35s cubic-bezier(.4,0,.2,1);
+            border-top: 4px solid var(--primary-color, #005baa);
+        }
+        .ann-overlay.show .ann-popup { transform: translateY(0) scale(1); }
+        .ann-popup-icon {
+            width: 50px; height: 50px; border-radius: 14px;
+            background: linear-gradient(135deg, #005baa, #00a9e0);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; margin-bottom: 16px;
+        }
+        .ann-popup h3 {
+            font-size: 1.15rem; font-weight: 700; color: #1e293b;
+            margin-bottom: 10px; line-height: 1.3;
+        }
+        .ann-popup p {
+            font-size: .92rem; color: #475569; line-height: 1.7;
+            margin-bottom: 20px; white-space: pre-line;
+        }
+        .ann-close-btn {
+            position: absolute; top: 14px; right: 14px; width: 32px; height: 32px;
+            border-radius: 50%; border: none; background: #f1f5f9; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem; color: #64748b; transition: background .2s, color .2s;
+        }
+        .ann-close-btn:hover { background: #e2e8f0; color: #1e293b; }
+        .ann-dismiss-btn {
+            width: 100%; padding: 12px; border: none; border-radius: 12px;
+            background: linear-gradient(135deg, #005baa, #00a9e0);
+            color: #fff; font-weight: 600; font-size: .95rem; cursor: pointer;
+            transition: transform .15s, box-shadow .2s;
+        }
+        .ann-dismiss-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,91,170,.25); }
     </style>
 </head>
 <body>
+
+<!-- Announcement Popup -->
+<div class="ann-overlay" id="ann-overlay">
+    <div class="ann-popup">
+        <button class="ann-close-btn" id="ann-close-btn">&times;</button>
+        <div class="ann-popup-icon">📢</div>
+        <h3 id="ann-popup-title"></h3>
+        <p id="ann-popup-message"></p>
+        <button class="ann-dismiss-btn" id="ann-dismiss-btn">Got it!</button>
+    </div>
+</div>
 
 <!-- Mobile sidebar overlay -->
 <div class="sidebar-overlay" id="sidebar-overlay"></div>
@@ -24,7 +80,7 @@
     <!-- ===== SIDEBAR ===== -->
     <aside class="sidebar" id="sidebar">
         <a href="dashboard.html" class="sidebar-brand">
-            <div class="sidebar-brand__orb">CP</div>
+            <img src="css/logo.jpg" alt="Logo" class="sidebar-brand__orb" style="width: auto !important; height: 44px !important; max-height: 44px; border-radius: 16px !important; object-fit: contain !important; background: none !important; padding: 0 !important; box-shadow: none !important; overflow: visible !important;">
             <span class="sidebar-brand__name">CryptoPlexTrade</span>
         </a>
         <nav class="sidebar-nav">
@@ -68,7 +124,7 @@
                 <!-- Notification Bell -->
                 <div class="notification-bell" id="notification-bell" style="position:relative;">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M5.85 3.5a.75.75 0 0 0-1.117-1 9.719 9.719 0 0 0-2.348 4.876.75.75 0 0 0 1.479.248A8.219 8.219 0 0 1 5.85 3.5ZM19.267 2.5a.75.75 0 1 0-1.118 1 8.22 8.22 0 0 1 1.987 4.124.75.75 0 0 0 1.48-.248A9.72 9.72 0 0 0 19.266 2.5Z"/><path fill-rule="evenodd" d="M12 2.25A6.75 6.75 0 0 0 5.25 9v.75a8.217 8.217 0 0 1-2.119 5.52.75.75 0 0 0 .298 1.206c1.544.57 3.16.99 4.831 1.243a3.75 3.75 0 1 0 7.48 0 24.583 24.583 0 0 0 4.83-1.244.75.75 0 0 0 .298-1.205 8.217 8.217 0 0 1-2.118-5.52V9A6.75 6.75 0 0 0 12 2.25ZM9.75 18c0-.034 0-.067.002-.1a25.05 25.05 0 0 0 4.496 0l.002.1a2.25 2.25 0 1 1-4.5 0Z" clip-rule="evenodd"/></svg>
-                    <span class="notification-count" id="notification-count" style="display:none;">0</span>
+                    <span class="notification-count" id="notification-count">0</span>
                     <div class="notifications-panel" id="notifications-panel">
                         <div class="notifications-header">
                             <span>Notifications</span>
@@ -431,7 +487,12 @@
     notifBell.addEventListener('click', e => { e.stopPropagation(); notifPanel.classList.toggle('show'); });
     document.addEventListener('click', () => notifPanel.classList.remove('show'));
     notifPanel.addEventListener('click', e => e.stopPropagation());
-    markAllBtn.addEventListener('click', e => { e.stopPropagation(); fetchNotifications(); });
+    markAllBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        const allIds = allNotifs.map(n => n.id);
+        localStorage.setItem('readNotifications', JSON.stringify(allIds));
+        fetchNotifications();
+    });
 
     // --- Referral Copy ---
     document.getElementById('copy-referral-btn').addEventListener('click', () => {
@@ -450,6 +511,42 @@
     fetchNotifications();
     setInterval(fetchLiveRates, 60000);
     setInterval(fetchMarketWatch, 60000);
+
+    // --- Announcement Popup ---
+    async function checkAnnouncement() {
+        try {
+            const r = await fetch('/api/announcement');
+            if (!r.ok) return;
+            const data = await r.json();
+            if (!data.active || !data.title) return;
+
+            // Check if user already dismissed this version today
+            const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+            const dismissed = JSON.parse(localStorage.getItem('ann_dismissed') || '{}');
+            if (dismissed.date === today && dismissed.updatedAt === data.updatedAt) return;
+
+            // Show the popup
+            document.getElementById('ann-popup-title').textContent = data.title;
+            document.getElementById('ann-popup-message').textContent = data.message;
+            setTimeout(() => document.getElementById('ann-overlay').classList.add('show'), 600);
+
+            // Dismiss handlers
+            function dismiss() {
+                const overlay = document.getElementById('ann-overlay');
+                overlay.classList.remove('show');
+                localStorage.setItem('ann_dismissed', JSON.stringify({ date: today, updatedAt: data.updatedAt }));
+            }
+            document.getElementById('ann-close-btn').addEventListener('click', dismiss);
+            document.getElementById('ann-dismiss-btn').addEventListener('click', dismiss);
+            document.getElementById('ann-overlay').addEventListener('click', (e) => {
+                if (e.target === e.currentTarget) dismiss();
+            });
+        } catch (e) {
+            console.error('Announcement check failed:', e);
+        }
+    }
+    checkAnnouncement();
+
 })();
 </script>
 </body>

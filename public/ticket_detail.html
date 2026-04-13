@@ -27,14 +27,8 @@
         }
         .header .container { display: flex; justify-content: space-between; align-items: center; }
         .logo { font-size: 1.8rem; font-weight: 700; color: var(--text-primary); text-decoration: none; }
-        .logo {
-            font-size: 1.2rem; font-weight: 700; color: var(--bg-white); text-decoration: none;
-            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-            width: 45px; height: 45px; border-radius: 50%; display: flex;
-            align-items: center; justify-content: center;
-            box-shadow: 0 2px 8px var(--shadow-blue);
-            transition: transform 0.3s ease;
-        }
+        .logo { text-decoration: none; }
+        img.logo { width: auto; height: 44px; border-radius: 16px; object-fit: contain; background: none; box-shadow: none; }
         .logo:hover { transform: scale(1.1); }
         .header-nav a { color: var(--text-body); text-decoration: none; margin-left: 30px; font-weight: 500; }
         .dashboard-layout { display: flex; height: calc(100vh - 81px); }
@@ -63,13 +57,13 @@
         .message.success { background-color: #e9f5ec; color: #28a745; }
         .message.error { background-color: #fbe9e7; color: #dc3545; }
     </style>
-<link rel="stylesheet" href="/css/responsive.css">
+<link rel="stylesheet" href="css/responsive.css">
 </head>
 <body>
     <header class="header">
         <div class="container">
             <a href="dashboard.html" class="logo-wrapper">
-                <div class="logo">CE</div>
+                <img src="css/logo.jpg" alt="Logo" class="logo" style="width: auto !important; height: 44px !important; max-height: 44px; border-radius: 16px !important; object-fit: contain !important; background: none !important; box-shadow: none !important; overflow: visible !important;">
                 <span class="logo-name">CryptoPlexTrade</span>
             </a>
             <nav class="header-nav">

@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const fs = require('fs');
 const authRoutes = require('./authRoutes');
 const orderRoutes = require('./orderRoutes');
 const supportRoutes = require('./supportRoutes');
@@ -24,6 +25,26 @@ const newsCache = {
     cacheDuration: 15 * 60 * 1000, // Cache for 15 minutes
 };
 
+// === MAINTENANCE MODE ===
+const maintenancePath = path.join(__dirname, 'maintenance.json');
+function isMaintenanceActive() {
+    try {
+        return JSON.parse(fs.readFileSync(maintenancePath, 'utf8'));
+    } catch { return { active: false, message: '' }; }
+}
+
+// Maintenance check BEFORE static files so dashboard pages get intercepted
+const userPages = ['/dashboard.html', '/trade.html', '/transactions.html', '/profile.html', '/support.html', '/contact.html', '/faq.html'];
+app.use((req, res, next) => {
+    const data = isMaintenanceActive();
+    if (!data.active) return next();
+    const p = req.path.toLowerCase();
+    if (userPages.includes(p)) {
+        return res.redirect('/maintenance.html');
+    }
+    next();
+});
+
 // Middleware
 app.use(express.static(path.join(__dirname, 'public'), { dotfiles: 'ignore' })); // Serve static files from the 'public' directory
 
@@ -46,6 +67,23 @@ app.use(cors({
 }));
 app.use(express.json()); // Allows the server to understand JSON data
 app.use(cookieParser()); // Allows the server to parse cookies
+
+// Public endpoint to check maintenance status
+app.get('/api/maintenance', (req, res) => {
+    const data = isMaintenanceActive();
+    res.json({ active: data.active, message: data.message || '' });
+});
+
+// Block user API calls during maintenance (but allow admin API, login, and maintenance check)
+app.use((req, res, next) => {
+    const data = isMaintenanceActive();
+    if (!data.active) return next();
+    const p = req.path.toLowerCase();
+    if (p.startsWith('/api/') && !p.startsWith('/api/admin') && !p.startsWith('/api/maintenance') && !p.startsWith('/api/login') && !p.startsWith('/api/register')) {
+        return res.status(503).json({ message: data.message || 'Site is under maintenance.' });
+    }
+    next();
+});
 
 // Serve the admin login page for the /admin-login route
 app.get('/admin-login', (req, res) => {
@@ -95,26 +133,57 @@ app.get('/api/rates', (req, res) => {
     res.status(200).json(getRates());
 });
 
+// Public endpoint to get active announcement (no auth needed)
+app.get('/api/announcement', (req, res) => {
+    try {
+        const data = JSON.parse(require('fs').readFileSync(require('path').join(__dirname, 'announcements.json'), 'utf8'));
+        if (data.active) {
+            res.json({ active: true, title: data.title, message: data.message, updatedAt: data.updatedAt });
+        } else {
+            res.json({ active: false });
+        }
+    } catch {
+        res.json({ active: false });
+    }
+});
+
 // A simple proxy endpoint to fetch crypto news
 app.get('/api/news', async (req, res) => {
     const now = Date.now();
 
     // If we have fresh data in the cache, serve it immediately.
     if (newsCache.data && (now - newsCache.lastFetch < newsCache.cacheDuration)) {
-        // logger.info('Serving news from cache.');
         return res.status(200).json(newsCache.data);
     }
 
     try {
-        // logger.info('Fetching fresh news from API.');
-        const newsResponse = await fetch('https://min-api.cryptocompare.com/data/v2/news/?lang=EN');
+        // Try CryptoCompare first (with optional api_key from .env)
+        const apiKey = process.env.CRYPTOCOMPARE_API_KEY || '';
+        const ccUrl = `https://min-api.cryptocompare.com/data/v2/news/?lang=EN${apiKey ? '&api_key=' + apiKey : ''}`;
+        const newsResponse = await fetch(ccUrl);
         const newsData = await newsResponse.json();
-        newsCache.data = newsData; // Store data in cache
-        newsCache.lastFetch = now; // Update the timestamp
-        res.status(200).json(newsCache.data);
+        
+        // If CryptoCompare returns valid articles, cache and return them
+        if (newsData.Data && Array.isArray(newsData.Data) && newsData.Data.length > 0) {
+            newsCache.data = newsData;
+            newsCache.lastFetch = now;
+            return res.status(200).json(newsCache.data);
+        }
+
+        // CryptoCompare returned empty — use fallback headlines
+        throw new Error('No articles from CryptoCompare');
     } catch (error) {
-        logger.error('News fetch error:', error);
-        res.status(500).json({ message: 'Failed to fetch news' });
+        logger.warn('News: CryptoCompare unavailable, using fallback headlines.');
+        // Return hardcoded placeholder news so the section isn't empty
+        res.status(200).json({
+            Data: [
+                { title: 'Bitcoin continues to dominate the crypto market', url: 'https://www.coingecko.com', source: 'CryptoPlexTrade' },
+                { title: 'Ethereum upgrades drive network efficiency', url: 'https://www.coingecko.com', source: 'CryptoPlexTrade' },
+                { title: 'USDT remains the top stablecoin by volume', url: 'https://www.coingecko.com', source: 'CryptoPlexTrade' },
+                { title: 'Crypto adoption grows across emerging markets', url: 'https://www.coingecko.com', source: 'CryptoPlexTrade' },
+                { title: 'Regulatory clarity brings institutional investors', url: 'https://www.coingecko.com', source: 'CryptoPlexTrade' }
+            ]
+        });
     }
 });
 

@@ -104,23 +104,21 @@ body {
 }
 
 .logo {
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: var(--bg-white);
     text-decoration: none;
-    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 8px var(--shadow-blue);
     transition: transform 0.3s ease;
 }
 
+img.logo {
+    width: auto;
+    height: 44px;
+    border-radius: 16px;
+    object-fit: contain;
+    background: none;
+    box-shadow: none;
+}
+
 .logo:hover {
-    transform: scale(1.1);
+    transform: scale(1.05);
 }
 
 .nav a, .header-nav a {
@@ -327,12 +325,8 @@ body {
         }
         .header .container { display: flex; justify-content: space-between; align-items: center; }
         .logo { font-size: 1.8rem; font-weight: 700; color: var(--text-primary); text-decoration: none; }
-        .logo {
-            font-size: 1.2rem; font-weight: 700; color: var(--bg-white); text-decoration: none;
-            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-            width: 45px; height: 45px; border-radius: 50%; display: flex;
-            align-items: center; justify-content: center;
-            box-shadow: 0 2px 8px var(--shadow-blue);
-            transition: transform 0.3s ease;
+        img.logo {
+            width: auto; height: 44px; border-radius: 16px;
+            object-fit: contain; background: none; box-shadow: none;
         }
-        .logo:hover { transform: scale(1.1); }
+        .logo:hover { transform: scale(1.05); }

@@ -70,19 +70,8 @@
             gap: 12px;
         }
 
-        .brand-circle {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            font-size: 0.9rem;
-        }
+        .brand-circle { text-decoration: none; }
+        img.brand-circle { width: auto; height: 44px; border-radius: 16px; object-fit: contain; background: none; box-shadow: none; }
 
         .brand-name {
             font-size: 1.25rem;
@@ -477,11 +466,11 @@
             }
         }
     </style>
-<link rel="stylesheet" href="/css/responsive.css">
+<link rel="stylesheet" href="css/responsive.css">
 </head>
 <body>
 <header class="header">
-    <a href="index.html" class="brand"><div class="brand-circle">CP</div><span class="brand-name">CryptoPlexTrade</span></a>
+    <a href="index.html" class="brand"><img src="css/logo.jpg" alt="Logo" class="brand-circle" style="width: auto !important; height: 44px !important; max-height: 44px; border-radius: 16px !important; object-fit: contain !important; background: none !important; padding: 0 !important; box-shadow: none !important; overflow: visible !important;"><span class="brand-name">CryptoPlexTrade</span></a>
     <nav class="header-nav">
         <a href="index.html#rates">Rates</a>
         <a href="faq.html">FAQ</a>

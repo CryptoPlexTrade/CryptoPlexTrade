@@ -23,11 +23,11 @@ for (const file of files) {
         let content = fs.readFileSync(filePath, 'utf8');
         let initialContent = content;
 
-        // Replace <div class="sidebar-brand__orb">...</div>
-        content = content.replace(/<div\s+class="sidebar-brand__orb"[^>]*>.*?<\/div>/gi, '<img src="/css/logo.PNG" alt="Logo" class="sidebar-brand__orb" style="background: none; object-fit: contain; padding: 2px;">');
+        // Replace logo element encapsulating CE or CP
+        content = content.replace(/<div\s+class="logo"[^>]*>(?:CE|CP)<\/div>/gi, '<img src="/css/logo.jpg" alt="Logo" class="logo" style="width: 35px; height: 35px; object-fit: cover; border-radius: 50%;">');
         
-        // Replace <div class="logo">...</div>
-        content = content.replace(/<div\s+class="logo"[^>]*>.*?<\/div>/gi, '<img src="/css/logo.PNG" alt="Logo" class="logo" style="background: none; object-fit: contain; border-radius: 50%; padding: 2px;">');
+        // Also capture anchors that function as logos
+        content = content.replace(/<a\s+href="[^"]*"\s+class="logo"[^>]*>(?:CE|CP)<\/a>/gi, '<a href="index.html" class="logo" style="width: 35px; height: 35px; display: inline-block; overflow: hidden; border-radius: 50%;"><img src="/css/logo.jpg" alt="Logo" style="width:100%; height:100%; object-fit:cover;"></a>');
 
         if (content !== initialContent) {
             fs.writeFileSync(filePath, content, 'utf8');

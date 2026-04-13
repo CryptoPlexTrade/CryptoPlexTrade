@@ -38,8 +38,9 @@ router.post('/register', async (req, res) => {
     }
 
     try {
-        // Check if user already exists
-        const [userExists] = await db.query('SELECT email FROM users WHERE email = ?', [email]);
+        // Check if user already exists (case-insensitive)
+        const emailLower = email.toLowerCase().trim();
+        const [userExists] = await db.query('SELECT email FROM users WHERE LOWER(email) = ?', [emailLower]);
         if (userExists.length > 0) {
             return res.status(409).json({ message: 'An account with this email already exists.' });
         }
@@ -86,15 +87,16 @@ router.post('/register', async (req, res) => {
 
 // === LOGIN ENDPOINT ===
 router.post('/login', async (req, res) => {
-    const { email, password } = req.body;
+    const { password } = req.body;
+    const email = (req.body.email || '').toLowerCase().trim();
 
     if (!email || !password) {
         return res.status(400).json({ message: 'Please provide email and password.' });
     }
 
     try {
-        // Find the user by email
-        const [users] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
+        // Find the user by email (case-insensitive)
+        const [users] = await db.query('SELECT * FROM users WHERE LOWER(email) = ?', [email]);
         if (users.length === 0) {
             return res.status(401).json({ message: 'Invalid credentials.' });
         }

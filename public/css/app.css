@@ -75,18 +75,21 @@ body {
 }
 
 .sidebar-brand__orb {
-    width: 36px;
-    height: 36px;
-    border-radius: 9px;
-    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    width: auto;
+    height: 44px;
+    border-radius: 16px;
+    background: none;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.75rem;
-    font-weight: 800;
-    color: white;
     flex-shrink: 0;
-    letter-spacing: 0.5px;
+    overflow: visible;
+}
+img.sidebar-brand__orb {
+    width: auto;
+    height: 44px;
+    border-radius: 16px;
+    object-fit: contain;
 }
 
 .sidebar-brand__name {
@@ -185,7 +188,7 @@ body {
     border: none;
     cursor: pointer;
     padding: 5px;
-    border-radius: 6px;
+    border-radius: 16px;
 }
 
 .hamburger-btn span {
@@ -272,7 +275,7 @@ body {
 
 .kpi-card__icon {
     width: 36px;
-    height: 36px;
+    height: 44px;
     border-radius: 9px;
     display: flex;
     align-items: center;
@@ -795,7 +798,7 @@ body {
         border-bottom: 1px solid var(--border);
         font-size: 0.83rem;
         gap: 12px;
-        min-height: 40px;
+        min-height: 44px;
     }
     .data-table--cards tbody tr td:last-child { border-bottom: none; }
 
@@ -986,9 +989,13 @@ body {
 .ticker-tape {
     position: fixed; bottom: 0; left: 0; width: 100%;
     background: #0f172a; color: #e2e8f0;
-    padding: 8px 0; z-index: 400;
+    padding: 8px 0;
+    padding-bottom: calc(8px + env(safe-area-inset-bottom)); /* iPhone bottom bar */
+    z-index: 1000; /* above sidebar (200), overlay (199), notifications (600) */
     overflow: hidden; white-space: nowrap;
     border-top: 2px solid var(--primary);
+    -webkit-transform: translateZ(0); /* force GPU layer on iOS Safari */
+    transform: translateZ(0);
 }
 
 .ticker-tape__track { display: inline-block; animation: scroll-ticker 42s linear infinite; }
@@ -1030,7 +1037,7 @@ body {
     .sidebar.open { transform: translateX(0); }
     .hamburger-btn { display: flex; }
     .topbar { padding: 0 18px; }
-    .page-content { padding: 20px 18px 100px; }
+    .page-content { padding: 20px 18px 120px; } /* extra bottom for ticker */
     .dash-layout { grid-template-columns: 1fr; }
     .grid-2 { grid-template-columns: 1fr; }
     .grid-3 { grid-template-columns: 1fr 1fr; }
@@ -1050,5 +1057,5 @@ body {
     .notifications-panel { width: 280px; right: -12px; }
     .trade-wrapper { max-width: 100%; }
     .topbar { padding: 0 14px; }
-    .page-content { padding: 16px 14px 100px; }
+    .page-content { padding: 16px 14px 120px; } /* extra bottom for ticker */
 }
