@@ -152,6 +152,18 @@
 
     <script src="admin.js"></script>
     <script>
+        // Mobile sidebar toggle
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const sidebar = document.getElementById('admin-sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        const closeBtn = document.getElementById('sidebar-close-btn');
+        function openSidebar() { sidebar.classList.add('sidebar-open'); overlay.classList.add('show'); overlay.style.display = 'block'; }
+        function closeSidebar() { sidebar.classList.remove('sidebar-open'); overlay.classList.remove('show'); setTimeout(() => { overlay.style.display = 'none'; }, 300); }
+        menuBtn.addEventListener('click', openSidebar);
+        closeBtn.addEventListener('click', closeSidebar);
+        overlay.addEventListener('click', closeSidebar);
+    </script>
+    <script>
     (function() {
         const activeToggle = document.getElementById('ann-active');
         const titleInput = document.getElementById('ann-title');
