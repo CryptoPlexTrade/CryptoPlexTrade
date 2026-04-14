@@ -32,8 +32,9 @@ router.post('/create', authenticateToken, async (req, res) => {
         }
         const exchangeRate = productRates.buy; // Use the "buy" rate because the user is buying from us
 
-        // Find the selected miner fee from the trusted list
-        const selectedMinerFee = rates.minerFees.find(f => f.value === minerFeeValue);
+        // Find the selected miner fee from the product's fee list
+        const productMinerFees = productRates.minerFees || [];
+        const selectedMinerFee = productMinerFees.find(f => f.value === minerFeeValue);
         if (!selectedMinerFee) {
             return res.status(400).json({ message: 'Invalid miner fee selected.' });
         }
@@ -46,11 +47,12 @@ router.post('/create', authenticateToken, async (req, res) => {
         // --- END SERVER-SIDE CALCULATION ---
 
         // Insert new order into the database
-        const [result] = await db.query(
+        const [, orderMeta] = await db.query(
             `INSERT INTO orders (user_id, order_type, product, usd_amount, ghs_amount, fee_ghs, total_paid, wallet_address, transaction_id, status) 
              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             [userId, 'buy', product, parsedUsdAmount, calculatedGhsAmount, calculatedFeeGhs, calculatedTotalPaid, walletAddress, transactionId, ORDER_STATUS.PENDING_CONFIRMATION]
         );
+        const newOrderId = orderMeta.insertId;
 
         const [users] = await db.query('SELECT email FROM users WHERE id = ?', [userId]);
         const userEmail = users.length > 0 ? users[0].email : 'N/A';
@@ -64,11 +66,11 @@ router.post('/create', authenticateToken, async (req, res) => {
             wallet_address: walletAddress,
             user_transaction_id: transactionId,
             user_email: userEmail
-        }, result.insertId).catch(emailError => {
-            logger.error(`Failed to send admin notification email for order #${result.insertId}:`, emailError);
+        }, newOrderId).catch(emailError => {
+            logger.error(`Failed to send admin notification email for order #${newOrderId}:`, emailError);
         });
 
-        res.status(201).json({ message: 'Order created successfully!', orderId: result.insertId });
+        res.status(201).json({ message: 'Order created successfully!', orderId: newOrderId });
 
     } catch (error) {
         logger.error('Order creation error:', error);
@@ -129,11 +131,12 @@ router.post('/create-sell-order', authenticateToken, async (req, res) => {
         const payoutDetailsString = JSON.stringify(payoutInfo);
 
         // Insert new sell order into the database
-        const [result] = await db.query(
+        const [, sellMeta] = await db.query(
             `INSERT INTO orders (user_id, order_type, product, usd_amount, ghs_amount, total_paid, wallet_address, transaction_id, status) 
              VALUES (?, 'sell', ?, ?, ?, ?, ?, ?, ?)`,
             [userId, product, parsedProductAmount, calculatedGhsToReceive, calculatedGhsToReceive, payoutDetailsString, transactionId, ORDER_STATUS.PENDING_CONFIRMATION]
         );
+        const newSellOrderId = sellMeta.insertId;
 
         const [users] = await db.query('SELECT email FROM users WHERE id = ?', [userId]);
         const userEmail = users.length > 0 ? users[0].email : 'N/A';
@@ -147,11 +150,11 @@ router.post('/create-sell-order', authenticateToken, async (req, res) => {
             user_transaction_id: transactionId,
             payout_info: payoutInfo, // The original object, not the string
             user_email: userEmail
-        }, result.insertId).catch(emailError => {
-            logger.error(`Failed to send admin notification email for sell order #${result.insertId}:`, emailError);
+        }, newSellOrderId).catch(emailError => {
+            logger.error(`Failed to send admin notification email for sell order #${newSellOrderId}:`, emailError);
         });
 
-        res.status(201).json({ message: 'Sell order created successfully!', orderId: result.insertId });
+        res.status(201).json({ message: 'Sell order created successfully!', orderId: newSellOrderId });
 
     } catch (error) {
         logger.error('Sell order creation error:', error);
