@@ -62,8 +62,12 @@ let ratesCache = {
         }
         logger.info('Rates loaded from rates.json');
     } catch (error) {
-        logger.warn('rates.json not found or invalid. Using default rates. Saving new file.');
-        await fs.writeFile(ratesFilePath, JSON.stringify(ratesCache, null, 2));
+        logger.warn('rates.json not found or invalid. Using default in-memory rates.');
+        try {
+            await fs.writeFile(ratesFilePath, JSON.stringify(ratesCache, null, 2));
+        } catch (writeErr) {
+            logger.warn('Could not write rates.json (read-only filesystem). Using in-memory defaults.');
+        }
     }
 })();
 
@@ -71,8 +75,12 @@ const getRates = () => ratesCache;
 
 const setRates = async (newRates) => {
     ratesCache = newRates;
-    await fs.writeFile(ratesFilePath, JSON.stringify(ratesCache, null, 2));
-    logger.info('Rates have been updated and saved to rates.json');
+    try {
+        await fs.writeFile(ratesFilePath, JSON.stringify(ratesCache, null, 2));
+        logger.info('Rates have been updated and saved to rates.json');
+    } catch (err) {
+        logger.warn('Could not persist rates to file (read-only filesystem). Rates updated in memory only.');
+    }
 };
 
-module.exports = { getRates, setRates };
+module.exports = { getRates, setRates };

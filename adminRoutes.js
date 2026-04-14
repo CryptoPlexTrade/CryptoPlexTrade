@@ -180,7 +180,11 @@ function getAnnouncement() {
 }
 
 function saveAnnouncement(data) {
-    fs.writeFileSync(announcementPath, JSON.stringify(data, null, 2), 'utf8');
+    try {
+        fs.writeFileSync(announcementPath, JSON.stringify(data, null, 2), 'utf8');
+    } catch (err) {
+        logger.warn('Could not persist announcement to file (read-only filesystem). Updated in memory only.');
+    }
 }
 
 // Admin: Get current announcement
@@ -217,7 +221,11 @@ function getMaintenance() {
 }
 
 function saveMaintenance(data) {
-    fs.writeFileSync(maintenancePath, JSON.stringify(data, null, 2), 'utf8');
+    try {
+        fs.writeFileSync(maintenancePath, JSON.stringify(data, null, 2), 'utf8');
+    } catch (err) {
+        logger.warn('Could not persist maintenance to file (read-only filesystem). Updated in memory only.');
+    }
 }
 
 // Admin: Get maintenance status
