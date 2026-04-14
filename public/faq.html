@@ -13,15 +13,76 @@
         body{font-family:'Poppins',sans-serif;min-height:100vh;display:flex;flex-direction:column;background:linear-gradient(135deg,#e8f4fe 0%,#f0f7ff 40%,#dbeef9 70%,#c8e5f5 100%);background-size:300% 300%;animation:bg-shift 18s ease infinite;color:var(--text-dark);}
         @keyframes bg-shift{0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
 
-        .header{position:sticky;top:0;z-index:100;padding:16px 40px;display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.7);backdrop-filter:blur(12px);border-bottom:1px solid rgba(0,91,170,.1);}
-        .brand{display:flex;align-items:center;gap:10px;text-decoration:none;}
-        .brand-circle { text-decoration: none; }
-        img.brand-circle { width: auto; height: 44px; border-radius: 16px; object-fit: contain; background: none !important; box-shadow: none !important; } img.brand-circle { width: auto; height: 44px; border-radius: 16px; object-fit: contain; background: none !important; box-shadow: none !important; }
-        .brand-name{font-size:1.1rem;font-weight:700;color:var(--text-dark);}
-        .header-nav{display:flex;align-items:center;gap:24px;}
-        .header-nav a{font-size:.85rem;color:var(--text-muted);text-decoration:none;font-weight:500;transition:color .2s;}
-        .header-nav a:hover{color:var(--blue-main);}
-        .header-nav .btn-cta{background:linear-gradient(90deg,var(--blue-main),var(--blue-light));color:#fff;font-weight:600;padding:8px 20px;border-radius:50px;}
+        /* ── Container ─────────────────────────────────────── */
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+        
+        /* ── Header ─────────────────────────────────────────── */
+        .header {
+            position: sticky; top: 0; z-index: 200;
+            padding: 18px 0;
+            background: rgba(255,255,255,0.82);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(0,91,170,0.1);
+        }
+        .header .container {
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .logo-wrapper { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .logo {
+            width: 42px; height: 42px; border-radius: 50%;
+            background: linear-gradient(45deg, var(--blue-main), var(--blue-light));
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1rem; font-weight: 700; color: #fff;
+            box-shadow: 0 2px 8px var(--shadow-b);
+            transition: transform .3s;
+        }
+        .logo:hover { transform: scale(1.08); }
+        .logo-name { font-size: 1.1rem; font-weight: 700; color: var(--text-dark); }
+
+        .nav { display: flex; align-items: center; gap: 8px; }
+        .nav a {
+            color: var(--text-mid); text-decoration: none;
+            margin-left: 22px; font-weight: 500; font-size: .9rem;
+            transition: color .2s;
+        }
+        .nav a:hover { color: var(--blue-main); }
+
+        .btn-primary {
+            background: linear-gradient(45deg, var(--blue-main), var(--blue-light));
+            background-size: 200% 200%;
+            color: white; padding: 9px 22px; border-radius: 50px;
+            text-decoration: none; font-weight: 600; font-size: .9rem;
+            transition: transform .25s, box-shadow .25s;
+            animation: gradient-animation 8s ease infinite;
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px var(--shadow-b); }
+        @keyframes gradient-animation {
+            0%   { background-position: 0% 50%; }
+            50%  { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Mobile CTA */
+        .mobile-header-cta { display: none; gap: 8px; align-items: center; }
+        .mobile-login-btn {
+            padding: 7px 14px;
+            border: 2px solid var(--blue-main);
+            border-radius: 50px;
+            color: var(--blue-main);
+            text-decoration: none;
+            font-size: .8rem; font-weight: 700;
+            white-space: nowrap;
+            transition: background .2s, color .2s;
+        }
+        .mobile-login-btn:hover { background: var(--blue-main); color: #fff; }
+        .mobile-signup-btn { padding: 7px 14px !important; font-size: .8rem !important; white-space: nowrap; border: none; }
+
+        @media (max-width: 900px) {
+            .nav { display: none !important; }
+            .mobile-header-cta { display: flex; margin-left: auto; }
+            .logo-name { font-size: .95rem; }
+        }
 
         .hero{text-align:center;padding:56px 20px 32px;position:relative;z-index:1;}
         .hero h1{font-size:2.4rem;font-weight:800;color:var(--text-dark);margin-bottom:10px;}
@@ -74,14 +135,23 @@
 <body>
 
 <header class="header">
-    <a href="index.html" class="brand"><img src="css/logo.jpg" alt="Logo" class="brand-circle" style="width: auto !important; height: 44px !important; max-height: 44px; border-radius: 16px !important; object-fit: contain !important; background: none !important; padding: 0 !important; box-shadow: none !important; overflow: visible !important;"><span class="brand-name">CryptoPlexTrade</span></a>
-    <nav class="header-nav">
-        <a href="rates">Rates</a>
-        <a href="faq.html" style="color:#005baa;">FAQ</a>
-        <a href="contact.html">Contact</a>
-        <a href="login.html">Login</a>
-        <a href="register.html" class="btn-cta">Get Started</a>
-    </nav>
+    <div class="container">
+        <a href="index.html" class="logo-wrapper">
+            <img src="css/logo.jpg" alt="Logo" class="logo" style="width: auto !important; height: 44px !important; max-height: 44px; border-radius: 16px !important; object-fit: contain !important; background: none !important; box-shadow: none !important; overflow: visible !important;">
+            <span class="logo-name">CryptoPlexTrade</span>
+        </a>
+        <nav class="nav">
+            <a href="rates">Rates</a>
+            <a href="why-us">Features</a>
+            <a href="help.html">Help</a>
+            <a href="login.html">Login</a>
+            <a href="register.html" class="btn-primary">Sign Up</a>
+        </nav>
+        <div class="mobile-header-cta">
+            <a href="login.html" class="mobile-login-btn">Login</a>
+            <a href="register.html" class="btn-primary mobile-signup-btn">Sign Up</a>
+        </div>
+    </div>
 </header>
 
 
