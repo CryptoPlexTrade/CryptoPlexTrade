@@ -46,8 +46,10 @@ app.use((req, res, next) => {
 });
 
 // Middleware
-app.use(express.static(path.join(__dirname, 'public'), { dotfiles: 'ignore' })); // Serve static files from the 'public' directory
-
+app.use(express.static(path.join(__dirname, 'public'), { 
+    dotfiles: 'ignore',
+    extensions: ['html'] // This allows extensionless URLs (e.g. /login instead of /login.html)
+})); // Serve static files from the 'public' directory
 // Apply security headers. A functional CSP for the current architecture.
 app.use(helmet.contentSecurityPolicy({
     directives: {
