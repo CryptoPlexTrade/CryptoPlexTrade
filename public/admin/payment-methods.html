@@ -91,6 +91,12 @@
         .save-msg.success { display: block; background: rgba(40,167,69,.08); color: #16a34a; border: 1px solid rgba(40,167,69,.2); }
         .save-msg.error { display: block; background: rgba(220,53,69,.07); color: #dc3545; border: 1px solid rgba(220,53,69,.2); }
         .last-updated { font-size: .78rem; color: #94a3b8; font-style: italic; margin-top: 4px; }
+        .wallet-hint {
+            font-size: .72rem; font-weight: 600; margin-top: 4px; min-height: 16px;
+            transition: color .2s;
+        }
+        .wallet-hint.valid  { color: #16a34a; }
+        .wallet-hint.invalid{ color: #dc3545; }
         @media (max-width: 768px) {
             .pm-grid { grid-template-columns: 1fr; }
             .wallet-grid { grid-template-columns: 1fr; }
@@ -178,19 +184,23 @@
                     <div class="wallet-grid">
                         <div class="wallet-item pm-field">
                             <label>BTC Wallet <span class="wallet-badge">Bitcoin</span></label>
-                            <input type="text" id="wallet-btc" class="wallet-input" placeholder="bc1q...">
+                            <input type="text" id="wallet-btc" class="wallet-input" placeholder="bc1q... or 1... or 3..." autocomplete="off" spellcheck="false">
+                            <div class="wallet-hint" id="hint-btc"></div>
                         </div>
                         <div class="wallet-item pm-field">
                             <label>ETH Wallet <span class="wallet-badge">Ethereum</span></label>
-                            <input type="text" id="wallet-eth" class="wallet-input" placeholder="0x...">
+                            <input type="text" id="wallet-eth" class="wallet-input" placeholder="0x..." autocomplete="off" spellcheck="false">
+                            <div class="wallet-hint" id="hint-eth"></div>
                         </div>
                         <div class="wallet-item pm-field">
                             <label>USDT (TRC20) Wallet <span class="wallet-badge">Tron</span></label>
-                            <input type="text" id="wallet-usdt-trc20" class="wallet-input" placeholder="T...">
+                            <input type="text" id="wallet-usdt-trc20" class="wallet-input" placeholder="T..." autocomplete="off" spellcheck="false">
+                            <div class="wallet-hint" id="hint-trc20"></div>
                         </div>
                         <div class="wallet-item pm-field">
                             <label>USDT (ERC20) Wallet <span class="wallet-badge">Ethereum</span></label>
-                            <input type="text" id="wallet-usdt-erc20" class="wallet-input" placeholder="0x...">
+                            <input type="text" id="wallet-usdt-erc20" class="wallet-input" placeholder="0x..." autocomplete="off" spellcheck="false">
+                            <div class="wallet-hint" id="hint-erc20"></div>
                         </div>
                     </div>
                 </div>
@@ -339,6 +349,35 @@
                 saveBtn.textContent = 'Save All Payment Details';
                 setTimeout(() => { saveMsg.style.display = 'none'; }, 5000);
             }
+        });
+
+        // ── Admin Wallet Address Validator ──────────────────────
+        const WALLET_RULES = {
+            'wallet-btc':       { pattern: /^(1[a-km-zA-HJ-NP-Z1-9]{25,34}|3[a-km-zA-HJ-NP-Z1-9]{25,34}|bc1[a-z0-9]{39,59})$/, hint: 'BTC: starts with 1, 3, or bc1 · 26–62 chars' },
+            'wallet-eth':       { pattern: /^0x[0-9a-fA-F]{40}$/, hint: 'ETH: starts with 0x · 42 chars total' },
+            'wallet-usdt-trc20':{ pattern: /^T[1-9A-HJ-NP-Za-km-z]{33}$/, hint: 'TRC-20: starts with T · 34 chars' },
+            'wallet-usdt-erc20':{ pattern: /^0x[0-9a-fA-F]{40}$/, hint: 'ERC-20: starts with 0x · 42 chars total' },
+        };
+        const HINT_MAP = { 'wallet-btc':'hint-btc','wallet-eth':'hint-eth','wallet-usdt-trc20':'hint-trc20','wallet-usdt-erc20':'hint-erc20' };
+        Object.entries(WALLET_RULES).forEach(([id, rule]) => {
+            const inp  = document.getElementById(id);
+            const hint = document.getElementById(HINT_MAP[id]);
+            if (!inp || !hint) return;
+            inp.addEventListener('input', () => {
+                const val = inp.value.trim();
+                if (!val) { hint.textContent = rule.hint; hint.className = 'wallet-hint'; inp.style.borderColor = ''; return; }
+                if (rule.pattern.test(val)) {
+                    hint.textContent = '✓ Valid address';
+                    hint.className = 'wallet-hint valid';
+                    inp.style.borderColor = '#16a34a';
+                } else {
+                    hint.textContent = '✗ ' + rule.hint;
+                    hint.className = 'wallet-hint invalid';
+                    inp.style.borderColor = '#dc3545';
+                }
+            });
+            // On load: show hint text in neutral colour
+            inp.addEventListener('focus', () => { if (!inp.value.trim()) { hint.textContent = rule.hint; hint.className = 'wallet-hint'; } });
         });
 
         loadPaymentMethods();

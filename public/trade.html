@@ -164,8 +164,9 @@
                         </div>
 
                         <div class="float-group" id="wallet-address-group">
-                            <input type="text" id="wallet-address" name="wallet-address" required placeholder=" ">
+                            <input type="text" id="wallet-address" name="wallet-address" required placeholder=" " autocomplete="off" spellcheck="false">
                             <label for="wallet-address" id="wallet-label">Your Wallet Address</label>
+                            <div id="wallet-validation-msg" style="display:none;font-size:.78rem;font-weight:600;padding:5px 2px 0;transition:all .2s;"></div>
                         </div>
 
                         <label class="trade-checkbox">
@@ -377,22 +378,69 @@
     ghsAmountInput.addEventListener('input', () => calculate('ghs'));
     productSelect.addEventListener('change', updateUI);
 
+    // ── Crypto Address Validator ─────────────────────────────
+    const ADDR_RULES = {
+        BTC:        { pattern: /^(1[a-km-zA-HJ-NP-Z1-9]{25,34}|3[a-km-zA-HJ-NP-Z1-9]{25,34}|bc1[a-z0-9]{39,59})$/, hint: 'BTC: starts with 1, 3, or bc1 · 26–62 characters' },
+        ETH:        { pattern: /^0x[0-9a-fA-F]{40}$/, hint: 'ETH: starts with 0x · 42 characters total' },
+        USDT_TRC20: { pattern: /^T[1-9A-HJ-NP-Za-km-z]{33}$/, hint: 'TRC-20: starts with T · 34 characters' },
+        USDT_ERC20: { pattern: /^0x[0-9a-fA-F]{40}$/, hint: 'ERC-20: starts with 0x · 42 characters total' },
+    };
+
+    const walletInput  = document.getElementById('wallet-address');
+    const walletMsg    = document.getElementById('wallet-validation-msg');
+    let   walletValid  = false;
+
+    function validateWallet() {
+        const addr = walletInput.value.trim();
+        const p    = productSelect.value;
+        const rule = ADDR_RULES[p];
+        if (!rule) return;
+
+        if (!addr) {
+            walletMsg.style.display = 'none';
+            walletInput.style.borderColor = '';
+            walletValid = false;
+            return;
+        }
+        if (rule.pattern.test(addr)) {
+            walletMsg.innerHTML = `<span style="color:#16a34a">✓ Valid ${p.replace('_',' ')} address</span>`;
+            walletInput.style.borderColor = '#16a34a';
+            walletMsg.style.display = 'block';
+            walletValid = true;
+        } else {
+            walletMsg.innerHTML = `<span style="color:#dc3545">✗ Invalid address — <em>${rule.hint}</em></span>`;
+            walletInput.style.borderColor = '#dc3545';
+            walletMsg.style.display = 'block';
+            walletValid = false;
+        }
+    }
+
+    walletInput.addEventListener('input', validateWallet);
+    // Re-validate when product changes (rules differ per coin)
+    productSelect.addEventListener('change', validateWallet);
+
     tradeForm.addEventListener('submit', function (e) {
         e.preventDefault();
         const usdAmount = parseFloat(usdAmountInput.value);
-        const walletAddress = document.getElementById('wallet-address').value;
+        const walletAddress = walletInput.value.trim();
         const termsChecked = document.getElementById('terms').checked;
 
         if (currentMode === 'buy') {
             if (!usdAmount || usdAmount <= 0) { alert('Please enter a valid amount to buy.'); return; }
-            if (!walletAddress.trim()) { alert('Please enter your wallet address.'); return; }
+            if (!walletAddress) { alert('Please enter your wallet address.'); return; }
+            if (!walletValid) {
+                walletInput.focus();
+                walletMsg.style.display = 'block';
+                alert('The wallet address you entered doesn\'t look valid for ' + productSelect.value + '. Please double-check it.');
+                return;
+            }
             if (!termsChecked) { alert('You must agree to the Terms & Agreement.'); return; }
             const p = productSelect.value;
             localStorage.setItem('buyOrderDetails', JSON.stringify({
                 product: p, usdAmount: usdAmountInput.value, productAmount: usdAmount,
                 ghsAmount: ghsAmountInput.value, feeGhs: feeGhsInput.value,
                 totalPay: totalPayInput.value, minerFeeValue: parseFloat(minerFeeSelect.value) || 0,
-                walletAddress: walletAddress.trim(), rate: rates[p].buy
+                walletAddress: walletAddress, rate: rates[p].buy
             }));
             window.location.href = 'order_summary.html';
         } else {
