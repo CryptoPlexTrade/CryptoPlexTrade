@@ -53,9 +53,10 @@ async function save(data) {
     try {
         await db.query(`
             INSERT INTO system_settings (key, value, updated_at) 
-            VALUES ('payment_methods', $1::jsonb, NOW())
+            VALUES ('payment_methods', ?::jsonb, NOW())
             ON CONFLICT (key) DO UPDATE 
             SET value = EXCLUDED.value, updated_at = EXCLUDED.updated_at
+            RETURNING key
         `, [JSON.stringify(data)]);
         logger.info('Payment methods persisted to database.');
     } catch (err) {
