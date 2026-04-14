@@ -8,6 +8,59 @@
 *, *::before, *::after { box-sizing: border-box; }
 
 /* ══════════════════════════════════════════════════════════
+   0. GLOBAL LOGO SIZING
+   ══════════════════════════════════════════════════════════ */
+
+/* Desktop – make the logo more prominent and visible */
+img.logo,
+img.sidebar-brand__orb,
+img.os-brand__orb,
+img.brand-orb,
+img.brand-circle {
+    height: 56px !important;
+    max-height: 56px !important;
+    width: auto !important;
+    border-radius: 14px !important;
+    object-fit: contain !important;
+    background: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    transition: transform 0.3s ease;
+}
+
+img.logo:hover,
+img.sidebar-brand__orb:hover,
+img.os-brand__orb:hover,
+img.brand-orb:hover,
+img.brand-circle:hover {
+    transform: scale(1.05);
+}
+
+@media (max-width: 900px) {
+    img.logo,
+    img.sidebar-brand__orb,
+    img.os-brand__orb,
+    img.brand-orb,
+    img.brand-circle {
+        height: 44px !important;
+        max-height: 44px !important;
+    }
+}
+
+@media (max-width: 640px) {
+    img.logo,
+    img.sidebar-brand__orb,
+    img.os-brand__orb,
+    img.brand-orb,
+    img.brand-circle {
+        height: 38px !important;
+        max-height: 38px !important;
+        border-radius: 10px !important;
+    }
+}
+
+/* ══════════════════════════════════════════════════════════
    1. HEADER & NAV
    ══════════════════════════════════════════════════════════ */
 @media (max-width: 900px) {

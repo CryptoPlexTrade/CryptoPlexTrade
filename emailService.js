@@ -15,6 +15,8 @@ if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
             user: process.env.SMTP_USER,
             pass: process.env.SMTP_PASS,
         },
+        // Improve deliverability
+        tls: { rejectUnauthorized: true },
     });
 
     transporter.verify((error, success) => {
@@ -27,6 +29,12 @@ if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
 } else {
     logger.warn('SMTP configuration is missing. Email notifications will be disabled.');
 }
+
+// Consistent sender identity — always use the same From address & name
+const SENDER_NAME  = 'CryptoPlexTrade';
+const getSender    = () => `"${SENDER_NAME}" <${process.env.SMTP_USER}>`;
+const getReplyTo   = () => process.env.ADMIN_EMAIL || process.env.SMTP_USER;
+const getAppDomain = () => process.env.APP_URL || 'cryptoplextrade.com';
 
 /**
  * Sends an email notification to the admin about a new order.
@@ -41,45 +49,86 @@ async function sendNewOrderNotification(orderDetails, orderId) {
 
     const { order_type, user_email } = orderDetails;
     const subject = `New ${order_type.toUpperCase()} Order Received - #${orderId}`;
-    let textBody = `A new order has been placed by ${user_email}.\n\n`;
-    let htmlBody = `
-        <h1>New Order Notification</h1>
-        <p>A new <strong>${order_type.toUpperCase()}</strong> order has been placed by <strong>${user_email}</strong>.</p>
-        <h2>Order Summary (ID: #${orderId})</h2>`;
+    let textBody = `A new order has been placed by ${user_email}.\r\n\r\n`;
+    let htmlBody = `<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#f4f7fb;font-family:Arial,Helvetica,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f7fb;padding:32px 16px;">
+    <tr><td align="center">
+      <table width="560" cellpadding="0" cellspacing="0" style="background:#ffffff;border:1px solid #dde9f7;max-width:560px;width:100%;">
+        <!-- Header -->
+        <tr>
+          <td style="background:#005baa;padding:24px 32px;">
+            <p style="margin:0;font-size:20px;font-weight:bold;color:#ffffff;">${SENDER_NAME}</p>
+            <p style="margin:4px 0 0;font-size:13px;color:#b3d4f0;">New Order Alert</p>
+          </td>
+        </tr>
+        <!-- Body -->
+        <tr>
+          <td style="padding:32px;">
+            <p style="margin:0 0 16px;font-size:15px;color:#1e293b;">A new <strong>${order_type.toUpperCase()}</strong> order has been placed by <strong>${user_email}</strong>.</p>
+            <h2 style="margin:0 0 16px;font-size:17px;color:#1e293b;">Order Summary (ID: #${orderId})</h2>`;
 
     if (order_type === 'buy') {
         htmlBody += `
-            <ul>
+            <ul style="padding-left:20px;color:#475569;font-size:14px;line-height:1.8;">
                 <li><strong>Product:</strong> ${orderDetails.product}</li>
                 <li><strong>Amount User Buys:</strong> ${orderDetails.usd_amount} ${orderDetails.product}</li>
                 <li><strong>Total Paid by User (GHS):</strong> ₵${orderDetails.total_paid_ghs.toFixed(2)}</li>
                 <li><strong>User's Receiving Wallet:</strong> ${orderDetails.wallet_address}</li>
                 <li><strong>User's Payment TXID:</strong> ${orderDetails.user_transaction_id}</li>
             </ul>`;
-        textBody += `Order ID: #${orderId}\nType: BUY\nProduct: ${orderDetails.product}\nAmount User Buys: ${orderDetails.usd_amount} ${orderDetails.product}\nTotal Paid (GHS): ${orderDetails.total_paid_ghs.toFixed(2)}\nUser's Receiving Wallet: ${orderDetails.wallet_address}\nUser's Payment TXID: ${orderDetails.user_transaction_id}`;
+        textBody += `Order ID: #${orderId}\r\nType: BUY\r\nProduct: ${orderDetails.product}\r\nAmount User Buys: ${orderDetails.usd_amount} ${orderDetails.product}\r\nTotal Paid (GHS): ${orderDetails.total_paid_ghs.toFixed(2)}\r\nUser's Receiving Wallet: ${orderDetails.wallet_address}\r\nUser's Payment TXID: ${orderDetails.user_transaction_id}`;
     } else { // Sell Order
         htmlBody += `
-            <ul>
+            <ul style="padding-left:20px;color:#475569;font-size:14px;line-height:1.8;">
                 <li><strong>Product:</strong> ${orderDetails.product}</li>
                 <li><strong>Amount User Sells:</strong> ${orderDetails.product_amount} ${orderDetails.product}</li>
                 <li><strong>GHS to Pay User:</strong> ₵${orderDetails.ghs_to_receive.toFixed(2)}</li>
                 <li><strong>User's Crypto TXID:</strong> ${orderDetails.user_transaction_id}</li>
             </ul>
-            <h3>User Payout Information:</h3>
-            <ul>
+            <h3 style="margin:16px 0 8px;font-size:15px;color:#1e293b;">User Payout Information:</h3>
+            <ul style="padding-left:20px;color:#475569;font-size:14px;line-height:1.8;">
                 <li><strong>Method:</strong> ${orderDetails.payout_info.method === 'momo' ? 'Mobile Money' : 'Bank Transfer'}</li>
                 ${orderDetails.payout_info.method === 'momo'
                     ? `<li><strong>MoMo Number:</strong> ${orderDetails.payout_info.number}</li><li><strong>MoMo Name:</strong> ${orderDetails.payout_info.name}</li>`
                     : `<li><strong>Bank Name:</strong> ${orderDetails.payout_info.bankName}</li><li><strong>Account Name:</strong> ${orderDetails.payout_info.accountName}</li><li><strong>Account Number:</strong> ${orderDetails.payout_info.accountNumber}</li>`
                 }
             </ul>`;
-        textBody += `Order ID: #${orderId}\nType: SELL\nProduct: ${orderDetails.product}\nAmount User Sells: ${orderDetails.product_amount} ${orderDetails.product}\nGHS to Pay User: ${orderDetails.ghs_to_receive.toFixed(2)}\nUser's Crypto TXID: ${orderDetails.user_transaction_id}\n\nPayout Method: ${orderDetails.payout_info.method}\n... see HTML email for full payout details.`;
+        textBody += `Order ID: #${orderId}\r\nType: SELL\r\nProduct: ${orderDetails.product}\r\nAmount User Sells: ${orderDetails.product_amount} ${orderDetails.product}\r\nGHS to Pay User: ${orderDetails.ghs_to_receive.toFixed(2)}\r\nUser's Crypto TXID: ${orderDetails.user_transaction_id}\r\n\r\nPayout Method: ${orderDetails.payout_info.method}`;
     }
 
-    htmlBody += `<p>Please log in to the admin panel to review and process the order.</p>`;
-    textBody += `\n\nPlease log in to the admin panel to review and process the order.`;
+    htmlBody += `
+            <p style="margin:24px 0 0;font-size:14px;color:#475569;">Please log in to the admin panel to review and process the order.</p>
+          </td>
+        </tr>
+        <!-- Footer -->
+        <tr>
+          <td style="background:#f8fafc;border-top:1px solid #e2e8f0;padding:16px 32px;">
+            <p style="margin:0;font-size:11px;color:#94a3b8;">${SENDER_NAME} &middot; <a href="mailto:${process.env.ADMIN_EMAIL}" style="color:#94a3b8;">${process.env.ADMIN_EMAIL}</a></p>
+          </td>
+        </tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+    textBody += `\r\n\r\nPlease log in to the admin panel to review and process the order.`;
 
-    await transporter.sendMail({ from: `"CryptoPlexTrade Notifier" <${process.env.SMTP_USER}>`, to: process.env.ADMIN_EMAIL, subject, text: textBody, html: htmlBody });
+    const domain = getAppDomain();
+    await transporter.sendMail({
+        from:      getSender(),
+        replyTo:   getReplyTo(),
+        to:        process.env.ADMIN_EMAIL,
+        subject,
+        text:      textBody,
+        html:      htmlBody,
+        headers: {
+            'Message-ID': `<${Date.now()}.order-${orderId}@${domain}>`,
+            'Precedence': 'bulk',
+        },
+    });
     logger.info(`Admin notification sent for new order #${orderId}`);
 }
 
@@ -94,9 +143,9 @@ async function sendPasswordResetEmail(user, resetUrl) {
         return;
     }
 
-    const senderDomain = (process.env.SMTP_USER || 'noreply@example.com').split('@')[1];
-    const messageId    = `<${Date.now()}.reset@${senderDomain}>`;
-    const subject      = 'Your password reset link';
+    const domain    = getAppDomain();
+    const messageId = `<${Date.now()}.reset@${domain}>`;
+    const subject   = 'Your password reset link';
 
     // Plain-text — required and important for spam scoring
     const textBody = [
@@ -112,7 +161,7 @@ async function sendPasswordResetEmail(user, resetUrl) {
         `Your password will not change unless you click the link above.`,
         ``,
         `-- CryptoPlexTrade Support`,
-        `support@winningedgeinvestment.com`,
+        `${process.env.ADMIN_EMAIL}`,
     ].join('\r\n');
 
     // Clean, simple HTML — avoid CSS tricks that spam filters flag
@@ -126,7 +175,7 @@ async function sendPasswordResetEmail(user, resetUrl) {
         <!-- Header -->
         <tr>
           <td style="background:#005baa;padding:24px 32px;">
-            <p style="margin:0;font-size:20px;font-weight:bold;color:#ffffff;">CryptoPlexTrade</p>
+            <p style="margin:0;font-size:20px;font-weight:bold;color:#ffffff;">${SENDER_NAME}</p>
             <p style="margin:4px 0 0;font-size:13px;color:#b3d4f0;">Account Security</p>
           </td>
         </tr>
@@ -138,7 +187,7 @@ async function sendPasswordResetEmail(user, resetUrl) {
             <!-- Button -->
             <table cellpadding="0" cellspacing="0" style="margin:28px 0;">
               <tr>
-                <td style="background:#005baa;">
+                <td style="background:#005baa;border-radius:6px;">
                   <a href="${resetUrl}" style="display:inline-block;padding:14px 32px;font-size:15px;font-weight:bold;color:#ffffff;text-decoration:none;">Reset My Password</a>
                 </td>
               </tr>
@@ -152,7 +201,7 @@ async function sendPasswordResetEmail(user, resetUrl) {
         <!-- Footer -->
         <tr>
           <td style="background:#f8fafc;border-top:1px solid #e2e8f0;padding:16px 32px;">
-            <p style="margin:0;font-size:11px;color:#94a3b8;">CryptoPlexTrade &middot; <a href="mailto:support@winningedgeinvestment.com" style="color:#94a3b8;">support@winningedgeinvestment.com</a></p>
+            <p style="margin:0;font-size:11px;color:#94a3b8;">${SENDER_NAME} &middot; <a href="mailto:${process.env.ADMIN_EMAIL}" style="color:#94a3b8;">${process.env.ADMIN_EMAIL}</a></p>
           </td>
         </tr>
       </table>
@@ -162,15 +211,16 @@ async function sendPasswordResetEmail(user, resetUrl) {
 </html>`;
 
     await transporter.sendMail({
-        from:    `"CryptoPlexTrade" <${process.env.SMTP_USER}>`,
+        from:    getSender(),
+        replyTo: getReplyTo(),
         to:      user.email,
         subject,
         text:    textBody,
         html:    htmlBody,
         headers: {
-            'Message-ID':      messageId,
-            'List-Unsubscribe': `<mailto:${process.env.SMTP_USER}?subject=unsubscribe>`,
-            'X-Mailer':        'CryptoPlexTrade Mailer',
+            'Message-ID':       messageId,
+            'List-Unsubscribe': `<mailto:${process.env.ADMIN_EMAIL}?subject=unsubscribe>`,
+            'Precedence':       'bulk',
         },
     });
     logger.info(`Password reset email sent to ${user.email}`);
