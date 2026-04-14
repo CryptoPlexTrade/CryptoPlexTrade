@@ -147,11 +147,11 @@
                         <p>Please send the exact total amount to the details below and use the reference code.</p>
                         <div class="detail-item">
                             <span class="label">Recipient Name:</span>
-                            <span class="value">CryptoPlexTrade Ltd.</span>
+                            <span class="value" id="pm-momo-name">Loading...</span>
                         </div>
                         <div class="detail-item">
                             <span class="label">Number:</span>
-                            <span class="value">024 123 4567</span>
+                            <span class="value" id="pm-momo-number">Loading...</span>
                         </div>
                         <div class="detail-item">
                             <span class="label">Payment Reference (Required):</span>
@@ -165,15 +165,15 @@
                         <p>Please send the exact total amount to the bank account below.</p>
                         <div class="detail-item">
                             <span class="label">Bank Name:</span>
-                            <span class="value">Global Trust Bank</span>
+                            <span class="value" id="pm-bank-name">Loading...</span>
                         </div>
                         <div class="detail-item">
                             <span class="label">Account Name:</span>
-                            <span class="value">CryptoPlexTrade Ltd.</span>
+                            <span class="value" id="pm-bank-account-name">Loading...</span>
                         </div>
                         <div class="detail-item">
                             <span class="label">Account Number:</span>
-                            <span class="value">9040001234567</span>
+                            <span class="value" id="pm-bank-account-number">Loading...</span>
                         </div>
                     </div>
                 </div>
@@ -206,8 +206,28 @@
 
     <script src="/js/ticker.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // ... (existing script logic)
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Fetch payment methods from admin-configured data
+            try {
+                const pmRes = await fetch('/api/payment-methods');
+                if (pmRes.ok) {
+                    const pm = await pmRes.json();
+                    // Populate MoMo details
+                    const momoName = document.getElementById('pm-momo-name');
+                    const momoNum  = document.getElementById('pm-momo-number');
+                    if (momoName) momoName.textContent = pm.momo?.recipientName || 'N/A';
+                    if (momoNum)  momoNum.textContent  = pm.momo?.number || 'N/A';
+                    // Populate Bank details
+                    const bankName   = document.getElementById('pm-bank-name');
+                    const bankAccNm  = document.getElementById('pm-bank-account-name');
+                    const bankAccNum = document.getElementById('pm-bank-account-number');
+                    if (bankName)   bankName.textContent   = pm.bank?.bankName || 'N/A';
+                    if (bankAccNm)  bankAccNm.textContent  = pm.bank?.accountName || 'N/A';
+                    if (bankAccNum) bankAccNum.textContent  = pm.bank?.accountNumber || 'N/A';
+                }
+            } catch (err) {
+                console.error('Failed to load payment methods:', err);
+            }
         });
     </script>
 

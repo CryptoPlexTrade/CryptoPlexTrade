@@ -76,6 +76,20 @@ app.get('/api/maintenance', (req, res) => {
     res.json({ active: data.active, message: data.message || '' });
 });
 
+// Public endpoint to get payment method details (for buyconfirm page)
+app.get('/api/payment-methods', (req, res) => {
+    try {
+        const pmPath = path.join(__dirname, 'paymentMethods.json');
+        const data = JSON.parse(fs.readFileSync(pmPath, 'utf8'));
+        res.json(data);
+    } catch {
+        res.json({
+            momo: { recipientName: '', number: '' },
+            bank: { bankName: '', accountName: '', accountNumber: '' }
+        });
+    }
+});
+
 // Block user API calls during maintenance (but allow admin API, login, and maintenance check)
 app.use((req, res, next) => {
     const data = isMaintenanceActive();

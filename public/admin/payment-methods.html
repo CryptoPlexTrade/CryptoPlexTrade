@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="../css/logo.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Methods - Admin</title>
+    <link rel="stylesheet" href="admin.css">
+    <style>
+        .pm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 28px; }
+        .pm-card {
+            background: #fff; border: 1px solid #e2e8f0; border-radius: 16px;
+            padding: 28px; box-shadow: 0 2px 12px rgba(0,91,170,.06);
+        }
+        .pm-card h3 {
+            font-size: .95rem; font-weight: 700; color: #1e293b; margin-bottom: 18px;
+            padding-bottom: 12px; border-bottom: 2px solid #f0f7ff;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .pm-card h3 .icon-circle {
+            width: 36px; height: 36px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+        .pm-card h3 .icon-circle svg { width: 18px; height: 18px; color: #fff; }
+        .icon-momo { background: linear-gradient(135deg, #f7931a, #fbbf24); }
+        .icon-bank { background: linear-gradient(135deg, #005baa, #00a9e0); }
+        .pm-field { margin-bottom: 16px; }
+        .pm-field label {
+            display: block; font-size: .72rem; font-weight: 700; color: #64748b;
+            text-transform: uppercase; letter-spacing: .4px; margin-bottom: 6px;
+        }
+        .pm-field input {
+            width: 100%; padding: 11px 14px; border: 1.5px solid #e2e8f0; border-radius: 9px;
+            font-family: 'Poppins', sans-serif; font-size: .9rem; color: #1e293b;
+            background: #fafcff; outline: none; transition: border-color .2s, box-shadow .2s;
+        }
+        .pm-field input:focus {
+            border-color: #005baa; background: #fff; box-shadow: 0 0 0 3px rgba(0,91,170,.09);
+        }
+        .pm-actions { display: flex; gap: 12px; justify-content: flex-end; margin-top: 8px; }
+        .btn-save {
+            background: linear-gradient(90deg, #005baa, #00a9e0); color: #fff;
+            padding: 11px 28px; border: none; border-radius: 9px; font-family: 'Poppins', sans-serif;
+            font-size: .88rem; font-weight: 600; cursor: pointer;
+            transition: transform .2s, box-shadow .2s;
+        }
+        .btn-save:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,91,170,.18); }
+        .btn-save:disabled { opacity: .55; cursor: not-allowed; transform: none; }
+        .save-msg {
+            display: none; padding: 12px 16px; border-radius: 9px; font-size: .85rem;
+            font-weight: 500; margin-bottom: 20px;
+        }
+        .save-msg.success { display: block; background: rgba(40,167,69,.08); color: #16a34a; border: 1px solid rgba(40,167,69,.2); }
+        .save-msg.error { display: block; background: rgba(220,53,69,.07); color: #dc3545; border: 1px solid rgba(220,53,69,.2); }
+        .last-updated { font-size: .78rem; color: #94a3b8; font-style: italic; margin-top: 4px; }
+        @media (max-width: 768px) {
+            .pm-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile Hamburger Button -->
+    <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open menu">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+        </svg>
+    </button>
+    <!-- Sidebar overlay -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <!-- Mobile Top Bar -->
+    <div class="mobile-topbar">
+        <span class="mobile-page-title">Payment Methods</span>
+    </div>
+    <div class="admin-layout">
+        <aside class="admin-sidebar" id="admin-sidebar">
+            <button class="sidebar-close-btn" id="sidebar-close-btn" aria-label="Close menu">&times;</button>
+            <div class="sidebar-header">
+                <a href="index.html" class="logo-wrapper">
+                    <img src="../css/logo.jpg" alt="Logo" class="logo" style="width: auto !important; height: 44px !important; max-height: 44px; border-radius: 16px !important; object-fit: contain !important; background: none !important; box-shadow: none !important; overflow: visible !important;">
+                    <span class="logo-name">Admin Portal</span>
+                </a>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="index.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M10.5 18.75a.75.75 0 0 0 0 1.5h3a.75.75 0 0 0 0-1.5h-3Z" /><path fill-rule="evenodd" d="M8.625.75A3.375 3.375 0 0 0 5.25 4.125v15.75a3.375 3.375 0 0 0 3.375 3.375h6.75a3.375 3.375 0 0 0 3.375-3.375V4.125A3.375 3.375 0 0 0 15.375.75h-6.75ZM7.5 4.125C7.5 3.504 8.004 3 8.625 3h6.75C15.996 3 16.5 3.504 16.5 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-6.75A1.125 1.125 0 0 1 7.5 19.875V4.125Z" clip-rule="evenodd" /></svg>Dashboard</a></li>
+                    <li><a href="transactions.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M3 4.5h18v15H3v-15Zm6.75 10.5a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM12 15a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM15.75 15a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM9.75 9a.75.75 0 0 0-1.5 0v4.5a.75.75 0 0 0 1.5 0V9Zm3.75-3a.75.75 0 0 0-1.5 0v7.5a.75.75 0 0 0 1.5 0V6Zm2.25 1.5a.75.75 0 0 0-1.5 0v6a.75.75 0 0 0 1.5 0v-6Z" /></svg>Transactions</a></li>
+                    <li><a href="users.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M4.5 6.375a4.125 4.125 0 1 1 8.25 0 4.125 4.125 0 0 1-8.25 0ZM14.25 8.625a3.375 3.375 0 1 1 6.75 0 3.375 3.375 0 0 1-6.75 0ZM1.5 19.125a7.125 7.125 0 0 1 14.25 0v.003l-.001.119a.75.75 0 0 1-.363.63l-2.693 1.5c-.25.142-.565.142-.815 0l-2.693-1.5a.75.75 0 0 1-.363-.63V19.125Zm15.75 0v.003l-.001.119a.75.75 0 0 1-.363.63l-2.693 1.5c-.25.142-.565.142-.815 0l-2.693-1.5a.75.75 0 0 1-.363-.63V19.125a7.125 7.125 0 0 1 14.25 0Z" /></svg>Users</a></li>
+                    <li><a href="support.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm11.378-3.917c-.89-.777-2.366-.777-3.255 0a.75.75 0 0 1-1.06-1.06c2.298-2.013 5.824-2.013 8.122 0a.75.75 0 0 1-1.06 1.06ZM12 15.75a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" clip-rule="evenodd" /></svg>Support Tickets</a></li>
+                    <li><a href="referrals.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M10.5 4.5a.75.75 0 0 0 0 1.5h3a.75.75 0 0 0 0-1.5h-3Z" /><path fill-rule="evenodd" d="M12 1.5a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V2.25A.75.75 0 0 1 12 1.5ZM10.5 18a.75.75 0 0 0 0 1.5h3a.75.75 0 0 0 0-1.5h-3Zm1.5-1.5a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V17.25a.75.75 0 0 1 .75-.75ZM4.5 10.5a.75.75 0 0 0-1.5 0v3a.75.75 0 0 0 1.5 0v-3Zm1.5.75a.75.75 0 0 1 2.25-1.5h2.25a.75.75 0 0 1 0 1.5H7.5a.75.75 0 0 1-.75-.75Zm15-1.5a.75.75 0 0 0-1.5 0v3a.75.75 0 0 0 1.5 0v-3Zm-1.5.75a.75.75 0 0 1 .75-.75h2.25a.75.75 0 0 1 0 1.5H19.5a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" /></svg>Referrals</a></li>
+                    <li><a href="rates.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM9 7.5a.75.75 0 0 0 0 1.5h3.94l-1.72 1.72a.75.75 0 1 0 1.06 1.06l2.5-2.5a.75.75 0 0 0 0-1.06l-2.5-2.5a.75.75 0 0 0-1.06 1.06L12.94 7.5H9Zm6 9a.75.75 0 0 0 0-1.5h-3.94l1.72-1.72a.75.75 0 1 0-1.06-1.06l-2.5 2.5a.75.75 0 0 0 0 1.06l2.5 2.5a.75.75 0 1 0 1.06-1.06L11.06 16.5H15Z" clip-rule="evenodd" /></svg>Manage Rates</a></li>
+                    <li><a href="payment-methods.html" class="active"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M4.5 3.75a3 3 0 0 0-3 3v.75h21v-.75a3 3 0 0 0-3-3h-15Z" /><path fill-rule="evenodd" d="M22.5 9.75h-21v7.5a3 3 0 0 0 3 3h15a3 3 0 0 0 3-3v-7.5Zm-18 3.75a.75.75 0 0 1 .75-.75h6a.75.75 0 0 1 0 1.5h-6a.75.75 0 0 1-.75-.75Zm.75 2.25a.75.75 0 0 0 0 1.5h3a.75.75 0 0 0 0-1.5h-3Z" clip-rule="evenodd" /></svg>Payment Methods</a></li>
+                    <li><a href="announcements.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M16.881 4.345A23.112 23.112 0 0 1 8.25 6H7.5a5.25 5.25 0 0 0-.88 10.427 21.593 21.593 0 0 0 1.378 3.94c.464 1.004 1.674 1.32 2.582.796l.657-.379c.88-.508 1.165-1.593.772-2.468a17.116 17.116 0 0 1-.628-1.607c1.918.258 3.76.75 5.5 1.446A21.727 21.727 0 0 0 18 11.25c0-2.414-.393-4.735-1.119-6.905ZM18.26 3.74a23.22 23.22 0 0 1 1.24 7.51 23.22 23.22 0 0 1-1.24 7.51c-.055.161.044.348.206.404a.75.75 0 0 0 .404-.206A24.72 24.72 0 0 0 21 11.25a24.72 24.72 0 0 0-2.13-8.208.75.75 0 0 0-.61-.492Z"/></svg>Announcements</a></li>
+                    <li><a href="maintenance.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 6.75a5.25 5.25 0 0 1 6.775-5.025.75.75 0 0 1 .313 1.248l-3.32 3.319c.063.475.276.934.641 1.299.365.365.824.578 1.3.64l3.318-3.319a.75.75 0 0 1 1.248.313 5.25 5.25 0 0 1-5.472 6.756c-1.018-.086-1.87.1-2.309.634L7.344 21.3A3.298 3.298 0 1 1 2.7 16.657l8.684-7.151c.533-.44.72-1.291.634-2.309A5.342 5.342 0 0 1 12 6.75ZM4.117 19.125a.75.75 0 0 1 .75-.75h.008a.75.75 0 0 1 .75.75v.008a.75.75 0 0 1-.75.75h-.008a.75.75 0 0 1-.75-.75v-.008Z" clip-rule="evenodd"/></svg>Maintenance</a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="#" id="logout-btn">Logout</a>
+            </div>
+        </aside>
+        <main class="admin-content">
+            <div class="admin-header">
+                <h1>Payment Methods</h1>
+                <p>Manage the payment details shown to users during checkout.</p>
+            </div>
+
+            <div id="save-msg" class="save-msg"></div>
+
+            <div class="pm-grid">
+                <!-- Mobile Money Card -->
+                <div class="pm-card">
+                    <h3>
+                        <span class="icon-circle icon-momo">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M1.5 4.5a3 3 0 0 1 3-3h1.372c.86 0 1.61.586 1.819 1.42l1.105 4.423a1.875 1.875 0 0 1-.694 1.955l-1.293.97c-.135.101-.164.249-.126.352a11.285 11.285 0 0 0 6.697 6.697c.103.038.25.009.352-.126l.97-1.293a1.875 1.875 0 0 1 1.955-.694l4.423 1.105c.834.209 1.42.959 1.42 1.82V19.5a3 3 0 0 1-3 3h-2.25C8.552 22.5 1.5 15.448 1.5 6.75V4.5Z"/></svg>
+                        </span>
+                        Mobile Money (MoMo)
+                    </h3>
+                    <div class="pm-field">
+                        <label for="momo-name">Recipient Name</label>
+                        <input type="text" id="momo-name" placeholder="e.g. CryptoPlexTrade Ltd.">
+                    </div>
+                    <div class="pm-field">
+                        <label for="momo-number">MoMo Number</label>
+                        <input type="text" id="momo-number" placeholder="e.g. 024 123 4567">
+                    </div>
+                </div>
+
+                <!-- Bank Transfer Card -->
+                <div class="pm-card">
+                    <h3>
+                        <span class="icon-circle icon-bank">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11.584 2.376a.75.75 0 0 1 .832 0l9 6a.75.75 0 0 1-.832 1.248L12 3.901 3.416 9.624a.75.75 0 0 1-.832-1.248l9-6Z"/><path fill-rule="evenodd" d="M20.25 10.332v9.918H21a.75.75 0 0 1 0 1.5H3a.75.75 0 0 1 0-1.5h.75v-9.918a.75.75 0 0 1 .634-.74A49.109 49.109 0 0 1 12 9c2.59 0 5.134.202 7.616.592a.75.75 0 0 1 .634.74Zm-7.5 2.418a.75.75 0 0 0-1.5 0v6.75a.75.75 0 0 0 1.5 0v-6.75Zm3-.75a.75.75 0 0 1 .75.75v6.75a.75.75 0 0 1-1.5 0v-6.75a.75.75 0 0 1 .75-.75ZM9 12.75a.75.75 0 0 0-1.5 0v6.75a.75.75 0 0 0 1.5 0v-6.75Z" clip-rule="evenodd"/></svg>
+                        </span>
+                        Bank Transfer
+                    </h3>
+                    <div class="pm-field">
+                        <label for="bank-name">Bank Name</label>
+                        <input type="text" id="bank-name" placeholder="e.g. Global Trust Bank">
+                    </div>
+                    <div class="pm-field">
+                        <label for="bank-account-name">Account Name</label>
+                        <input type="text" id="bank-account-name" placeholder="e.g. CryptoPlexTrade Ltd.">
+                    </div>
+                    <div class="pm-field">
+                        <label for="bank-account-number">Account Number</label>
+                        <input type="text" id="bank-account-number" placeholder="e.g. 9040001234567">
+                    </div>
+                </div>
+            </div>
+
+            <div class="pm-actions">
+                <button class="btn-save" id="save-btn">Save Payment Details</button>
+            </div>
+            <p class="last-updated" id="last-updated"></p>
+        </main>
+    </div>
+
+    <script src="admin.js"></script>
+    <script>
+        // Mobile sidebar toggle
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const sidebar = document.getElementById('admin-sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        const closeBtn = document.getElementById('sidebar-close-btn');
+        function openSidebar() { sidebar.classList.add('sidebar-open'); overlay.classList.add('show'); overlay.style.display = 'block'; }
+        function closeSidebar() { sidebar.classList.remove('sidebar-open'); overlay.classList.remove('show'); setTimeout(() => { overlay.style.display = 'none'; }, 300); }
+        menuBtn.addEventListener('click', openSidebar);
+        closeBtn.addEventListener('click', closeSidebar);
+        overlay.addEventListener('click', closeSidebar);
+    </script>
+    <script>
+        const momoNameInput    = document.getElementById('momo-name');
+        const momoNumberInput  = document.getElementById('momo-number');
+        const bankNameInput    = document.getElementById('bank-name');
+        const bankAccNameInput = document.getElementById('bank-account-name');
+        const bankAccNumInput  = document.getElementById('bank-account-number');
+        const saveBtn          = document.getElementById('save-btn');
+        const saveMsg          = document.getElementById('save-msg');
+        const lastUpdatedEl    = document.getElementById('last-updated');
+
+        // Load current payment methods
+        async function loadPaymentMethods() {
+            try {
+                const res = await fetch('/api/admin/payment-methods', { credentials: 'include' });
+                if (res.status === 401 || res.status === 403) {
+                    window.location.href = '/admin-login';
+                    return;
+                }
+                const data = await res.json();
+                momoNameInput.value    = data.momo?.recipientName || '';
+                momoNumberInput.value  = data.momo?.number || '';
+                bankNameInput.value    = data.bank?.bankName || '';
+                bankAccNameInput.value = data.bank?.accountName || '';
+                bankAccNumInput.value  = data.bank?.accountNumber || '';
+                if (data.updatedAt) {
+                    lastUpdatedEl.textContent = `Last updated: ${new Date(data.updatedAt).toLocaleString()}`;
+                }
+            } catch (err) {
+                console.error('Error loading payment methods:', err);
+            }
+        }
+
+        // Save payment methods
+        saveBtn.addEventListener('click', async () => {
+            saveBtn.disabled = true;
+            saveBtn.textContent = 'Saving...';
+            saveMsg.className = 'save-msg';
+            saveMsg.style.display = 'none';
+
+            try {
+                const res = await fetch('/api/admin/payment-methods', {
+                    method: 'PUT',
+                    credentials: 'include',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        momo: {
+                            recipientName: momoNameInput.value.trim(),
+                            number: momoNumberInput.value.trim()
+                        },
+                        bank: {
+                            bankName: bankNameInput.value.trim(),
+                            accountName: bankAccNameInput.value.trim(),
+                            accountNumber: bankAccNumInput.value.trim()
+                        }
+                    })
+                });
+
+                const result = await res.json();
+                if (!res.ok) throw new Error(result.message || 'Failed to save.');
+
+                saveMsg.textContent = '✓ ' + result.message;
+                saveMsg.className = 'save-msg success';
+                saveMsg.style.display = 'block';
+                if (result.data?.updatedAt) {
+                    lastUpdatedEl.textContent = `Last updated: ${new Date(result.data.updatedAt).toLocaleString()}`;
+                }
+            } catch (err) {
+                saveMsg.textContent = '✗ ' + (err.message || 'An error occurred.');
+                saveMsg.className = 'save-msg error';
+                saveMsg.style.display = 'block';
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.textContent = 'Save Payment Details';
+                setTimeout(() => { saveMsg.style.display = 'none'; }, 5000);
+            }
+        });
+
+        loadPaymentMethods();
+    </script>
+</body>
+</html>

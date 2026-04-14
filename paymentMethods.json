@@ -1,0 +1,12 @@
+{
+  "momo": {
+    "recipientName": "CryptoPlexTrade Ltd.",
+    "number": "024 123 4567"
+  },
+  "bank": {
+    "bankName": "Global Trust Bank",
+    "accountName": "CryptoPlexTrade Ltd.",
+    "accountNumber": "9040001234567"
+  },
+  "updatedAt": ""
+}

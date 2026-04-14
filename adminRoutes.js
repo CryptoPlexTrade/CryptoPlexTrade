@@ -246,4 +246,55 @@ router.put('/maintenance', (req, res) => {
     res.json({ message: `Maintenance mode ${data.active ? 'enabled' : 'disabled'}.`, data });
 });
 
+// === PAYMENT METHODS MANAGEMENT ===
+const paymentMethodsPath = path.join(__dirname, 'paymentMethods.json');
+
+function getPaymentMethods() {
+    try {
+        return JSON.parse(fs.readFileSync(paymentMethodsPath, 'utf8'));
+    } catch {
+        return {
+            momo: { recipientName: '', number: '' },
+            bank: { bankName: '', accountName: '', accountNumber: '' },
+            updatedAt: ''
+        };
+    }
+}
+
+function savePaymentMethods(data) {
+    try {
+        fs.writeFileSync(paymentMethodsPath, JSON.stringify(data, null, 2), 'utf8');
+    } catch (err) {
+        logger.warn('Could not persist payment methods to file (read-only filesystem). Updated in memory only.');
+    }
+}
+
+// Admin: Get current payment methods
+router.get('/payment-methods', (req, res) => {
+    res.json(getPaymentMethods());
+});
+
+// Admin: Update payment methods
+router.put('/payment-methods', (req, res) => {
+    const { momo, bank } = req.body;
+    if (!momo || !bank) {
+        return res.status(400).json({ message: 'Both MoMo and Bank details are required.' });
+    }
+    const data = {
+        momo: {
+            recipientName: momo.recipientName || '',
+            number: momo.number || ''
+        },
+        bank: {
+            bankName: bank.bankName || '',
+            accountName: bank.accountName || '',
+            accountNumber: bank.accountNumber || ''
+        },
+        updatedAt: new Date().toISOString()
+    };
+    savePaymentMethods(data);
+    logger.info('Payment methods updated by admin');
+    res.json({ message: 'Payment methods updated successfully.', data });
+});
+
 module.exports = router;
