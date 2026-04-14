@@ -250,12 +250,12 @@ router.put('/maintenance', (req, res) => {
 const paymentMethods = require('./paymentMethodsManager');
 
 // Admin: Get current payment methods
-router.get('/payment-methods', (req, res) => {
-    res.json(paymentMethods.get());
+router.get('/payment-methods', async (req, res) => {
+    res.json(await paymentMethods.get());
 });
 
 // Admin: Update payment methods
-router.put('/payment-methods', (req, res) => {
+router.put('/payment-methods', async (req, res) => {
     const { momoAccounts, bank, wallets } = req.body;
     if (!bank) {
         return res.status(400).json({ message: 'Bank details are required.' });
@@ -279,7 +279,7 @@ router.put('/payment-methods', (req, res) => {
         },
         updatedAt: new Date().toISOString()
     };
-    paymentMethods.save(data);
+    await paymentMethods.save(data);
     logger.info('Payment methods updated by admin');
     res.json({ message: 'Payment methods updated successfully.', data });
 });

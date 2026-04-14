@@ -78,8 +78,8 @@ app.get('/api/maintenance', (req, res) => {
 
 // Public endpoint to get payment method details (for buy/sell pages)
 const paymentMethods = require('./paymentMethodsManager');
-app.get('/api/payment-methods', (req, res) => {
-    res.json(paymentMethods.get());
+app.get('/api/payment-methods', async (req, res) => {
+    res.json(await paymentMethods.get());
 });
 
 // Block user API calls during maintenance (but allow admin API, login, and maintenance check)

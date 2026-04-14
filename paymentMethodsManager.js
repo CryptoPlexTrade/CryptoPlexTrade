@@ -1,14 +1,9 @@
 /**
  * paymentMethodsManager.js
- * Shared module for payment methods data.
- * Both adminRoutes.js and server.js import from here
- * so they share the same in-memory cache.
+ * Database-backed storage for payment methods.
  */
-const fs = require('fs');
-const path = require('path');
+const db = require('./database');
 const logger = require('./logger');
-
-const filePath = path.join(__dirname, 'paymentMethods.json');
 
 const DEFAULT_DATA = {
     momoAccounts: [],
@@ -17,26 +12,54 @@ const DEFAULT_DATA = {
     updatedAt: ''
 };
 
-// Single in-memory cache shared across the entire app
+// In-memory cache to avoid hitting the DB on every single page load
 let cache = null;
+let isInitialized = false;
 
-function get() {
-    if (cache) return cache;
+async function ensureTable() {
+    if (isInitialized) return;
     try {
-        cache = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-        return cache;
-    } catch {
-        return { ...DEFAULT_DATA };
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS system_settings (
+                key VARCHAR(50) PRIMARY KEY,
+                value JSONB NOT NULL,
+                updated_at TIMESTAMPTZ DEFAULT NOW()
+            )
+        `);
+        isInitialized = true;
+    } catch (err) {
+        logger.error('Error creating system_settings table:', err);
     }
 }
 
-function save(data) {
-    cache = data; // Always update in-memory (works on Vercel)
+async function get() {
+    await ensureTable();
     try {
-        fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
-        logger.info('Payment methods persisted to file.');
+        const [rows] = await db.query("SELECT value FROM system_settings WHERE key = 'payment_methods'");
+        if (rows.length > 0) {
+            cache = rows[0].value;
+            return cache;
+        }
+        return { ...DEFAULT_DATA };
     } catch (err) {
-        logger.warn('Could not persist payment methods to file (read-only fs). Using in-memory cache.');
+        logger.error('Error fetching payment methods from DB:', err);
+        return cache || { ...DEFAULT_DATA };
+    }
+}
+
+async function save(data) {
+    await ensureTable();
+    cache = data;
+    try {
+        await db.query(`
+            INSERT INTO system_settings (key, value, updated_at) 
+            VALUES ('payment_methods', $1::jsonb, NOW())
+            ON CONFLICT (key) DO UPDATE 
+            SET value = EXCLUDED.value, updated_at = EXCLUDED.updated_at
+        `, [JSON.stringify(data)]);
+        logger.info('Payment methods persisted to database.');
+    } catch (err) {
+        logger.error('Could not persist payment methods to DB:', err);
     }
 }
 
