@@ -34,7 +34,7 @@ function isMaintenanceActive() {
 }
 
 // Maintenance check BEFORE static files so dashboard pages get intercepted
-const userPages = ['/dashboard.html', '/trade.html', '/transactions.html', '/profile.html', '/support.html', '/contact.html', '/faq.html'];
+const userPages = ['/dashboard.html', '/trade.html', '/transactions.html', '/profile.html', '/support.html'];
 app.use((req, res, next) => {
     const data = isMaintenanceActive();
     if (!data.active) return next();

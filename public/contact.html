@@ -54,61 +54,34 @@
         #toast{visibility:hidden;min-width:300px;background:linear-gradient(90deg,#005baa,#00a9e0);color:#fff;text-align:center;border-radius:12px;padding:16px 24px;position:fixed;z-index:1000;left:50%;bottom:90px;transform:translateX(-50%);opacity:0;transition:opacity .5s,bottom .5s;box-shadow:0 8px 24px rgba(0,91,170,.3);font-weight:500;font-size:.9rem;}
         #toast.show{visibility:visible;opacity:1;bottom:110px;}
 
+        .header{position:sticky;top:0;z-index:100;padding:16px 40px;display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.7);backdrop-filter:blur(12px);border-bottom:1px solid rgba(0,91,170,.1);}
+        .brand{display:flex;align-items:center;gap:10px;text-decoration:none;}
+        .brand-circle { text-decoration: none; }
+        img.brand-circle { width: auto; height: 44px; border-radius: 16px; object-fit: contain; background: none !important; box-shadow: none !important; }
+        .brand-name{font-size:1.1rem;font-weight:700;color:#0f172a;}
+        .header-nav{display:flex;align-items:center;gap:24px;}
+        .header-nav a{font-size:.85rem;color:#94a3b8;text-decoration:none;font-weight:500;transition:color .2s;}
+        .header-nav a:hover{color:#005baa;}
+        .header-nav .btn-cta{background:linear-gradient(90deg,#005baa,#00a9e0);color:#fff;font-weight:600;padding:8px 20px;border-radius:50px;}
+        @media(max-width:640px){.header{padding:16px 14px;}.header-nav{gap:12px;}.brand-name{display:none;}}
+
         @media(max-width:800px){.content-wrap{grid-template-columns:1fr;}.hero-banner h1{font-size:1.9rem;}}
     </style>
+    <link rel="stylesheet" href="css/responsive.css">
 </head>
-<body>
+<body style="background:#f8fafc;">
 
-<div class="sidebar-overlay" id="sidebar-overlay"></div>
+<header class="header">
+    <a href="index.html" class="brand"><img src="css/logo.jpg" alt="Logo" class="brand-circle" style="width: auto !important; height: 44px !important; max-height: 44px; border-radius: 16px !important; object-fit: contain !important; background: none !important; padding: 0 !important; box-shadow: none !important; overflow: visible !important;"><span class="brand-name">CryptoPlexTrade</span></a>
+    <nav class="header-nav">
+        <a href="rates">Rates</a>
+        <a href="faq.html">FAQ</a>
+        <a href="contact.html" style="color:#005baa;">Contact</a>
+        <a href="login.html">Login</a>
+        <a href="register.html" class="btn-cta">Get Started</a>
+    </nav>
+</header>
 
-<div class="app-shell">
-
-    <!-- ===== SIDEBAR ===== -->
-    <aside class="sidebar" id="sidebar">
-        <a href="dashboard.html" class="sidebar-brand">
-            <img src="css/logo.jpg" alt="Logo" class="sidebar-brand__orb" style="width: auto !important; height: 44px !important; max-height: 44px; border-radius: 16px !important; object-fit: contain !important; background: none !important; padding: 0 !important; box-shadow: none !important; overflow: visible !important;">
-            <span class="sidebar-brand__name">CryptoPlexTrade</span>
-        </a>
-        <nav class="sidebar-nav">
-            <ul>
-                <li><a href="dashboard.html">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11.47 3.841a.75.75 0 0 1 1.06 0l8.69 8.69a.75.75 0 1 0 1.06-1.061l-8.689-8.69a2.25 2.25 0 0 0-3.182 0l-8.69 8.69a.75.75 0 1 0 1.061 1.06l8.69-8.689Z"/><path d="m12 5.432 8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 0 1-.75-.75v-4.5a.75.75 0 0 0-.75-.75h-3a.75.75 0 0 0-.75.75V21a.75.75 0 0 1-.75.75H5.625a1.875 1.875 0 0 1-1.875-1.875v-6.198a2.29 2.29 0 0 0 .091-.086L12 5.432Z"/></svg>
-                    Dashboard
-                </a></li>
-                <li><a href="trade.html">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M3 4.5h18v15H3v-15Zm6.75 10.5a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM12 15a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM15.75 15a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM9.75 9a.75.75 0 0 0-1.5 0v4.5a.75.75 0 0 0 1.5 0V9Zm3.75-3a.75.75 0 0 0-1.5 0v7.5a.75.75 0 0 0 1.5 0V6Zm2.25 1.5a.75.75 0 0 0-1.5 0v6a.75.75 0 0 0 1.5 0v-6Z"/></svg>
-                    Trade
-                </a></li>
-                <li><a href="transactions.html">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clip-rule="evenodd"/></svg>
-                    Transactions
-                </a></li>
-                <li><a href="profile.html">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd"/></svg>
-                    Profile
-                </a></li>
-                <li><a href="support.html">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm11.378-3.917c-.89-.777-2.366-.777-3.255 0a.75.75 0 0 1-1.06-1.06c2.298-2.013 5.824-2.013 8.122 0a.75.75 0 0 1-1.06 1.06ZM12 15.75a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" clip-rule="evenodd"/></svg>
-                    Support
-                </a></li>
-            </ul>
-        </nav>
-    </aside>
-
-    <div class="main-wrap">
-        <header class="topbar">
-            <div class="topbar-left">
-                <button class="hamburger-btn" id="hamburger-btn" aria-label="Toggle sidebar">
-                    <span></span><span></span><span></span>
-                </button>
-                <span class="topbar-title">Contact Us</span>
-            </div>
-            <div class="topbar-right">
-                <a href="#" id="logout-btn" class="btn btn-danger btn-sm">Logout</a>
-            </div>
-        </header>
-
-        <main class="page-content">
 
 <div class="hero-banner">
     <h1>Get in <span>Touch</span></h1>
@@ -189,34 +162,15 @@
     </div>
 </div>
 
-        </main><!-- /page-content -->
-    </div><!-- /main-wrap -->
-</div><!-- /app-shell -->
-
 <div id="toast">✓ Your message has been sent! An agent will get in touch shortly.</div>
 
-<!-- Ticker Tape -->
+<footer style="text-align:center;padding:16px;font-size:.76rem;color:#94a3b8;">&copy; 2026 CryptoPlexTrade &middot; <a href="privacy.html" style="color:inherit;text-decoration:none;">Privacy</a> &middot; <a href="terms.html" style="color:inherit;text-decoration:none;">Terms</a></footer>
+
 <div class="ticker-tape"><div class="ticker-tape__track" id="ticker-track"></div></div>
 
 <script src="inactivity-timer.js"></script>
 <script>
 (function() {
-    // Sidebar toggle
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('sidebar-overlay');
-    const hamburger = document.getElementById('hamburger-btn');
-    if (hamburger) hamburger.addEventListener('click', () => { sidebar.classList.add('open'); overlay.classList.add('open'); });
-    if (overlay) overlay.addEventListener('click', () => { sidebar.classList.remove('open'); overlay.classList.remove('open'); });
-
-    // Logout
-    function getCookie(name) { const v = `; ${document.cookie}`, p = v.split(`; ${name}=`); if (p.length === 2) return p.pop().split(';').shift(); }
-    document.getElementById('logout-btn').addEventListener('click', async (e) => {
-        e.preventDefault();
-        try {
-            const r = await fetch('/api/logout', { method: 'POST', headers: { 'X-CSRF-Token': getCookie('csrf-token') } });
-            if (r.ok) window.location.href = 'login.html';
-        } catch (err) { console.error(err); }
-    });
 
     // Toast on return from form submit
     const params = new URLSearchParams(window.location.search);
