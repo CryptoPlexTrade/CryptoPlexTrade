@@ -212,11 +212,12 @@
                 const pmRes = await fetch('/api/payment-methods');
                 if (pmRes.ok) {
                     const pm = await pmRes.json();
-                    // Populate MoMo details
+                    // Populate MoMo details (first account)
                     const momoName = document.getElementById('pm-momo-name');
                     const momoNum  = document.getElementById('pm-momo-number');
-                    if (momoName) momoName.textContent = pm.momo?.recipientName || 'N/A';
-                    if (momoNum)  momoNum.textContent  = pm.momo?.number || 'N/A';
+                    const firstMomo = (pm.momoAccounts && pm.momoAccounts[0]) || pm.momo || {};
+                    if (momoName) momoName.textContent = firstMomo.recipientName || 'N/A';
+                    if (momoNum)  momoNum.textContent  = firstMomo.number || 'N/A';
                     // Populate Bank details
                     const bankName   = document.getElementById('pm-bank-name');
                     const bankAccNm  = document.getElementById('pm-bank-account-name');

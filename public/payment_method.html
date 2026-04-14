@@ -247,27 +247,13 @@
                 <div class="panel-header">
                     <div class="panel-header-text">
                         <h3>Mobile Money Instructions</h3>
-                        <p>Send the exact total to the number below and use the reference code.</p>
+                        <p>Send the exact total to one of the numbers below and use the reference code.</p>
                     </div>
                 </div>
-                <div class="panel-rows">
-                    <div class="panel-row">
-                        <span class="panel-row__label">Network</span>
-                        <span class="panel-row__value">
-                            <div class="panel-network">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 150" height="18" style="border-radius:3px;"><rect width="150" height="150" fill="#ffcc00"/><path d="M75 35c-22.1 0-40 17.9-40 40s17.9 40 40 40 40-17.9 40-40-17.9-40-40-40zm0 75c-19.3 0-35-15.7-35-35s15.7-35 35-35 35 15.7 35 35-15.7 35-35 35z" fill="#005baa"/><circle cx="75" cy="75" r="18" fill="#fff"/><circle cx="75" cy="75" r="12" fill="#005baa"/></svg>
-                                MTN Ghana
-                            </div>
-                        </span>
-                    </div>
-                    <div class="panel-row">
-                        <span class="panel-row__label">Recipient Name</span>
-                        <span class="panel-row__value">CryptoPlexTrade Ltd.</span>
-                    </div>
-                    <div class="panel-row">
-                        <span class="panel-row__label">MoMo Number</span>
-                        <span class="panel-row__value">024 123 4567</span>
-                    </div>
+                <div class="panel-rows" id="momo-rows">
+                    <div class="panel-row" style="color:var(--text-3);font-style:italic;">Loading payment details...</div>
+                </div>
+                <div class="panel-rows" style="border-top:1px solid var(--border);">
                     <div class="panel-row panel-row--ref">
                         <span class="panel-row__label">Payment Reference <span style="color:var(--red);">(Required)</span></span>
                         <div class="ref-value-wrap">
@@ -286,19 +272,8 @@
                         <p>Send the exact total to the account below via your bank app or branch.</p>
                     </div>
                 </div>
-                <div class="panel-rows">
-                    <div class="panel-row">
-                        <span class="panel-row__label">Bank Name</span>
-                        <span class="panel-row__value">Global Trust Bank</span>
-                    </div>
-                    <div class="panel-row">
-                        <span class="panel-row__label">Account Name</span>
-                        <span class="panel-row__value">CryptoPlexTrade Ltd.</span>
-                    </div>
-                    <div class="panel-row">
-                        <span class="panel-row__label">Account Number</span>
-                        <span class="panel-row__value" style="font-family:monospace;letter-spacing:1px;">9040001234567</span>
-                    </div>
+                <div class="panel-rows" id="bank-rows">
+                    <div class="panel-row" style="color:var(--text-3);font-style:italic;">Loading payment details...</div>
                 </div>
             </div>
 
@@ -321,7 +296,7 @@
 
 <script src="inactivity-timer.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
 
     // Logout
     document.getElementById('logout-btn').addEventListener('click', async (e) => {
@@ -341,6 +316,58 @@ document.addEventListener('DOMContentLoaded', function() {
         return result;
     }
     document.getElementById('payment-reference').textContent = generateToken();
+
+    // ── Fetch & render payment details from admin ──
+    try {
+        const pmRes = await fetch('/api/payment-methods');
+        if (pmRes.ok) {
+            const pm = await pmRes.json();
+
+            // Render MoMo accounts
+            const momoRows = document.getElementById('momo-rows');
+            const accounts = pm.momoAccounts || (pm.momo ? [pm.momo] : []);
+            if (accounts.length > 0) {
+                let html = '';
+                accounts.forEach((a, i) => {
+                    if (i > 0) html += '<div style="border-top:2px dashed var(--border);margin:4px 22px;"></div>';
+                    html += `
+                        <div class="panel-row">
+                            <span class="panel-row__label">Network</span>
+                            <span class="panel-row__value">${a.network || 'MTN'}</span>
+                        </div>
+                        <div class="panel-row">
+                            <span class="panel-row__label">Recipient Name</span>
+                            <span class="panel-row__value">${a.recipientName || 'N/A'}</span>
+                        </div>
+                        <div class="panel-row">
+                            <span class="panel-row__label">MoMo Number</span>
+                            <span class="panel-row__value">${a.number || 'N/A'}</span>
+                        </div>`;
+                });
+                momoRows.innerHTML = html;
+            } else {
+                momoRows.innerHTML = '<div class="panel-row" style="color:var(--text-3);font-style:italic;">No Mobile Money details available.</div>';
+            }
+
+            // Render Bank details
+            const bankRows = document.getElementById('bank-rows');
+            if (pm.bank) {
+                bankRows.innerHTML = `
+                    <div class="panel-row">
+                        <span class="panel-row__label">Bank Name</span>
+                        <span class="panel-row__value">${pm.bank.bankName || 'N/A'}</span>
+                    </div>
+                    <div class="panel-row">
+                        <span class="panel-row__label">Account Name</span>
+                        <span class="panel-row__value">${pm.bank.accountName || 'N/A'}</span>
+                    </div>
+                    <div class="panel-row">
+                        <span class="panel-row__label">Account Number</span>
+                        <span class="panel-row__value" style="font-family:monospace;letter-spacing:1px;">${pm.bank.accountNumber || 'N/A'}</span>
+                    </div>`;
+            }
+        }
+    } catch (err) { console.error('Failed to load payment methods:', err); }
 
     // UI elements
     const paymentOptionCards = document.querySelectorAll('.payment-option-card');

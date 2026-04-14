@@ -76,7 +76,7 @@ app.get('/api/maintenance', (req, res) => {
     res.json({ active: data.active, message: data.message || '' });
 });
 
-// Public endpoint to get payment method details (for buyconfirm page)
+// Public endpoint to get payment method details (for buy/sell pages)
 app.get('/api/payment-methods', (req, res) => {
     try {
         const pmPath = path.join(__dirname, 'paymentMethods.json');
@@ -84,8 +84,9 @@ app.get('/api/payment-methods', (req, res) => {
         res.json(data);
     } catch {
         res.json({
-            momo: { recipientName: '', number: '' },
-            bank: { bankName: '', accountName: '', accountNumber: '' }
+            momoAccounts: [],
+            bank: { bankName: '', accountName: '', accountNumber: '' },
+            wallets: { BTC: '', ETH: '', USDT_TRC20: '', USDT_ERC20: '' }
         });
     }
 });

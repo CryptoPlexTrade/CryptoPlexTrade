@@ -249,19 +249,26 @@ router.put('/maintenance', (req, res) => {
 // === PAYMENT METHODS MANAGEMENT ===
 const paymentMethodsPath = path.join(__dirname, 'paymentMethods.json');
 
+let paymentMethodsCache = null;
+
 function getPaymentMethods() {
+    if (paymentMethodsCache) return paymentMethodsCache;
     try {
-        return JSON.parse(fs.readFileSync(paymentMethodsPath, 'utf8'));
+        const data = JSON.parse(fs.readFileSync(paymentMethodsPath, 'utf8'));
+        paymentMethodsCache = data;
+        return data;
     } catch {
         return {
-            momo: { recipientName: '', number: '' },
+            momoAccounts: [],
             bank: { bankName: '', accountName: '', accountNumber: '' },
+            wallets: { BTC: '', ETH: '', USDT_TRC20: '', USDT_ERC20: '' },
             updatedAt: ''
         };
     }
 }
 
 function savePaymentMethods(data) {
+    paymentMethodsCache = data;
     try {
         fs.writeFileSync(paymentMethodsPath, JSON.stringify(data, null, 2), 'utf8');
     } catch (err) {
@@ -276,19 +283,26 @@ router.get('/payment-methods', (req, res) => {
 
 // Admin: Update payment methods
 router.put('/payment-methods', (req, res) => {
-    const { momo, bank } = req.body;
-    if (!momo || !bank) {
-        return res.status(400).json({ message: 'Both MoMo and Bank details are required.' });
+    const { momoAccounts, bank, wallets } = req.body;
+    if (!bank) {
+        return res.status(400).json({ message: 'Bank details are required.' });
     }
     const data = {
-        momo: {
-            recipientName: momo.recipientName || '',
-            number: momo.number || ''
-        },
+        momoAccounts: Array.isArray(momoAccounts) ? momoAccounts.map(m => ({
+            recipientName: (m.recipientName || '').trim(),
+            number: (m.number || '').trim(),
+            network: (m.network || 'MTN').trim()
+        })).filter(m => m.number) : [],
         bank: {
-            bankName: bank.bankName || '',
-            accountName: bank.accountName || '',
-            accountNumber: bank.accountNumber || ''
+            bankName: (bank.bankName || '').trim(),
+            accountName: (bank.accountName || '').trim(),
+            accountNumber: (bank.accountNumber || '').trim()
+        },
+        wallets: {
+            BTC: (wallets?.BTC || '').trim(),
+            ETH: (wallets?.ETH || '').trim(),
+            USDT_TRC20: (wallets?.USDT_TRC20 || '').trim(),
+            USDT_ERC20: (wallets?.USDT_ERC20 || '').trim()
         },
         updatedAt: new Date().toISOString()
     };

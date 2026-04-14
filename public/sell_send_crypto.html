@@ -228,7 +228,7 @@
 
 <script src="inactivity-timer.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
     function getCookie(name) {
         const value = `; ${document.cookie}`;
         const parts = value.split(`; ${name}=`);
@@ -253,14 +253,25 @@ document.addEventListener('DOMContentLoaded', function() {
         window.location.href = 'login.html';
     });
 
-    // Wallet addresses per product
-    const walletAddresses = {
-        BTC: 'bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh',
-        ETH: '0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B'
+    // Wallet addresses - fetch from admin-configured payment methods
+    let walletAddresses = {
+        BTC: '',
+        ETH: '',
+        USDT_TRC20: '',
+        USDT_ERC20: ''
     };
 
     const product = orderDetails?.product || 'BTC';
-    const depositAddress = walletAddresses[product];
+
+    try {
+        const pmRes = await fetch('/api/payment-methods');
+        if (pmRes.ok) {
+            const pm = await pmRes.json();
+            if (pm.wallets) walletAddresses = pm.wallets;
+        }
+    } catch (err) { console.error('Failed to load wallets:', err); }
+
+    const depositAddress = walletAddresses[product] || 'Address not configured — please contact support.';
 
     document.getElementById('deposit-label').textContent = `Please send the exact amount of ${product} to the address below:`;
     document.getElementById('deposit-address').textContent = depositAddress;

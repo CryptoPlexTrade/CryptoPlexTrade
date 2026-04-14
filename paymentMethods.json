@@ -1,12 +1,21 @@
 {
-  "momo": {
-    "recipientName": "CryptoPlexTrade Ltd.",
-    "number": "024 123 4567"
-  },
+  "momoAccounts": [
+    {
+      "recipientName": "CryptoPlexTrade Ltd.",
+      "number": "024 123 4567",
+      "network": "MTN"
+    }
+  ],
   "bank": {
     "bankName": "Global Trust Bank",
     "accountName": "CryptoPlexTrade Ltd.",
     "accountNumber": "9040001234567"
+  },
+  "wallets": {
+    "BTC": "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh",
+    "ETH": "0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B",
+    "USDT_TRC20": "",
+    "USDT_ERC20": ""
   },
   "updatedAt": ""
 }
