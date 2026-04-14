@@ -77,18 +77,9 @@ app.get('/api/maintenance', (req, res) => {
 });
 
 // Public endpoint to get payment method details (for buy/sell pages)
+const paymentMethods = require('./paymentMethodsManager');
 app.get('/api/payment-methods', (req, res) => {
-    try {
-        const pmPath = path.join(__dirname, 'paymentMethods.json');
-        const data = JSON.parse(fs.readFileSync(pmPath, 'utf8'));
-        res.json(data);
-    } catch {
-        res.json({
-            momoAccounts: [],
-            bank: { bankName: '', accountName: '', accountNumber: '' },
-            wallets: { BTC: '', ETH: '', USDT_TRC20: '', USDT_ERC20: '' }
-        });
-    }
+    res.json(paymentMethods.get());
 });
 
 // Block user API calls during maintenance (but allow admin API, login, and maintenance check)

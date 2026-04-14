@@ -247,38 +247,11 @@ router.put('/maintenance', (req, res) => {
 });
 
 // === PAYMENT METHODS MANAGEMENT ===
-const paymentMethodsPath = path.join(__dirname, 'paymentMethods.json');
-
-let paymentMethodsCache = null;
-
-function getPaymentMethods() {
-    if (paymentMethodsCache) return paymentMethodsCache;
-    try {
-        const data = JSON.parse(fs.readFileSync(paymentMethodsPath, 'utf8'));
-        paymentMethodsCache = data;
-        return data;
-    } catch {
-        return {
-            momoAccounts: [],
-            bank: { bankName: '', accountName: '', accountNumber: '' },
-            wallets: { BTC: '', ETH: '', USDT_TRC20: '', USDT_ERC20: '' },
-            updatedAt: ''
-        };
-    }
-}
-
-function savePaymentMethods(data) {
-    paymentMethodsCache = data;
-    try {
-        fs.writeFileSync(paymentMethodsPath, JSON.stringify(data, null, 2), 'utf8');
-    } catch (err) {
-        logger.warn('Could not persist payment methods to file (read-only filesystem). Updated in memory only.');
-    }
-}
+const paymentMethods = require('./paymentMethodsManager');
 
 // Admin: Get current payment methods
 router.get('/payment-methods', (req, res) => {
-    res.json(getPaymentMethods());
+    res.json(paymentMethods.get());
 });
 
 // Admin: Update payment methods
@@ -306,7 +279,7 @@ router.put('/payment-methods', (req, res) => {
         },
         updatedAt: new Date().toISOString()
     };
-    savePaymentMethods(data);
+    paymentMethods.save(data);
     logger.info('Payment methods updated by admin');
     res.json({ message: 'Payment methods updated successfully.', data });
 });
