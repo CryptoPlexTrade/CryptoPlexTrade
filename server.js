@@ -29,7 +29,7 @@ const newsCache = {
 const maintenance = require('./maintenanceManager');
 
 // Maintenance check BEFORE static files so dashboard pages get intercepted
-const userPages = ['/dashboard.html', '/trade.html', '/transactions.html', '/profile.html', '/support.html'];
+const userPages = ['/index.html', '/', '/dashboard.html', '/trade.html', '/transactions.html', '/profile.html', '/support.html'];
 app.use((req, res, next) => {
     const data = maintenance.get();
     if (!data.active) return next();
