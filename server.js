@@ -25,18 +25,13 @@ const newsCache = {
     cacheDuration: 15 * 60 * 1000, // Cache for 15 minutes
 };
 
-// === MAINTENANCE MODE ===
-const maintenancePath = path.join(__dirname, 'maintenance.json');
-function isMaintenanceActive() {
-    try {
-        return JSON.parse(fs.readFileSync(maintenancePath, 'utf8'));
-    } catch { return { active: false, message: '' }; }
-}
+// === MAINTENANCE MODE — shared module (Vercel-safe) ===
+const maintenance = require('./maintenanceManager');
 
 // Maintenance check BEFORE static files so dashboard pages get intercepted
 const userPages = ['/dashboard.html', '/trade.html', '/transactions.html', '/profile.html', '/support.html'];
 app.use((req, res, next) => {
-    const data = isMaintenanceActive();
+    const data = maintenance.get();
     if (!data.active) return next();
     const p = req.path.toLowerCase();
     if (userPages.includes(p)) {
@@ -72,7 +67,7 @@ app.use(cookieParser()); // Allows the server to parse cookies
 
 // Public endpoint to check maintenance status
 app.get('/api/maintenance', (req, res) => {
-    const data = isMaintenanceActive();
+    const data = maintenance.get();
     res.json({ active: data.active, message: data.message || '' });
 });
 
@@ -84,7 +79,7 @@ app.get('/api/payment-methods', async (req, res) => {
 
 // Block user API calls during maintenance (but allow admin API, login, and maintenance check)
 app.use((req, res, next) => {
-    const data = isMaintenanceActive();
+    const data = maintenance.get();
     if (!data.active) return next();
     const p = req.path.toLowerCase();
     if (p.startsWith('/api/') && !p.startsWith('/api/admin') && !p.startsWith('/api/maintenance') && !p.startsWith('/api/login') && !p.startsWith('/api/register')) {

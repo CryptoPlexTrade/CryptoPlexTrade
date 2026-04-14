@@ -210,27 +210,11 @@ router.put('/announcement', (req, res) => {
 });
 
 // === MAINTENANCE MODE ===
-const maintenancePath = path.join(__dirname, 'maintenance.json');
-
-function getMaintenance() {
-    try {
-        return JSON.parse(fs.readFileSync(maintenancePath, 'utf8'));
-    } catch {
-        return { active: false, message: '', updatedAt: '' };
-    }
-}
-
-function saveMaintenance(data) {
-    try {
-        fs.writeFileSync(maintenancePath, JSON.stringify(data, null, 2), 'utf8');
-    } catch (err) {
-        logger.warn('Could not persist maintenance to file (read-only filesystem). Updated in memory only.');
-    }
-}
+const maintenance = require('./maintenanceManager');
 
 // Admin: Get maintenance status
 router.get('/maintenance', (req, res) => {
-    res.json(getMaintenance());
+    res.json(maintenance.get());
 });
 
 // Admin: Toggle maintenance mode
@@ -241,7 +225,7 @@ router.put('/maintenance', (req, res) => {
         message: message || 'We\'re performing scheduled maintenance. We\'ll be back shortly!',
         updatedAt: new Date().toISOString()
     };
-    saveMaintenance(data);
+    maintenance.save(data);
     logger.info(`Maintenance mode ${data.active ? 'ENABLED' : 'DISABLED'} by admin`);
     res.json({ message: `Maintenance mode ${data.active ? 'enabled' : 'disabled'}.`, data });
 });
