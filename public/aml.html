@@ -141,5 +141,6 @@
     (async()=>{const track=document.getElementById('ticker-track');const syms=['BTC','ETH','SOL','BNB','XRP','LTC','ADA','DOGE'];try{const r=await fetch(`https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${syms.join(',')}&tsyms=USD`);const d=await r.json();let html='';syms.forEach(s=>{const c=d.RAW?.[s]?.USD;if(!c)return;const dir=c.CHANGEPCT24HOUR>=0?'up':'down';html+=`<div class="ticker-tape__item"><span class="pair">${s}/USD</span><span class="price">${c.PRICE.toLocaleString('en-US',{style:'currency',currency:'USD'})}</span><span class="change ${dir}">${dir==='up'?'+':''}${c.CHANGEPCT24HOUR.toFixed(2)}% ${dir==='up'?'▲':'▼'}</span></div>`;});track.innerHTML=html+html;}catch(e){}})();
 })();
 </script>
+    <script src="/chat-widget.js"></script>
 </body>
 </html>

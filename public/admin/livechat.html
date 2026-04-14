@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="../css/logo.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Chat - Admin</title>
+    <link rel="stylesheet" href="admin.css">
+    <style>
+        .chat-layout {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 0;
+            height: calc(100vh - 80px);
+            background: #fff;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+            box-shadow: 0 4px 24px rgba(0,91,170,.07);
+        }
+
+        /* ── Session List ─────────────────────────── */
+        .sessions-panel {
+            border-right: 1px solid #e2e8f0;
+            display: flex; flex-direction: column;
+            background: #fafcff;
+        }
+        .sessions-panel-header {
+            padding: 18px 20px 14px;
+            border-bottom: 1px solid #e2e8f0;
+            background: #fff;
+        }
+        .sessions-panel-header h2 {
+            font-size: .9rem; font-weight: 700; color: var(--text-primary); margin: 0 0 8px 0;
+        }
+        .sessions-filter {
+            display: flex; gap: 6px;
+        }
+        .filter-btn {
+            flex: 1; padding: 6px 0; border: 1.5px solid #e2e8f0; border-radius: 8px;
+            background: #fff; font-family: 'Poppins',sans-serif; font-size: .72rem; font-weight: 600;
+            color: #64748b; cursor: pointer; transition: all .2s;
+        }
+        .filter-btn.active { background: var(--primary-color); border-color: var(--primary-color); color: #fff; }
+
+        .sessions-list {
+            flex: 1; overflow-y: auto; padding: 8px;
+        }
+        .sessions-list::-webkit-scrollbar { width: 4px; }
+        .sessions-list::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 4px; }
+
+        .session-item {
+            padding: 12px 14px; border-radius: 10px; cursor: pointer;
+            border: 1px solid transparent; margin-bottom: 4px;
+            transition: all .15s; display: flex; flex-direction: column; gap: 4px;
+        }
+        .session-item:hover { background: var(--bg-highlight); border-color: #e2e8f0; }
+        .session-item.active { background: var(--bg-highlight); border-color: var(--primary-color); }
+        .session-item-top { display: flex; justify-content: space-between; align-items: center; }
+        .session-name { font-size: .84rem; font-weight: 700; color: var(--text-primary); }
+        .session-time { font-size: .68rem; color: #94a3b8; }
+        .session-preview { font-size: .76rem; color: #64748b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .session-status-badge {
+            font-size: .62rem; font-weight: 700; padding: 2px 8px; border-radius: 20px;
+        }
+        .status-open   { background: rgba(40,167,69,.1); color: #28a745; }
+        .status-closed { background: rgba(100,116,139,.1); color: #64748b; }
+
+        .no-sessions {
+            padding: 40px 20px; text-align: center; color: #94a3b8;
+            font-size: .82rem; font-style: italic;
+        }
+
+        /* ── Message Panel ────────────────────────── */
+        .message-panel {
+            display: flex; flex-direction: column; background: #fff;
+        }
+        .message-panel-header {
+            padding: 16px 22px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex; align-items: center; justify-content: space-between;
+            background: #fff; flex-shrink: 0;
+        }
+        .msg-panel-name { font-size: .95rem; font-weight: 700; color: var(--text-primary); margin: 0; }
+        .msg-panel-sub  { font-size: .74rem; color: #64748b; margin-top: 1px; }
+        .btn-close-session {
+            padding: 7px 16px; background: #fef2f2; border: 1px solid #fecaca;
+            border-radius: 8px; color: #dc3545; font-family:'Poppins',sans-serif;
+            font-size: .78rem; font-weight: 600; cursor: pointer; transition: all .2s;
+        }
+        .btn-close-session:hover { background: #dc3545; color: #fff; }
+
+        /* Messages */
+        #admin-messages {
+            flex: 1; overflow-y: auto; padding: 20px 24px;
+            display: flex; flex-direction: column; gap: 10px;
+            scroll-behavior: smooth;
+        }
+        #admin-messages::-webkit-scrollbar { width: 4px; }
+        #admin-messages::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 4px; }
+
+        .admin-msg {
+            max-width: 70%; padding: 11px 16px; border-radius: 16px;
+            font-size: .85rem; line-height: 1.55; word-break: break-word;
+            animation: msg-in .2s ease;
+        }
+        @keyframes msg-in { from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:translateY(0);} }
+        .admin-msg.customer {
+            background: #f1f5f9; color: #1e293b;
+            border-bottom-left-radius: 4px; align-self: flex-start;
+        }
+        .admin-msg.admin-side {
+            background: linear-gradient(135deg, #005baa, #00a9e0); color: #fff;
+            border-bottom-right-radius: 4px; align-self: flex-end;
+        }
+        .admin-msg-meta { font-size: .67rem; opacity: .6; margin-top: 4px; }
+        .admin-msg.customer .admin-msg-meta { text-align: left; }
+        .admin-msg.admin-side .admin-msg-meta { text-align: right; }
+
+        .empty-panel {
+            flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            color: #94a3b8; gap: 12px;
+        }
+        .empty-panel svg { width: 48px; height: 48px; color: #cbd5e1; }
+        .empty-panel p { font-size: .88rem; font-style: italic; margin: 0; }
+
+        /* Reply area */
+        #admin-reply-area {
+            padding: 14px 20px; border-top: 1px solid #e2e8f0;
+            display: flex; gap: 10px; align-items: flex-end; flex-shrink: 0; background: #fff;
+        }
+        #admin-reply-input {
+            flex: 1; border: 1.5px solid #e2e8f0; border-radius: 10px;
+            padding: 11px 14px; font-family:'Poppins',sans-serif; font-size: .86rem;
+            outline: none; resize: none; max-height: 120px; min-height: 44px;
+            transition: border-color .2s; background: #fafcff; color: #1e293b; line-height: 1.4;
+        }
+        #admin-reply-input:focus { border-color: var(--primary-color); }
+        #admin-reply-input:disabled { background: #f8fafc; color: #94a3b8; cursor: not-allowed; }
+        #admin-send-btn {
+            padding: 11px 20px; background: var(--primary-color); color: #fff; border: none;
+            border-radius: 10px; font-family:'Poppins',sans-serif; font-weight: 600;
+            font-size: .86rem; cursor: pointer; transition: background .2s, transform .15s;
+            flex-shrink: 0; display: flex; align-items: center; gap: 7px;
+        }
+        #admin-send-btn:hover { background: var(--primary-dark); transform: translateY(-1px); }
+        #admin-send-btn:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+        #admin-send-btn svg { width: 16px; height: 16px; }
+
+        @media (max-width: 900px) {
+            .chat-layout { grid-template-columns: 1fr; height: auto; }
+            .sessions-panel { height: 280px; }
+            .message-panel { min-height: 400px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile Hamburger Button -->
+    <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open menu">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+        </svg>
+    </button>
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <div class="mobile-topbar"><span class="mobile-page-title">Live Chat</span></div>
+
+    <div class="admin-layout">
+        <aside class="admin-sidebar" id="admin-sidebar">
+            <button class="sidebar-close-btn" id="sidebar-close-btn" aria-label="Close menu">&times;</button>
+            <div class="sidebar-header">
+                <a href="index.html" class="logo-wrapper">
+                    <img src="../css/logo.jpg" alt="Logo" class="logo" style="width:auto!important;height:44px!important;max-height:44px;border-radius:16px!important;object-fit:contain!important;background:none!important;box-shadow:none!important;">
+                    <span class="logo-name">Admin Portal</span>
+                </a>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="index.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M10.5 18.75a.75.75 0 0 0 0 1.5h3a.75.75 0 0 0 0-1.5h-3Z"/><path fill-rule="evenodd" d="M8.625.75A3.375 3.375 0 0 0 5.25 4.125v15.75a3.375 3.375 0 0 0 3.375 3.375h6.75a3.375 3.375 0 0 0 3.375-3.375V4.125A3.375 3.375 0 0 0 15.375.75h-6.75ZM7.5 4.125C7.5 3.504 8.004 3 8.625 3h6.75C15.996 3 16.5 3.504 16.5 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-6.75A1.125 1.125 0 0 1 7.5 19.875V4.125Z" clip-rule="evenodd"/></svg>Dashboard</a></li>
+                    <li><a href="transactions.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M3 4.5h18v15H3v-15Z"/></svg>Transactions</a></li>
+                    <li><a href="users.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M4.5 6.375a4.125 4.125 0 1 1 8.25 0 4.125 4.125 0 0 1-8.25 0ZM14.25 8.625a3.375 3.375 0 1 1 6.75 0 3.375 3.375 0 0 1-6.75 0ZM1.5 19.125a7.125 7.125 0 0 1 14.25 0v.003l-.001.119a.75.75 0 0 1-.363.63l-2.693 1.5c-.25.142-.565.142-.815 0l-2.693-1.5a.75.75 0 0 1-.363-.63V19.125Zm15.75 0v.003l-.001.119a.75.75 0 0 1-.363.63l-2.693 1.5c-.25.142-.565.142-.815 0l-2.693-1.5a.75.75 0 0 1-.363-.63V19.125a7.125 7.125 0 0 1 14.25 0Z"/></svg>Users</a></li>
+                    <li><a href="support.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm11.378-3.917c-.89-.777-2.366-.777-3.255 0a.75.75 0 0 1-1.06-1.06c2.298-2.013 5.824-2.013 8.122 0a.75.75 0 0 1-1.06 1.06ZM12 15.75a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" clip-rule="evenodd"/></svg>Support Tickets</a></li>
+                    <li><a href="referrals.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M10.5 4.5a.75.75 0 0 0 0 1.5h3a.75.75 0 0 0 0-1.5h-3Z"/><path fill-rule="evenodd" d="M12 1.5a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V2.25A.75.75 0 0 1 12 1.5Z" clip-rule="evenodd"/></svg>Referrals</a></li>
+                    <li><a href="rates.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Z" clip-rule="evenodd"/></svg>Manage Rates</a></li>
+                    <li><a href="payment-methods.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M4.5 3.75a3 3 0 0 0-3 3v.75h21v-.75a3 3 0 0 0-3-3h-15Z"/><path fill-rule="evenodd" d="M22.5 9.75h-21v7.5a3 3 0 0 0 3 3h15a3 3 0 0 0 3-3v-7.5Z" clip-rule="evenodd"/></svg>Payment Methods</a></li>
+                    <li><a href="announcements.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M16.881 4.345A23.112 23.112 0 0 1 8.25 6H7.5a5.25 5.25 0 0 0-.88 10.427 21.593 21.593 0 0 0 1.378 3.94c.464 1.004 1.674 1.32 2.582.796l.657-.379c.88-.508 1.165-1.593.772-2.468a17.116 17.116 0 0 1-.628-1.607c1.918.258 3.76.75 5.5 1.446A21.727 21.727 0 0 0 18 11.25c0-2.414-.393-4.735-1.119-6.905Z"/></svg>Announcements</a></li>
+                    <li><a href="maintenance.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 6.75a5.25 5.25 0 0 1 6.775-5.025.75.75 0 0 1 .313 1.248l-3.32 3.319c.063.475.276.934.641 1.299.365.365.824.578 1.3.64l3.318-3.319a.75.75 0 0 1 1.248.313 5.25 5.25 0 0 1-5.472 6.756c-1.018-.086-1.87.1-2.309.634L7.344 21.3A3.298 3.298 0 1 1 2.7 16.657l8.684-7.151c.533-.44.72-1.291.634-2.309A5.342 5.342 0 0 1 12 6.75Z" clip-rule="evenodd"/></svg>Maintenance</a></li>
+                    <li><a href="livechat.html" class="active"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M4.804 21.644A6.707 6.707 0 0 0 6 21.75a6.721 6.721 0 0 0 3.583-1.029c.774.182 1.584.279 2.417.279 5.322 0 9.75-3.97 9.75-9 0-5.03-4.428-9-9.75-9s-9.75 3.97-9.75 9c0 2.409 1.025 4.587 2.674 6.192.232.226.277.428.254.543a3.73 3.73 0 0 1-.814 1.686.75.75 0 0 0 .44 1.223Z" clip-rule="evenodd"/></svg>Live Chat</a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer"><a href="#" id="logout-btn">Logout</a></div>
+        </aside>
+
+        <main class="admin-content">
+            <div class="admin-header">
+                <h1>💬 Live Chat</h1>
+                <p>Respond to customer inquiries in real time.</p>
+            </div>
+
+            <div class="chat-layout">
+                <!-- Session list -->
+                <div class="sessions-panel">
+                    <div class="sessions-panel-header">
+                        <h2>Conversations</h2>
+                        <div class="sessions-filter">
+                            <button class="filter-btn active" data-filter="all">All</button>
+                            <button class="filter-btn" data-filter="open">Open</button>
+                            <button class="filter-btn" data-filter="closed">Closed</button>
+                        </div>
+                    </div>
+                    <div class="sessions-list" id="sessions-list">
+                        <p class="no-sessions">Loading chats…</p>
+                    </div>
+                </div>
+
+                <!-- Message panel (empty state) -->
+                <div class="message-panel" id="message-panel">
+                    <div class="empty-panel" id="empty-panel">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path fill-rule="evenodd" d="M4.804 21.644A6.707 6.707 0 0 0 6 21.75a6.721 6.721 0 0 0 3.583-1.029c.774.182 1.584.279 2.417.279 5.322 0 9.75-3.97 9.75-9 0-5.03-4.428-9-9.75-9s-9.75 3.97-9.75 9c0 2.409 1.025 4.587 2.674 6.192.232.226.277.428.254.543a3.73 3.73 0 0 1-.814 1.686.75.75 0 0 0 .44 1.223Z" clip-rule="evenodd"/>
+                        </svg>
+                        <p>Select a conversation to start responding</p>
+                    </div>
+
+                    <div id="chat-detail" style="display:none;flex:1;flex-direction:column;overflow:hidden;">
+                        <div class="message-panel-header">
+                            <div>
+                                <p class="msg-panel-name" id="detail-name">—</p>
+                                <p class="msg-panel-sub" id="detail-sub">—</p>
+                            </div>
+                            <button class="btn-close-session" id="close-session-btn">Close Chat ✕</button>
+                        </div>
+                        <div id="admin-messages"></div>
+                        <div id="admin-reply-area">
+                            <textarea id="admin-reply-input" placeholder="Type your reply…" rows="1"></textarea>
+                            <button id="admin-send-btn">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M3.478 2.405a.75.75 0 0 0-.926.94l2.432 7.905H13.5a.75.75 0 0 1 0 1.5H4.984l-2.432 7.905a.75.75 0 0 0 .926.94 60.519 60.519 0 0 0 18.445-8.986.75.75 0 0 0 0-1.218A60.517 60.517 0 0 0 3.478 2.405Z"/></svg>
+                                Send
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="admin.js"></script>
+    <script>
+        // Mobile sidebar toggle
+        const menuBtn  = document.getElementById('mobile-menu-btn');
+        const sidebar  = document.getElementById('admin-sidebar');
+        const sOverlay = document.getElementById('sidebar-overlay');
+        const closeBtn = document.getElementById('sidebar-close-btn');
+        function openSidebar()  { sidebar.classList.add('sidebar-open'); sOverlay.classList.add('show'); sOverlay.style.display='block'; }
+        function closeSidebar() { sidebar.classList.remove('sidebar-open'); sOverlay.classList.remove('show'); setTimeout(()=>sOverlay.style.display='none',300); }
+        menuBtn.addEventListener('click', openSidebar);
+        closeBtn.addEventListener('click', closeSidebar);
+        sOverlay.addEventListener('click', closeSidebar);
+    </script>
+    <script>
+    (function() {
+        let sessions  = [];
+        let activeId  = null;
+        let pollTimer = null;
+        let filter    = 'all';
+
+        const sessionsList  = document.getElementById('sessions-list');
+        const emptyPanel    = document.getElementById('empty-panel');
+        const chatDetail    = document.getElementById('chat-detail');
+        const detailName    = document.getElementById('detail-name');
+        const detailSub     = document.getElementById('detail-sub');
+        const adminMessages = document.getElementById('admin-messages');
+        const replyInput    = document.getElementById('admin-reply-input');
+        const sendBtn       = document.getElementById('admin-send-btn');
+        const closeSessionBtn = document.getElementById('close-session-btn');
+
+        function fmtRelative(iso) {
+            const diff = Date.now() - new Date(iso).getTime();
+            if (diff < 60000)    return 'just now';
+            if (diff < 3600000)  return Math.floor(diff/60000) + 'm ago';
+            if (diff < 86400000) return Math.floor(diff/3600000) + 'h ago';
+            return new Date(iso).toLocaleDateString();
+        }
+        function fmtTime(iso) {
+            return new Date(iso).toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
+        }
+
+        // ── Render session list ──────────────────────────────────────
+        function renderSessions() {
+            const filtered = filter === 'all' ? sessions : sessions.filter(s => s.status === filter);
+            if (filtered.length === 0) {
+                sessionsList.innerHTML = '<p class="no-sessions">No conversations yet.</p>';
+                return;
+            }
+            sessionsList.innerHTML = filtered.map(s => `
+                <div class="session-item ${s.id === activeId ? 'active' : ''}" data-id="${s.id}">
+                    <div class="session-item-top">
+                        <span class="session-name">${escHtml(s.guest_name)}</span>
+                        <span class="session-status-badge status-${s.status}">${s.status}</span>
+                    </div>
+                    <div class="session-preview">${escHtml(s.last_message || 'No messages yet')}</div>
+                    <div class="session-time">${fmtRelative(s.updated_at)} · ${s.message_count} msgs</div>
+                </div>
+            `).join('');
+
+            sessionsList.querySelectorAll('.session-item').forEach(el => {
+                el.addEventListener('click', () => openSession(parseInt(el.dataset.id)));
+            });
+        }
+
+        // ── Load sessions ────────────────────────────────────────────
+        async function loadSessions() {
+            try {
+                const r = await fetch('/api/admin/chat/sessions', { credentials: 'include' });
+                if (!r.ok) return;
+                sessions = await r.json();
+                renderSessions();
+            } catch (_) {}
+        }
+
+        // ── Open session ─────────────────────────────────────────────
+        async function openSession(id) {
+            activeId = id;
+            renderSessions();
+            emptyPanel.style.display = 'none';
+            chatDetail.style.display = 'flex';
+
+            const sess = sessions.find(s => s.id === id);
+            if (sess) {
+                detailName.textContent = sess.guest_name;
+                detailSub.textContent  = `Session #${id} · ${sess.status} · Started ${fmtRelative(sess.created_at)}`;
+            }
+
+            await loadMessages();
+            startDetailPoll();
+
+            const closed = sess?.status === 'closed';
+            replyInput.disabled = closed;
+            sendBtn.disabled    = closed;
+            closeSessionBtn.style.display = closed ? 'none' : '';
+        }
+
+        // ── Load messages ────────────────────────────────────────────
+        async function loadMessages() {
+            if (!activeId) return;
+            try {
+                const r = await fetch(`/api/admin/chat/${activeId}`, { credentials: 'include' });
+                if (!r.ok) return;
+                const data = await r.json();
+                adminMessages.innerHTML = '';
+                data.messages.forEach(m => appendAdminMsg(m));
+                adminMessages.scrollTop = adminMessages.scrollHeight;
+            } catch (_) {}
+        }
+
+        function appendAdminMsg(m) {
+            const div = document.createElement('div');
+            div.className = 'admin-msg ' + (m.sender === 'admin' ? 'admin-side' : 'customer');
+            div.innerHTML = `${escHtml(m.message)}<div class="admin-msg-meta">${m.sender === 'admin' ? 'You' : 'Customer'} · ${fmtTime(m.created_at)}</div>`;
+            adminMessages.appendChild(div);
+        }
+
+        // ── Send reply ───────────────────────────────────────────────
+        async function sendReply() {
+            const msg = replyInput.value.trim();
+            if (!msg || !activeId) return;
+            replyInput.value = '';
+            replyInput.style.height = 'auto';
+            sendBtn.disabled = true;
+
+            appendAdminMsg({ sender: 'admin', message: msg, created_at: new Date().toISOString() });
+            adminMessages.scrollTop = adminMessages.scrollHeight;
+
+            try {
+                await fetch(`/api/admin/chat/${activeId}/reply`, {
+                    method: 'POST', credentials: 'include',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: msg })
+                });
+                await loadSessions();
+            } catch (_) {}
+
+            sendBtn.disabled = false;
+            replyInput.focus();
+        }
+
+        sendBtn.addEventListener('click', sendReply);
+        replyInput.addEventListener('keydown', e => {
+            if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendReply(); }
+        });
+        replyInput.addEventListener('input', () => {
+            replyInput.style.height = 'auto';
+            replyInput.style.height = Math.min(replyInput.scrollHeight, 120) + 'px';
+        });
+
+        // ── Close session ────────────────────────────────────────────
+        closeSessionBtn.addEventListener('click', async () => {
+            if (!activeId || !confirm('Close this chat session?')) return;
+            try {
+                await fetch(`/api/admin/chat/${activeId}/close`, { method:'PUT', credentials:'include' });
+                replyInput.disabled = true;
+                sendBtn.disabled    = true;
+                closeSessionBtn.style.display = 'none';
+                await loadSessions();
+                const sess = sessions.find(s => s.id === activeId);
+                if (sess) detailSub.textContent = `Session #${activeId} · closed`;
+            } catch (_) {}
+        });
+
+        // ── Filter buttons ───────────────────────────────────────────
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                filter = btn.dataset.filter;
+                renderSessions();
+            });
+        });
+
+        // ── Polling ──────────────────────────────────────────────────
+        function startDetailPoll() {
+            if (pollTimer) clearInterval(pollTimer);
+            pollTimer = setInterval(async () => {
+                await loadMessages();
+                await loadSessions();
+            }, 4000);
+        }
+
+        function escHtml(s) {
+            return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+        }
+
+        // ── Init ─────────────────────────────────────────────────────
+        loadSessions();
+        setInterval(loadSessions, 8000);
+    })();
+    </script>
+</body>
+</html>

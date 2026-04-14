@@ -131,6 +131,11 @@ app.use('/api/admin', adminRoutes); // Use admin routes
 app.use('/api/support', supportRoutes);
 app.use('/api/notifications', notificationRoutes); // Use notification routes
 
+// Live Chat routes
+const { publicRouter: chatPublic, adminRouter: chatAdmin } = require('./chatRoutes');
+app.use('/api/chat', chatPublic);
+app.use('/api/admin/chat', chatAdmin);
+
 // A simple endpoint to simulate admin-controlled rates
 app.get('/api/rates', (req, res) => {
     res.status(200).json(getRates());

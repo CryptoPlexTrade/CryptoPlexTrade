@@ -226,4 +226,81 @@ async function sendPasswordResetEmail(user, resetUrl) {
     logger.info(`Password reset email sent to ${user.email}`);
 }
 
-module.exports = { sendNewOrderNotification, sendPasswordResetEmail };
+/**
+ * Sends an email notification to the admin about a new live chat session.
+ * @param {string} guestName - The name of the guest who started the chat.
+ * @param {number} sessionId - The ID of the chat session.
+ */
+async function sendLiveChatNotification(guestName, sessionId) {
+    if (!transporter) {
+        logger.warn('Email service is not configured. Skipping live chat notification.');
+        return;
+    }
+
+    const subject = `New Live Chat Initiated - ${guestName}`;
+    const domain = getAppDomain();
+    const adminUrl = `${process.env.APP_URL || 'http://' + domain}/admin/livechat.html`;
+
+    const textBody = `A new live chat session has been started by ${guestName}.\r\n\r\n` +
+                     `Session ID: #${sessionId}\r\n` +
+                     `You can reply to this chat in the admin panel: ${adminUrl}`;
+
+    const htmlBody = `<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#f4f7fb;font-family:Arial,Helvetica,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f7fb;padding:32px 16px;">
+    <tr><td align="center">
+      <table width="560" cellpadding="0" cellspacing="0" style="background:#ffffff;border:1px solid #dde9f7;max-width:560px;width:100%;">
+        <!-- Header -->
+        <tr>
+          <td style="background:#005baa;padding:24px 32px;">
+            <p style="margin:0;font-size:20px;font-weight:bold;color:#ffffff;">${SENDER_NAME}</p>
+            <p style="margin:4px 0 0;font-size:13px;color:#b3d4f0;">Live Chat Alert</p>
+          </td>
+        </tr>
+        <!-- Body -->
+        <tr>
+          <td style="padding:32px;">
+            <p style="margin:0 0 16px;font-size:15px;color:#1e293b;">A new live chat session has been started by <strong>${guestName}</strong>.</p>
+            <p style="margin:0 0 16px;font-size:14px;color:#475569;">Session ID: <strong>#${sessionId}</strong></p>
+            <!-- Button -->
+            <table cellpadding="0" cellspacing="0" style="margin:28px 0;">
+              <tr>
+                <td style="background:#005baa;border-radius:6px;">
+                  <a href="${adminUrl}" style="display:inline-block;padding:14px 32px;font-size:15px;font-weight:bold;color:#ffffff;text-decoration:none;">Reply to Chat</a>
+                </td>
+              </tr>
+            </table>
+            <hr style="border:none;border-top:1px solid #e2e8f0;margin:0 0 20px;">
+            <p style="margin:0;font-size:12px;color:#94a3b8;line-height:1.6;">Access the admin panel to manage all active conversations.</p>
+          </td>
+        </tr>
+        <!-- Footer -->
+        <tr>
+          <td style="background:#f8fafc;border-top:1px solid #e2e8f0;padding:16px 32px;">
+            <p style="margin:0;font-size:11px;color:#94a3b8;">${SENDER_NAME} &middot; <a href="mailto:${process.env.ADMIN_EMAIL}" style="color:#94a3b8;">${process.env.ADMIN_EMAIL}</a></p>
+          </td>
+        </tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+
+    await transporter.sendMail({
+        from:      getSender(),
+        replyTo:   getReplyTo(),
+        to:        process.env.ADMIN_EMAIL,
+        subject,
+        text:      textBody,
+        html:      htmlBody,
+        headers: {
+            'Message-ID': `<${Date.now()}.chat-${sessionId}@${domain}>`,
+            'Precedence': 'bulk',
+        },
+    });
+    logger.info(`Admin notification sent for new chat session #${sessionId}`);
+}
+
+module.exports = { sendNewOrderNotification, sendPasswordResetEmail, sendLiveChatNotification };
