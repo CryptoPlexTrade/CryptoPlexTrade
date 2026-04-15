@@ -129,14 +129,14 @@ body {
 table {
     width: 100%;
     border-collapse: collapse;
-    min-width: 950px;
+    min-width: 700px;
 }
 
 th, td {
-    padding: 16px 20px;
+    padding: 12px 10px;
     text-align: left;
     border-bottom: 1px solid var(--border-light);
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     white-space: nowrap;
 }
 tbody tr { transition: background-color 0.2s ease; }
