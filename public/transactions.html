@@ -92,6 +92,28 @@
                 <p>View and filter all your past orders.</p>
             </div>
 
+            <!-- KPI Cards -->
+            <div class="kpi-grid" style="margin-bottom:20px;">
+                <div class="kpi-card">
+                    <div class="kpi-card__header">
+                        <span class="kpi-card__label">Total Bought</span>
+                        <div class="kpi-card__icon kpi-card__icon--green">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V9Z" clip-rule="evenodd" /></svg>
+                        </div>
+                    </div>
+                    <div class="kpi-card__value" id="kpi-total-bought">—</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-card__header">
+                        <span class="kpi-card__label">Total Sold</span>
+                        <div class="kpi-card__icon kpi-card__icon--orange">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm3 10.5a.75.75 0 0 0 0-1.5H9a.75.75 0 0 0 0 1.5h6Z" clip-rule="evenodd" /></svg>
+                        </div>
+                    </div>
+                    <div class="kpi-card__value" id="kpi-total-sold">—</div>
+                </div>
+            </div>
+
             <div class="filter-bar">
                 <div class="filter-group">
                     <label>Order Type</label>
@@ -189,6 +211,14 @@
     });
 
     let allTransactions = [];
+
+    function updateKpis() {
+        const bought = allTransactions.filter(t => t.order_type === 'buy');
+        const sold   = allTransactions.filter(t => t.order_type === 'sell');
+        const fmtAmt = (arr) => '₵ ' + arr.reduce((s, t) => s + parseFloat(t.total_paid || 0), 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        document.getElementById('kpi-total-bought').innerHTML = `${bought.length} <span style="font-size:.75rem;font-weight:500;color:var(--text-3);margin-left:4px;">(${fmtAmt(bought)})</span>`;
+        document.getElementById('kpi-total-sold').innerHTML   = `${sold.length} <span style="font-size:.75rem;font-weight:500;color:var(--text-3);margin-left:4px;">(${fmtAmt(sold)})</span>`;
+    }
     const tbody       = document.getElementById('transactions-tbody');
     const filterType   = document.getElementById('filter-type');
     const filterStatus = document.getElementById('filter-status');
@@ -357,6 +387,7 @@
             if (r.status === 401 || r.status === 403) { window.location.href = 'login.html'; return; }
             if (!r.ok) throw new Error('Failed');
             allTransactions = await r.json();
+            updateKpis();
             renderTransactions(allTransactions);
         } catch (e) {
             tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--red);padding:24px;">Could not load transaction history.</td></tr>';
