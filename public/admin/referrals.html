@@ -91,10 +91,12 @@
                     </tbody>
                 </table>
             </div>
+            <div id="pagination-bar"></div>
         </main>
     </div>
 
     <script src="admin.js"></script>
+    <script src="admin-pagination.js"></script>
     <script>
         // Mobile sidebar toggle
         const menuBtn = document.getElementById('mobile-menu-btn');
@@ -118,7 +120,14 @@
     <script>
         document.addEventListener('DOMContentLoaded', async function() {
             const tbody = document.getElementById('referrals-tbody');
-            let allReferrals = []; // Store all fetched data
+            let allReferrals = [];
+            let filteredReferrals = [];
+
+            const pager = new AdminPagination({
+                containerId: 'pagination-bar',
+                defaultPerPage: 10,
+                onPageChange: () => renderReferrals(pager.getSlice(filteredReferrals))
+            });
 
             async function fetchReferrals() {
                 try {
@@ -130,7 +139,7 @@
                     }
                     if (!response.ok) throw new Error('Failed to fetch referral data');
                     allReferrals = await response.json();
-                    renderReferrals(allReferrals);
+                    applyFilters();
                 } catch (error) {
                     tbody.innerHTML = `<tr><td colspan="4" class="error-message">${error.message}</td></tr>`;
                 }
@@ -161,7 +170,7 @@
 
             function applyFilters() {
                 const filterValue = document.getElementById('filter-transacted').value;
-                let filteredReferrals = [...allReferrals];
+                filteredReferrals = [...allReferrals];
 
                 if (filterValue === 'yes') {
                     filteredReferrals = allReferrals.filter(ref => ref.has_transacted);
@@ -169,7 +178,8 @@
                     filteredReferrals = allReferrals.filter(ref => !ref.has_transacted);
                 }
 
-                renderReferrals(filteredReferrals);
+                pager.setTotal(filteredReferrals.length);
+                pager.goToPage(1);
             }
 
             // ── Custom Status Dropdown Logic ────────────────────────────

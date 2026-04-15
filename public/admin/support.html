@@ -98,6 +98,7 @@
                     </tbody>
                 </table>
             </div>
+            <div id="pagination-bar"></div>
         </main>
     </div>
 
@@ -123,6 +124,7 @@
     </div>
 
     <script src="admin.js"></script>
+    <script src="admin-pagination.js"></script>
     <script>
         // Mobile sidebar toggle
         const menuBtn = document.getElementById('mobile-menu-btn');
@@ -146,6 +148,14 @@
     <script>
         document.addEventListener('DOMContentLoaded', async function() {
             const tbody = document.getElementById('tickets-tbody');
+            let allTickets = [];
+
+            const pager = new AdminPagination({
+                containerId: 'pagination-bar',
+                defaultPerPage: 10,
+                onPageChange: () => renderTickets(pager.getSlice(allTickets))
+            });
+
             async function fetchTickets() {
                 try {
                     tbody.innerHTML = '<tr><td colspan="6">Loading...</td></tr>';
@@ -155,8 +165,9 @@
                         return;
                     }
                     if (!response.ok) throw new Error('Failed to fetch tickets');
-                    const tickets = await response.json();
-                    renderTickets(tickets);
+                    allTickets = await response.json();
+                    pager.setTotal(allTickets.length);
+                    pager.goToPage(1);
                 } catch (error) {
                     tbody.innerHTML = `<tr><td colspan="6" class="error-message">${error.message}</td></tr>`;
                 }

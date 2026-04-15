@@ -820,3 +820,80 @@ th {
     tbody td { padding: 10px 12px; font-size: 0.84rem; }
     tbody td::before { min-width: 95px; font-size: 0.72rem; }
 }
+
+/* ── Pagination Bar ────────────────────────────── */
+.pagination-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 14px 20px;
+    background: var(--bg-white);
+    border-top: 1px solid var(--border-light);
+    border-radius: 0 0 12px 12px;
+    font-size: .85rem;
+    color: var(--text-secondary);
+}
+.pagination-bar .pg-per-page {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+}
+.pagination-bar .pg-per-page select {
+    padding: 5px 8px;
+    border: 1.5px solid var(--border-light);
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-size: .82rem;
+    color: var(--text-primary);
+    background: #fafcff;
+    cursor: pointer;
+    outline: none;
+    transition: border-color .2s;
+}
+.pagination-bar .pg-per-page select:focus { border-color: var(--primary-color); }
+.pagination-bar .pg-info { font-weight: 500; }
+.pagination-bar .pg-buttons {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.pagination-bar .pg-btn {
+    min-width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid var(--border-light);
+    border-radius: 8px;
+    background: #fff;
+    color: var(--text-primary);
+    font-family: 'Poppins', sans-serif;
+    font-size: .82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .2s;
+    padding: 0 6px;
+}
+.pagination-bar .pg-btn:hover:not(:disabled):not(.pg-active) {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    background: #f0f7ff;
+}
+.pagination-bar .pg-btn:disabled {
+    opacity: .4;
+    cursor: not-allowed;
+}
+.pagination-bar .pg-btn.pg-active {
+    background: var(--primary-color);
+    color: #fff;
+    border-color: var(--primary-color);
+}
+.pagination-bar .pg-btn svg { width: 16px; height: 16px; }
+
+@media (max-width: 600px) {
+    .pagination-bar { padding: 10px 12px; font-size: .78rem; }
+    .pagination-bar .pg-btn { min-width: 30px; height: 30px; font-size: .75rem; }
+}

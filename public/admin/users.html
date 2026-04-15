@@ -78,10 +78,12 @@
                     </tbody>
                 </table>
             </div>
+            <div id="pagination-bar"></div>
         </main>
     </div>
 
     <script src="admin.js"></script>
+    <script src="admin-pagination.js"></script>
     <script>
         // Mobile sidebar toggle
         const menuBtn = document.getElementById('mobile-menu-btn');
@@ -105,7 +107,14 @@
     <script>
         document.addEventListener('DOMContentLoaded', async function() {
             const tbody = document.getElementById('users-tbody');
-            let allUsers = []; // Store all fetched users
+            let allUsers = [];
+            let filteredUsers = [];
+
+            const pager = new AdminPagination({
+                containerId: 'pagination-bar',
+                defaultPerPage: 10,
+                onPageChange: () => renderUsers(pager.getSlice(filteredUsers))
+            });
 
             async function fetchUsers() {
                 try {
@@ -117,7 +126,7 @@
                     }
                     if (!response.ok) throw new Error('Failed to fetch users');
                     allUsers = await response.json();
-                    renderUsers(allUsers);
+                    applyFilters();
                 } catch (error) {
                     tbody.innerHTML = `<tr><td colspan="6" class="error-message">${error.message}</td></tr>`;
                 }
@@ -145,20 +154,14 @@
 
             function applyFilters() {
                 const searchTerm = document.getElementById('search-user').value.toLowerCase();
-                
-                const filteredUsers = allUsers.filter(user => {
-                    const nameMatch = user.fullname.toLowerCase().includes(searchTerm);
-                    const emailMatch = user.email.toLowerCase().includes(searchTerm);
-                    return nameMatch || emailMatch;
+                filteredUsers = allUsers.filter(user => {
+                    return user.fullname.toLowerCase().includes(searchTerm) || user.email.toLowerCase().includes(searchTerm);
                 });
-
-                renderUsers(filteredUsers);
+                pager.setTotal(filteredUsers.length);
+                pager.goToPage(1);
             }
 
-            // Initial fetch
             fetchUsers();
-
-            // Add event listener for the search input
             document.getElementById('search-user').addEventListener('input', applyFilters);
         });
     </script>

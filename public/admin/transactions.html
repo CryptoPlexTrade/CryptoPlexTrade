@@ -111,6 +111,7 @@
                     </tbody>
                 </table>
             </div>
+            <div id="pagination-bar"></div>
         </main>
     </div>
 
@@ -128,6 +129,7 @@
     </div>
 
     <script src="admin.js"></script>
+    <script src="admin-pagination.js"></script>
     <script>
         // Mobile sidebar toggle
         const menuBtn = document.getElementById('mobile-menu-btn');
@@ -153,6 +155,15 @@
             const tbody = document.getElementById('orders-tbody');
             const orderStatusOptions = ['pending_confirmation', 'pending_payment', 'completed', 'failed', 'cancelled'];
             let allOrders = []; // Store all fetched orders
+            let filteredOrders = [];
+
+            const pager = new AdminPagination({
+                containerId: 'pagination-bar',
+                defaultPerPage: 10,
+                onPageChange: (page, perPage) => {
+                    renderOrders(pager.getSlice(filteredOrders));
+                }
+            });
 
             async function fetchOrders() {
                 try {
@@ -164,7 +175,7 @@
                     }
                     if (!response.ok) throw new Error('Failed to fetch orders');
                     allOrders = await response.json();
-                    renderOrders(allOrders);
+                    applyFilters();
                 } catch (error) {
                     tbody.innerHTML = `<tr><td colspan="8" class="error-message">${error.message}</td></tr>`;
                 }
@@ -208,7 +219,6 @@
                                     <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                                 </button>
                                 <div class="csd-dropdown">${optionsHTML}</div>
-                                <!-- Hidden select for value access -->
                                 <select class="status-select" data-order-id="${order.id}" style="display:none">
                                     ${orderStatusOptions.map(opt => `<option value="${opt}" ${order.status === opt ? 'selected' : ''}>${opt}</option>`).join('')}
                                 </select>
@@ -228,12 +238,10 @@
                     completed: '#28a745', failed: '#dc3545', cancelled: '#dc3545'
                 };
                 orderStatusOptions.forEach(opt => {
-                    // Hidden select
                     const option = document.createElement('option');
                     option.value = opt;
                     option.textContent = opt.replace(/_/g, ' ');
                     statusFilter.appendChild(option);
-                    // CSD panel option
                     const div = document.createElement('div');
                     div.className = 'csd-option';
                     div.dataset.value = opt;
@@ -245,7 +253,7 @@
             function applyFilters() {
                 const typeFilter = document.getElementById('filter-type').value;
                 const statusFilter = document.getElementById('filter-status').value;
-                let filteredOrders = [...allOrders];
+                filteredOrders = [...allOrders];
 
                 if (typeFilter !== 'all') {
                     filteredOrders = filteredOrders.filter(order => order.order_type === typeFilter);
@@ -254,7 +262,8 @@
                     filteredOrders = filteredOrders.filter(order => order.status === statusFilter);
                 }
 
-                renderOrders(filteredOrders);
+                pager.setTotal(filteredOrders.length);
+                pager.goToPage(1);
             }
 
             // ── Custom Status Dropdown logic ────────────────────────────
