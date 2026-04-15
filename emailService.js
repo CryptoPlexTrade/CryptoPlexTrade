@@ -453,7 +453,7 @@ async function sendVerificationEmail(email, otpCode) {
         ``,
         `Your email verification code is: ${otpCode}`,
         ``,
-        `This code will expire in 15 minutes.`,
+        `This code will expire in 5 minutes.`,
         `If you didn't request this, you can safely ignore this email.`,
         ``,
         `-- CryptoPlexTrade`,
@@ -484,7 +484,7 @@ async function sendVerificationEmail(email, otpCode) {
               <h2 style="margin:0;font-size:36px;font-weight:800;color:#005baa;letter-spacing:6px;">${otpCode}</h2>
             </div>
             
-            <p style="margin:0 0 8px;font-size:13px;color:#64748b;">This code will expire in <strong>15 minutes</strong>.</p>
+            <p style="margin:0 0 8px;font-size:13px;color:#64748b;">This code will expire in <strong>5 minutes</strong>.</p>
             <p style="margin:0;font-size:13px;color:#94a3b8;">If you did not request this, please ignore this email.</p>
           </td>
         </tr>
@@ -502,7 +502,7 @@ async function sendVerificationEmail(email, otpCode) {
 </html>`;
 
     await transporter.sendMail({
-        from:    '"CryptoPlexTrade Verification" <verification@cryptoplextrade.com>',
+        from:    `"CryptoPlexTrade Verification" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
         replyTo: getReplyTo(),
         to:      email,
         subject,

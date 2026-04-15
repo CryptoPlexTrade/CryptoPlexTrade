@@ -15,6 +15,18 @@ const crypto = require('crypto');
 const db = require('./database');
 const { getRates } = require('./rates');
 
+// --- Auto-migrate DB token columns ---
+(async function migrateTokens() {
+    try {
+        await db.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS verify_token VARCHAR(255)');
+        await db.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS verify_expires BIGINT');
+        await db.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS reset_token VARCHAR(255)');
+        await db.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS reset_expires BIGINT');
+    } catch (e) {
+        logger.error('Token migration failed:', e);
+    }
+})();
+
 const app = express();
 const PORT = process.env.PORT || 5008;
 

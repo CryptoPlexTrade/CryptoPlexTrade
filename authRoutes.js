@@ -5,9 +5,8 @@ const crypto = require('crypto');
 const { authenticateToken } = require('./authMiddleware');
 const { sendPasswordResetEmail, sendVerificationEmail } = require('./emailService');
 
-// In-memory token stores. Cleared on server restart.
-const passwordResetTokens = new Map();
-const verificationTokens  = new Map();
+// In-memory token stores removed to support Vercel serverless persistence.
+// Tokens will now be stored in the database.
 
 // const rateLimit = require('express-rate-limit');
 const logger = require('./logger');
@@ -82,8 +81,10 @@ router.post('/register', async (req, res) => {
 
         // Generate 6-digit OTP
         const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
-        // Store the token (valid for 15 mins)
-        verificationTokens.set(emailLower, { code: otpCode, expires: Date.now() + 15 * 60 * 1000 });
+        const expiresAt = Date.now() + 5 * 60 * 1000;
+        
+        // Store the token in the DB (valid for 5 mins)
+        await db.query('UPDATE users SET verify_token = ?, verify_expires = ? WHERE id = ?', [otpCode, expiresAt, newUserId]);
 
         // Send Email
         sendVerificationEmail(emailLower, otpCode).catch(err => logger.error('Verification email failed:', err));
@@ -125,7 +126,8 @@ router.post('/login', async (req, res) => {
         if (user.role === 'user' && !user.is_verified) {
             // Generate a new code so they can verify now if the old one expired
             const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
-            verificationTokens.set(email, { code: otpCode, expires: Date.now() + 15 * 60 * 1000 });
+            const expiresAt = Date.now() + 5 * 60 * 1000;
+            await db.query('UPDATE users SET verify_token = ?, verify_expires = ? WHERE id = ?', [otpCode, expiresAt, user.id]);
             sendVerificationEmail(email, otpCode).catch(err => logger.error('Verification email failed:', err));
             return res.status(403).json({ message: 'Please verify your email address to log in.', needVerification: true, email });
         }
@@ -250,7 +252,11 @@ router.post('/forgot-password', async (req, res) => {
         if (users.length > 0) {
             const user = users[0];
             const token = crypto.randomBytes(32).toString('hex');
-            passwordResetTokens.set(email, { token, expires: Date.now() + 60 * 60 * 1000 });
+            
+            // Store token in DB, valid for 1 hour
+            const expiresAt = Date.now() + 60 * 60 * 1000;
+            await db.query('UPDATE users SET reset_token = ?, reset_expires = ? WHERE id = ?', [token, expiresAt, user.id]);
+
             const appUrl = process.env.APP_URL || `http://localhost:${process.env.PORT || 5008}`;
             const resetUrl = `${appUrl}/reset-password.html?token=${token}&email=${encodeURIComponent(email)}`;
 
@@ -282,15 +288,18 @@ router.post('/reset-password', async (req, res) => {
     if (newPassword.length < 8) {
         return res.status(400).json({ message: 'Password must be at least 8 characters.' });
     }
-    const stored = passwordResetTokens.get(email);
-    if (!stored || stored.token !== token || Date.now() > stored.expires) {
-        return res.status(400).json({ message: 'This reset link is invalid or has expired. Please request a new one.' });
-    }
     try {
+        const [users] = await db.query('SELECT id, reset_token, reset_expires FROM users WHERE LOWER(email) = ?', [email]);
+        const user = users[0];
+
+        if (!user || user.reset_token !== token || Date.now() > user.reset_expires) {
+            return res.status(400).json({ message: 'This reset link is invalid or has expired. Please request a new one.' });
+        }
+
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(newPassword, salt);
-        await db.query('UPDATE users SET password = ? WHERE LOWER(email) = ?', [hashedPassword, email]);
-        passwordResetTokens.delete(email); // Invalidate token after use
+        await db.query('UPDATE users SET password = ?, reset_token = NULL, reset_expires = NULL WHERE id = ?', [hashedPassword, user.id]);
+
         res.status(200).json({ message: 'Password reset successfully! You can now log in with your new password.' });
     } catch (error) {
         logger.error('Reset password error:', error);
@@ -317,23 +326,20 @@ router.post('/verify-email', async (req, res) => {
         return res.status(400).json({ message: 'Email and 6-digit code are required.' });
     }
 
-    const stored = verificationTokens.get(email);
-    if (!stored || stored.code !== otp || Date.now() > stored.expires) {
-        return res.status(400).json({ message: 'Invalid or expired verification code.' });
-    }
-
     try {
-        // Mark user as verified
-        await db.query('UPDATE users SET is_verified = TRUE WHERE LOWER(email) = ?', [email]);
-        verificationTokens.delete(email); // Clean up
-
-        // Fetch user again to log them in
-        const [users] = await db.query('SELECT * FROM users WHERE LOWER(email) = ?', [email]);
+        const [users] = await db.query('SELECT id, fullname, role, verify_token, verify_expires FROM users WHERE LOWER(email) = ?', [email]);
         const user = users[0];
 
         if (!user) {
             return res.status(404).json({ message: 'User not found.' });
         }
+
+        if (user.verify_token !== otp || Date.now() > user.verify_expires) {
+            return res.status(400).json({ message: 'Invalid or expired verification code.' });
+        }
+
+        // Mark user as verified and clear tokens
+        await db.query('UPDATE users SET is_verified = TRUE, verify_token = NULL, verify_expires = NULL WHERE id = ?', [user.id]);
 
         // Create a JWT token
         const csrfToken = crypto.randomBytes(32).toString('hex');
@@ -371,7 +377,8 @@ router.post('/resend-verification', async (req, res) => {
         const [users] = await db.query('SELECT id, is_verified FROM users WHERE LOWER(email) = ?', [email]);
         if (users.length > 0 && !users[0].is_verified) {
             const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
-            verificationTokens.set(email, { code: otpCode, expires: Date.now() + 15 * 60 * 1000 });
+            const expiresAt = Date.now() + 5 * 60 * 1000;
+            await db.query('UPDATE users SET verify_token = ?, verify_expires = ? WHERE id = ?', [otpCode, expiresAt, users[0].id]);
             sendVerificationEmail(email, otpCode).catch(err => logger.error('Verification email failed:', err));
         }
         res.status(200).json({ message: genericMsg });
