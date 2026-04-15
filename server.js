@@ -30,13 +30,15 @@ const maintenance = require('./maintenanceManager');
 
 // Maintenance check BEFORE static files so dashboard pages get intercepted
 const userPages = ['/index.html', '/', '/dashboard.html', '/trade.html', '/transactions.html', '/profile.html', '/support.html'];
-app.use((req, res, next) => {
-    const data = maintenance.get();
-    if (!data.active) return next();
-    const p = req.path.toLowerCase();
-    if (userPages.includes(p)) {
-        return res.redirect('/maintenance.html');
-    }
+app.use(async (req, res, next) => {
+    try {
+        const data = await maintenance.get();
+        if (!data.active) return next();
+        const p = req.path.toLowerCase();
+        if (userPages.includes(p)) {
+            return res.redirect('/maintenance.html');
+        }
+    } catch (_) {}
     next();
 });
 
@@ -66,8 +68,8 @@ app.use(express.json()); // Allows the server to understand JSON data
 app.use(cookieParser()); // Allows the server to parse cookies
 
 // Public endpoint to check maintenance status
-app.get('/api/maintenance', (req, res) => {
-    const data = maintenance.get();
+app.get('/api/maintenance', async (req, res) => {
+    const data = await maintenance.get();
     res.json({ active: data.active, message: data.message || '' });
 });
 
@@ -78,13 +80,15 @@ app.get('/api/payment-methods', async (req, res) => {
 });
 
 // Block user API calls during maintenance (but allow admin API, login, and maintenance check)
-app.use((req, res, next) => {
-    const data = maintenance.get();
-    if (!data.active) return next();
-    const p = req.path.toLowerCase();
-    if (p.startsWith('/api/') && !p.startsWith('/api/admin') && !p.startsWith('/api/maintenance') && !p.startsWith('/api/login') && !p.startsWith('/api/register')) {
-        return res.status(503).json({ message: data.message || 'Site is under maintenance.' });
-    }
+app.use(async (req, res, next) => {
+    try {
+        const data = await maintenance.get();
+        if (!data.active) return next();
+        const p = req.path.toLowerCase();
+        if (p.startsWith('/api/') && !p.startsWith('/api/admin') && !p.startsWith('/api/maintenance') && !p.startsWith('/api/login') && !p.startsWith('/api/register')) {
+            return res.status(503).json({ message: data.message || 'Site is under maintenance.' });
+        }
+    } catch (_) {}
     next();
 });
 

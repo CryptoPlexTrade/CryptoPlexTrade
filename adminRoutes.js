@@ -213,19 +213,19 @@ router.put('/announcement', (req, res) => {
 const maintenance = require('./maintenanceManager');
 
 // Admin: Get maintenance status
-router.get('/maintenance', (req, res) => {
-    res.json(maintenance.get());
+router.get('/maintenance', async (req, res) => {
+    res.json(await maintenance.get());
 });
 
 // Admin: Toggle maintenance mode
-router.put('/maintenance', (req, res) => {
+router.put('/maintenance', async (req, res) => {
     const { active, message } = req.body;
     const data = {
         active: !!active,
         message: message || 'We\'re performing scheduled maintenance. We\'ll be back shortly!',
         updatedAt: new Date().toISOString()
     };
-    maintenance.save(data);
+    await maintenance.save(data);
     logger.info(`Maintenance mode ${data.active ? 'ENABLED' : 'DISABLED'} by admin`);
     res.json({ message: `Maintenance mode ${data.active ? 'enabled' : 'disabled'}.`, data });
 });

@@ -5,179 +5,162 @@
     <link rel="icon" type="image/png" href="css/logo.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Step 3: Confirm ID - CryptoPlexTrade</title>
+    <meta name="description" content="Confirm your payment transaction ID to complete your crypto order on CryptoPlexTrade.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/app.css">
     <style>
-        :root {
-            --primary-color: #005baa; --primary-dark: #004a8a; --secondary-color: #00a9e0; --bg-highlight: #f0f7ff;
-            --bg-white: #ffffff; --bg-light: #f8fafc; --border-light: #e2e8f0; --border-medium: #cbd5e1;
-            --text-secondary: #64748b; --text-body: #475569; --text-primary: #1e293b;
-            --accent-green: #28a745; --accent-red: #dc3545;
-            --shadow-subtle: rgba(0, 0, 0, 0.05); --shadow-medium: rgba(0, 0, 0, 0.1); --shadow-blue: rgba(0, 91, 170, 0.2);
+        body { overflow-y: auto; }
+
+        .os-wrap { min-height: 100vh; background: var(--bg); display: flex; flex-direction: column; }
+
+        /* ── Topbar ─────────────────────────────────────── */
+        .os-topbar {
+            background: var(--bg-white); border-bottom: 1px solid var(--border);
+            padding: 0 32px; height: 62px;
+            display: flex; align-items: center; justify-content: space-between;
+            flex-shrink: 0; position: sticky; top: 0; z-index: 100;
         }
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
-        body { 
-            font-family: 'Poppins', sans-serif; 
-            color: var(--text-body); 
-            margin: 0; 
-            padding: 0; 
-            display: flex; 
-            flex-direction: column; 
-            min-height: 100vh; 
-            background: linear-gradient(-45deg, #f0f7ff, #e2e8f0, #f0f7ff, #00a9e0);
-            background-size: 400% 400%;
-            animation: gradientBG 20s ease infinite;
+        .os-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .os-brand__orb { text-decoration: none; }
+        img.os-brand__orb { width: auto; height: 44px; border-radius: 16px; object-fit: contain; background: none !important; box-shadow: none !important; }
+        .os-brand__name { font-size: 0.9rem; font-weight: 700; color: var(--text-1); }
+        .os-topbar-right { display: flex; gap: 12px; align-items: center; }
+
+        /* ── Main ───────────────────────────────────────── */
+        .os-main {
+            flex: 1; display: flex; align-items: flex-start;
+            justify-content: center; padding: 40px 20px 100px;
         }
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
-        body { 
-            font-family: 'Poppins', sans-serif; 
-            color: var(--text-body); 
-            margin: 0; 
-            padding: 0; 
-            display: flex; 
-            flex-direction: column; 
-            min-height: 100vh; 
-            background: linear-gradient(-45deg, #f0f7ff, #e2e8f0, #f0f7ff, #00a9e0);
-            background-size: 400% 400%;
-            animation: gradientBG 20s ease infinite;
+        .os-container { width: 100%; max-width: 560px; }
+
+        /* ── Steps ──────────────────────────────────────── */
+        .steps { display: flex; align-items: flex-start; gap: 0; margin-bottom: 32px; }
+        .step-item { flex: 1; display: flex; flex-direction: column; align-items: center; position: relative; }
+        .step-item:not(:last-child)::after {
+            content: ''; position: absolute; top: 18px; left: 50%;
+            width: 100%; height: 2px; background: var(--border); z-index: 0;
         }
-        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-
-        .container { max-width: 800px; margin: 0 auto; padding: 0 20px; }
-        .header { padding: 20px 0; background: transparent; position: sticky; top: 0; z-index: 100; }
-        .header .container { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; }
-        .logo-wrapper { display: flex; align-items: center; text-decoration: none; }
-        .logo-name {
-            font-size: 1.8rem; font-weight: 700; color: var(--text-primary);
-            text-decoration: none; margin-left: 12px;
+        .step-item.done:not(:last-child)::after { background: var(--green); }
+        .step-num {
+            width: 36px; height: 44px; border-radius: 50%;
+            border: 2px solid var(--border-mid); background: white;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.8rem; font-weight: 700; color: var(--text-3);
+            position: relative; z-index: 1; transition: all 0.25s;
         }
-        .header .container { display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-size: 1.8rem; font-weight: 700; color: var(--text-primary); text-decoration: none; }
-        .logo { text-decoration: none; }
-        img.logo { width: auto; height: 44px; border-radius: 16px; object-fit: contain; background: none; box-shadow: none; }
-        .logo:hover { transform: scale(1.1); }
-        .nav a { color: var(--text-body); text-decoration: none; margin-left: 30px; font-weight: 400; transition: color 0.3s ease; }
-        .nav a:hover { color: var(--primary-color); }
-        .btn-primary { background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)); background-size: 200% 200%; color: white; padding: 15px 40px; border-radius: 50px; text-decoration: none; font-weight: 600; transition: transform 0.3s ease, box-shadow 0.3s ease; border: none; animation: gradient-animation 8s ease infinite; cursor: pointer; }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px var(--shadow-blue); }
-        @keyframes gradient-animation { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-
-        .container { max-width: 800px; margin: 0 auto; padding: 0 20px; }
-        .header { padding: 20px 0; background: transparent; position: sticky; top: 0; z-index: 100; }
-        .header .container { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; }
-        .logo { font-size: 1.8rem; font-weight: 700; color: var(--text-primary); text-decoration: none; }
-        .logo { text-decoration: none; }
-        img.logo { width: auto; height: 44px; border-radius: 16px; object-fit: contain; background: none; box-shadow: none; }
-        .logo:hover { transform: scale(1.1); }
-        .nav a { color: var(--text-body); text-decoration: none; margin-left: 30px; font-weight: 400; transition: color 0.3s ease; }
-        .nav a:hover { color: var(--primary-color); }
-        .btn-primary { background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)); background-size: 200% 200%; color: white; padding: 15px 40px; border-radius: 50px; text-decoration: none; font-weight: 600; transition: transform 0.3s ease, box-shadow 0.3s ease; border: none; animation: gradient-animation 8s ease infinite; cursor: pointer; }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px var(--shadow-blue); }
-        @keyframes gradient-animation { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-
-        /* --- Main Content --- */
-        .main-content { flex-grow: 1; padding: 60px 0; }
-        .confirmation-wrapper {
-            background: rgba(255, 255, 255, 0.5);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px; 
-            box-shadow: 0 15px 35px var(--shadow-medium);
-            animation: fade-in-up 0.8s ease-out;
-            padding: 40px 50px; 
-            border-image: linear-gradient(145deg, rgba(255,255,255,0.5), rgba(255,255,255,0.1), rgba(255,255,255,0.5)) 1;
+        .step-item.active .step-num {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            border-color: transparent; color: white;
+            box-shadow: 0 0 0 4px rgba(0,91,170,0.15);
         }
-        @keyframes fade-in-up { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .step-item.done .step-num {
+            background: var(--green); border-color: transparent; color: white;
+        }
+        .step-label {
+            font-size: 0.72rem; font-weight: 600; color: var(--text-3);
+            margin-top: 8px; text-align: center; white-space: nowrap;
+        }
+        .step-item.active .step-label { color: var(--primary-dark); }
+        .step-item.done .step-label { color: var(--green); }
 
-        .confirmation-wrapper h1 { font-size: 2.5rem; color: var(--text-primary); margin-top: 0; margin-bottom: 30px; text-align: center; }
+        /* ── Confirm Card ──────────────────────────────── */
+        .confirm-card {
+            background: var(--bg-white); border: 1px solid var(--border);
+            border-radius: 16px; box-shadow: var(--shadow-sm);
+            padding: 32px; animation: panel-in 0.28s ease;
+        }
+        @keyframes panel-in { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Stepper */
-        .stepper { display: flex; justify-content: space-between; margin-bottom: 40px; position: relative; }
-        .stepper-line { position: absolute; top: 19px; left: 10%; right: 10%; height: 4px; background: var(--border-light); z-index: 1; }
-        .stepper-progress { position: absolute; top: 19px; left: 10%; height: 4px; background: var(--primary-color); z-index: 2; width: 0; transition: width 0.5s ease-in-out; }
-        .step { display: flex; flex-direction: column; align-items: center; z-index: 3; background-color: var(--bg-light); padding: 0 10px; }
-        .step-number { width: 40px; height: 44px; border-radius: 50%; background: var(--bg-white); border: 3px solid var(--border-medium); color: var(--text-secondary); display: flex; align-items: center; justify-content: center; font-weight: 700; margin-bottom: 10px; transition: all 0.4s ease; }
-        .step-title { font-size: 0.9rem; font-weight: 500; color: var(--text-secondary); }
-        .step.active .step-number { border-color: var(--primary-color); background: var(--primary-color); color: white; transform: scale(1.1); box-shadow: 0 0 15px var(--shadow-blue); }
-        .step.active .step-title { color: var(--primary-dark); }
-        .step.completed .step-number { border-color: var(--accent-green); background: var(--accent-green); color: white; }
-        .step.completed .step-title { color: var(--text-primary); }
+        .confirm-card h2 {
+            font-size: 1.15rem; font-weight: 700; color: var(--text-1);
+            margin: 0 0 8px; text-align: center;
+        }
+        .confirm-card .subtitle {
+            font-size: 0.82rem; color: var(--text-3); text-align: center;
+            margin: 0 0 28px; line-height: 1.6;
+        }
 
-        .form-group { position: relative; margin-bottom: 20px; }
-        .form-group label { display: block; font-weight: 600; color: var(--text-primary); margin-bottom: 8px; }
-        .form-group input { width: 100%; padding: 12px 15px; border: 1px solid var(--border-medium); border-radius: 8px; font-size: 1rem; box-sizing: border-box; transition: border-color 0.3s ease, box-shadow 0.3s ease; background-color: var(--bg-white); }
-        .form-group input:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px var(--shadow-blue); }
+        .form-group { margin-bottom: 20px; }
+        .form-group label {
+            display: block; font-size: 0.78rem; font-weight: 700;
+            color: var(--text-3); text-transform: uppercase;
+            letter-spacing: 0.5px; margin-bottom: 8px;
+        }
+        .form-group input {
+            width: 100%; padding: 12px 14px; border: 1.5px solid var(--border);
+            border-radius: 10px; font-family: 'Poppins', sans-serif;
+            font-size: 0.92rem; color: var(--text-1); background: var(--bg);
+            outline: none; transition: border-color 0.2s; box-sizing: border-box;
+        }
+        .form-group input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0,91,170,0.1); }
 
-        #confirm-payment-btn { width: 100%; margin-top: 10px; }
-
-        #server-message { padding: 15px; border-radius: 8px; margin-bottom: 20px; font-weight: 500; display: none; }
+        #server-message { padding: 14px 18px; border-radius: 10px; margin-bottom: 20px; font-weight: 500; display: none; font-size: 0.85rem; }
         #server-message.success { background-color: #e9f5ec; color: #28a745; }
         #server-message.error { background-color: #fbe9e7; color: #dc3545; }
 
         /* Success Animation */
         .success-animation { text-align: center; display: none; }
-        .success-checkmark { width: 100px; height: 100px; margin: 20px auto; }
-        .success-checkmark__circle { stroke-dasharray: 166; stroke-dashoffset: 166; stroke-width: 3; stroke-miterlimit: 10; stroke: var(--accent-green); fill: none; animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards; }
-        .success-checkmark__check { transform-origin: 50% 50%; stroke-dasharray: 48; stroke-dashoffset: 48; stroke-width: 3; stroke: var(--accent-green); fill: none; animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards; }
+        .success-checkmark { width: 80px; height: 80px; margin: 16px auto; }
+        .success-checkmark__circle { stroke-dasharray: 166; stroke-dashoffset: 166; stroke-width: 3; stroke-miterlimit: 10; stroke: var(--green); fill: none; animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards; }
+        .success-checkmark__check { transform-origin: 50% 50%; stroke-dasharray: 48; stroke-dashoffset: 48; stroke-width: 3; stroke: var(--green); fill: none; animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards; }
         @keyframes stroke { 100% { stroke-dashoffset: 0; } }
 
-        /* --- Ticker Tape --- */
-        .ticker-tape {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background-color: var(--text-primary);
-            color: var(--bg-white);
-            padding: 10px 0;
-            z-index: 200;
-            overflow: hidden;
-            white-space: nowrap;
-            border-top: 2px solid var(--primary-color);
+        .success-animation p {
+            font-size: 0.92rem; font-weight: 600; color: var(--green); margin-top: 8px;
         }
-        .ticker-tape__track { display: inline-block; animation: scroll-ticker 40s linear infinite; }
-        .ticker-tape__item { display: inline-flex; align-items: center; padding: 0 25px; font-size: 0.9rem; }
-        .ticker-tape__item .pair { font-weight: 600; margin-right: 15px; color: var(--text-secondary); }
-        .ticker-tape__item .price { font-weight: 500; margin-right: 10px; color: var(--bg-white); }
-        .ticker-tape__item .change.up { color: var(--accent-green); }
-        .ticker-tape__item .change.down { color: var(--accent-red); }
-        @keyframes scroll-ticker { 0% { transform: translateX(0%); } 100% { transform: translateX(-50%); } }
 
+        /* mobile */
+        @media (max-width: 540px) {
+            .os-topbar { padding: 0 16px; }
+            .os-brand__name { display: none; }
+            .confirm-card { padding: 24px 20px; }
+            .step-label { font-size: 0.65rem; }
+        }
     </style>
-<link rel="stylesheet" href="css/responsive.css">
 </head>
 <body>
-    <header class="header">
-        <div class="container">
-            <a href="dashboard.html" class="logo-wrapper">
-                <img src="css/logo.jpg" alt="Logo" class="logo" style="width: auto !important; height: 44px !important; max-height: 44px; border-radius: 16px !important; object-fit: contain !important; background: none !important; box-shadow: none !important; overflow: visible !important;">
-                <span class="logo-name">CryptoPlexTrade</span>
-            </a>
-            <nav class="nav">
-                <a href="dashboard.html">Dashboard</a>
-                <a href="#" id="logout-btn">Logout</a>
-            </nav>
+<div class="os-wrap">
+
+    <!-- Topbar -->
+    <header class="os-topbar">
+        <a href="dashboard.html" class="os-brand">
+            <img src="css/logo.jpg" alt="Logo" class="os-brand__orb" style="width: auto !important; height: 44px !important; max-height: 44px; border-radius: 16px !important; object-fit: contain !important; background: none !important; padding: 0 !important; box-shadow: none !important; overflow: visible !important;">
+            <span class="os-brand__name">CryptoPlexTrade</span>
+        </a>
+        <div class="os-topbar-right">
+            <a href="dashboard.html" class="btn btn-ghost btn-sm">Dashboard</a>
+            <a href="#" id="logout-btn" class="btn btn-danger btn-sm">Logout</a>
         </div>
     </header>
 
-    <main class="main-content">
-        <div class="container">
-            <div class="confirmation-wrapper">
-                <h1>Confirm Transaction ID</h1>
+    <main class="os-main">
+        <div class="os-container">
 
-                <div class="stepper">
-                    <div class="stepper-line"><div class="stepper-progress" style="width: 100%;"></div></div>
-                    <div class="step completed">
-                        <div class="step-number">1</div>
-                        <div class="step-title">Verify Order</div>
+            <!-- Step indicator -->
+            <div class="steps">
+                <div class="step-item done">
+                    <div class="step-num">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" style="width:14px;height:14px;"><path fill-rule="evenodd" d="M12.416 3.376a.75.75 0 0 1 .208 1.04l-5 7.5a.75.75 0 0 1-1.154.114l-3-3a.75.75 0 0 1 1.06-1.06l2.353 2.353 4.493-6.74a.75.75 0 0 1 1.04-.207Z" clip-rule="evenodd"/></svg>
                     </div>
-                    <div class="step completed">
-                        <div class="step-number">2</div>
-                        <div class="step-title">Make Payment</div>
-                    </div>
-                    <div class="step active">
-                        <div class="step-number">3</div>
-                        <div class="step-title">Confirm ID</div>
-                    </div>
+                    <span class="step-label">Verify Order</span>
                 </div>
+                <div class="step-item done">
+                    <div class="step-num">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" style="width:14px;height:14px;"><path fill-rule="evenodd" d="M12.416 3.376a.75.75 0 0 1 .208 1.04l-5 7.5a.75.75 0 0 1-1.154.114l-3-3a.75.75 0 0 1 1.06-1.06l2.353 2.353 4.493-6.74a.75.75 0 0 1 1.04-.207Z" clip-rule="evenodd"/></svg>
+                    </div>
+                    <span class="step-label">Make Payment</span>
+                </div>
+                <div class="step-item active">
+                    <div class="step-num">3</div>
+                    <span class="step-label">Confirm ID</span>
+                </div>
+            </div>
+
+            <!-- Confirm Card -->
+            <div class="confirm-card">
+                <h2>Confirm Transaction ID</h2>
+                <p class="subtitle">Enter the transaction ID from your payment to complete your order.</p>
 
                 <div id="server-message"></div>
 
@@ -191,145 +174,123 @@
 
                 <form id="transaction-id-form">
                     <div class="form-group">
-                        <label for="transaction-id">Enter Your Payment Transaction ID</label>
-                        <input type="text" id="transaction-id" name="transaction-id" required>
+                        <label for="transaction-id">Payment Transaction ID</label>
+                        <input type="text" id="transaction-id" name="transaction-id" placeholder="e.g. TXN-283749201" required>
                     </div>
-                    <button type="submit" id="confirm-payment-btn" class="btn-primary">I Have Paid, Confirm Now</button>
+                    <button type="submit" id="confirm-payment-btn" class="btn btn-primary btn-full btn-lg">I Have Paid, Confirm Now →</button>
+                    <p style="text-align:center;font-size:0.76rem;color:var(--text-3);margin-top:14px;">
+                        Your order will be reviewed and processed within minutes.
+                    </p>
                 </form>
             </div>
+
         </div>
     </main>
+</div>
 
-    <!-- ================== FOOTER (placeholder for spacing) ================== -->
-    <footer style="height: 50px;"></footer>
+<!-- Ticker Tape -->
+<div class="ticker-tape"><div class="ticker-tape__track"></div></div>
 
-    <!-- ================== TICKER TAPE ================== -->
-    <div class="ticker-tape">
-        <div class="ticker-tape__track">
-            <!-- Items will be dynamically inserted here by JavaScript -->
-        </div>
-    </div>
+<script src="inactivity-timer.js"></script>
+<script src="chat-widget.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+    const csrfToken = getCookie('csrf-token');
 
-    <script src="inactivity-timer.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            function getCookie(name) {
-                const value = `; ${document.cookie}`;
-                const parts = value.split(`; ${name}=`);
-                if (parts.length === 2) return parts.pop().split(';').shift();
-            }
-            const csrfToken = getCookie('csrf-token');
+    const orderDetails = JSON.parse(localStorage.getItem('buyOrderDetails'));
+    if (!orderDetails) {
+        window.location.href = 'login.html';
+        return;
+    }
 
-            let allTransactions = []; // Define at a higher scope if needed elsewhere
+    // Logout
+    const logoutBtn = document.getElementById('logout-btn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            await fetch('/api/logout', { method: 'POST', headers: { 'X-CSRF-Token': csrfToken } });
+            localStorage.removeItem('buyOrderDetails');
+            window.location.href = 'login.html';
+        });
+    }
 
-            const orderDetails = JSON.parse(localStorage.getItem('buyOrderDetails'));
-            if (!orderDetails) {
+    // Form Submission Logic
+    const txForm = document.getElementById('transaction-id-form');
+    const serverMessageDiv = document.getElementById('server-message');
+
+    txForm.addEventListener('submit', async function(event) {
+        event.preventDefault();
+        const transactionId = document.getElementById('transaction-id').value;
+        if (!transactionId.trim()) {
+            alert('Please enter a transaction ID.');
+            return;
+        }
+
+        const finalOrderData = { ...orderDetails, transactionId: transactionId.trim() };
+
+        try {
+            const response = await fetch('/api/orders/create', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrfToken },
+                body: JSON.stringify(finalOrderData)
+            });
+
+            const result = await response.json();
+
+            if (response.status === 401 || response.status === 403) {
                 window.location.href = 'login.html';
                 return;
             }
 
-            // Logout
-            const logoutBtn = document.getElementById('logout-btn');
-            if (logoutBtn) {
-                logoutBtn.addEventListener('click', async (e) => {
-                    e.preventDefault();
-                    await fetch('/api/logout', { method: 'POST', headers: { 'X-CSRF-Token': csrfToken } });
-                    localStorage.removeItem('buyOrderDetails');
-                    window.location.href = 'login.html';
+            if (response.ok) {
+                txForm.style.display = 'none';
+                document.querySelector('.confirm-card h2').textContent = 'Submission Complete!';
+                document.querySelector('.confirm-card .subtitle').textContent = 'Your order is being processed.';
+                document.querySelector('.success-animation').style.display = 'block';
+
+                localStorage.removeItem('buyOrderDetails');
+
+                setTimeout(() => { window.location.href = 'dashboard.html'; }, 3000);
+            } else {
+                throw new Error(result.message || 'An unknown error occurred.');
+            }
+        } catch (error) {
+            serverMessageDiv.textContent = `Error: ${error.message}`;
+            serverMessageDiv.className = 'error';
+            serverMessageDiv.style.display = 'block';
+        }
+    });
+
+    // --- Ticker Tape Logic ---
+    const tickerTrack = document.querySelector('.ticker-tape__track');
+    if (tickerTrack) {
+        const coinSymbols = ['BTC', 'ETH', 'SOL', 'BNB', 'XRP', 'LTC', 'ADA', 'DOGE'];
+
+        async function fetchLiveRates() {
+            try {
+                const r = await fetch(`https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${coinSymbols.join(',')}&tsyms=USD`);
+                if (!r.ok) throw new Error();
+                const data = await r.json();
+                let html = '';
+                coinSymbols.forEach(s => {
+                    const c = data.RAW[s]?.USD; if (!c) return;
+                    const dir = c.CHANGEPCT24HOUR >= 0 ? 'up' : 'down';
+                    const sign = dir === 'up' ? '+' : '';
+                    html += `<div class="ticker-tape__item"><span class="pair">${s}/USD</span><span class="price">${c.PRICE.toLocaleString('en-US',{style:'currency',currency:'USD',minimumFractionDigits:2})}</span><span class="change ${dir}">${sign}${c.CHANGEPCT24HOUR.toFixed(2)}% ${dir==='up'?'▲':'▼'}</span></div>`;
                 });
-            }
+                tickerTrack.innerHTML = html + html;
+            } catch(e) { console.error('Ticker error', e); }
+        }
+        fetchLiveRates();
+        setInterval(fetchLiveRates, 60000);
+    }
+});
+</script>
 
-            // Form Submission Logic
-            const txForm = document.getElementById('transaction-id-form');
-            const serverMessageDiv = document.getElementById('server-message');
-
-            txForm.addEventListener('submit', async function(event) {
-                event.preventDefault();
-                const transactionId = document.getElementById('transaction-id').value;
-                if (!transactionId.trim()) {
-                    alert('Please enter a transaction ID.');
-                    return;
-                }
-
-                const finalOrderData = { ...orderDetails, transactionId: transactionId.trim() };
-
-                try {
-                    const response = await fetch('/api/orders/create', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrfToken },
-                        body: JSON.stringify(finalOrderData)
-                    });
-
-                    const result = await response.json();
-
-                    if (response.status === 401 || response.status === 403) {
-                        window.location.href = 'login.html';
-                        return;
-                    }
-
-                    if (response.ok) {
-                        txForm.style.display = 'none';
-                        document.querySelector('.confirmation-wrapper h1').textContent = 'Submission Complete!';
-                        document.querySelector('.success-animation').style.display = 'block';
-
-                        localStorage.removeItem('buyOrderDetails'); // Clean up
-
-                        setTimeout(() => { window.location.href = 'dashboard.html'; }, 3000);
-                    } else {
-                        throw new Error(result.message || 'An unknown error occurred.');
-                    }
-                } catch (error) {
-                    serverMessageDiv.textContent = `Error: ${error.message}`;
-                    serverMessageDiv.className = 'error';
-                    serverMessageDiv.style.display = 'block';
-                }
-            });
-
-            // --- Ticker Tape Logic ---
-            const tickerTrack = document.querySelector('.ticker-tape__track');
-            if (tickerTrack) {
-                const coinSymbols = ['BTC', 'ETH', 'SOL', 'BNB', 'XRP', 'LTC', 'ADA', 'DOGE'];
-                const vsCurrency = 'usd';
-
-                function updateTicker(data) {
-                    let itemsHTML = '';
-                    coinSymbols.forEach(symbol => {
-                        const coinData = data.RAW[symbol]?.[vsCurrency.toUpperCase()];
-                        if (!coinData) return;
-
-                        const price = coinData.PRICE;
-                        const change = coinData.CHANGEPCT24HOUR;
-                        const dir = change >= 0 ? 'up' : 'down';
-                        const sign = dir === 'up' ? '+' : '';
-                        const arrow = dir === 'up' ? '▲' : '▼';
-                        const pair = `${symbol}/USD`;
-
-                        itemsHTML += `
-                            <div class="ticker-tape__item" data-pair="${symbol}">
-                                <span class="pair">${pair}</span>
-                                <span class="price">${price.toLocaleString('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2 })}</span>
-                                <span class="change ${dir}">${sign}${change.toFixed(2)}% ${arrow}</span>
-                            </div>
-                        `;
-                    });
-                    tickerTrack.innerHTML = itemsHTML + itemsHTML;
-                }
-
-                async function fetchLiveRates() {
-                    try {
-                        const apiUrl = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${coinSymbols.join(',')}&tsyms=${vsCurrency.toUpperCase()}`;
-                        const response = await fetch(apiUrl);
-                        if (!response.ok) throw new Error(`CryptoCompare API error: ${response.status}`);
-                        const data = await response.json();
-                        updateTicker(data);
-                    } catch (error) { console.error("Failed to fetch ticker data:", error); }
-                }
-                fetchLiveRates();
-                setInterval(fetchLiveRates, 60000);
-            }
-        });
-    </script>
-
-    <script src="/chat-widget.js"></script>
 </body>
 </html>
