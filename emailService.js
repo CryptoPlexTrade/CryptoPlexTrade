@@ -32,7 +32,7 @@ if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
 
 // Consistent sender identity — always use the same From address & name
 const SENDER_NAME  = 'CryptoPlexTrade';
-const getSender    = () => `"${SENDER_NAME}" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`;
+const getSender    = () => `"${SENDER_NAME}" <${process.env.SMTP_USER}>`;
 const getReplyTo   = () => process.env.ADMIN_EMAIL || process.env.SMTP_USER;
 const getAppDomain = () => process.env.APP_URL || 'cryptoplextrade.com';
 
