@@ -71,6 +71,7 @@ async function save(data) {
             VALUES ('maintenance', ?::jsonb, NOW())
             ON CONFLICT (key)
             DO UPDATE SET value = EXCLUDED.value, updated_at = NOW()
+            RETURNING key
         `, [json]);
     } catch (err) {
         logger.error('Error saving maintenance state to DB:', err);
