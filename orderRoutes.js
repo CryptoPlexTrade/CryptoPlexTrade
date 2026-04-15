@@ -25,7 +25,7 @@ router.post('/create', authenticateToken, async (req, res) => {
     }
 
     try {
-        const rates = getRates(); // Get current, trusted rates from the server
+        const rates = await getRates(); // Get current, trusted rates from the server
         const productRates = rates[product];
         if (!productRates) {
             return res.status(400).json({ message: `Invalid product selected: ${product}` });
@@ -116,7 +116,7 @@ router.post('/create-sell-order', authenticateToken, async (req, res) => {
     }
 
     try {
-        const rates = getRates();
+        const rates = await getRates();
         const productRates = rates[product];
         if (!productRates) {
             return res.status(400).json({ message: `Invalid product selected: ${product}` });

@@ -1,12 +1,24 @@
-const fs = require('fs').promises;
-const path = require('path');
+/**
+ * rates.js
+ * ─────────────────────────────────────────────────────────────
+ * Database-backed exchange rates & mining fees.
+ * Persists across Vercel cold starts and serverless instances.
+ *
+ * Uses the `site_settings` table with key = 'rates'.
+ * Caches the result for 30 seconds to avoid hammering the DB.
+ * ─────────────────────────────────────────────────────────────
+ */
+const db = require('./database');
 const logger = require('./logger');
 
-const ratesFilePath = path.join(__dirname, 'rates.json');
+let tableReady = false;
+let cache = null;
+let cacheTime = 0;
+const CACHE_TTL = 30_000; // 30 seconds
 
-let ratesCache = {
+const DEFAULT_RATES = {
     BTC: {
-        buy: 13.05, 
+        buy: 13.05,
         sell: 12.95,
         minerFees: [
             { name: 'Priority', value: 3.50 },
@@ -43,44 +55,64 @@ let ratesCache = {
     }
 };
 
-// Load rates from file on startup
-(async () => {
+async function ensureTable() {
+    if (tableReady) return;
     try {
-        const data = await fs.readFile(ratesFilePath, 'utf8');
-        ratesCache = JSON.parse(data);
-        // Simple migration for old structure
-        if (ratesCache.btcToGhs) {
-            logger.warn('Old rates structure detected. Migrating to new buy/sell structure.');
-            const oldBtcRate = ratesCache.btcToGhs;
-            const oldEthRate = ratesCache.ethToGhs || oldBtcRate; // Fallback
-            ratesCache = {
-                BTC: { buy: oldBtcRate + 0.02, sell: oldBtcRate - 0.02 },
-                ETH: { buy: oldEthRate + 0.02, sell: oldEthRate - 0.02 },
-                minerFees: ratesCache.minerFees
-            };
-            await setRates(ratesCache); // Save the new structure
-        }
-        logger.info('Rates loaded from rates.json');
-    } catch (error) {
-        logger.warn('rates.json not found or invalid. Using default in-memory rates.');
-        try {
-            await fs.writeFile(ratesFilePath, JSON.stringify(ratesCache, null, 2));
-        } catch (writeErr) {
-            logger.warn('Could not write rates.json (read-only filesystem). Using in-memory defaults.');
-        }
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS site_settings (
+                key         VARCHAR(64) PRIMARY KEY,
+                value       JSONB NOT NULL DEFAULT '{}',
+                updated_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
+            )
+        `);
+        tableReady = true;
+    } catch (err) {
+        logger.error('Error creating site_settings table:', err);
     }
-})();
+}
 
-const getRates = () => ratesCache;
+const getRates = async () => {
+    // Return cache if still fresh
+    if (cache && (Date.now() - cacheTime) < CACHE_TTL) {
+        return cache;
+    }
+
+    try {
+        await ensureTable();
+        const [rows] = await db.query(
+            "SELECT value FROM site_settings WHERE key = 'rates'"
+        );
+        if (rows.length > 0) {
+            cache = rows[0].value;
+            cacheTime = Date.now();
+            return cache;
+        }
+    } catch (err) {
+        logger.error('Error reading rates from DB:', err);
+        if (cache) return cache;
+    }
+
+    return DEFAULT_RATES;
+};
 
 const setRates = async (newRates) => {
-    ratesCache = newRates;
+    cache = newRates;
+    cacheTime = Date.now();
+
     try {
-        await fs.writeFile(ratesFilePath, JSON.stringify(ratesCache, null, 2));
-        logger.info('Rates have been updated and saved to rates.json');
+        await ensureTable();
+        const json = JSON.stringify(newRates);
+        await db.query(`
+            INSERT INTO site_settings (key, value, updated_at)
+            VALUES ('rates', ?::jsonb, NOW())
+            ON CONFLICT (key)
+            DO UPDATE SET value = EXCLUDED.value, updated_at = NOW()
+            RETURNING key
+        `, [json]);
+        logger.info('Rates saved to database successfully.');
     } catch (err) {
-        logger.warn('Could not persist rates to file (read-only filesystem). Rates updated in memory only.');
+        logger.error('Error saving rates to DB:', err);
     }
 };
 
-module.exports = { getRates, setRates };
+module.exports = { getRates, setRates };

@@ -141,8 +141,8 @@ app.use('/api/chat', chatPublic);
 app.use('/api/admin/chat', chatAdmin);
 
 // A simple endpoint to simulate admin-controlled rates
-app.get('/api/rates', (req, res) => {
-    res.status(200).json(getRates());
+app.get('/api/rates', async (req, res) => {
+    res.status(200).json(await getRates());
 });
 
 // Public endpoint to get active announcement (no auth needed)

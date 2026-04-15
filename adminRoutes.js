@@ -113,8 +113,8 @@ router.post('/tickets/:id/reply', async (req, res) => {
 });
 
 // === RATE MANAGEMENT ===
-router.get('/rates', (req, res) => {
-    res.json(getRates());
+router.get('/rates', async (req, res) => {
+    res.json(await getRates());
 });
 
 router.put('/rates', async (req, res) => {
