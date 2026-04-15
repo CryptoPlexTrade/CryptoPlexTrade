@@ -167,33 +167,15 @@ router.get('/referrals', async (req, res) => {
     }
 });
 // === ANNOUNCEMENT MANAGEMENT ===
-const fs = require('fs');
-const path = require('path');
-const announcementPath = path.join(__dirname, 'announcements.json');
-
-function getAnnouncement() {
-    try {
-        return JSON.parse(fs.readFileSync(announcementPath, 'utf8'));
-    } catch {
-        return { active: false, title: '', message: '', updatedAt: '' };
-    }
-}
-
-function saveAnnouncement(data) {
-    try {
-        fs.writeFileSync(announcementPath, JSON.stringify(data, null, 2), 'utf8');
-    } catch (err) {
-        logger.warn('Could not persist announcement to file (read-only filesystem). Updated in memory only.');
-    }
-}
+const announcement = require('./announcementManager');
 
 // Admin: Get current announcement
-router.get('/announcement', (req, res) => {
-    res.json(getAnnouncement());
+router.get('/announcement', async (req, res) => {
+    res.json(await announcement.get());
 });
 
 // Admin: Update announcement
-router.put('/announcement', (req, res) => {
+router.put('/announcement', async (req, res) => {
     const { active, title, message } = req.body;
     if (active && (!title || !message)) {
         return res.status(400).json({ message: 'Title and message are required for an active announcement.' });
@@ -204,7 +186,7 @@ router.put('/announcement', (req, res) => {
         message: message || '',
         updatedAt: new Date().toISOString()
     };
-    saveAnnouncement(data);
+    await announcement.save(data);
     logger.info(`Announcement updated: active=${data.active}, title="${data.title}"`);
     res.json({ message: 'Announcement saved successfully.', data });
 });

@@ -146,9 +146,10 @@ app.get('/api/rates', (req, res) => {
 });
 
 // Public endpoint to get active announcement (no auth needed)
-app.get('/api/announcement', (req, res) => {
+const announcementMgr = require('./announcementManager');
+app.get('/api/announcement', async (req, res) => {
     try {
-        const data = JSON.parse(require('fs').readFileSync(require('path').join(__dirname, 'announcements.json'), 'utf8'));
+        const data = await announcementMgr.get();
         if (data.active) {
             res.json({ active: true, title: data.title, message: data.message, updatedAt: data.updatedAt });
         } else {
