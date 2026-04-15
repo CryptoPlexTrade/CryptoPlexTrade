@@ -268,4 +268,40 @@ router.put('/payment-methods', async (req, res) => {
     res.json({ message: 'Payment methods updated successfully.', data });
 });
 
+// === ADMIN CHANGE PASSWORD ===
+const bcrypt = require('bcryptjs');
+
+router.put('/change-password', async (req, res) => {
+    const { currentPassword, newPassword } = req.body;
+
+    if (!currentPassword || !newPassword) {
+        return res.status(400).json({ message: 'Current password and new password are required.' });
+    }
+    if (newPassword.length < 8) {
+        return res.status(400).json({ message: 'New password must be at least 8 characters long.' });
+    }
+
+    try {
+        const [users] = await db.query('SELECT password FROM users WHERE id = ?', [req.user.userId]);
+        if (users.length === 0) {
+            return res.status(404).json({ message: 'Admin user not found.' });
+        }
+
+        const isMatch = await bcrypt.compare(currentPassword, users[0].password);
+        if (!isMatch) {
+            return res.status(401).json({ message: 'Incorrect current password.' });
+        }
+
+        const salt = await bcrypt.genSalt(10);
+        const hashed = await bcrypt.hash(newPassword, salt);
+        await db.query('UPDATE users SET password = ? WHERE id = ?', [hashed, req.user.userId]);
+
+        logger.info(`Admin password changed successfully for user ID ${req.user.userId}`);
+        res.json({ message: 'Password changed successfully!' });
+    } catch (err) {
+        logger.error('Admin change password error:', err);
+        res.status(500).json({ message: 'Server error while changing password.' });
+    }
+});
+
 module.exports = router;
