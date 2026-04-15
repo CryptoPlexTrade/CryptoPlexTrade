@@ -303,4 +303,124 @@ async function sendLiveChatNotification(guestName, sessionId) {
     logger.info(`Admin notification sent for new chat session #${sessionId}`);
 }
 
-module.exports = { sendNewOrderNotification, sendPasswordResetEmail, sendLiveChatNotification };
+/**
+ * Sends an email to the customer when their order is marked as completed.
+ * @param {object} order - The order object from the DB.
+ * @param {string} userEmail - The customer's email address.
+ */
+async function sendOrderCompletedEmail(order, userEmail) {
+    if (!transporter) {
+        logger.warn('Email service is not configured. Skipping order completed email.');
+        return;
+    }
+
+    const domain = getAppDomain();
+    const orderId = order.id;
+    const orderType = order.order_type === 'buy' ? 'Purchase' : 'Sale';
+    const product = order.product;
+    const totalPaid = parseFloat(order.total_paid || 0).toFixed(2);
+
+    const subject = `Your ${orderType} Order #${orderId} is Complete ✓`;
+
+    const textBody = [
+        `Dear Valued Customer,`,
+        ``,
+        `Great news! Your ${orderType.toLowerCase()} order #${orderId} has been successfully completed.`,
+        ``,
+        `Order Summary:`,
+        `  Order ID: #${orderId}`,
+        `  Type: ${orderType}`,
+        `  Product: ${product}`,
+        `  Amount: ₵${totalPaid}`,
+        ``,
+        `If you have any questions about this transaction, please don't hesitate to reach out to our support team.`,
+        ``,
+        `Thank you for choosing CryptoPlexTrade!`,
+        ``,
+        `-- CryptoPlexTrade`,
+        `${process.env.ADMIN_EMAIL}`,
+    ].join('\r\n');
+
+    const htmlBody = `<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#f4f7fb;font-family:Arial,Helvetica,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f7fb;padding:32px 16px;">
+    <tr><td align="center">
+      <table width="560" cellpadding="0" cellspacing="0" style="background:#ffffff;border:1px solid #dde9f7;max-width:560px;width:100%;">
+        <!-- Header -->
+        <tr>
+          <td style="background:linear-gradient(135deg,#005baa,#00a9e0);padding:24px 32px;">
+            <p style="margin:0;font-size:20px;font-weight:bold;color:#ffffff;">${SENDER_NAME}</p>
+            <p style="margin:4px 0 0;font-size:13px;color:#b3d4f0;">Transaction Completed</p>
+          </td>
+        </tr>
+        <!-- Body -->
+        <tr>
+          <td style="padding:32px;">
+            <p style="margin:0 0 16px;font-size:15px;color:#1e293b;">Dear Valued Customer,</p>
+            <p style="margin:0 0 20px;font-size:14px;color:#475569;line-height:1.6;">Great news! Your <strong>${orderType.toLowerCase()}</strong> order has been <strong style="color:#16a34a;">successfully completed</strong>.</p>
+
+            <!-- Success Badge -->
+            <table width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 24px;">
+              <tr>
+                <td style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:20px;text-align:center;">
+                  <p style="margin:0 0 4px;font-size:28px;">✅</p>
+                  <p style="margin:0;font-size:16px;font-weight:bold;color:#16a34a;">Order Complete</p>
+                </td>
+              </tr>
+            </table>
+
+            <!-- Order Details -->
+            <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;margin:0 0 24px;">
+              <tr style="background:#f8fafc;">
+                <td style="padding:12px 16px;font-size:13px;color:#64748b;font-weight:600;border-bottom:1px solid #e2e8f0;">Order ID</td>
+                <td style="padding:12px 16px;font-size:14px;color:#1e293b;font-weight:700;border-bottom:1px solid #e2e8f0;text-align:right;">#${orderId}</td>
+              </tr>
+              <tr>
+                <td style="padding:12px 16px;font-size:13px;color:#64748b;font-weight:600;border-bottom:1px solid #e2e8f0;">Type</td>
+                <td style="padding:12px 16px;font-size:14px;color:#1e293b;border-bottom:1px solid #e2e8f0;text-align:right;">${orderType}</td>
+              </tr>
+              <tr style="background:#f8fafc;">
+                <td style="padding:12px 16px;font-size:13px;color:#64748b;font-weight:600;border-bottom:1px solid #e2e8f0;">Product</td>
+                <td style="padding:12px 16px;font-size:14px;color:#1e293b;border-bottom:1px solid #e2e8f0;text-align:right;">${product}</td>
+              </tr>
+              <tr>
+                <td style="padding:12px 16px;font-size:13px;color:#64748b;font-weight:600;">Amount (GHS)</td>
+                <td style="padding:12px 16px;font-size:14px;color:#1e293b;font-weight:700;text-align:right;">₵${totalPaid}</td>
+              </tr>
+            </table>
+
+            <p style="margin:0 0 8px;font-size:14px;color:#475569;line-height:1.6;">If you have any questions about this transaction, please don't hesitate to contact our support team.</p>
+            <p style="margin:24px 0 0;font-size:14px;color:#1e293b;font-weight:600;">Thank you for choosing CryptoPlexTrade! 🚀</p>
+          </td>
+        </tr>
+        <!-- Footer -->
+        <tr>
+          <td style="background:#f8fafc;border-top:1px solid #e2e8f0;padding:16px 32px;">
+            <p style="margin:0;font-size:11px;color:#94a3b8;">${SENDER_NAME} &middot; <a href="mailto:${process.env.ADMIN_EMAIL}" style="color:#94a3b8;">${process.env.ADMIN_EMAIL}</a></p>
+          </td>
+        </tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+
+    await transporter.sendMail({
+        from:    getSender(),
+        replyTo: getReplyTo(),
+        to:      userEmail,
+        subject,
+        text:    textBody,
+        html:    htmlBody,
+        headers: {
+            'Message-ID':       `<${Date.now()}.completed-${orderId}@${domain}>`,
+            'List-Unsubscribe': `<mailto:${process.env.ADMIN_EMAIL}?subject=unsubscribe>`,
+            'Precedence':       'bulk',
+        },
+    });
+    logger.info(`Order completed email sent to ${userEmail} for order #${orderId}`);
+}
+
+module.exports = { sendNewOrderNotification, sendPasswordResetEmail, sendLiveChatNotification, sendOrderCompletedEmail };

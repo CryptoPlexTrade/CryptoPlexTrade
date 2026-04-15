@@ -3,6 +3,7 @@ const db = require('./database');
 const { authenticateAdminToken } = require('./authMiddleware');
 const { adminOnly } = require('./adminAuthMiddleware');
 const { getRates, setRates } = require('./rates');
+const { sendOrderCompletedEmail } = require('./emailService');
 const logger = require('./logger');
 
 const router = express.Router();
@@ -80,6 +81,25 @@ router.put('/orders/:id/status', async (req, res) => {
     }
     try {
         await db.query('UPDATE orders SET status = ? WHERE id = ?', [status, req.params.id]);
+
+        // Send email notification when order is completed
+        if (status === 'completed') {
+            // Fetch the order + user email (fire-and-forget)
+            db.query(
+                'SELECT o.*, u.email FROM orders o JOIN users u ON o.user_id = u.id WHERE o.id = ?',
+                [req.params.id]
+            ).then(([rows]) => {
+                if (rows.length > 0) {
+                    const order = rows[0];
+                    sendOrderCompletedEmail(order, order.email).catch(err => {
+                        logger.error(`Failed to send completion email for order #${req.params.id}:`, err);
+                    });
+                }
+            }).catch(err => {
+                logger.error(`Failed to fetch order for completion email:`, err);
+            });
+        }
+
         res.json({ message: 'Order status updated successfully.' });
     } catch (error) {
         logger.error('Admin order status update error:', error);
