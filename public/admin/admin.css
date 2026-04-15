@@ -129,32 +129,19 @@ body {
 table {
     width: 100%;
     border-collapse: collapse;
+    min-width: 950px;
 }
 
 th, td {
-    padding: 12px 15px;
     padding: 16px 20px;
     text-align: left;
     border-bottom: 1px solid var(--border-light);
     font-size: 0.9rem;
+    white-space: nowrap;
 }
 tbody tr { transition: background-color 0.2s ease; }
 tbody tr:hover { background-color: var(--bg-highlight); }
 tbody tr:last-child td { border-bottom: none; }
-
-th:last-child, td:last-child {
-    position: sticky;
-    right: -1px; /* Prevents 1px line showing through */
-    background-color: var(--bg-white);
-    z-index: 2;
-    box-shadow: -2px 0 5px rgba(0,0,0,0.03);
-}
-th:last-child {
-    z-index: 3;
-}
-tbody tr:hover td:last-child {
-    background-color: var(--bg-highlight);
-}
 
 th {
     font-weight: 600;
