@@ -85,11 +85,57 @@
             flex-shrink: 0;
         }
         .chat-header-avatar svg { width: 22px; height: 22px; color: #fff; }
-        .chat-header-info { flex: 1; }
+        .chat-header-info { flex: 1; min-width: 0; }
         .chat-header-title { font-family: 'Poppins',system-ui,sans-serif; font-size: .88rem; font-weight: 700; color: #fff; }
         .chat-header-sub   { font-family: 'Poppins',system-ui,sans-serif; font-size: .72rem; color: rgba(255,255,255,.8); margin-top: 1px; }
         .chat-online-dot   { width: 8px; height: 8px; border-radius: 50%; background: #4ade80; display: inline-block; margin-right: 5px; animation: online-blink 2s ease-in-out infinite; }
         @keyframes online-blink { 0%,100%{opacity:1;} 50%{opacity:.4;} }
+
+        /* Header action buttons */
+        .chat-header-actions { display: flex; gap: 6px; flex-shrink: 0; }
+        .chat-hdr-btn {
+            width: 32px; height: 32px; border-radius: 8px;
+            border: none; cursor: pointer; display: flex;
+            align-items: center; justify-content: center;
+            transition: all .2s; background: rgba(255,255,255,.15);
+        }
+        .chat-hdr-btn:hover { background: rgba(255,255,255,.3); }
+        .chat-hdr-btn svg { width: 16px; height: 16px; color: #fff; }
+        .chat-hdr-btn.end-btn:hover { background: rgba(239,68,68,.7); }
+
+        /* Customer confirmation overlay */
+        #cpt-cust-confirm {
+            position: absolute; inset: 0; z-index: 20;
+            background: rgba(15,23,42,.5); backdrop-filter: blur(4px);
+            display: none; flex-direction: column;
+            align-items: center; justify-content: center;
+            padding: 28px; gap: 14px;
+        }
+        #cpt-cust-confirm.show { display: flex; }
+        .cust-conf-card {
+            background: #fff; border-radius: 20px; padding: 28px;
+            text-align: center; width: 100%; max-width: 300px;
+            box-shadow: 0 12px 40px rgba(0,0,0,.15);
+            animation: msg-in .25s ease;
+        }
+        .cust-conf-icon {
+            width: 52px; height: 52px; background: #fff1f2; border-radius: 16px;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 16px; color: #e11d48;
+        }
+        .cust-conf-icon svg { width: 26px; height: 26px; }
+        .cust-conf-card h4 { font-family:'Poppins',system-ui,sans-serif; font-size:1rem; font-weight:700; color:#1e293b; margin:0 0 8px; }
+        .cust-conf-card p  { font-family:'Poppins',system-ui,sans-serif; font-size:.82rem; color:#64748b; margin:0 0 20px; line-height:1.5; }
+        .cust-conf-btns { display:flex; gap:10px; }
+        .cust-conf-btn {
+            flex:1; padding:10px; border-radius:12px; border:none;
+            font-family:'Poppins',system-ui,sans-serif; font-size:.84rem;
+            font-weight:600; cursor:pointer; transition:all .2s;
+        }
+        .cust-conf-cancel { background:#f1f5f9; color:#64748b; }
+        .cust-conf-cancel:hover { background:#e2e8f0; color:#1e293b; }
+        .cust-conf-end { background:#e11d48; color:#fff; box-shadow:0 4px 12px rgba(225,29,72,.25); }
+        .cust-conf-end:hover { background:#be123c; transform:translateY(-1px); }
 
         /* Messages area */
         #cpt-chat-messages {
@@ -214,6 +260,29 @@
                 <div class="chat-header-title">CryptoPlexTrade Support</div>
                 <div class="chat-header-sub"><span class="chat-online-dot"></span>We're online — typically reply in minutes</div>
             </div>
+            <div class="chat-header-actions">
+                <button class="chat-hdr-btn" id="cpt-minimize-btn" aria-label="Minimize chat" title="Minimize">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3"/></svg>
+                </button>
+                <button class="chat-hdr-btn end-btn" id="cpt-endchat-btn" aria-label="End chat" title="End chat">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Customer end-chat confirmation -->
+        <div id="cpt-cust-confirm">
+            <div class="cust-conf-card">
+                <div class="cust-conf-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"/></svg>
+                </div>
+                <h4>End this chat?</h4>
+                <p>Your conversation history will be cleared and you'll need to start a new session to reach us again.</p>
+                <div class="cust-conf-btns">
+                    <button class="cust-conf-btn cust-conf-cancel" id="cpt-conf-no">Cancel</button>
+                    <button class="cust-conf-btn cust-conf-end" id="cpt-conf-yes">End Chat</button>
+                </div>
+            </div>
         </div>
 
         <div id="cpt-name-prompt">
@@ -249,6 +318,8 @@
     let unreadCount = 0;
     let pollInterval = null;
     let isOpen = false;
+    let isFetching = false;
+    const displayedMessageIds = new Set();
 
     const badge        = document.getElementById('cpt-chat-badge');
     const namePrompt   = document.getElementById('cpt-name-prompt');
@@ -258,6 +329,11 @@
     const closedBanner = document.getElementById('cpt-chat-closed-banner');
     const inputEl      = document.getElementById('cpt-chat-input');
     const sendBtn      = document.getElementById('cpt-chat-send');
+    const minimizeBtn  = document.getElementById('cpt-minimize-btn');
+    const endChatBtn   = document.getElementById('cpt-endchat-btn');
+    const custConfirm  = document.getElementById('cpt-cust-confirm');
+    const confNoBtn    = document.getElementById('cpt-conf-no');
+    const confYesBtn   = document.getElementById('cpt-conf-yes');
 
     function fmtTime(iso) {
         const d = new Date(iso);
@@ -265,8 +341,26 @@
     }
 
     function appendMsg(msg, scroll = true) {
+        // Prevent duplicates if ID exists
+        if (msg.id && displayedMessageIds.has(msg.id)) return;
+        if (msg.id) {
+            displayedMessageIds.add(msg.id);
+            // If this is a real message from customer, remove its corresponding optimistic (temp) version
+            if (msg.sender === 'customer') {
+                const temps = messagesEl.querySelectorAll('[data-temp-id]');
+                for (const t of temps) {
+                    // Match by content (since we don't have a correlation ID)
+                    if (t.innerText.includes(msg.message)) {
+                        t.remove();
+                    }
+                }
+            }
+        }
+
         const div = document.createElement('div');
         div.className = 'chat-msg ' + msg.sender;
+        if (msg.tempId) div.setAttribute('data-temp-id', msg.tempId);
+        
         div.innerHTML = `${msg.message}<div class="chat-msg-time">${fmtTime(msg.created_at)}</div>`;
         messagesEl.appendChild(div);
         if (scroll) messagesEl.scrollTop = messagesEl.scrollHeight;
@@ -281,24 +375,52 @@
         }
     }
 
+    function resetChat() {
+        if (pollInterval) {
+            clearInterval(pollInterval);
+            pollInterval = null;
+        }
+        sessionId = null;
+        lastMsgTime = '1970-01-01';
+        isFetching = false;
+        unreadCount = 0;
+        displayedMessageIds.clear();
+        localStorage.removeItem('cpt_chat_session_id');
+        localStorage.removeItem('cpt_chat_last_time');
+        localStorage.removeItem('cpt_chat_session'); // Clear session key so a fresh one is generated
+        
+        // Reset UI
+        messagesEl.innerHTML = '';
+        closedBanner.style.display = 'none';
+        inputEl.disabled = false;
+        sendBtn.disabled = false;
+        updateBadge();
+        
+        if (isOpen) {
+            namePrompt.style.display = 'flex';
+        }
+    }
+
     // ── Poll for new messages ──────────────────────────────────────────
     async function pollMessages() {
-        if (!sessionId) return;
+        if (!sessionId || isFetching) return;
+        isFetching = true;
         try {
             const r = await fetch(`/api/chat/${sessionId}?since=${encodeURIComponent(lastMsgTime)}`);
-            if (!r.ok) return;
+            if (!r.ok) { isFetching = false; return; }
             const data = await r.json();
 
             if (data.status === 'closed') {
-                closedBanner.style.display = 'block';
-                inputEl.disabled = true;
-                sendBtn.disabled = true;
+                resetChat();
+                return;
             }
 
             data.messages.forEach(m => {
+                // Only count genuinely new messages toward unread badge
+                const isNew = !m.id || !displayedMessageIds.has(m.id);
                 appendMsg(m);
                 lastMsgTime = m.created_at;
-                if (m.sender === 'admin' && !isOpen) {
+                if (isNew && m.sender === 'admin' && !isOpen) {
                     unreadCount++;
                 }
             });
@@ -307,7 +429,10 @@
                 localStorage.setItem('cpt_chat_last_time', lastMsgTime);
                 updateBadge();
             }
-        } catch (_) {}
+        } catch (_) {
+        } finally {
+            isFetching = false;
+        }
     }
 
     // ── Open / close ───────────────────────────────────────────────────
@@ -334,6 +459,28 @@
     }
 
     bubble.addEventListener('click', () => isOpen ? closeChat() : openChat());
+
+    // ── Minimize button ───────────────────────────────────────────────
+    minimizeBtn.addEventListener('click', closeChat);
+
+    // ── End chat button (customer) ────────────────────────────────────
+    endChatBtn.addEventListener('click', () => {
+        if (!sessionId) return;
+        custConfirm.classList.add('show');
+    });
+
+    confNoBtn.addEventListener('click', () => {
+        custConfirm.classList.remove('show');
+    });
+
+    confYesBtn.addEventListener('click', async () => {
+        custConfirm.classList.remove('show');
+        if (!sessionId) return;
+        try {
+            await fetch(`/api/chat/${sessionId}/close`, { method: 'PUT' });
+        } catch (_) {}
+        resetChat();
+    });
 
     // ── Start session ──────────────────────────────────────────────────
     async function startSession(name) {
@@ -371,15 +518,22 @@
         inputEl.style.height = 'auto';
         sendBtn.disabled = true;
 
+        const tempId = 'temp_' + Date.now();
         // Optimistic render
-        appendMsg({ sender: 'customer', message: msg, created_at: new Date().toISOString() });
+        appendMsg({ sender: 'customer', message: msg, created_at: new Date().toISOString(), tempId });
 
         try {
-            await fetch(`/api/chat/${sessionId}/send`, {
+            const r = await fetch(`/api/chat/${sessionId}/send`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ message: msg })
             });
+            
+            // Session was closed by admin — reset to fresh chat
+            if (r.status === 400) {
+                resetChat();
+                return;
+            }
         } catch (_) {}
 
         sendBtn.disabled = false;
@@ -406,14 +560,14 @@
     // Resume if session already exists
     if (sessionId) {
         namePrompt.style.display = 'none';
+        isFetching = true; // Use the same lock
         // Load history on first open
         fetch(`/api/chat/${sessionId}`)
             .then(r => r.json())
             .then(data => {
                 if (data.status === 'closed') {
-                    closedBanner.style.display = 'block';
-                    inputEl.disabled = true;
-                    sendBtn.disabled = true;
+                    resetChat();
+                    return;
                 }
                 data.messages?.forEach(m => {
                     appendMsg(m, false);
@@ -421,8 +575,11 @@
                 });
                 messagesEl.scrollTop = messagesEl.scrollHeight;
                 localStorage.setItem('cpt_chat_last_time', lastMsgTime);
+                isFetching = false;
                 startPolling();
-            }).catch(() => {});
+            }).catch(() => {
+                isFetching = false;
+            });
     }
 
     document.addEventListener('visibilitychange', () => {

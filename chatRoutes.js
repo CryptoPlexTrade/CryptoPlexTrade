@@ -152,6 +152,26 @@ router.post('/:sessionId/send', async (req, res) => {
     }
 });
 
+// PUT /api/chat/:sessionId/close  – customer ends their own chat
+router.put('/:sessionId/close', async (req, res) => {
+    await ensureTables();
+    try {
+        const { sessionId } = req.params;
+        const [session] = await db.query(
+            'SELECT id, status FROM chat_sessions WHERE id = ?',
+            [sessionId]
+        );
+        if (session.length === 0) return res.status(404).json({ message: 'Session not found.' });
+        if (session[0].status === 'closed') return res.json({ success: true });
+
+        await db.query("UPDATE chat_sessions SET status = 'closed', updated_at = NOW() WHERE id = ?", [sessionId]);
+        res.json({ success: true });
+    } catch (err) {
+        logger.error('Chat customer close error:', err);
+        res.status(500).json({ message: 'Server error.' });
+    }
+});
+
 
 // ═══════════════════════════════════════════════════════════════════
 //  ADMIN ROUTES
