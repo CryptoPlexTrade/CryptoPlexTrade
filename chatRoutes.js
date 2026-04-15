@@ -250,4 +250,18 @@ adminChat.put('/:sessionId/close', async (req, res) => {
     }
 });
 
+// DELETE /api/admin/chat/:sessionId — permanently delete a chat session and its messages
+adminChat.delete('/:sessionId', async (req, res) => {
+    await ensureTables();
+    try {
+        const { sessionId } = req.params;
+        // Messages are deleted automatically via ON DELETE CASCADE
+        await db.query('DELETE FROM chat_sessions WHERE id = ?', [sessionId]);
+        res.json({ success: true });
+    } catch (err) {
+        logger.error('Admin chat delete error:', err);
+        res.status(500).json({ message: 'Server error.' });
+    }
+});
+
 module.exports = { publicRouter: router, adminRouter: adminChat };
