@@ -509,8 +509,7 @@ async function sendVerificationEmail(email, otpCode) {
         text:    textBody,
         html:    htmlBody,
         headers: {
-            'Message-ID':       `<${Date.now()}.verify@${domain}>`,
-            'Precedence':       'bulk',
+            'Message-ID':       `<${Date.now()}.verify@${domain}>`
         },
     });
     logger.info(`Verification email sent to ${email}`);
