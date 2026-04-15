@@ -16,10 +16,32 @@ router.get('/stats', async (req, res) => {
         const [[userCount]] = await db.query('SELECT COUNT(*) as count FROM users');
         const [[orderCount]] = await db.query('SELECT COUNT(*) as count FROM orders');
         const [[ticketCount]] = await db.query("SELECT COUNT(*) as count FROM support_tickets WHERE status = 'open'");
+
+        // Buy totals (completed)
+        const [[buyCompleted]] = await db.query(
+            "SELECT COALESCE(COUNT(*),0) as count, COALESCE(SUM(total_paid),0) as total FROM orders WHERE order_type = 'buy' AND status = 'completed'"
+        );
+        // Sell totals (completed)
+        const [[sellCompleted]] = await db.query(
+            "SELECT COALESCE(COUNT(*),0) as count, COALESCE(SUM(total_paid),0) as total FROM orders WHERE order_type = 'sell' AND status = 'completed'"
+        );
+        // Pending orders
+        const [[pendingOrders]] = await db.query(
+            "SELECT COALESCE(COUNT(*),0) as count FROM orders WHERE status != 'completed' AND status != 'failed' AND status != 'cancelled'"
+        );
+        // Total revenue (all completed)
+        const [[totalRevenue]] = await db.query(
+            "SELECT COALESCE(SUM(total_paid),0) as total FROM orders WHERE status = 'completed'"
+        );
+
         res.json({
             users: userCount.count,
             orders: orderCount.count,
             openTickets: ticketCount.count,
+            pendingOrders: pendingOrders.count,
+            buyCompleted: { count: buyCompleted.count, total: parseFloat(buyCompleted.total) },
+            sellCompleted: { count: sellCompleted.count, total: parseFloat(sellCompleted.total) },
+            totalRevenue: parseFloat(totalRevenue.total),
         });
     } catch (error) {
         logger.error('Admin stats fetch error:', error);
