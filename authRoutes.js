@@ -86,8 +86,12 @@ router.post('/register', async (req, res) => {
         // Store the token in the DB (valid for 5 mins)
         await db.query('UPDATE users SET verify_token = ?, verify_expires = ? WHERE id = ?', [otpCode, expiresAt, newUserId]);
 
-        // Send Email
-        sendVerificationEmail(emailLower, otpCode).catch(err => logger.error('Verification email failed:', err));
+        // Send Email (MUST be awaited on Vercel Serverless before res.json)
+        try {
+            await sendVerificationEmail(emailLower, otpCode);
+        } catch (err) {
+            logger.error('Verification email failed:', err);
+        }
 
         res.status(201).json({ message: 'User registered successfully! Please verify your email.', needVerification: true, email: emailLower });
 
@@ -128,7 +132,11 @@ router.post('/login', async (req, res) => {
             const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
             const expiresAt = Date.now() + 5 * 60 * 1000;
             await db.query('UPDATE users SET verify_token = ?, verify_expires = ? WHERE id = ?', [otpCode, expiresAt, user.id]);
-            sendVerificationEmail(email, otpCode).catch(err => logger.error('Verification email failed:', err));
+            try {
+                await sendVerificationEmail(email, otpCode);
+            } catch (err) {
+                logger.error('Verification email failed:', err);
+            }
             return res.status(403).json({ message: 'Please verify your email address to log in.', needVerification: true, email });
         }
 
@@ -260,14 +268,15 @@ router.post('/forgot-password', async (req, res) => {
             const appUrl = process.env.APP_URL || `http://localhost:${process.env.PORT || 5008}`;
             const resetUrl = `${appUrl}/reset-password.html?token=${token}&email=${encodeURIComponent(email)}`;
 
-            // Fire-and-forget: respond immediately, send email in background
-            res.status(200).json(genericResponse);
+            try {
+                await sendPasswordResetEmail(user, resetUrl);
+                logger.info(`Password reset email sent to ${user.email}`);
+            } catch (mailErr) {
+                logger.error('Password reset email failed:', mailErr);
+            }
 
-            // Send email after response is dispatched
-            sendPasswordResetEmail(user, resetUrl)
-                .then(() => logger.info(`Password reset email sent to ${user.email}`))
-                .catch(mailErr => logger.error('Password reset email failed:', mailErr));
-            return; // prevent double-send below
+            // Respond after email completes on Vercel
+            return res.status(200).json(genericResponse);
         }
 
         res.status(200).json(genericResponse);
@@ -379,7 +388,11 @@ router.post('/resend-verification', async (req, res) => {
             const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
             const expiresAt = Date.now() + 5 * 60 * 1000;
             await db.query('UPDATE users SET verify_token = ?, verify_expires = ? WHERE id = ?', [otpCode, expiresAt, users[0].id]);
-            sendVerificationEmail(email, otpCode).catch(err => logger.error('Verification email failed:', err));
+            try {
+                await sendVerificationEmail(email, otpCode);
+            } catch (err) {
+                logger.error('Verification email failed:', err);
+            }
         }
         res.status(200).json({ message: genericMsg });
     } catch (error) {
