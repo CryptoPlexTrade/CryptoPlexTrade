@@ -216,8 +216,8 @@
         const bought = allTransactions.filter(t => t.order_type === 'buy');
         const sold   = allTransactions.filter(t => t.order_type === 'sell');
         const fmtAmt = (arr) => '₵ ' + arr.reduce((s, t) => s + parseFloat(t.total_paid || 0), 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        document.getElementById('kpi-total-bought').innerHTML = `${bought.length} <span style="font-size:.75rem;font-weight:500;color:var(--text-3);margin-left:4px;">(${fmtAmt(bought)})</span>`;
-        document.getElementById('kpi-total-sold').innerHTML   = `${sold.length} <span style="font-size:.75rem;font-weight:500;color:var(--text-3);margin-left:4px;">(${fmtAmt(sold)})</span>`;
+        document.getElementById('kpi-total-bought').textContent = fmtAmt(bought);
+        document.getElementById('kpi-total-sold').textContent   = fmtAmt(sold);
     }
     const tbody       = document.getElementById('transactions-tbody');
     const filterType   = document.getElementById('filter-type');
