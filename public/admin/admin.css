@@ -337,6 +337,43 @@ th {
 .modal-body .label { font-weight: 600; color: var(--text-secondary); }
 .modal-body .value { font-weight: 500; color: var(--text-primary); word-break: break-all; text-align: right; }
 
+/* Modal Status Update Section */
+.modal-status-section {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 2px solid var(--border-light);
+}
+.modal-status-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 12px;
+}
+.modal-status-controls {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+}
+.modal-status-controls .csd-wrapper {
+    flex: 1;
+    min-width: 0;
+}
+.modal-status-controls .csd-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin-top: 4px;
+}
+.modal-status-controls .save-btn {
+    flex-shrink: 0;
+    padding: 8px 20px;
+    font-size: 0.85rem;
+    white-space: nowrap;
+}
+
 
 /* Form Card for Rates */
 .form-card {
@@ -739,36 +776,25 @@ th {
         padding-top: 2px;
     }
 
-    /* Action cell: stack buttons vertically */
-    tbody td.action-cell {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 8px;
-    }
-    tbody td.action-cell::before {
-        margin-bottom: 4px;
-    }
-    .action-cell .action-btn {
+    /* View button in last cell */
+    tbody td:last-child .view-btn {
         width: 100%;
         text-align: center;
-        padding: 7px 12px;
-        font-size: 0.82rem;
-    }
-    .action-cell .status-select {
-        width: 100%;
-        box-sizing: border-box;
+        padding: 8px 12px;
         font-size: 0.85rem;
-        padding: 6px 10px;
     }
-    .action-cell .save-btn {
-        width: 100%;
-        text-align: center;
+    /* Hide empty data-label pseudo-element on View button cell */
+    tbody td:last-child::before {
+        display: none;
     }
 
-    /* Remove sticky last-column on mobile */
-    th:last-child, td:last-child {
-        position: static;
-        box-shadow: none;
+    /* Modal status controls stack on mobile */
+    .modal-status-controls {
+        flex-direction: column;
+    }
+    .modal-status-controls .save-btn {
+        width: 100%;
+        text-align: center;
     }
 
     /* ── Modals ─────────────────────── */

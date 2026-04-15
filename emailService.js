@@ -315,6 +315,7 @@ async function sendOrderCompletedEmail(order, userEmail) {
     }
 
     const domain = getAppDomain();
+    const appUrl = process.env.APP_URL || 'https://cryptoplextrade.com';
     const orderId = order.id;
     const orderType = order.order_type === 'buy' ? 'Purchase' : 'Sale';
     const product = order.product;
@@ -344,61 +345,66 @@ async function sendOrderCompletedEmail(order, userEmail) {
     const htmlBody = `<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
-<body style="margin:0;padding:0;background:#f4f7fb;font-family:Arial,Helvetica,sans-serif;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f7fb;padding:32px 16px;">
+<body style="margin:0;padding:0;background-color:#0f172a;font-family:'Inter', Arial, sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#0f172a;padding:40px 16px;">
     <tr><td align="center">
-      <table width="560" cellpadding="0" cellspacing="0" style="background:#ffffff;border:1px solid #dde9f7;max-width:560px;width:100%;">
+      <table width="600" cellpadding="0" cellspacing="0" style="background:#1e293b;border-radius:16px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.3);max-width:600px;width:100%;border:1px solid #334155;">
         <!-- Header -->
         <tr>
-          <td style="background:linear-gradient(135deg,#005baa,#00a9e0);padding:24px 32px;">
-            <p style="margin:0;font-size:20px;font-weight:bold;color:#ffffff;">${SENDER_NAME}</p>
-            <p style="margin:4px 0 0;font-size:13px;color:#b3d4f0;">Transaction Completed</p>
+          <td style="background:linear-gradient(135deg, #005baa, #00a9e0);padding:40px 32px;text-align:center;">
+            <div style="margin-bottom:16px;">
+              <img src="${appUrl}/css/logo.png" alt="CryptoPlexTrade Logo" style="height:56px;width:auto;border-radius:12px;background:#ffffff;padding:5px;box-shadow:0 4px 12px rgba(0,0,0,0.2);">
+            </div>
+            <h1 style="margin:0;font-size:26px;font-weight:700;color:#ffffff;letter-spacing:0.5px;text-shadow:0 2px 4px rgba(0,0,0,0.2);">Transaction Completed</h1>
           </td>
         </tr>
         <!-- Body -->
         <tr>
-          <td style="padding:32px;">
-            <p style="margin:0 0 16px;font-size:15px;color:#1e293b;">Dear Valued Customer,</p>
-            <p style="margin:0 0 20px;font-size:14px;color:#475569;line-height:1.6;">Great news! Your <strong>${orderType.toLowerCase()}</strong> order has been <strong style="color:#16a34a;">successfully completed</strong>.</p>
+          <td style="padding:40px 32px;">
+            <p style="margin:0 0 16px;font-size:16px;color:#f8fafc;font-weight:500;">Dear Valued Customer,</p>
+            <p style="margin:0 0 24px;font-size:15px;color:#cbd5e1;line-height:1.7;">Great news! Your <strong>${orderType.toLowerCase()}</strong> order has been <strong style="color:#4ade80;">successfully completed</strong>.</p>
 
             <!-- Success Badge -->
-            <table width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 24px;">
+            <table width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 32px;">
               <tr>
-                <td style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:20px;text-align:center;">
-                  <p style="margin:0 0 4px;font-size:28px;">✅</p>
-                  <p style="margin:0;font-size:16px;font-weight:bold;color:#16a34a;">Order Complete</p>
+                <td style="background:rgba(74, 222, 128, 0.1);border:1px solid rgba(74, 222, 128, 0.2);border-radius:12px;padding:24px;text-align:center;">
+                  <div style="background:#22c55e;color:#fff;width:48px;height:48px;line-height:48px;border-radius:50%;font-size:24px;margin:0 auto 12px;box-shadow:0 4px 12px rgba(34, 197, 94, 0.3);">✓</div>
+                  <h2 style="margin:0;font-size:20px;font-weight:700;color:#4ade80;letter-spacing:0.5px;">Payment Processed</h2>
                 </td>
               </tr>
             </table>
 
             <!-- Order Details -->
-            <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;margin:0 0 24px;">
-              <tr style="background:#f8fafc;">
-                <td style="padding:12px 16px;font-size:13px;color:#64748b;font-weight:600;border-bottom:1px solid #e2e8f0;">Order ID</td>
-                <td style="padding:12px 16px;font-size:14px;color:#1e293b;font-weight:700;border-bottom:1px solid #e2e8f0;text-align:right;">#${orderId}</td>
-              </tr>
-              <tr>
-                <td style="padding:12px 16px;font-size:13px;color:#64748b;font-weight:600;border-bottom:1px solid #e2e8f0;">Type</td>
-                <td style="padding:12px 16px;font-size:14px;color:#1e293b;border-bottom:1px solid #e2e8f0;text-align:right;">${orderType}</td>
-              </tr>
-              <tr style="background:#f8fafc;">
-                <td style="padding:12px 16px;font-size:13px;color:#64748b;font-weight:600;border-bottom:1px solid #e2e8f0;">Product</td>
-                <td style="padding:12px 16px;font-size:14px;color:#1e293b;border-bottom:1px solid #e2e8f0;text-align:right;">${product}</td>
-              </tr>
-              <tr>
-                <td style="padding:12px 16px;font-size:13px;color:#64748b;font-weight:600;">Amount (GHS)</td>
-                <td style="padding:12px 16px;font-size:14px;color:#1e293b;font-weight:700;text-align:right;">₵${totalPaid}</td>
-              </tr>
-            </table>
+            <div style="background:#0f172a;border-radius:12px;padding:24px;border:1px solid #334155;">
+              <h3 style="margin:0 0 16px;font-size:14px;text-transform:uppercase;color:#94a3b8;letter-spacing:1px;border-bottom:1px solid #334155;padding-bottom:12px;">Order Summary</h3>
+              <table width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td style="padding:8px 0;font-size:14px;color:#94a3b8;">Order ID</td>
+                  <td style="padding:8px 0;font-size:15px;color:#f8fafc;font-weight:600;text-align:right;">#${orderId}</td>
+                </tr>
+                <tr>
+                  <td style="padding:8px 0;font-size:14px;color:#94a3b8;">Type</td>
+                  <td style="padding:8px 0;font-size:15px;color:#f8fafc;font-weight:600;text-align:right;">${orderType}</td>
+                </tr>
+                <tr>
+                  <td style="padding:8px 0;font-size:14px;color:#94a3b8;">Product</td>
+                  <td style="padding:8px 0;font-size:15px;color:#f8fafc;font-weight:600;text-align:right;">${product}</td>
+                </tr>
+                <tr>
+                  <td style="padding:16px 0 0;font-size:14px;color:#94a3b8;border-top:1px dashed #334155;margin-top:8px;">Amount (GHS)</td>
+                  <td style="padding:16px 0 0;font-size:18px;color:#38bdf8;font-weight:700;text-align:right;border-top:1px dashed #334155;margin-top:8px;">₵${totalPaid}</td>
+                </tr>
+              </table>
+            </div>
 
-            <p style="margin:0 0 8px;font-size:14px;color:#475569;line-height:1.6;">If you have any questions about this transaction, please don't hesitate to contact our support team.</p>
-            <p style="margin:24px 0 0;font-size:14px;color:#1e293b;font-weight:600;">Thank you for choosing CryptoPlexTrade! 🚀</p>
+            <p style="margin:32px 0 8px;font-size:14px;color:#cbd5e1;line-height:1.7;text-align:center;">If you have any questions about this transaction, our support team is always here to help.</p>
+            <p style="margin:16px 0 0;font-size:15px;color:#f8fafc;font-weight:600;text-align:center;">Thank you for choosing CryptoPlexTrade! 🚀</p>
           </td>
         </tr>
         <!-- Footer -->
         <tr>
-          <td style="background:#f8fafc;border-top:1px solid #e2e8f0;padding:16px 32px;">
-            <p style="margin:0;font-size:11px;color:#94a3b8;">${SENDER_NAME} &middot; <a href="mailto:${process.env.ADMIN_EMAIL}" style="color:#94a3b8;">${process.env.ADMIN_EMAIL}</a></p>
+          <td style="background:#0f172a;border-top:1px solid #334155;padding:24px 32px;text-align:center;">
+            <p style="margin:0;font-size:12px;color:#64748b;">${SENDER_NAME} &middot; <a href="mailto:${process.env.ADMIN_EMAIL}" style="color:#38bdf8;text-decoration:none;">${process.env.ADMIN_EMAIL}</a></p>
           </td>
         </tr>
       </table>
@@ -408,7 +414,7 @@ async function sendOrderCompletedEmail(order, userEmail) {
 </html>`;
 
     await transporter.sendMail({
-        from:    getSender(),
+        from:    `"${SENDER_NAME}" <noreply@cryptoplextrade.com>`,
         replyTo: getReplyTo(),
         to:      userEmail,
         subject,
