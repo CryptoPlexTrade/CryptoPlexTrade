@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS users (
     email           VARCHAR(255)        NOT NULL UNIQUE,
     password        VARCHAR(255)        NOT NULL,
     role            VARCHAR(20)         NOT NULL DEFAULT 'user',   -- 'user' | 'admin'
+    is_verified     BOOLEAN             DEFAULT FALSE,
     referral_code   VARCHAR(50)         UNIQUE,
     referred_by_id  INTEGER             REFERENCES users(id) ON DELETE SET NULL,
     created_at      TIMESTAMPTZ         NOT NULL DEFAULT NOW(),

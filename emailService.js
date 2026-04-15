@@ -431,5 +431,89 @@ async function sendOrderCompletedEmail(order, userEmail) {
     });
     logger.info(`Order completed email sent to ${userEmail} for order #${orderId}`);
 }
+/**
+ * Sends a 6-digit OTP verification email for new account sign-ups.
+ * @param {string} email - The user's email address.
+ * @param {string} otpCode - The 6-digit OTP code to send.
+ */
+async function sendVerificationEmail(email, otpCode) {
+    if (!transporter) {
+        logger.warn('Email service is not configured. Skipping verification email.');
+        return;
+    }
 
-module.exports = { sendNewOrderNotification, sendPasswordResetEmail, sendLiveChatNotification, sendOrderCompletedEmail };
+    const domain = getAppDomain();
+    let appUrl = process.env.APP_URL || 'https://cryptoplextrade.com';
+    if (!appUrl.startsWith('http')) appUrl = 'https://' + appUrl;
+
+    const subject = 'Verify your email address - CryptoPlexTrade';
+
+    const textBody = [
+        `Welcome to CryptoPlexTrade!`,
+        ``,
+        `Your email verification code is: ${otpCode}`,
+        ``,
+        `This code will expire in 15 minutes.`,
+        `If you didn't request this, you can safely ignore this email.`,
+        ``,
+        `-- CryptoPlexTrade`,
+    ].join('\r\n');
+
+    const htmlBody = `<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background-color:#f0f7ff;font-family:Arial,Helvetica,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f0f7ff;padding:40px 16px;">
+    <tr><td align="center">
+      <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 4px 24px rgba(0,91,170,0.12);max-width:600px;width:100%;border:1px solid #dde9f7;">
+        <!-- Header with logo -->
+        <tr>
+          <td style="background:linear-gradient(135deg, #005baa, #00a9e0);padding:32px;text-align:center;">
+            <img src="${appUrl}/css/logo.png" alt="CryptoPlexTrade" style="height:50px;width:auto;border-radius:10px;margin-bottom:14px;">
+            <h1 style="margin:0;font-size:22px;font-weight:700;color:#ffffff;letter-spacing:0.3px;">Verify Your Email</h1>
+          </td>
+        </tr>
+        <!-- Body -->
+        <tr>
+          <td style="padding:36px 32px;text-align:center;">
+            <p style="margin:0 0 24px;font-size:15px;color:#475569;line-height:1.7;">Thank you for registering! Please use the verification code below to complete your sign-up process.</p>
+
+            <!-- OTP Display -->
+            <div style="background:#f8fafc;border:2px dashed #cbd5e1;border-radius:10px;padding:24px;margin-bottom:24px;">
+              <p style="margin:0;font-size:13px;text-transform:uppercase;color:#64748b;font-weight:600;letter-spacing:1px;margin-bottom:8px;">Your Verification Code</p>
+              <h2 style="margin:0;font-size:36px;font-weight:800;color:#005baa;letter-spacing:6px;">${otpCode}</h2>
+            </div>
+            
+            <p style="margin:0 0 8px;font-size:13px;color:#64748b;">This code will expire in <strong>15 minutes</strong>.</p>
+            <p style="margin:0;font-size:13px;color:#94a3b8;">If you did not request this, please ignore this email.</p>
+          </td>
+        </tr>
+        <!-- Footer -->
+        <tr>
+          <td style="background:#f8fafc;border-top:1px solid #e2e8f0;padding:20px 32px;text-align:center;">
+            <p style="margin:0 0 6px;font-size:12px;color:#64748b;">${SENDER_NAME}</p>
+            <p style="margin:0;font-size:11px;color:#94a3b8;"><a href="mailto:${process.env.ADMIN_EMAIL}" style="color:#005baa;text-decoration:none;">${process.env.ADMIN_EMAIL}</a></p>
+          </td>
+        </tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+
+    await transporter.sendMail({
+        from:    '"CryptoPlexTrade Verification" <verification@cryptoplextrade.com>',
+        replyTo: getReplyTo(),
+        to:      email,
+        subject,
+        text:    textBody,
+        html:    htmlBody,
+        headers: {
+            'Message-ID':       `<${Date.now()}.verify@${domain}>`,
+            'Precedence':       'bulk',
+        },
+    });
+    logger.info(`Verification email sent to ${email}`);
+}
+
+module.exports = { sendNewOrderNotification, sendPasswordResetEmail, sendLiveChatNotification, sendOrderCompletedEmail, sendVerificationEmail };

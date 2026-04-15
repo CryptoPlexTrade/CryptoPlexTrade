@@ -300,7 +300,13 @@ document.getElementById('register-form').addEventListener('submit', async functi
             body: JSON.stringify({ fullname: fullname.value.trim(), phone: phone.value.trim(), email: email.value.trim(), password: password.value, referralCode: document.getElementById('referral-code').value.trim() || null })
         });
         const data = await res.json();
-        if (res.status === 201) { window.location.href = 'register-success.html'; }
+        if (res.status === 201) { 
+            if (data.needVerification) {
+                window.location.href = `verify.html?email=${encodeURIComponent(data.email)}`;
+            } else {
+                window.location.href = 'register-success.html'; 
+            }
+        }
         else { document.getElementById('server-error').textContent = data.message || 'An error occurred.'; document.getElementById('server-error').style.display = 'block'; btn.textContent = 'Create Free Account →'; btn.disabled = false; }
     } catch { document.getElementById('server-error').textContent = 'Could not connect. Please try again.'; document.getElementById('server-error').style.display = 'block'; btn.textContent = 'Create Free Account →'; btn.disabled = false; }
 });

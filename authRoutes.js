@@ -3,7 +3,11 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const { authenticateToken } = require('./authMiddleware');
-const { sendPasswordResetEmail } = require('./emailService');
+const { sendPasswordResetEmail, sendVerificationEmail } = require('./emailService');
+
+// In-memory token stores. Cleared on server restart.
+const passwordResetTokens = new Map();
+const verificationTokens  = new Map();
 
 // const rateLimit = require('express-rate-limit');
 const logger = require('./logger');
@@ -65,8 +69,8 @@ router.post('/register', async (req, res) => {
 
         // Insert new user into the database
         const [result] = await db.query(
-            'INSERT INTO users (fullname, phone, email, password, referred_by_id) VALUES (?, ?, ?, ?, ?)',
-            [fullname, phone, email, hashedPassword, referredById]
+            'INSERT INTO users (fullname, phone, email, password, referred_by_id, is_verified) VALUES (?, ?, ?, ?, ?, ?)',
+            [fullname, phone, email, hashedPassword, referredById, false]
         );
 
         // Generate and update the referral code for the new user
@@ -76,7 +80,15 @@ router.post('/register', async (req, res) => {
         const newUserReferralCode = `CE-${namePart}${randomPart}`;
         await db.query('UPDATE users SET referral_code = ? WHERE id = ?', [newUserReferralCode, newUserId]);
 
-        res.status(201).json({ message: 'User registered successfully!' });
+        // Generate 6-digit OTP
+        const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
+        // Store the token (valid for 15 mins)
+        verificationTokens.set(emailLower, { code: otpCode, expires: Date.now() + 15 * 60 * 1000 });
+
+        // Send Email
+        sendVerificationEmail(emailLower, otpCode).catch(err => logger.error('Verification email failed:', err));
+
+        res.status(201).json({ message: 'User registered successfully! Please verify your email.', needVerification: true, email: emailLower });
 
     } catch (error) {
         logger.error('Registration error:', error);
@@ -107,6 +119,15 @@ router.post('/login', async (req, res) => {
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             return res.status(401).json({ message: 'Invalid credentials.' });
+        }
+
+        // Check if user is verified
+        if (user.role === 'user' && !user.is_verified) {
+            // Generate a new code so they can verify now if the old one expired
+            const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
+            verificationTokens.set(email, { code: otpCode, expires: Date.now() + 15 * 60 * 1000 });
+            sendVerificationEmail(email, otpCode).catch(err => logger.error('Verification email failed:', err));
+            return res.status(403).json({ message: 'Please verify your email address to log in.', needVerification: true, email });
         }
 
         // AFTER password is verified, check for admin role if it's an admin login attempt.
@@ -212,9 +233,6 @@ router.put('/user/change-password', authenticateToken, async (req, res) => {
 });
 
 // === FORGOT PASSWORD ENDPOINT ===
-// In-memory token store: email -> { token, expires }
-// Tokens are valid for 1 hour. Cleared on server restart.
-const passwordResetTokens = new Map();
 
 router.post('/forgot-password', async (req, res) => {
     const email = (req.body.email || '').toLowerCase().trim();
@@ -288,6 +306,79 @@ router.post('/logout', (req, res) => {
     res.clearCookie('admin-token');
     res.clearCookie('admin-csrf-token');
     res.status(200).json({ message: 'Logout successful.' });
+});
+
+// === VERIFY EMAIL ENDPOINT ===
+router.post('/verify-email', async (req, res) => {
+    const email = (req.body.email || '').toLowerCase().trim();
+    const { otp } = req.body;
+
+    if (!email || !otp) {
+        return res.status(400).json({ message: 'Email and 6-digit code are required.' });
+    }
+
+    const stored = verificationTokens.get(email);
+    if (!stored || stored.code !== otp || Date.now() > stored.expires) {
+        return res.status(400).json({ message: 'Invalid or expired verification code.' });
+    }
+
+    try {
+        // Mark user as verified
+        await db.query('UPDATE users SET is_verified = TRUE WHERE LOWER(email) = ?', [email]);
+        verificationTokens.delete(email); // Clean up
+
+        // Fetch user again to log them in
+        const [users] = await db.query('SELECT * FROM users WHERE LOWER(email) = ?', [email]);
+        const user = users[0];
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found.' });
+        }
+
+        // Create a JWT token
+        const csrfToken = crypto.randomBytes(32).toString('hex');
+        const payload = { userId: user.id, name: user.fullname, role: user.role, csrfToken };
+        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+        const cookieOpts = {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+            maxAge: 60 * 60 * 1000
+        };
+
+        res.cookie('token', token, cookieOpts);
+        res.cookie('csrf-token', csrfToken, { ...cookieOpts, httpOnly: false });
+
+        res.status(200).json({ message: 'Email verified successfully! Logging you in...', role: user.role });
+    } catch (error) {
+        logger.error('Verify email error:', error);
+        res.status(500).json({ message: 'Server error during verification.' });
+    }
+});
+
+// === RESEND VERIFICATION ENDPOINT ===
+router.post('/resend-verification', async (req, res) => {
+    const email = (req.body.email || '').toLowerCase().trim();
+    if (!email) {
+        return res.status(400).json({ message: 'Email is required.' });
+    }
+
+    // Always return a success-like message to prevent enumeration
+    const genericMsg = 'If the account exists and is unverified, a new code has been sent.';
+
+    try {
+        const [users] = await db.query('SELECT id, is_verified FROM users WHERE LOWER(email) = ?', [email]);
+        if (users.length > 0 && !users[0].is_verified) {
+            const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
+            verificationTokens.set(email, { code: otpCode, expires: Date.now() + 15 * 60 * 1000 });
+            sendVerificationEmail(email, otpCode).catch(err => logger.error('Verification email failed:', err));
+        }
+        res.status(200).json({ message: genericMsg });
+    } catch (error) {
+        logger.error('Resend verification error:', error);
+        res.status(500).json({ message: 'Server error. Please try again later.' });
+    }
 });
 
 module.exports = router;
