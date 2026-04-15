@@ -292,7 +292,7 @@ router.post('/reset-password', async (req, res) => {
         const [users] = await db.query('SELECT id, reset_token, reset_expires FROM users WHERE LOWER(email) = ?', [email]);
         const user = users[0];
 
-        if (!user || user.reset_token !== token || Date.now() > user.reset_expires) {
+        if (!user || !user.reset_token || user.reset_token !== token || !user.reset_expires || Date.now() > parseInt(user.reset_expires, 10)) {
             return res.status(400).json({ message: 'This reset link is invalid or has expired. Please request a new one.' });
         }
 
@@ -334,7 +334,7 @@ router.post('/verify-email', async (req, res) => {
             return res.status(404).json({ message: 'User not found.' });
         }
 
-        if (user.verify_token !== otp || Date.now() > user.verify_expires) {
+        if (!user.verify_token || user.verify_token !== otp.trim() || !user.verify_expires || Date.now() > parseInt(user.verify_expires, 10)) {
             return res.status(400).json({ message: 'Invalid or expired verification code.' });
         }
 

@@ -50,9 +50,13 @@ async function query(sql, params = []) {
     const result = await pool.query(finalSql, pgParams);
 
     // Mimic mysql2 insertId / affectedRows on the "result" object
+    // Arrays are objects in JS, so we can attach properties to it.
+    result.rows.insertId     = result.rows[0]?.id ?? null;
+    result.rows.affectedRows = result.rowCount ?? 0;
+
     const meta = {
-        insertId:     result.rows[0]?.id ?? null,
-        affectedRows: result.rowCount ?? 0,
+        insertId:     result.rows.insertId,
+        affectedRows: result.rows.affectedRows,
         rows:         result.rows,
     };
 
@@ -69,9 +73,11 @@ async function getConnection() {
             const isInsert = /^\s*INSERT/i.test(pgSql);
             const finalSql = isInsert && !/RETURNING/i.test(pgSql) ? `${pgSql} RETURNING id` : pgSql;
             const result = await client.query(finalSql, pgParams);
+            result.rows.insertId = result.rows[0]?.id ?? null;
+            result.rows.affectedRows = result.rowCount ?? 0;
             const meta = {
-                insertId:     result.rows[0]?.id ?? null,
-                affectedRows: result.rowCount ?? 0,
+                insertId:     result.rows.insertId,
+                affectedRows: result.rows.affectedRows,
             };
             return [result.rows, meta];
         },
