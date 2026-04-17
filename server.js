@@ -81,7 +81,8 @@ app.use(cors({
     origin: process.env.FRONTEND_ORIGIN || true,
     credentials: true
 }));
-app.use(express.json()); // Allows the server to understand JSON data
+app.use(express.json({ limit: '10mb' })); // Increased limit for Base64 image uploads
+app.use(express.urlencoded({ limit: '10mb', extended: true }));
 app.use(cookieParser()); // Allows the server to parse cookies
 
 // Public endpoint to check maintenance status

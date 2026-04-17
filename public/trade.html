@@ -203,7 +203,21 @@
         catch (err) { console.error(err); }
     });
 
-    // --- Trade Logic (preserved exactly) ---
+    // --- KYC Guard ---
+    async function enforceKyc() {
+        try {
+            const res = await fetch('/api/user/me', { credentials: 'include' });
+            if (res.status === 401 || res.status === 403) { window.location.href = 'login.html'; return; }
+            if (res.ok) {
+                const user = await res.json();
+                if (user.kyc_status !== 'approved') {
+                    window.location.href = 'kyc.html';
+                }
+            }
+        } catch (e) {}
+    }
+    enforceKyc();
+
     const buyTab           = document.getElementById('buy-tab');
     const sellTab          = document.getElementById('sell-tab');
     const usdAmountInput   = document.getElementById('usd-amount');
