@@ -341,7 +341,7 @@
 
     <script>
         // === KYC STATUS GUARD ===
-        // Check current status before showing the form.
+        // Shows the correct screen based on the user's current KYC status.
         (async function checkKycStatus() {
             try {
                 const res = await fetch('/api/user/me', { credentials: 'include' });
@@ -353,24 +353,46 @@
 
                 const user = await res.json();
 
+                // ── APPROVED ─────────────────────────────────────────────
                 if (user.kyc_status === 'approved') {
-                    // Already approved — no need to be here
-                    window.location.href = 'dashboard.html';
+                    document.getElementById('kyc-form').style.display = 'none';
+                    document.querySelector('.skip-link').style.display = 'none';
+                    document.querySelector('.page-title').textContent = 'Identity Verified';
+                    document.querySelector('.page-sub').textContent = '';
+
+                    const banner = document.createElement('div');
+                    banner.innerHTML = `
+                        <div style="text-align:center;padding:10px 0 24px;">
+                            <div style="width:88px;height:88px;border-radius:50%;background:linear-gradient(135deg,#16a34a,#22c55e);display:flex;align-items:center;justify-content:center;margin:0 auto 22px;font-size:2.8rem;box-shadow:0 8px 24px rgba(22,163,74,0.3);">✅</div>
+                            <h2 style="font-size:1.3rem;font-weight:700;color:#15803d;margin-bottom:8px;">Account Verified!</h2>
+                            <p style="color:#334155;font-size:0.92rem;line-height:1.8;margin-bottom:10px;">
+                                Your identity has been <strong>successfully verified</strong>. You now have full access to buy and sell crypto on CryptoPlexTrade.
+                            </p>
+                            <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:14px 18px;margin:20px 0 28px;font-size:0.82rem;color:#166534;font-weight:500;">
+                                🛡️ Your account is KYC-compliant and fully activated.
+                            </div>
+                            <a href="dashboard.html" style="display:inline-block;width:100%;padding:15px;background:linear-gradient(90deg,#16a34a,#22c55e);color:#fff;border-radius:12px;font-weight:700;text-decoration:none;font-size:1rem;box-shadow:0 6px 20px rgba(22,163,74,.25);transition:opacity 0.2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+                                Go to Dashboard →
+                            </a>
+                        </div>
+                    `;
+                    document.getElementById('alert-msg').insertAdjacentElement('afterend', banner);
                     return;
                 }
 
+                // ── PENDING ───────────────────────────────────────────────
                 if (user.kyc_status === 'pending') {
-                    // Already submitted — show review screen, hide the form
                     document.getElementById('kyc-form').style.display = 'none';
+                    document.querySelector('.skip-link').style.display = 'none';
                     document.querySelector('.page-title').textContent = 'Verification Under Review';
                     document.querySelector('.page-sub').textContent = '';
-                    document.querySelector('.skip-link').style.display = 'none';
 
-                    const pendingBanner = document.createElement('div');
-                    pendingBanner.innerHTML = `
+                    const banner = document.createElement('div');
+                    banner.innerHTML = `
                         <div style="text-align:center;padding:10px 0 24px;">
-                            <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#fbbf24,#f59e0b);display:flex;align-items:center;justify-content:center;margin:0 auto 22px;font-size:2.5rem;box-shadow:0 8px 24px rgba(245,158,11,0.3);">⏳</div>
-                            <p style="color:#334155;font-size:0.95rem;line-height:1.8;margin-bottom:10px;">
+                            <div style="width:88px;height:88px;border-radius:50%;background:linear-gradient(135deg,#fbbf24,#f59e0b);display:flex;align-items:center;justify-content:center;margin:0 auto 22px;font-size:2.8rem;box-shadow:0 8px 24px rgba(245,158,11,0.3);">⏳</div>
+                            <h2 style="font-size:1.3rem;font-weight:700;color:#92400e;margin-bottom:8px;">Documents Under Review</h2>
+                            <p style="color:#334155;font-size:0.92rem;line-height:1.8;margin-bottom:10px;">
                                 Your identity documents have been <strong>successfully submitted</strong> and are currently being reviewed by our compliance team.
                             </p>
                             <p style="color:#64748b;font-size:0.875rem;line-height:1.7;margin-bottom:28px;">
@@ -385,9 +407,12 @@
                             </a>
                         </div>
                     `;
-                    document.getElementById('alert-msg').insertAdjacentElement('afterend', pendingBanner);
+                    document.getElementById('alert-msg').insertAdjacentElement('afterend', banner);
+                    return;
                 }
-                // 'unverified' → form shows normally (default state)
+
+                // ── UNVERIFIED → form shows normally (default state) ──────
+
             } catch (e) {
                 // Network error — let the page render normally
             }
