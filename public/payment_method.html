@@ -362,7 +362,8 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
     populateOrderBanner();
 
-    // Generate Random Token
+    // Generate / Restore Payment Reference
+    // The reference is tied to the order session — same ref survives page refresh
     function generateToken(length = 8) {
         const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         let result = '';
@@ -371,7 +372,18 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
         return result;
     }
-    document.getElementById('payment-reference').textContent = generateToken();
+
+    // Reuse existing reference if order already has one, otherwise create fresh
+    const orderData = JSON.parse(localStorage.getItem('buyOrderDetails') || 'null');
+    let paymentRef = orderData?.paymentReference;
+    if (!paymentRef) {
+        paymentRef = generateToken();
+        if (orderData) {
+            orderData.paymentReference = paymentRef;
+            localStorage.setItem('buyOrderDetails', JSON.stringify(orderData));
+        }
+    }
+    document.getElementById('payment-reference').textContent = paymentRef;
 
     // ── Fetch & render payment details from admin ──
     try {
