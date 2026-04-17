@@ -3,7 +3,7 @@ const db = require('./database');
 const { authenticateAdminToken } = require('./authMiddleware');
 const { adminOnly } = require('./adminAuthMiddleware');
 const { getRates, setRates } = require('./rates');
-const { sendOrderCompletedEmail } = require('./emailService');
+const { sendOrderCompletedEmail, sendKycApprovedEmail, sendKycRejectedEmail } = require('./emailService');
 const logger = require('./logger');
 
 const router = express.Router();
@@ -201,11 +201,25 @@ router.get('/kyc', async (req, res) => {
 
 router.put('/kyc/:id/status', async (req, res) => {
     const { status } = req.body; // 'approved' or 'rejected'
-    if (!status) return res.status(400).json({ message: 'Status is required.' });
+    if (!['approved', 'rejected'].includes(status))
+        return res.status(400).json({ message: 'Invalid status. Must be approved or rejected.' });
 
     try {
         await db.query('UPDATE users SET kyc_status = ? WHERE id = ?', [status, req.params.id]);
         res.status(200).json({ message: `KYC status updated to ${status}.` });
+
+        // Fire user notification email — non-blocking
+        db.query('SELECT fullname, email FROM users WHERE id = ?', [req.params.id])
+            .then(rows => {
+                const user = rows[0];
+                if (!user) return;
+                const fn = status === 'approved' ? sendKycApprovedEmail : sendKycRejectedEmail;
+                fn(user).catch(err =>
+                    logger.warn(`KYC ${status} email failed (non-critical):`, err.message)
+                );
+            })
+            .catch(err => logger.warn('Could not fetch user for KYC notification:', err.message));
+
     } catch (error) {
         logger.error('KYC status update error:', error);
         res.status(500).json({ message: 'Server error updating KYC status.' });

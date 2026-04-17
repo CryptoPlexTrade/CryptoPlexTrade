@@ -515,4 +515,303 @@ async function sendVerificationEmail(email, otpCode) {
     logger.info(`Verification email sent to ${email}`);
 }
 
-module.exports = { sendNewOrderNotification, sendPasswordResetEmail, sendLiveChatNotification, sendOrderCompletedEmail, sendVerificationEmail };
+/**
+ * Sends an email alert to the admin when a user submits KYC documents.
+ * @param {object} user - { fullname, email } of the submitting user.
+ * @param {string} idType - The type of ID submitted (e.g. 'passport').
+ */
+async function sendKycSubmissionAlert(user, idType) {
+    if (!transporter) {
+        logger.warn('Email service is not configured. Skipping KYC alert.');
+        return;
+    }
+
+    const domain   = getAppDomain();
+    let appUrl = process.env.APP_URL || 'https://cryptoplextrade.com';
+    if (!appUrl.startsWith('http')) appUrl = 'https://' + appUrl;
+    const kycAdminUrl = `${appUrl}/admin/kyc.html`;
+    const subject     = `🔔 KYC Submission — ${user.fullname || user.email}`;
+
+    const idLabel = (idType || 'Unknown')
+        .replace(/_/g, ' ')
+        .replace(/\b\w/g, c => c.toUpperCase());
+
+    const textBody = [
+        `New KYC Submission`,
+        ``,
+        `A user has submitted their KYC documents and is awaiting approval.`,
+        ``,
+        `User:     ${user.fullname || 'N/A'}`,
+        `Email:    ${user.email}`,
+        `ID Type:  ${idLabel}`,
+        ``,
+        `Review and approve or reject the submission in the admin panel:`,
+        kycAdminUrl,
+        ``,
+        `-- ${SENDER_NAME}`,
+    ].join('\r\n');
+
+    const htmlBody = `<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background-color:#f0f7ff;font-family:Arial,Helvetica,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f0f7ff;padding:40px 16px;">
+    <tr><td align="center">
+      <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 4px 24px rgba(0,91,170,0.12);max-width:600px;width:100%;border:1px solid #dde9f7;">
+        <!-- Header -->
+        <tr>
+          <td style="background:linear-gradient(135deg,#005baa,#00a9e0);padding:32px;text-align:center;">
+            <img src="${appUrl}/css/logo.png" alt="${SENDER_NAME}" style="height:50px;width:auto;border-radius:10px;margin-bottom:14px;">
+            <h1 style="margin:0;font-size:20px;font-weight:700;color:#ffffff;">KYC Verification Submitted</h1>
+            <p style="margin:6px 0 0;font-size:13px;color:#b3d4f0;">Action Required — Admin Review Needed</p>
+          </td>
+        </tr>
+        <!-- Body -->
+        <tr>
+          <td style="padding:36px 32px;">
+            <p style="margin:0 0 20px;font-size:15px;color:#1e293b;">A user has submitted their identity documents and is waiting for your approval before they can start trading.</p>
+
+            <!-- Alert Badge -->
+            <table width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 28px;">
+              <tr>
+                <td style="background:#fff8e1;border:1px solid #fbbf24;border-radius:10px;padding:16px 20px;">
+                  <p style="margin:0;font-size:13px;font-weight:700;color:#92400e;">&#9888; Pending KYC Approval</p>
+                  <p style="margin:6px 0 0;font-size:13px;color:#78350f;">This user cannot trade until you approve their submission.</p>
+                </td>
+              </tr>
+            </table>
+
+            <!-- User Details -->
+            <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e2e8f0;border-radius:10px;overflow:hidden;margin:0 0 28px;">
+              <tr>
+                <td colspan="2" style="background:#005baa;padding:12px 16px;">
+                  <p style="margin:0;font-size:12px;font-weight:700;color:#ffffff;text-transform:uppercase;letter-spacing:0.8px;">Submission Details</p>
+                </td>
+              </tr>
+              <tr style="background:#f8fafc;">
+                <td style="padding:14px 16px;font-size:13px;color:#64748b;font-weight:600;border-bottom:1px solid #e2e8f0;width:40%;">Full Name</td>
+                <td style="padding:14px 16px;font-size:14px;color:#1e293b;font-weight:700;border-bottom:1px solid #e2e8f0;">${user.fullname || 'N/A'}</td>
+              </tr>
+              <tr>
+                <td style="padding:14px 16px;font-size:13px;color:#64748b;font-weight:600;border-bottom:1px solid #e2e8f0;">Email</td>
+                <td style="padding:14px 16px;font-size:14px;color:#005baa;border-bottom:1px solid #e2e8f0;">${user.email}</td>
+              </tr>
+              <tr style="background:#f8fafc;">
+                <td style="padding:14px 16px;font-size:13px;color:#64748b;font-weight:600;">ID Type Submitted</td>
+                <td style="padding:14px 16px;font-size:14px;color:#1e293b;font-weight:600;">${idLabel}</td>
+              </tr>
+            </table>
+
+            <!-- CTA Button -->
+            <table cellpadding="0" cellspacing="0" style="margin:0 auto 28px;">
+              <tr>
+                <td style="background:#005baa;border-radius:8px;">
+                  <a href="${kycAdminUrl}" style="display:inline-block;padding:14px 36px;font-size:15px;font-weight:bold;color:#ffffff;text-decoration:none;">Review KYC Submission</a>
+                </td>
+              </tr>
+            </table>
+
+            <hr style="border:none;border-top:1px solid #e2e8f0;margin:0 0 20px;">
+            <p style="margin:0;font-size:12px;color:#94a3b8;line-height:1.6;">This notification was automatically generated after the user submitted their KYC documents.</p>
+          </td>
+        </tr>
+        <!-- Footer -->
+        <tr>
+          <td style="background:#f8fafc;border-top:1px solid #e2e8f0;padding:20px 32px;text-align:center;">
+            <p style="margin:0 0 4px;font-size:12px;color:#64748b;">${SENDER_NAME}</p>
+            <p style="margin:0;font-size:11px;color:#94a3b8;"><a href="mailto:${process.env.ADMIN_EMAIL}" style="color:#005baa;text-decoration:none;">${process.env.ADMIN_EMAIL}</a></p>
+          </td>
+        </tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+
+    await transporter.sendMail({
+        from:    getSender(),
+        replyTo: getReplyTo(),
+        to:      process.env.ADMIN_EMAIL,
+        subject,
+        text:    textBody,
+        html:    htmlBody,
+        headers: {
+            'Message-ID': `<${Date.now()}.kyc-${user.email.replace('@','.')}@${domain}>`,
+            'Precedence': 'bulk',
+        },
+    });
+    logger.info(`KYC submission alert sent to admin for user: ${user.email}`);
+}
+
+/**
+ * Sends an approval email to a user when their KYC is approved by admin.
+ * @param {object} user - { fullname, email }
+ */
+async function sendKycApprovedEmail(user) {
+    if (!transporter) { logger.warn('Email service not configured. Skipping KYC approved email.'); return; }
+
+    const domain = getAppDomain();
+    let appUrl = process.env.APP_URL || 'https://cryptoplextrade.com';
+    if (!appUrl.startsWith('http')) appUrl = 'https://' + appUrl;
+    const tradeUrl = `${appUrl}/trade.html`;
+    const subject  = `✅ Your Account is Verified — You Can Now Trade!`;
+
+    const textBody = [
+        `Hi ${user.fullname || 'there'},`,
+        ``,
+        `Great news! Your identity verification has been approved.`,
+        `You can now buy and sell crypto on CryptoPlexTrade.`,
+        ``,
+        `Start trading: ${tradeUrl}`,
+        ``,
+        `Thank you for completing the verification process.`,
+        `-- ${SENDER_NAME}`,
+    ].join('\r\n');
+
+    const htmlBody = `<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background-color:#f0f7ff;font-family:Arial,Helvetica,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f0f7ff;padding:40px 16px;">
+    <tr><td align="center">
+      <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 4px 24px rgba(0,91,170,0.12);max-width:600px;width:100%;border:1px solid #dde9f7;">
+        <tr>
+          <td style="background:linear-gradient(135deg,#005baa,#00a9e0);padding:32px;text-align:center;">
+            <img src="${appUrl}/css/logo.png" alt="${SENDER_NAME}" style="height:50px;width:auto;border-radius:10px;margin-bottom:14px;">
+            <h1 style="margin:0;font-size:20px;font-weight:700;color:#ffffff;">Identity Verified &#10003;</h1>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:36px 32px;text-align:center;">
+            <table width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 28px;">
+              <tr>
+                <td style="background:#e9f5ec;border:1px solid #b8e6c4;border-radius:12px;padding:24px;text-align:center;">
+                  <div style="background:#28a745;color:#fff;width:52px;height:52px;line-height:52px;border-radius:50%;font-size:26px;margin:0 auto 12px;">&#10003;</div>
+                  <p style="margin:0;font-size:18px;font-weight:700;color:#16a34a;">KYC Approved!</p>
+                  <p style="margin:8px 0 0;font-size:14px;color:#15803d;">Your account is now fully verified.</p>
+                </td>
+              </tr>
+            </table>
+            <p style="margin:0 0 24px;font-size:15px;color:#1e293b;line-height:1.7;">Hi <strong>${user.fullname || 'there'}</strong>, great news! Your identity has been successfully verified. You can now access all features of CryptoPlexTrade including buying and selling crypto.</p>
+            <table cellpadding="0" cellspacing="0" style="margin:0 auto 28px;">
+              <tr>
+                <td style="background:#28a745;border-radius:8px;">
+                  <a href="${tradeUrl}" style="display:inline-block;padding:14px 36px;font-size:15px;font-weight:bold;color:#ffffff;text-decoration:none;">Start Trading Now</a>
+                </td>
+              </tr>
+            </table>
+            <p style="margin:0;font-size:12px;color:#94a3b8;">Thank you for choosing ${SENDER_NAME}.</p>
+          </td>
+        </tr>
+        <tr>
+          <td style="background:#f8fafc;border-top:1px solid #e2e8f0;padding:20px 32px;text-align:center;">
+            <p style="margin:0;font-size:11px;color:#94a3b8;">${SENDER_NAME} &middot; <a href="mailto:${process.env.ADMIN_EMAIL}" style="color:#005baa;text-decoration:none;">${process.env.ADMIN_EMAIL}</a></p>
+          </td>
+        </tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+
+    await transporter.sendMail({
+        from: getSender(), replyTo: getReplyTo(), to: user.email, subject,
+        text: textBody, html: htmlBody,
+        headers: { 'Message-ID': `<${Date.now()}.kyc-approved@${domain}>`, 'Precedence': 'bulk' },
+    });
+    logger.info(`KYC approved email sent to ${user.email}`);
+}
+
+/**
+ * Sends a rejection email to a user when their KYC is rejected by admin.
+ * @param {object} user - { fullname, email }
+ */
+async function sendKycRejectedEmail(user) {
+    if (!transporter) { logger.warn('Email service not configured. Skipping KYC rejected email.'); return; }
+
+    const domain = getAppDomain();
+    let appUrl = process.env.APP_URL || 'https://cryptoplextrade.com';
+    if (!appUrl.startsWith('http')) appUrl = 'https://' + appUrl;
+    const kycUrl  = `${appUrl}/kyc.html`;
+    const subject = `Action Required — KYC Verification Unsuccessful`;
+
+    const textBody = [
+        `Hi ${user.fullname || 'there'},`,
+        ``,
+        `Unfortunately, we were unable to verify your identity with the documents submitted.`,
+        ``,
+        `This may be due to:`,
+        `  - Blurry or unclear document images`,
+        `  - Documents that are expired`,
+        `  - Mismatched personal information`,
+        ``,
+        `Please re-submit your KYC with clearer, valid documents:`,
+        kycUrl,
+        ``,
+        `If you believe this is a mistake, please contact our support team.`,
+        `-- ${SENDER_NAME}`,
+    ].join('\r\n');
+
+    const htmlBody = `<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background-color:#f0f7ff;font-family:Arial,Helvetica,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f0f7ff;padding:40px 16px;">
+    <tr><td align="center">
+      <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 4px 24px rgba(0,91,170,0.12);max-width:600px;width:100%;border:1px solid #dde9f7;">
+        <tr>
+          <td style="background:linear-gradient(135deg,#005baa,#00a9e0);padding:32px;text-align:center;">
+            <img src="${appUrl}/css/logo.png" alt="${SENDER_NAME}" style="height:50px;width:auto;border-radius:10px;margin-bottom:14px;">
+            <h1 style="margin:0;font-size:20px;font-weight:700;color:#ffffff;">Verification Update</h1>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:36px 32px;">
+            <table width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 24px;">
+              <tr>
+                <td style="background:#fff1f0;border:1px solid #fca5a5;border-radius:12px;padding:20px;">
+                  <p style="margin:0;font-size:14px;font-weight:700;color:#dc2626;">&#9888; KYC Submission Unsuccessful</p>
+                  <p style="margin:6px 0 0;font-size:13px;color:#b91c1c;">We were unable to verify your identity with the submitted documents.</p>
+                </td>
+              </tr>
+            </table>
+            <p style="margin:0 0 16px;font-size:15px;color:#1e293b;">Hi <strong>${user.fullname || 'there'}</strong>,</p>
+            <p style="margin:0 0 20px;font-size:14px;color:#475569;line-height:1.7;">Unfortunately, your KYC submission could not be approved. This is often due to one of the following reasons:</p>
+            <ul style="padding-left:20px;color:#475569;font-size:14px;line-height:1.9;margin:0 0 24px;">
+              <li>Blurry or unclear document images</li>
+              <li>Expired ID or passport</li>
+              <li>Mismatched personal information</li>
+              <li>Incomplete document (all pages/sides required)</li>
+            </ul>
+            <p style="margin:0 0 24px;font-size:14px;color:#475569;line-height:1.7;">Please <strong>re-submit your KYC</strong> with clear, valid documents to get your account verified.</p>
+            <table cellpadding="0" cellspacing="0" style="margin:0 auto 28px;">
+              <tr>
+                <td style="background:#005baa;border-radius:8px;">
+                  <a href="${kycUrl}" style="display:inline-block;padding:14px 36px;font-size:15px;font-weight:bold;color:#ffffff;text-decoration:none;">Re-submit KYC</a>
+                </td>
+              </tr>
+            </table>
+            <hr style="border:none;border-top:1px solid #e2e8f0;margin:0 0 20px;">
+            <p style="margin:0;font-size:12px;color:#94a3b8;line-height:1.6;">If you believe this decision is incorrect, please contact our support team by replying to this email.</p>
+          </td>
+        </tr>
+        <tr>
+          <td style="background:#f8fafc;border-top:1px solid #e2e8f0;padding:20px 32px;text-align:center;">
+            <p style="margin:0;font-size:11px;color:#94a3b8;">${SENDER_NAME} &middot; <a href="mailto:${process.env.ADMIN_EMAIL}" style="color:#005baa;text-decoration:none;">${process.env.ADMIN_EMAIL}</a></p>
+          </td>
+        </tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+
+    await transporter.sendMail({
+        from: getSender(), replyTo: getReplyTo(), to: user.email, subject,
+        text: textBody, html: htmlBody,
+        headers: { 'Message-ID': `<${Date.now()}.kyc-rejected@${domain}>`, 'Precedence': 'bulk' },
+    });
+    logger.info(`KYC rejected email sent to ${user.email}`);
+}
+
+module.exports = { sendNewOrderNotification, sendPasswordResetEmail, sendLiveChatNotification, sendOrderCompletedEmail, sendVerificationEmail, sendKycSubmissionAlert, sendKycApprovedEmail, sendKycRejectedEmail };

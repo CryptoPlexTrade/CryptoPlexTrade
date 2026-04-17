@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const { authenticateToken } = require('./authMiddleware');
-const { sendPasswordResetEmail, sendVerificationEmail } = require('./emailService');
+const { sendPasswordResetEmail, sendVerificationEmail, sendKycSubmissionAlert } = require('./emailService');
 
 // In-memory token stores removed to support Vercel serverless persistence.
 // Tokens will now be stored in the database.
@@ -413,6 +413,19 @@ router.post('/kyc-submit', authenticateToken, async (req, res) => {
             'UPDATE users SET kyc_status = ?, id_type = ?, id_front = ?, id_back = ?, id_selfie = ? WHERE id = ?',
             ['pending', id_type, id_front, id_back, id_selfie, req.user.userId]
         );
+
+        // Fire admin email alert — non-blocking so it never delays the response
+        db.query('SELECT fullname, email FROM users WHERE id = ?', [req.user.userId])
+            .then(rows => {
+                const user = rows[0];
+                if (user) {
+                    sendKycSubmissionAlert(user, id_type).catch(err =>
+                        logger.warn('KYC alert email failed (non-critical):', err.message)
+                    );
+                }
+            })
+            .catch(err => logger.warn('Could not fetch user for KYC alert:', err.message));
+
         res.status(200).json({ message: 'KYC documents submitted successfully. Pending admin review.' });
     } catch (error) {
         logger.error('KYC submission error:', error);
