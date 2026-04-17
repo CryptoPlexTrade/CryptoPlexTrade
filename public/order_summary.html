@@ -331,11 +331,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Page Protection: Check for both a valid session and order details
     fetch('/api/user/me', { credentials: 'include' })
-        .then(response => {
+        .then(async response => {
             if (response.status === 401 || response.status === 403 || !orderDetails) {
                 alert('Your session has expired or order details are missing. Please log in and try again.');
                 window.location.href = 'trade.html';
-            } else {
+                return;
+            }
+            if (response.ok) {
+                const user = await response.json();
+                if (user.kyc_status !== 'approved') {
+                    window.location.href = 'kyc.html';
+                    return;
+                }
                 populateSummary(orderDetails);
             }
         }).catch(() => window.location.href = 'login.html');

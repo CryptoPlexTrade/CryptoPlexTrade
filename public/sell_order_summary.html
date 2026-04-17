@@ -184,11 +184,21 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const orderDetails = JSON.parse(localStorage.getItem('sellOrderDetails'));
-    if (!orderDetails) {
-        alert('No sell order details found. Redirecting to trade page.');
-        window.location.href = 'trade.html';
-        return;
-    }
+    
+    fetch('/api/user/me', { credentials: 'include' })
+        .then(async response => {
+            if (response.status === 401 || response.status === 403 || !orderDetails) {
+                alert('Your session has expired or order details are missing. Please log in and try again.');
+                window.location.href = 'trade.html';
+                return;
+            }
+            if (response.ok) {
+                const user = await response.json();
+                if (user.kyc_status !== 'approved') {
+                    window.location.href = 'kyc.html';
+                }
+            }
+        }).catch(() => window.location.href = 'login.html');
 
     // Logout
     document.getElementById('logout-btn').addEventListener('click', async (e) => {
