@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="../css/logo.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage KYC - Admin</title>
+    <link rel="stylesheet" href="admin.css">
+    <style>
+        .kyc-modal {
+            display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%;
+            overflow: auto; background-color: rgba(0,0,0,0.8);
+            justify-content: center; align-items: start; padding: 40px 20px;
+        }
+        .kyc-modal-content {
+            background-color: #fff; margin: auto; padding: 20px 30px 40px; border-radius: 12px;
+            max-width: 800px; width: 100%; position: relative;
+        }
+        .close-modal { position: absolute; top: 15px; right: 20px; color: #666; font-size: 28px; font-weight: bold; cursor: pointer; }
+        .close-modal:hover { color: #000; }
+        .img-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
+        .img-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; text-align: center; }
+        .img-card h4 { margin-top: 0; margin-bottom: 10px; font-size: 0.9rem; color: #334155; }
+        .img-card img { width: 100%; max-height: 250px; object-fit: contain; border-radius: 4px; cursor: pointer; }
+        
+        .full-img-overlay {
+            display: none; position: fixed; z-index: 1001; left: 0; top: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); justify-content: center; align-items: center;
+        }
+        .full-img-overlay img { max-width: 90%; max-height: 90%; object-fit: contain; }
+        
+        .action-btns { margin-top: 30px; display: flex; gap: 15px; justify-content: flex-end; }
+        .btn-approve { background: #16a34a; color: #fff; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .btn-reject { background: #dc2626; color: #fff; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .btn-approve:hover { background: #15803d; } .btn-reject:hover { background: #b91c1c; }
+    </style>
+</head>
+<body>
+    <!-- Mobile Hamburger Button -->
+    <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open menu">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+        </svg>
+    </button>
+    <!-- Sidebar overlay -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <!-- Mobile Top Bar -->
+    <div class="mobile-topbar">
+        <span class="mobile-page-title">Manage KYC</span>
+    </div>
+    <div class="admin-layout">
+        <aside class="admin-sidebar" id="admin-sidebar">
+            <button class="sidebar-close-btn" id="sidebar-close-btn" aria-label="Close menu">&times;</button>
+            <div class="sidebar-header">
+                <a href="index.html" class="logo-wrapper">
+                    <img src="../css/logo.jpg" alt="Logo" class="logo" style="width: auto !important; height: 44px !important; max-height: 44px; border-radius: 16px !important; object-fit: contain !important; background: none !important; box-shadow: none !important; overflow: visible !important;">
+                    <span class="logo-name">Admin Portal</span>
+                </a>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="index.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11.47 3.841a.75.75 0 0 1 1.06 0l8.69 8.69a.75.75 0 1 0 1.06-1.061l-8.689-8.69a2.25 2.25 0 0 0-3.182 0l-8.69 8.69a.75.75 0 1 0 1.061 1.06l8.69-8.689Z" /><path d="m12 5.432 8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 0 1-.75-.75v-4.5a.75.75 0 0 0-.75-.75h-3a.75.75 0 0 0-.75.75V21a.75.75 0 0 1-.75.75H5.625a1.875 1.875 0 0 1-1.875-1.875v-6.198a2.29 2.29 0 0 0 .091-.086L12 5.432Z" /></svg>Dashboard</a></li>
+                    <li><a href="transactions.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 7.5a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5Z" /><path fill-rule="evenodd" d="M1.5 4.875C1.5 3.839 2.34 3 3.375 3h17.25c1.035 0 1.875.84 1.875 1.875v9.75c0 1.036-.84 1.875-1.875 1.875H3.375A1.875 1.875 0 0 1 1.5 14.625v-9.75ZM8.25 9.75a3.75 3.75 0 1 1 7.5 0 3.75 3.75 0 0 1-7.5 0ZM18.75 9a.75.75 0 0 0-.75.75v.008c0 .414.336.75.75.75h.008a.75.75 0 0 0 .75-.75V9.75a.75.75 0 0 0-.75-.75h-.008ZM4.5 9.75A.75.75 0 0 1 5.25 9h.008a.75.75 0 0 1 .75.75v.008a.75.75 0 0 1-.75.75H5.25a.75.75 0 0 1-.75-.75V9.75Z" clip-rule="evenodd" /><path d="M2.25 18a.75.75 0 0 0 0 1.5c5.4 0 10.63.722 15.6 2.075 1.19.324 2.4-.558 2.4-1.82V18.75a.75.75 0 0 0-.75-.75H2.25Z" /></svg>Transactions</a></li>
+                    <li><a href="users.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M8.25 6.75a3.75 3.75 0 1 1 7.5 0 3.75 3.75 0 0 1-7.5 0ZM15.75 9.75a3 3 0 1 1 6 0 3 3 0 0 1-6 0ZM2.25 9.75a3 3 0 1 1 6 0 3 3 0 0 1-6 0ZM6.31 15.117A6.745 6.745 0 0 1 12 12a6.745 6.745 0 0 1 6.709 7.498.75.75 0 0 1-.372.568A12.696 12.696 0 0 1 12 21.75c-2.305 0-4.47-.612-6.337-1.684a.75.75 0 0 1-.372-.568 6.787 6.787 0 0 1 1.019-4.38Z" /><path d="M5.082 14.254a8.287 8.287 0 0 0-1.308 5.135 9.687 9.687 0 0 1-1.764-.44l-.115-.04a.563.563 0 0 1-.373-.487l-.01-.121a3.75 3.75 0 0 1 3.57-4.047ZM20.226 19.389a8.287 8.287 0 0 0-1.308-5.135 3.75 3.75 0 0 1 3.57 4.047l-.01.121a.563.563 0 0 1-.373.486l-.115.04c-.567.2-1.156.349-1.764.441Z" /></svg>Users</a></li>
+                    <li><a href="kyc.html" class="active"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 10.5a8.25 8.25 0 1 1 14.59 5.28l4.69 4.69a.75.75 0 1 1-1.06 1.06l-4.69-4.69A8.25 8.25 0 0 1 2.25 10.5Z" clip-rule="evenodd" /><path d="M10.5 6.75a.75.75 0 0 0-.75.75v3h-3a.75.75 0 0 0 0 1.5h3v3a.75.75 0 0 0 1.5 0v-3h3a.75.75 0 0 0 0-1.5h-3v-3a.75.75 0 0 0-.75-.75Z" /></svg>KYC Approvals</a></li>
+                    <li><a href="support.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M4.848 2.771A49.144 49.144 0 0 1 12 2.25c2.43 0 4.817.178 7.152.52 1.978.292 3.348 2.024 3.348 3.97v6.02c0 1.946-1.37 3.678-3.348 3.97a48.901 48.901 0 0 1-3.476.383.39.39 0 0 0-.297.17l-2.755 4.133a.75.75 0 0 1-1.248 0l-2.755-4.133a.39.39 0 0 0-.297-.17 48.9 48.9 0 0 1-3.476-.384c-1.978-.29-3.348-2.024-3.348-3.97V6.741c0-1.946 1.37-3.68 3.348-3.97ZM6.75 8.25a.75.75 0 0 1 .75-.75h9a.75.75 0 0 1 0 1.5h-9a.75.75 0 0 1-.75-.75Zm.75 2.25a.75.75 0 0 0 0 1.5H12a.75.75 0 0 0 0-1.5H7.5Z" clip-rule="evenodd" /></svg>Support Tickets</a></li>
+                    <li><a href="settings.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M11.078 2.25c-.917 0-1.699.663-1.85 1.567L9.05 4.889c-.02.12-.115.26-.297.348a7.493 7.493 0 0 0-.986.57c-.166.115-.334.126-.45.083L6.3 5.508a1.875 1.875 0 0 0-2.282.819l-.922 1.597a1.875 1.875 0 0 0 .432 2.385l.84.692c.095.078.17.229.154.43a7.598 7.598 0 0 0 0 1.139c.015.2-.059.352-.153.43l-.841.692a1.875 1.875 0 0 0-.432 2.385l.922 1.597a1.875 1.875 0 0 0 2.282.818l1.019-.382c.115-.043.283-.031.45.082.312.214.641.405.985.57.182.088.277.228.297.35l.178 1.071c.151.904.933 1.567 1.85 1.567h1.844c.916 0 1.699-.663 1.85-1.567l.178-1.072c.02-.12.114-.26.297-.349.344-.165.673-.356.985-.57.167-.114.335-.125.45-.082l1.02.382a1.875 1.875 0 0 0 2.28-.819l.923-1.597a1.875 1.875 0 0 0-.432-2.385l-.84-.692c-.095-.078-.17-.229-.154-.43a7.614 7.614 0 0 0 0-1.139c-.016-.2.059-.352.153-.43l.84-.692c.708-.582.891-1.59.433-2.385l-.922-1.597a1.875 1.875 0 0 0-2.282-.818l-1.02.382c-.114.043-.282.031-.449-.083a7.49 7.49 0 0 0-.985-.57c-.183-.087-.277-.227-.297-.348l-.179-1.072a1.875 1.875 0 0 0-1.85-1.567h-1.843ZM12 15.75a3.75 3.75 0 1 0 0-7.5 3.75 3.75 0 0 0 0 7.5Z" clip-rule="evenodd" /></svg>Settings</a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="#" id="logout-btn">Logout</a>
+            </div>
+        </aside>
+        <main class="admin-content">
+            <div class="admin-header">
+                <h1>Manage KYC</h1>
+                <p>Review and approve Identity Documents uploaded by users.</p>
+            </div>
+
+            <div class="filter-controls">
+                <div class="filter-group" style="flex-grow: 1;">
+                    <label for="search-kyc">Search by Name or Email</label>
+                    <input type="text" id="search-kyc" placeholder="Start typing to filter...">
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>User ID</th>
+                            <th>Full Name</th>
+                            <th>Email</th>
+                            <th>ID Type</th>
+                            <th>Status</th>
+                            <th>Date Submited</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="kyc-tbody">
+                        <!-- KYC will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+            <div id="pagination-bar"></div>
+        </main>
+    </div>
+
+    <!-- Review Modal -->
+    <div id="kycModal" class="kyc-modal">
+        <div class="kyc-modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 style="margin-top:0;">Review KYC Documents</h2>
+            <p id="modal-user-info" style="color: #64748b; margin-top: 5px;"></p>
+            
+            <div class="img-grid">
+                <div class="img-card">
+                    <h4>Front ID</h4>
+                    <img id="img-front" src="" onclick="openFullImg(this.src)">
+                </div>
+                <div class="img-card">
+                    <h4>Back ID</h4>
+                    <img id="img-back" src="" onclick="openFullImg(this.src)">
+                </div>
+                <div class="img-card" style="grid-column: span 2;">
+                    <h4>Selfie</h4>
+                    <img id="img-selfie" src="" onclick="openFullImg(this.src)" style="max-height:350px;">
+                </div>
+            </div>
+
+            <div class="action-btns" id="action-btns">
+                <button class="btn-reject" onclick="updateKycStatus('rejected')">Reject</button>
+                <button class="btn-approve" onclick="updateKycStatus('approved')">Approve ✔</button>
+            </div>
+            
+            <p id="review-msg" style="margin-top:20px; font-weight:bold; display:none; text-align:right;"></p>
+        </div>
+    </div>
+
+    <div class="full-img-overlay" id="fullImgOverlay" onclick="this.style.display='none'">
+        <img id="fullImgEl" src="">
+    </div>
+
+    <script src="admin.js"></script>
+    <script src="admin-pagination.js"></script>
+    <script>
+        // Mobile sidebar toggle
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const sidebar = document.getElementById('admin-sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        const closeBtn = document.getElementById('sidebar-close-btn');
+        function openSidebar() {
+            sidebar.classList.add('sidebar-open');
+            overlay.classList.add('show');
+            overlay.style.display = 'block';
+        }
+        function closeSidebar() {
+            sidebar.classList.remove('sidebar-open');
+            overlay.classList.remove('show');
+            setTimeout(() => { overlay.style.display = 'none'; }, 300);
+        }
+        menuBtn.addEventListener('click', openSidebar);
+        closeBtn.addEventListener('click', closeSidebar);
+        overlay.addEventListener('click', closeSidebar);
+    </script>
+    <script>
+        let allKyc = [];
+        let filteredKyc = [];
+        let viewingUser = null;
+
+        const tbody = document.getElementById('kyc-tbody');
+        const pager = new AdminPagination({
+            containerId: 'pagination-bar',
+            defaultPerPage: 10,
+            onPageChange: () => renderKyc(pager.getSlice(filteredKyc))
+        });
+
+        async function fetchKyc() {
+            try {
+                tbody.innerHTML = '<tr><td colspan="7">Loading...</td></tr>';
+                const response = await fetch('/api/admin/kyc', { credentials: 'include' });
+                if (response.status === 401 || response.status === 403) {
+                    window.location.href = '/admin-login';
+                    return;
+                }
+                if (!response.ok) throw new Error('Failed to fetch KYC');
+                allKyc = await response.json();
+                applyFilters();
+            } catch (error) {
+                tbody.innerHTML = `<tr><td colspan="7" class="error-message">${error.message}</td></tr>`;
+            }
+        }
+
+        function renderKyc(users) {
+            tbody.innerHTML = '';
+            if (users.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7">No KYC submissions found.</td></tr>';
+                return;
+            }
+            users.forEach(user => {
+                const tr = document.createElement('tr');
+                let badgeClass = user.kyc_status === 'approved' ? 'status-completed' : (user.kyc_status === 'rejected' ? 'status-cancelled' : 'status-pending');
+                tr.innerHTML = `
+                    <td data-label="User ID">${user.id}</td>
+                    <td data-label="Full Name">${user.fullname}</td>
+                    <td data-label="Email">${user.email}</td>
+                    <td data-label="ID Type">${user.id_type || 'N/A'}</td>
+                    <td data-label="Status"><span class="status-badge ${badgeClass}">${user.kyc_status.toUpperCase()}</span></td>
+                    <td data-label="Date">${new Date(user.created_at).toLocaleDateString()}</td>
+                    <td data-label="Action"><button class="action-btn action-view" onclick='openReviewModal(${JSON.stringify(user).replace(/'/g, "&#39;")})'>Review</button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function applyFilters() {
+            const searchTerm = document.getElementById('search-kyc').value.toLowerCase();
+            filteredKyc = allKyc.filter(u => u.fullname.toLowerCase().includes(searchTerm) || u.email.toLowerCase().includes(searchTerm));
+            pager.setTotal(filteredKyc.length);
+            pager.goToPage(1);
+        }
+
+        document.getElementById('search-kyc').addEventListener('input', applyFilters);
+        fetchKyc();
+
+        // Modal Logic
+        const modal = document.getElementById('kycModal');
+        const closeModal = document.querySelector('.close-modal');
+        closeModal.onclick = () => modal.style.display = "none";
+        
+        function openFullImg(src) {
+            document.getElementById('fullImgEl').src = src;
+            document.getElementById('fullImgOverlay').style.display = 'flex';
+        }
+
+        function openReviewModal(user) {
+            viewingUser = user;
+            document.getElementById('modal-user-info').innerHTML = `<strong>${user.fullname}</strong> (${user.email}) - ${user.id_type}`;
+            document.getElementById('img-front').src = user.id_front || 'https://via.placeholder.com/400x200?text=No+Image';
+            document.getElementById('img-back').src = user.id_back || 'https://via.placeholder.com/400x200?text=No+Image';
+            document.getElementById('img-selfie').src = user.id_selfie || 'https://via.placeholder.com/400x400?text=No+Image';
+            
+            const msgObj = document.getElementById('review-msg');
+            const btns = document.getElementById('action-btns');
+            
+            if(user.kyc_status !== 'pending') {
+                btns.style.display = 'none';
+                msgObj.style.display = 'block';
+                msgObj.textContent = \`This submission has already been \${user.kyc_status.toUpperCase()}.\`;
+                msgObj.style.color = user.kyc_status === 'approved' ? '#16a34a' : '#dc2626';
+            } else {
+                btns.style.display = 'flex';
+                msgObj.style.display = 'none';
+            }
+
+            modal.style.display = "flex";
+        }
+
+        async function updateKycStatus(status) {
+            if(!confirm(\`Are you sure you want to \${status} this KYC submission?\`)) return;
+            
+            try {
+                const res = await fetch(\`/api/admin/kyc/\${viewingUser.id}/status\`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status })
+                });
+                if(res.ok) {
+                    alert(\`Successfully \${status}\`);
+                    modal.style.display = 'none';
+                    fetchKyc(); // Refresh
+                } else {
+                    alert('Error updating status.');
+                }
+            } catch(e) {
+                alert('Network error.');
+            }
+        }
+    </script>
+</body>
+</html>

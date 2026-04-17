@@ -400,5 +400,24 @@ router.post('/resend-verification', async (req, res) => {
         res.status(500).json({ message: 'Server error. Please try again later.' });
     }
 });
+// === KYC SUBMIT ENDPOINT ===
+router.post('/kyc-submit', authenticateToken, async (req, res) => {
+    const { id_type, id_front, id_back, id_selfie } = req.body;
+
+    if (!id_type || !id_front || !id_back || !id_selfie) {
+        return res.status(400).json({ message: 'Please provide all required documents.' });
+    }
+
+    try {
+        await db.query(
+            'UPDATE users SET kyc_status = ?, id_type = ?, id_front = ?, id_back = ?, id_selfie = ? WHERE id = ?',
+            ['pending', id_type, id_front, id_back, id_selfie, req.user.userId]
+        );
+        res.status(200).json({ message: 'KYC documents submitted successfully. Pending admin review.' });
+    } catch (error) {
+        logger.error('KYC submission error:', error);
+        res.status(500).json({ message: 'Server error during KYC submission.' });
+    }
+});
 
 module.exports = router;

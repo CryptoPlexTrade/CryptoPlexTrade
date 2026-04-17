@@ -25,6 +25,14 @@ router.post('/create', authenticateToken, async (req, res) => {
     }
 
     try {
+        const [users] = await db.query('SELECT email, kyc_status FROM users WHERE id = ?', [userId]);
+        if (users.length === 0) return res.status(404).json({ message: 'User not found.' });
+        const user = users[0];
+        if (user.kyc_status !== 'approved') {
+            return res.status(403).json({ message: 'Trading is disabled until your Identity Verification (KYC) is approved by an administrator.' });
+        }
+        const userEmail = user.email;
+
         const rates = await getRates(); // Get current, trusted rates from the server
         const productRates = rates[product];
         if (!productRates) {
@@ -54,8 +62,7 @@ router.post('/create', authenticateToken, async (req, res) => {
         );
         const newOrderId = orderMeta.insertId;
 
-        const [users] = await db.query('SELECT email FROM users WHERE id = ?', [userId]);
-        const userEmail = users.length > 0 ? users[0].email : 'N/A';
+        // userEmail is already fetched above
 
         // Send email notification to admin
         sendNewOrderNotification({
@@ -116,6 +123,14 @@ router.post('/create-sell-order', authenticateToken, async (req, res) => {
     }
 
     try {
+        const [users] = await db.query('SELECT email, kyc_status FROM users WHERE id = ?', [userId]);
+        if (users.length === 0) return res.status(404).json({ message: 'User not found.' });
+        const user = users[0];
+        if (user.kyc_status !== 'approved') {
+            return res.status(403).json({ message: 'Trading is disabled until your Identity Verification (KYC) is approved by an administrator.' });
+        }
+        const userEmail = user.email;
+
         const rates = await getRates();
         const productRates = rates[product];
         if (!productRates) {
@@ -138,8 +153,7 @@ router.post('/create-sell-order', authenticateToken, async (req, res) => {
         );
         const newSellOrderId = sellMeta.insertId;
 
-        const [users] = await db.query('SELECT email FROM users WHERE id = ?', [userId]);
-        const userEmail = users.length > 0 ? users[0].email : 'N/A';
+        // userEmail is already fetched above
 
         // Send email notification to admin
         sendNewOrderNotification({

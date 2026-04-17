@@ -502,7 +502,7 @@ async function sendVerificationEmail(email, otpCode) {
 </html>`;
 
     await transporter.sendMail({
-        from:    `"CryptoPlexTrade Verification" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
+        from:    `"${SENDER_NAME}" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
         replyTo: getReplyTo(),
         to:      email,
         subject,

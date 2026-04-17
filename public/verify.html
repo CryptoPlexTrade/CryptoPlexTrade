@@ -514,7 +514,7 @@ document.getElementById('verify-form').addEventListener('submit', async function
             succ.textContent = 'Verification successful! Redirecting...';
             succ.style.display = 'block';
             setTimeout(() => {
-                window.location.href = 'dashboard.html';
+                window.location.href = 'kyc.html';
             }, 1000);
         } else {
             err.textContent = data.message || 'Invalid code.';

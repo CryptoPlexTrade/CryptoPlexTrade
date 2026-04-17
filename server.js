@@ -22,6 +22,11 @@ const { getRates } = require('./rates');
         await db.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS verify_expires BIGINT');
         await db.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS reset_token VARCHAR(255)');
         await db.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS reset_expires BIGINT');
+        await db.query("ALTER TABLE users ADD COLUMN IF NOT EXISTS kyc_status VARCHAR(20) DEFAULT 'unverified'");
+        await db.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS id_type VARCHAR(50)');
+        await db.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS id_front TEXT');
+        await db.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS id_back TEXT');
+        await db.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS id_selfie TEXT');
     } catch (e) {
         logger.error('Token migration failed:', e);
     }
