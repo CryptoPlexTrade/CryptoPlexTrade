@@ -14,7 +14,7 @@ router.use(authenticateAdminToken, adminOnly);
 // === ADMIN DASHBOARD STATS ===
 router.get('/stats', async (req, res) => {
     try {
-        const [[userCount]] = await db.query('SELECT COUNT(*) as count FROM users');
+        const [[userCount]] = await db.query("SELECT COUNT(*) as count FROM users WHERE is_verified = TRUE OR role = 'admin'");
         const [[orderCount]] = await db.query('SELECT COUNT(*) as count FROM orders');
         const [[ticketCount]] = await db.query("SELECT COUNT(*) as count FROM support_tickets WHERE status = 'open'");
 
@@ -177,7 +177,7 @@ router.put('/rates', async (req, res) => {
 router.get('/users', async (req, res) => {
     try {
         const [users] = await db.query(
-            'SELECT id, fullname, email, phone, role, created_at FROM users ORDER BY created_at DESC'
+            "SELECT id, fullname, email, phone, role, created_at FROM users WHERE is_verified = TRUE OR role = 'admin' ORDER BY created_at DESC"
         );
         res.status(200).json(users);
     } catch (error) {
@@ -199,7 +199,7 @@ router.get('/referrals', async (req, res) => {
                 (SELECT COUNT(*) FROM orders WHERE user_id = referred.id) > 0 AS has_transacted
             FROM users AS referred
             JOIN users AS referrer ON referred.referred_by_id = referrer.id
-            WHERE referred.referred_by_id IS NOT NULL
+            WHERE referred.referred_by_id IS NOT NULL AND referred.is_verified = TRUE
             ORDER BY referred.created_at DESC
         `);
         res.status(200).json(referrals);
