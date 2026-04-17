@@ -225,6 +225,41 @@
                 </div>
             </div>
 
+            <!-- ── Order at a Glance Banner ─────────────────────── -->
+            <div id="order-banner" style="
+                background:linear-gradient(135deg,#f0f7ff,#e8f4fe);
+                border:1px solid #c7dfff;
+                border-radius:14px;
+                padding:14px 20px;
+                margin-bottom:20px;
+                display:flex;
+                align-items:center;
+                justify-content:space-between;
+                flex-wrap:wrap;
+                gap:10px;
+                box-shadow:0 2px 10px rgba(0,91,170,0.07);
+            ">
+                <div style="display:flex;align-items:center;gap:10px;">
+                    <div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#005baa,#00a9e0);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" style="width:18px;height:18px;"><path d="M2.273 5.625A4.483 4.483 0 0 1 5.25 4.5h13.5c1.141 0 2.183.425 2.977 1.125A3 3 0 0 0 18.75 3H5.25a3 3 0 0 0-2.977 2.625ZM2.273 8.625A4.483 4.483 0 0 1 5.25 7.5h13.5c1.141 0 2.183.425 2.977 1.125A3 3 0 0 0 18.75 6H5.25a3 3 0 0 0-2.977 2.625ZM5.25 9a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h13.5a3 3 0 0 0 3-3v-6a3 3 0 0 0-3-3H5.25Z"/></svg>
+                    </div>
+                    <div>
+                        <div style="font-size:0.68rem;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:0.4px;">Your Order</div>
+                        <div style="font-size:0.9rem;font-weight:700;color:#005baa;" id="banner-product">—</div>
+                    </div>
+                </div>
+                <div style="display:flex;gap:20px;flex-wrap:wrap;">
+                    <div style="text-align:center;">
+                        <div style="font-size:0.65rem;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:0.4px;">Value</div>
+                        <div style="font-size:0.88rem;font-weight:700;color:#1e293b;" id="banner-usd">—</div>
+                    </div>
+                    <div style="text-align:center;">
+                        <div style="font-size:0.65rem;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:0.4px;">Total to Pay</div>
+                        <div style="font-size:1rem;font-weight:800;color:#005baa;" id="banner-total">—</div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Method picker -->
             <p class="section-label">Select a payment method</p>
             <div class="payment-options">
@@ -243,7 +278,7 @@
             </div>
 
             <!-- Mobile Money Details -->
-            <div id="momo-details" class="payment-details-panel">
+            <div id="momo-details" class="payment-details-panel" style="display:none;">
                 <div class="panel-header">
                     <div class="panel-header-text">
                         <h3>Mobile Money Instructions</h3>
@@ -265,7 +300,7 @@
             </div>
 
             <!-- Bank Transfer Details -->
-            <div id="bank-details" class="payment-details-panel">
+            <div id="bank-details" class="payment-details-panel" style="display:none;">
                 <div class="panel-header">
                     <div class="panel-header-text">
                         <h3>Bank Transfer Instructions</h3>
@@ -306,6 +341,26 @@ document.addEventListener('DOMContentLoaded', async function() {
         localStorage.removeItem('buyOrderDetails');
         window.location.href = 'login.html';
     });
+
+    // ── Populate order banner from localStorage ──
+    function populateOrderBanner() {
+        const d = JSON.parse(localStorage.getItem('buyOrderDetails') || 'null');
+        if (!d) return;
+        const ticker = (d.product || '').replace('_TRC20','').replace('_ERC20','');
+        const productLabel = d.product === 'USDT_TRC20' ? 'USDT (TRC-20)'
+                           : d.product === 'USDT_ERC20' ? 'USDT (ERC-20)'
+                           : d.product || '—';
+        // Crypto quantity
+        const livePrice = parseFloat(d.livePrice);
+        const usdAmt    = parseFloat(d.usdAmount);
+        const qtyStr = (livePrice && usdAmt)
+            ? (() => { const q = usdAmt / livePrice; return (q < 0.001 ? q.toFixed(8) : q < 1 ? q.toFixed(6) : q.toFixed(4)) + ' ' + ticker; })()
+            : productLabel;
+        document.getElementById('banner-product').textContent = qtyStr;
+        document.getElementById('banner-usd').textContent    = `$${usdAmt.toFixed(2)}`;
+        document.getElementById('banner-total').textContent  = `₵${parseFloat(d.totalPay || 0).toFixed(2)}`;
+    }
+    populateOrderBanner();
 
     // Generate Random Token
     function generateToken(length = 8) {
@@ -401,21 +456,23 @@ document.addEventListener('DOMContentLoaded', async function() {
         }).catch(err => console.error('Failed to copy:', err));
     });
 
-    // --- Ticker Tape ---
+    // --- Ticker Tape (Binance 24hr stats) ---
     const tickerTrack = document.querySelector('.ticker-tape__track');
-    const coinSymbols = ['BTC', 'ETH', 'SOL', 'BNB', 'XRP', 'LTC', 'ADA', 'DOGE'];
+    const tickerPairs = ['BTCUSDT','ETHUSDT','SOLUSDT','BNBUSDT','XRPUSDT','LTCUSDT','ADAUSDT','DOGEUSDT'];
 
     async function fetchLiveRates() {
         try {
-            const r = await fetch(`https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${coinSymbols.join(',')}&tsyms=USD`);
+            const r = await fetch(`https://api.binance.com/api/v3/ticker/24hr?symbols=${JSON.stringify(tickerPairs)}`);
             if (!r.ok) throw new Error();
             const data = await r.json();
             let html = '';
-            coinSymbols.forEach(s => {
-                const c = data.RAW[s]?.USD; if (!c) return;
-                const dir = c.CHANGEPCT24HOUR >= 0 ? 'up' : 'down';
+            data.forEach(item => {
+                const sym = item.symbol.replace('USDT', '');
+                const price = parseFloat(item.lastPrice);
+                const changePct = parseFloat(item.priceChangePercent);
+                const dir = changePct >= 0 ? 'up' : 'down';
                 const sign = dir === 'up' ? '+' : '';
-                html += `<div class="ticker-tape__item"><span class="pair">${s}/USD</span><span class="price">${c.PRICE.toLocaleString('en-US',{style:'currency',currency:'USD',minimumFractionDigits:2})}</span><span class="change ${dir}">${sign}${c.CHANGEPCT24HOUR.toFixed(2)}% ${dir==='up'?'▲':'▼'}</span></div>`;
+                html += `<div class="ticker-tape__item"><span class="pair">${sym}/USD</span><span class="price">${price.toLocaleString('en-US',{style:'currency',currency:'USD',minimumFractionDigits:2})}</span><span class="change ${dir}">${sign}${changePct.toFixed(2)}% ${dir==='up'?'▲':'▼'}</span></div>`;
             });
             tickerTrack.innerHTML = html + html;
         } catch(e) { console.error('Ticker error', e); }

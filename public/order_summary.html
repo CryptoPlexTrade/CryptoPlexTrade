@@ -339,18 +339,60 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             if (response.ok) {
                 const user = await response.json();
-                if (user.kyc_status !== 'approved') {
+                if (user.kyc_status === 'unverified') {
                     window.location.href = 'kyc.html';
+                    return;
+                } else if (user.kyc_status === 'pending') {
+                    showKycPendingOverlay();
                     return;
                 }
                 populateSummary(orderDetails);
             }
         }).catch(() => window.location.href = 'login.html');
 
+    function showKycPendingOverlay() {
+        const overlay = document.createElement('div');
+        overlay.style.cssText = `
+            position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;
+            background:rgba(15,23,42,0.75);backdrop-filter:blur(6px);padding:20px;
+        `;
+        overlay.innerHTML = `
+            <div style="background:#fff;border-radius:20px;padding:40px 36px;max-width:440px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,91,170,0.2);">
+                <div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#fbbf24,#f59e0b);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:2rem;">⏳</div>
+                <h2 style="font-size:1.4rem;font-weight:700;color:#0f172a;margin-bottom:10px;">Verification Under Review</h2>
+                <p style="color:#64748b;font-size:0.95rem;line-height:1.7;margin-bottom:28px;">
+                    Your KYC documents have been submitted and are currently being reviewed by our compliance team.<br><br>
+                    <strong style="color:#0f172a;">Trading will be unlocked once your account is approved.</strong><br>
+                    This usually takes <em>1–24 hours</em>.
+                </p>
+                <a href="dashboard.html" style="display:inline-block;padding:13px 32px;background:linear-gradient(90deg,#005baa,#00a9e0);color:#fff;border-radius:12px;font-weight:700;text-decoration:none;font-size:0.95rem;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+                    ← Back to Dashboard
+                </a>
+            </div>
+        `;
+        document.body.appendChild(overlay);
+    }
+
+
     function populateSummary(details) {
-        const productAmount = parseFloat(details.usdAmount) / parseFloat(details.rate);
-        document.getElementById('summary-product-amount').textContent = `${productAmount.toFixed(8)} ${details.product}`;
-        document.getElementById('summary-usd').textContent = `$${parseFloat(details.usdAmount).toFixed(2)}`;
+        // Calculate real crypto quantity using the live price at the time of order
+        const livePrice = parseFloat(details.livePrice);
+        const usdAmount = parseFloat(details.usdAmount);
+        const cryptoQty = (livePrice && usdAmount) ? (usdAmount / livePrice) : null;
+        
+        const ticker = details.product.replace('_TRC20', '').replace('_ERC20', '');
+        const productLabel = details.product === 'USDT_TRC20' ? 'USDT (TRC-20)'
+                           : details.product === 'USDT_ERC20' ? 'USDT (ERC-20)'
+                           : details.product;
+        
+        let qtyDisplay = '—';
+        if (cryptoQty !== null) {
+            const precision = (ticker === 'BTC' || ticker === 'ETH') ? 8 : 2;
+            qtyDisplay = `${cryptoQty.toFixed(precision)} ${ticker}`;
+        }
+
+        document.getElementById('summary-product-amount').textContent = qtyDisplay;
+        document.getElementById('summary-usd').textContent = `$${usdAmount.toFixed(2)}`;
         document.getElementById('summary-fee').textContent = `₵${parseFloat(details.feeGhs).toFixed(2)}`;
         document.getElementById('summary-total').textContent = `₵${parseFloat(details.totalPay).toFixed(2)}`;
         document.getElementById('summary-wallet').textContent = details.walletAddress;
@@ -368,21 +410,23 @@ document.addEventListener('DOMContentLoaded', function() {
         if (response.ok) window.location.href = 'login.html';
     });
 
-    // --- Ticker Tape ---
+    // --- Ticker Tape (Binance 24hr stats) ---
     const tickerTrack = document.querySelector('.ticker-tape__track');
-    const coinSymbols = ['BTC', 'ETH', 'SOL', 'BNB', 'XRP', 'LTC', 'ADA', 'DOGE'];
+    const tickerPairs = ['BTCUSDT','ETHUSDT','SOLUSDT','BNBUSDT','XRPUSDT','LTCUSDT','ADAUSDT','DOGEUSDT'];
 
     async function fetchLiveRates() {
         try {
-            const r = await fetch(`https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${coinSymbols.join(',')}&tsyms=USD`);
+            const r = await fetch(`https://api.binance.com/api/v3/ticker/24hr?symbols=${JSON.stringify(tickerPairs)}`);
             if (!r.ok) throw new Error();
             const data = await r.json();
             let html = '';
-            coinSymbols.forEach(s => {
-                const c = data.RAW[s]?.USD; if (!c) return;
-                const dir = c.CHANGEPCT24HOUR >= 0 ? 'up' : 'down';
+            data.forEach(item => {
+                const sym = item.symbol.replace('USDT', '');
+                const price = parseFloat(item.lastPrice);
+                const changePct = parseFloat(item.priceChangePercent);
+                const dir = changePct >= 0 ? 'up' : 'down';
                 const sign = dir === 'up' ? '+' : '';
-                html += `<div class="ticker-tape__item"><span class="pair">${s}/USD</span><span class="price">${c.PRICE.toLocaleString('en-US',{style:'currency',currency:'USD',minimumFractionDigits:2})}</span><span class="change ${dir}">${sign}${c.CHANGEPCT24HOUR.toFixed(2)}% ${dir==='up'?'▲':'▼'}</span></div>`;
+                html += `<div class="ticker-tape__item"><span class="pair">${sym}/USD</span><span class="price">${price.toLocaleString('en-US',{style:'currency',currency:'USD',minimumFractionDigits:2})}</span><span class="change ${dir}">${sign}${changePct.toFixed(2)}% ${dir==='up'?'▲':'▼'}</span></div>`;
             });
             tickerTrack.innerHTML = html + html;
         } catch(e) { console.error('Ticker error', e); }

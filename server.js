@@ -125,7 +125,7 @@ app.get('/', (req, res) => {
 const { authenticateToken } = require('./authMiddleware');
 app.get('/api/user/me', authenticateToken, async (req, res) => {
     try {
-        const [users] = await db.query('SELECT id, fullname, referral_code FROM users WHERE id = ?', [req.user.userId]);
+        const [users] = await db.query('SELECT id, fullname, referral_code, kyc_status FROM users WHERE id = ?', [req.user.userId]);
         if (users.length === 0) {
             return res.status(404).json({ message: 'User not found.' });
         }
@@ -139,7 +139,7 @@ app.get('/api/user/me', authenticateToken, async (req, res) => {
             await db.query('UPDATE users SET referral_code = ? WHERE id = ?', [user.referral_code, user.id]);
         }
 
-        res.json({ name: user.fullname, userId: user.id, referral_code: user.referral_code, appUrl: process.env.APP_URL || `http://localhost:${PORT}` });
+        res.json({ name: user.fullname, userId: user.id, referral_code: user.referral_code, kyc_status: user.kyc_status || 'unverified', appUrl: process.env.APP_URL || `http://localhost:${PORT}` });
     } catch (error) {
         logger.error('Error fetching user /me data:', error);
         res.status(500).json({ message: 'Server error.' });
