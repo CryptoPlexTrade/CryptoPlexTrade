@@ -416,7 +416,7 @@ router.post('/kyc-submit', authenticateToken, async (req, res) => {
 
         // Fire admin email alert — non-blocking so it never delays the response
         db.query('SELECT fullname, email FROM users WHERE id = ?', [req.user.userId])
-            .then(rows => {
+            .then(([rows]) => {
                 const user = rows[0];
                 if (user) {
                     sendKycSubmissionAlert(user, id_type).catch(err =>

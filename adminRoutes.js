@@ -210,7 +210,7 @@ router.put('/kyc/:id/status', async (req, res) => {
 
         // Fire user notification email — non-blocking
         db.query('SELECT fullname, email FROM users WHERE id = ?', [req.params.id])
-            .then(rows => {
+            .then(([rows]) => {
                 const user = rows[0];
                 if (!user) return;
                 const fn = status === 'approved' ? sendKycApprovedEmail : sendKycRejectedEmail;
