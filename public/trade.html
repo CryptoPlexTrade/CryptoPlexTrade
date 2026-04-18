@@ -374,7 +374,10 @@
         if (!dropdownList) return;
         dropdownList.innerHTML = '';
 
-        rates[p].minerFees.forEach((fee, idx) => {
+        // Sort fees cheapest-first so Economy is always the default
+        const sortedFees = [...rates[p].minerFees].sort((a, b) => a.value - b.value);
+
+        sortedFees.forEach((fee, idx) => {
             // Hidden native option
             const opt = document.createElement('option');
             opt.value = fee.value;
@@ -401,8 +404,8 @@
             dropdownList.appendChild(li);
         });
 
-        // Set initial trigger display to first fee
-        const first = rates[p].minerFees[0];
+        // Set initial trigger display to the cheapest fee (first after sort)
+        const first = sortedFees[0];
         if (first) {
             const meta = FEE_META[first.name] || FEE_META['Standard'];
             document.getElementById('miner-badge').style.background = meta.bg;
@@ -689,6 +692,14 @@
             if (!minerWrap.contains(e.target)) { minerWrap.classList.remove('open'); minerTrigger.setAttribute('aria-expanded', 'false'); }
         });
     })();
+    // --- Auto-select asset from URL param (?product=ETH etc.) ---
+    (function () {
+        const param = new URLSearchParams(window.location.search).get('product');
+        if (!param) return;
+        const targetOpt = document.querySelector(`#asset-select-dropdown .asset-option[data-value="${param}"]`);
+        if (targetOpt) targetOpt.click(); // triggers the existing click handler — updates badge, name, miner fees & live price
+    })();
+
 })();
 </script>
 </body>

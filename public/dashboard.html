@@ -11,7 +11,94 @@
     <link rel="stylesheet" href="css/app.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* Dashboard-specific extras */
+        /* Live Rates Cards */
+        .rate-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .rate-card {
+            background: var(--bg-white);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px 18px 16px;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            transition: box-shadow 0.2s, transform 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+        .rate-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: var(--rc-color, linear-gradient(90deg,#f7931a,#fbbf24));
+        }
+        .rate-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+        .rate-card__header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .rate-card__logo {
+            width: 36px; height: 36px; border-radius: 50%;
+            object-fit: contain;
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            padding: 2px;
+            flex-shrink: 0;
+        }
+        .rate-card__name { font-size: 0.88rem; font-weight: 700; color: var(--text-1); }
+        .rate-card__ticker { font-size: 0.72rem; color: var(--text-3); font-weight: 500; }
+        .rate-card__price {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: var(--text-1);
+        }
+        .rate-card__price span { font-size: 0.7rem; color: var(--text-3); font-weight: 500; margin-left: 2px; }
+        .rate-card__rates {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+        .rate-card__rate {
+            background: var(--bg);
+            border-radius: 8px;
+            padding: 8px 10px;
+        }
+        .rate-card__rate-label {
+            font-size: 0.62rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            margin-bottom: 2px;
+        }
+        .rate-card__rate-label.buy { color: #16a34a; }
+        .rate-card__rate-label.sell { color: #dc3545; }
+        .rate-card__rate-value {
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: var(--text-1);
+        }
+        .rate-card__cta {
+            display: block;
+            text-align: center;
+            padding: 9px;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            color: white;
+            border-radius: 9px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-decoration: none;
+            margin-top: 2px;
+            transition: opacity 0.2s;
+        }
+        .rate-card__cta:hover { opacity: 0.88; }
+        /* Chart + Dashboard extras */
         .chart-container { position: relative; height: 220px; }
 
         /* Announcement Popup */
@@ -169,6 +256,18 @@
                         </div>
                     </div>
                     <div class="kpi-card__value" id="pending-orders-value">—</div>
+                </div>
+            </div>
+
+            <!-- Live Rates Section -->
+            <div style="margin-bottom:10px;">
+                <h2 style="font-size:0.8rem;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:14px;">📊 Live Rates &amp; Our Prices</h2>
+                <div class="rate-cards-grid" id="rate-cards-grid">
+                    <!-- Skeleton loaders -->
+                    <div class="rate-card" style="--rc-color:linear-gradient(90deg,#f7931a,#fbbf24);"><div class="rate-card__header"><div class="skeleton skeleton-avatar"></div><div><div class="skeleton skeleton-line" style="width:60px;margin-bottom:4px;"></div><div class="skeleton skeleton-line" style="width:30px;"></div></div></div><div class="skeleton skeleton-line" style="width:80px;"></div><div class="rate-card__rates"><div class="skeleton skeleton-line"></div><div class="skeleton skeleton-line"></div></div></div>
+                    <div class="rate-card" style="--rc-color:linear-gradient(90deg,#627eea,#a78bfa);"><div class="rate-card__header"><div class="skeleton skeleton-avatar"></div><div><div class="skeleton skeleton-line" style="width:60px;margin-bottom:4px;"></div><div class="skeleton skeleton-line" style="width:30px;"></div></div></div><div class="skeleton skeleton-line" style="width:80px;"></div><div class="rate-card__rates"><div class="skeleton skeleton-line"></div><div class="skeleton skeleton-line"></div></div></div>
+                    <div class="rate-card" style="--rc-color:linear-gradient(90deg,#26a17b,#22c55e);"><div class="rate-card__header"><div class="skeleton skeleton-avatar"></div><div><div class="skeleton skeleton-line" style="width:60px;margin-bottom:4px;"></div><div class="skeleton skeleton-line" style="width:30px;"></div></div></div><div class="skeleton skeleton-line" style="width:80px;"></div><div class="rate-card__rates"><div class="skeleton skeleton-line"></div><div class="skeleton skeleton-line"></div></div></div>
+                    <div class="rate-card" style="--rc-color:linear-gradient(90deg,#1ca0c3,#3b82f6);"><div class="rate-card__header"><div class="skeleton skeleton-avatar"></div><div><div class="skeleton skeleton-line" style="width:60px;margin-bottom:4px;"></div><div class="skeleton skeleton-line" style="width:30px;"></div></div></div><div class="skeleton skeleton-line" style="width:80px;"></div><div class="rate-card__rates"><div class="skeleton skeleton-line"></div><div class="skeleton skeleton-line"></div></div></div>
                 </div>
             </div>
 
@@ -375,27 +474,30 @@
         }
     }
 
-    // --- Market Watch ---
+    // --- Market Watch (Binance) ---
     async function fetchMarketWatch() {
         const list = document.getElementById('market-watch-list');
         if (!list) return;
-        const symbols = ['BTC', 'ETH', 'SOL', 'BNB'];
         try {
-            const r = await fetch(`https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${symbols.join(',')}&tsyms=USD`);
+            const pairs = ['BTCUSDT','ETHUSDT','SOLUSDT','BNBUSDT'];
+            const r = await fetch(`https://api.binance.com/api/v3/ticker/24hr?symbols=${JSON.stringify(pairs)}`);
             if (!r.ok) throw new Error();
             const data = await r.json();
             list.innerHTML = '';
-            symbols.forEach(s => {
-                const c = data.RAW[s]?.USD;
-                if (!c) return;
-                const dir = c.CHANGEPCT24HOUR >= 0 ? 'up' : 'down';
+            const logos = { BTC:'btc', ETH:'eth', SOL:'sol', BNB:'bnb' };
+            data.forEach(item => {
+                const sym = item.symbol.replace('USDT','');
+                const price = parseFloat(item.lastPrice);
+                const changePct = parseFloat(item.priceChangePercent);
+                const dir = changePct >= 0 ? 'up' : 'down';
+                const logo = logos[sym] || sym.toLowerCase();
                 list.innerHTML += `<li class="market-item">
                     <div class="market-item__asset">
-                        <img src="https://www.cryptocompare.com${c.IMAGEURL}" alt="${s}">
-                        <span>${s}</span>
+                        <img src="https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@master/svg/color/${logo}.svg" alt="${sym}" style="width:24px;height:24px;border-radius:50%;" onerror="this.style.display='none'">
+                        <span>${sym}</span>
                     </div>
-                    <span class="market-item__price">${c.PRICE.toLocaleString('en-US',{style:'currency',currency:'USD'})}</span>
-                    <span class="market-item__change ${dir}">${c.CHANGEPCT24HOUR.toFixed(2)}%</span>
+                    <span class="market-item__price">${price.toLocaleString('en-US',{style:'currency',currency:'USD'})}</span>
+                    <span class="market-item__change ${dir}">${changePct >= 0 ? '+' : ''}${changePct.toFixed(2)}%</span>
                 </li>`;
             });
         } catch (e) {
@@ -425,32 +527,79 @@
         }
     }
 
-    // --- Ticker Tape ---
+    // --- Live Rate Cards ---
+    const PRODUCT_META = {
+        BTC:        { name: 'Bitcoin',       ticker: 'BTC',  logo: 'https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@master/svg/color/btc.svg',  gradient: 'linear-gradient(90deg,#f7931a,#fbbf24)', binance: 'BTCUSDT' },
+        ETH:        { name: 'Ethereum',      ticker: 'ETH',  logo: 'https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@master/svg/color/eth.svg',  gradient: 'linear-gradient(90deg,#627eea,#a78bfa)', binance: 'ETHUSDT' },
+        USDT_TRC20: { name: 'USDT (TRC-20)', ticker: 'USDT', logo: 'https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@master/svg/color/usdt.svg', gradient: 'linear-gradient(90deg,#26a17b,#22c55e)', binance: 'USDTUSDT' },
+        USDT_ERC20: { name: 'USDT (ERC-20)', ticker: 'USDT', logo: 'https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@master/svg/color/usdt.svg', gradient: 'linear-gradient(90deg,#1ca0c3,#3b82f6)', binance: 'USDTUSDT' },
+    };
+
+    async function fetchRateCards() {
+        const grid = document.getElementById('rate-cards-grid');
+        if (!grid) return;
+        try {
+            const ratesRes  = await fetch('/api/rates', { credentials: 'include' });
+            const adminRates = ratesRes.ok ? await ratesRes.json() : {};
+
+            grid.innerHTML = '';
+            Object.entries(PRODUCT_META).forEach(([productId, meta]) => {
+                const rates    = adminRates[productId] || {};
+                const buyRate  = rates.buy  ? `₵${parseFloat(rates.buy).toFixed(2)}/$`  : '—';
+                const sellRate = rates.sell ? `₵${parseFloat(rates.sell).toFixed(2)}/$` : '—';
+                grid.innerHTML += `
+                <div class="rate-card" style="--rc-color:${meta.gradient};">
+                    <div class="rate-card__header">
+                        <img class="rate-card__logo" src="${meta.logo}" alt="${meta.ticker}" onerror="this.style.display='none'">
+                        <div>
+                            <div class="rate-card__name">${meta.name}</div>
+                            <div class="rate-card__ticker">${meta.ticker}</div>
+                        </div>
+                    </div>
+                    <div class="rate-card__rates">
+                        <div class="rate-card__rate">
+                            <div class="rate-card__rate-label buy">We Buy At</div>
+                            <div class="rate-card__rate-value">${sellRate}</div>
+                        </div>
+                        <div class="rate-card__rate">
+                            <div class="rate-card__rate-label sell">We Sell At</div>
+                            <div class="rate-card__rate-value">${buyRate}</div>
+                        </div>
+                    </div>
+                    <a href="trade.html?product=${productId}" class="rate-card__cta">Trade Now →</a>
+                </div>`;
+            });
+        } catch (e) {
+            const g = document.getElementById('rate-cards-grid');
+            if (g) g.innerHTML = '<p style="color:var(--text-3);font-size:0.85rem;">Could not load rates.</p>';
+        }
+    }
+
+    // --- Ticker Tape (Binance 24hr) ---
     const tickerTrack = document.querySelector('.ticker-tape__track');
-    const coinSymbols = ['BTC','ETH','SOL','BNB','XRP','LTC','ADA','DOGE'];
-    let lastPrices = {};
+    const tickerPairs = ['BTCUSDT','ETHUSDT','SOLUSDT','BNBUSDT','XRPUSDT','LTCUSDT','ADAUSDT','DOGEUSDT'];
 
     function updateTicker(data) {
         if (!tickerTrack) return;
         let html = '';
-        coinSymbols.forEach(s => {
-            const c = data.RAW[s]?.USD;
-            if (!c) return;
-            const dir = c.CHANGEPCT24HOUR >= 0 ? 'up' : 'down';
+        data.forEach(item => {
+            const sym = item.symbol.replace('USDT', '');
+            const price = parseFloat(item.lastPrice);
+            const changePct = parseFloat(item.priceChangePercent);
+            const dir = changePct >= 0 ? 'up' : 'down';
             const sign = dir === 'up' ? '+' : '';
-            html += `<div class="ticker-tape__item" data-pair="${s}">
-                <span class="pair">${s}/USD</span>
-                <span class="price">${c.PRICE.toLocaleString('en-US',{style:'currency',currency:'USD',minimumFractionDigits:2})}</span>
-                <span class="change ${dir}">${sign}${c.CHANGEPCT24HOUR.toFixed(2)}% ${dir==='up'?'▲':'▼'}</span>
+            html += `<div class="ticker-tape__item">
+                <span class="pair">${sym}/USD</span>
+                <span class="price">${price.toLocaleString('en-US',{style:'currency',currency:'USD',minimumFractionDigits:2})}</span>
+                <span class="change ${dir}">${sign}${changePct.toFixed(2)}% ${dir==='up'?'▲':'▼'}</span>
             </div>`;
-            lastPrices[s] = c.PRICE;
         });
         tickerTrack.innerHTML = html + html;
     }
 
     async function fetchLiveRates() {
         try {
-            const r = await fetch(`https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${coinSymbols.join(',')}&tsyms=USD`);
+            const r = await fetch(`https://api.binance.com/api/v3/ticker/24hr?symbols=${JSON.stringify(tickerPairs)}`);
             if (!r.ok) throw new Error();
             updateTicker(await r.json());
         } catch (e) { console.error('Ticker error', e); }
@@ -515,11 +664,12 @@
     });
 
     // --- Init ---
-    Promise.all([fetchWelcomeMessage(), fetchTransactions(), fetchMarketWatch(), fetchNews(), fetchLiveRates()])
+    Promise.all([fetchWelcomeMessage(), fetchTransactions(), fetchMarketWatch(), fetchNews(), fetchLiveRates(), fetchRateCards()])
         .catch(e => console.error(e));
     fetchNotifications();
     setInterval(fetchLiveRates, 60000);
     setInterval(fetchMarketWatch, 60000);
+    setInterval(fetchRateCards, 60000);
 
     // --- Announcement Popup ---
     async function checkAnnouncement() {
@@ -555,6 +705,14 @@
         }
     }
     checkAnnouncement();
+
+    // --- Auto-select asset from URL param (?product=ETH etc.) ---
+    (function () {
+        const param = new URLSearchParams(window.location.search).get('product');
+        if (!param) return;
+        const targetOpt = document.querySelector(`#asset-select-dropdown .asset-option[data-value="${param}"]`);
+        if (targetOpt) targetOpt.click(); // triggers the existing click handler — updates badge, name, miner fees, live price
+    })();
 
 })();
 </script>

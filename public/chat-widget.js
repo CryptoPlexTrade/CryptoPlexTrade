@@ -560,11 +560,20 @@
     // Resume if session already exists
     if (sessionId) {
         namePrompt.style.display = 'none';
-        isFetching = true; // Use the same lock
+        isFetching = true;
         // Load history on first open
         fetch(`/api/chat/${sessionId}`)
-            .then(r => r.json())
+            .then(r => {
+                // Session no longer exists in DB — clear stale state
+                if (r.status === 404 || !r.ok) {
+                    isFetching = false;
+                    resetChat();
+                    return null;
+                }
+                return r.json();
+            })
             .then(data => {
+                if (!data) return; // was reset above
                 if (data.status === 'closed') {
                     resetChat();
                     return;
@@ -579,6 +588,7 @@
                 startPolling();
             }).catch(() => {
                 isFetching = false;
+                resetChat(); // Network error — also clear stale session
             });
     }
 
