@@ -214,9 +214,34 @@
 
                         <form id="kyc-form">
                             <!-- ID Type -->
-                            <div class="form-group">
+                            <div class="form-group" style="position:relative; z-index: 10;">
                                 <label class="form-label">Document Type</label>
-                                <select id="id_type" class="form-control" required>
+                                <div class="asset-select-wrap" id="id-select-wrap" style="margin-bottom:0;">
+                                    <div class="asset-select-trigger" id="id-select-trigger" role="button" tabindex="0" aria-haspopup="listbox" aria-expanded="false">
+                                        <div class="asset-select-current" style="width:100%; border:none; padding:0;">
+                                            <span class="asset-select-name" id="id-select-name" style="color:var(--text-3);font-weight:400;width:100%;">Select an ID Type</span>
+                                        </div>
+                                        <svg class="dropdown-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" style="width:20px; color:#94a3b8;"><path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>
+                                    </div>
+                                    <ul class="asset-select-dropdown" id="id-select-dropdown" role="listbox" style="top:100%;">
+                                        <li class="asset-option" data-value="Ghana Card" data-label="Ghana Card" role="option">
+                                            <div class="asset-option__info">
+                                                <span class="asset-option__name">Ghana Card</span>
+                                            </div>
+                                        </li>
+                                        <li class="asset-option" data-value="Passport" data-label="Passport" role="option">
+                                            <div class="asset-option__info">
+                                                <span class="asset-option__name">Passport</span>
+                                            </div>
+                                        </li>
+                                        <li class="asset-option" data-value="Driver License" data-label="Driver License" role="option">
+                                            <div class="asset-option__info">
+                                                <span class="asset-option__name">Driver License</span>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <select id="id_type" name="id_type" style="display:none;">
                                     <option value="" disabled selected>Select an ID Type</option>
                                     <option value="Ghana Card">Ghana Card</option>
                                     <option value="Passport">Passport</option>
@@ -372,6 +397,14 @@
                 showContent(); return;
             }
 
+            // ── REJECTED ───────────────────────────────────────────────
+            if (user.kyc_status === 'rejected') {
+                const alertBox = document.getElementById('alert-msg');
+                alertBox.style.display = 'block';
+                alertBox.innerHTML = '<strong>⚠️ KYC Verification Unsuccessful:</strong> Your previous documents were rejected. Please carefully re-submit clear and legible documents.';
+                showContent(); return;
+            }
+
             // ── UNVERIFIED → show the form normally ──────────────────
             showContent();
 
@@ -433,6 +466,39 @@
     setupUploadHandler('file_back',   'zone_back',   'preview_back',   'title_back',   'back');
     setupUploadHandler('file_selfie', 'zone_selfie', 'preview_selfie', 'title_selfie', 'selfie');
 
+    // ── Custom ID Type Dropdown ─────────────────────────────────────
+    (function initIdDropdown() {
+        const wrap = document.getElementById('id-select-wrap');
+        if (!wrap) return;
+        const trigger = document.getElementById('id-select-trigger');
+        const options = wrap.querySelectorAll('.asset-option');
+        const nameEl  = document.getElementById('id-select-name');
+        const idSelect = document.getElementById('id_type');
+
+        function openDropdown() { wrap.classList.add('open'); trigger.setAttribute('aria-expanded', 'true'); }
+        function closeDropdown() { wrap.classList.remove('open'); trigger.setAttribute('aria-expanded', 'false'); }
+
+        trigger.addEventListener('click', () => { wrap.classList.contains('open') ? closeDropdown() : openDropdown(); });
+
+        options.forEach(opt => {
+            opt.addEventListener('click', () => {
+                const val = opt.dataset.value;
+                const label = opt.dataset.label;
+                nameEl.textContent = label;
+                nameEl.style.color = "var(--text-1)";
+                nameEl.style.fontWeight = "600";
+                
+                options.forEach(o => o.classList.remove('selected'));
+                opt.classList.add('selected');
+                
+                idSelect.value = val;
+                closeDropdown();
+            });
+        });
+
+        document.addEventListener('click', (e) => { if (!wrap.contains(e.target)) closeDropdown(); });
+    })();
+
     // ── Form Submission ─────────────────────────────────────────────
     document.getElementById('kyc-form').addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -440,6 +506,12 @@
         const alertMsg = document.getElementById('alert-msg');
         const idType   = document.getElementById('id_type').value;
         alertMsg.style.display = 'none';
+
+        if (!idType) {
+            alertMsg.style.display = 'block';
+            alertMsg.textContent = 'Please select a Document Type.';
+            return;
+        }
 
         if (!fileData.front || !fileData.back || !fileData.selfie) {
             alertMsg.style.display = 'block';

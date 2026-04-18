@@ -189,10 +189,10 @@ router.get('/users', async (req, res) => {
 // === KYC MANAGEMENT ===
 router.get('/kyc', async (req, res) => {
     try {
-        const [users] = await db.query(
-            "SELECT id, fullname, email, kyc_status, id_type, id_front, id_back, id_selfie, created_at FROM users WHERE kyc_status != 'unverified' ORDER BY CASE WHEN kyc_status = 'pending' THEN 1 ELSE 2 END, created_at DESC"
+        const [kyc] = await db.query(
+            "SELECT id, fullname, email, kyc_status, id_type, id_front, id_back, id_selfie, updated_at as created_at FROM users WHERE kyc_status != 'unverified' ORDER BY CASE WHEN kyc_status = 'pending' THEN 1 ELSE 2 END, updated_at DESC"
         );
-        res.status(200).json(users);
+        res.status(200).json(kyc);
     } catch (error) {
         logger.error('Error fetching KYC documents:', error);
         res.status(500).json({ message: 'Server error while fetching KYC documents.' });
