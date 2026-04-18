@@ -227,7 +227,7 @@
             if (res.status === 401 || res.status === 403) { window.location.href = 'login.html'; return; }
             if (res.ok) {
                 const user = await res.json();
-                if (user.kyc_status === 'unverified') {
+                if (user.kyc_status === 'unverified' || user.kyc_status === 'rejected') {
                     window.location.href = 'kyc.html';
                 } else if (user.kyc_status === 'pending') {
                     showKycPendingOverlay();

@@ -194,7 +194,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             if (response.ok) {
                 const user = await response.json();
-                if (user.kyc_status === 'unverified') {
+                if (user.kyc_status === 'unverified' || user.kyc_status === 'rejected') {
                     window.location.href = 'kyc.html';
                     return;
                 } else if (user.kyc_status === 'pending') {
