@@ -68,7 +68,7 @@ async function sendNewOrderNotification(orderDetails, orderId) {
         <tr>
           <td style="padding:32px;">
             <p style="margin:0 0 16px;font-size:15px;color:#1e293b;">A new <strong>${order_type.toUpperCase()}</strong> order has been placed by <strong>${user_email}</strong>.</p>
-            <h2 style="margin:0 0 16px;font-size:17px;color:#1e293b;">Order Summary (ID: #${orderId})</h2>`;
+            <h2 style="margin:0 0 16px;font-size:17px;color:#1e293b;">Order Summary (ID: ${formattedId})</h2>`;
 
     if (order_type === 'buy') {
         htmlBody += `
@@ -79,7 +79,7 @@ async function sendNewOrderNotification(orderDetails, orderId) {
                 <li><strong>User's Receiving Wallet:</strong> ${orderDetails.wallet_address}</li>
                 <li><strong>User's Payment TXID:</strong> ${orderDetails.user_transaction_id}</li>
             </ul>`;
-        textBody += `Order ID: #${orderId}\r\nType: BUY\r\nProduct: ${orderDetails.product}\r\nAmount User Buys: ${orderDetails.usd_amount} ${orderDetails.product}\r\nTotal Paid (GHS): ${orderDetails.total_paid_ghs.toFixed(2)}\r\nUser's Receiving Wallet: ${orderDetails.wallet_address}\r\nUser's Payment TXID: ${orderDetails.user_transaction_id}`;
+        textBody += `Order ID: ${formattedId}\r\nType: BUY\r\nProduct: ${orderDetails.product}\r\nAmount User Buys: ${orderDetails.usd_amount} ${orderDetails.product}\r\nTotal Paid (GHS): ${orderDetails.total_paid_ghs.toFixed(2)}\r\nUser's Receiving Wallet: ${orderDetails.wallet_address}\r\nUser's Payment TXID: ${orderDetails.user_transaction_id}`;
     } else { // Sell Order
         htmlBody += `
             <ul style="padding-left:20px;color:#475569;font-size:14px;line-height:1.8;">
@@ -362,7 +362,7 @@ async function sendOrderCompletedEmail(order, userEmail) {
         <tr>
           <td style="padding:36px 32px;">
             <p style="margin:0 0 14px;font-size:15px;color:#1e293b;">Dear Valued Customer,</p>
-            <p style="margin:0 0 24px;font-size:14px;color:#475569;line-height:1.7;">Great news! Your <strong>${orderType.toLowerCase()}</strong> order has been <strong style="color:#28a745;">successfully completed</strong>.</p>
+            <p style="margin:0 0 24px;font-size:14px;color:#475569;line-height:1.7;">Great news! Your <strong>${orderType.toLowerCase()} order ${orderId}</strong> has been <strong style="color:#28a745;">successfully completed</strong>.</p>
 
             <!-- Success Badge -->
             <table width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 28px;">
@@ -383,7 +383,7 @@ async function sendOrderCompletedEmail(order, userEmail) {
               </tr>
               <tr style="background:#f8fafc;">
                 <td style="padding:14px 16px;font-size:13px;color:#64748b;font-weight:600;border-bottom:1px solid #e2e8f0;">Order ID</td>
-                <td style="padding:14px 16px;font-size:14px;color:#1e293b;font-weight:700;border-bottom:1px solid #e2e8f0;text-align:right;">#${orderId}</td>
+                <td style="padding:14px 16px;font-size:14px;color:#1e293b;font-weight:700;border-bottom:1px solid #e2e8f0;text-align:right;">${orderId}</td>
               </tr>
               <tr>
                 <td style="padding:14px 16px;font-size:13px;color:#64748b;font-weight:600;border-bottom:1px solid #e2e8f0;">Type</td>

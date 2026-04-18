@@ -281,7 +281,7 @@
                 const tr = document.createElement('tr');
                 let badgeClass = user.kyc_status === 'approved' ? 'status-completed' : (user.kyc_status === 'rejected' ? 'status-cancelled' : 'status-pending');
                 tr.innerHTML = `
-                    <td data-label="User ID">${user.id}</td>
+                    <td data-label="User ID">USR-${String(user.id).padStart(4, '0')}</td>
                     <td data-label="Full Name">${user.fullname}</td>
                     <td data-label="Email">${user.email}</td>
                     <td data-label="ID Type">${user.id_type || 'N/A'}</td>

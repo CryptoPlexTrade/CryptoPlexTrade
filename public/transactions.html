@@ -277,7 +277,7 @@
             d.innerHTML = `<span class="label">${label}</span><span class="value ${cls}">${value}</span>`;
             return d;
         };
-        body.appendChild(row('Order ID', '#' + tx.id));
+        body.appendChild(row('Order ID', 'ORD-' + String(tx.id).padStart(4, '0')));
         body.appendChild(row('Date', new Date(tx.created_at).toLocaleString()));
         body.appendChild(row('Type', tx.order_type.charAt(0).toUpperCase() + tx.order_type.slice(1)));
         body.appendChild(row('Product', tx.product));

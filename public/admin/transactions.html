@@ -191,7 +191,7 @@
                 orders.forEach(order => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                        <td data-label="Order ID">${order.id}</td>
+                        <td data-label="Order ID">ORD-${String(order.id).padStart(4, '0')}</td>
                         <td data-label="User Email">${order.email}</td>
                         <td data-label="Type">${order.order_type}</td>
                         <td data-label="Product">${order.product}</td>

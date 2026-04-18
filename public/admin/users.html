@@ -142,7 +142,7 @@
                 users.forEach(user => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                        <td data-label="User ID">${user.id}</td>
+                        <td data-label="User ID">USR-${String(user.id).padStart(4, '0')}</td>
                         <td data-label="Full Name">${user.fullname}</td>
                         <td data-label="Email">${user.email}</td>
                         <td data-label="Phone">${user.phone || 'N/A'}</td>
