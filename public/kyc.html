@@ -453,6 +453,7 @@
         try {
             const response = await fetch('/api/kyc-submit', {
                 method: 'POST',
+                credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ id_type: idType, id_front: fileData.front, id_back: fileData.back, id_selfie: fileData.selfie })
             });
