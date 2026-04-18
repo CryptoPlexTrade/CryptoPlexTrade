@@ -256,6 +256,9 @@
                 font-size: 1.5rem;
             }
         }
+        /* Loading state — hide all content until KYC status is known */
+        #kyc-loading { text-align:center; padding: 40px 0; }
+        #kyc-content { display: none; }
     </style>
 </head>
 
@@ -269,6 +272,15 @@
     </a>
 
     <div class="kyc-card">
+        <!-- Loading spinner shown while we check KYC status -->
+        <div id="kyc-loading">
+            <div style="width:56px;height:56px;border:4px solid #e2e8f0;border-top-color:#005baa;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 18px;"></div>
+            <p style="color:#64748b;font-size:0.9rem;">Checking verification status...</p>
+        </div>
+        <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+
+        <!-- Actual content — hidden until check is done -->
+        <div id="kyc-content">
         <h1 class="page-title">Identity Verification</h1>
         <p class="page-sub">To comply with financial regulations and ensure the safety of your funds, please verify your
             identity.</p>
@@ -337,28 +349,37 @@
         </form>
 
         <a href="dashboard.html" class="skip-link">Skip for now, I'll do this later <br><span style="font-size:0.75rem; color: #dc2626;">(Meaning: You won't be able to perform any trades until verified)</span></a>
+        </div><!-- /#kyc-content -->
     </div>
 
     <script>
         // === KYC STATUS GUARD ===
         // Shows the correct screen based on the user's current KYC status.
         (async function checkKycStatus() {
+            const loading   = document.getElementById('kyc-loading');
+            const content   = document.getElementById('kyc-content');
+
+            function showContent() {
+                loading.style.display = 'none';
+                content.style.display = 'block';
+            }
+
             try {
                 const res = await fetch('/api/user/me', { credentials: 'include' });
                 if (res.status === 401 || res.status === 403) {
                     window.location.href = 'login.html';
                     return;
                 }
-                if (!res.ok) return; // Let page load normally on unexpected errors
+                if (!res.ok) { showContent(); return; }
 
                 const user = await res.json();
 
                 // ── APPROVED ─────────────────────────────────────────────
                 if (user.kyc_status === 'approved') {
-                    document.getElementById('kyc-form').style.display = 'none';
-                    document.querySelector('.skip-link').style.display = 'none';
                     document.querySelector('.page-title').textContent = 'Identity Verified';
                     document.querySelector('.page-sub').textContent = '';
+                    document.getElementById('kyc-form').style.display = 'none';
+                    document.querySelector('.skip-link').style.display = 'none';
 
                     const banner = document.createElement('div');
                     banner.innerHTML = `
@@ -371,21 +392,22 @@
                             <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:14px 18px;margin:20px 0 28px;font-size:0.82rem;color:#166534;font-weight:500;">
                                 🛡️ Your account is KYC-compliant and fully activated.
                             </div>
-                            <a href="dashboard.html" style="display:inline-block;width:100%;padding:15px;background:linear-gradient(90deg,#16a34a,#22c55e);color:#fff;border-radius:12px;font-weight:700;text-decoration:none;font-size:1rem;box-shadow:0 6px 20px rgba(22,163,74,.25);transition:opacity 0.2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+                            <a href="dashboard.html" style="display:inline-block;width:100%;padding:15px;background:linear-gradient(90deg,#16a34a,#22c55e);color:#fff;border-radius:12px;font-weight:700;text-decoration:none;font-size:1rem;box-shadow:0 6px 20px rgba(22,163,74,.25);" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
                                 Go to Dashboard →
                             </a>
                         </div>
                     `;
                     document.getElementById('alert-msg').insertAdjacentElement('afterend', banner);
+                    showContent();
                     return;
                 }
 
                 // ── PENDING ───────────────────────────────────────────────
                 if (user.kyc_status === 'pending') {
-                    document.getElementById('kyc-form').style.display = 'none';
-                    document.querySelector('.skip-link').style.display = 'none';
                     document.querySelector('.page-title').textContent = 'Verification Under Review';
                     document.querySelector('.page-sub').textContent = '';
+                    document.getElementById('kyc-form').style.display = 'none';
+                    document.querySelector('.skip-link').style.display = 'none';
 
                     const banner = document.createElement('div');
                     banner.innerHTML = `
@@ -402,19 +424,22 @@
                             <div style="background:#fef9c3;border:1px solid #fde68a;border-radius:12px;padding:14px 18px;margin-bottom:28px;font-size:0.82rem;color:#92400e;font-weight:500;">
                                 📧 You'll receive an email notification when your verification is complete.
                             </div>
-                            <a href="dashboard.html" style="display:inline-block;width:100%;padding:15px;background:linear-gradient(90deg,#005baa,#00a9e0);color:#fff;border-radius:12px;font-weight:700;text-decoration:none;font-size:1rem;box-shadow:0 6px 20px rgba(0,91,170,.25);transition:opacity 0.2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+                            <a href="dashboard.html" style="display:inline-block;width:100%;padding:15px;background:linear-gradient(90deg,#005baa,#00a9e0);color:#fff;border-radius:12px;font-weight:700;text-decoration:none;font-size:1rem;box-shadow:0 6px 20px rgba(0,91,170,.25);" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
                                 ← Back to Dashboard
                             </a>
                         </div>
                     `;
                     document.getElementById('alert-msg').insertAdjacentElement('afterend', banner);
+                    showContent();
                     return;
                 }
 
-                // ── UNVERIFIED → form shows normally (default state) ──────
+                // ── UNVERIFIED → show the form normally ───────────────────
+                showContent();
 
             } catch (e) {
-                // Network error — let the page render normally
+                // Network error — show the form as fallback
+                showContent();
             }
         })();
 
