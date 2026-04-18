@@ -69,11 +69,6 @@
         </header>
 
         <main class="page-content">
-            <div class="page-header">
-                <h1>Buy &amp; Sell Crypto</h1>
-                <p>Instantly trade digital assets at competitive rates.</p>
-            </div>
-
             <div class="trade-wrapper">
                 <div class="card">
                     <div class="trade-rate-banner">
@@ -91,35 +86,35 @@
                             <span class="asset-select-label">Select Asset</span>
                             <div class="asset-select-trigger" id="asset-select-trigger" role="button" tabindex="0" aria-haspopup="listbox" aria-expanded="false">
                                 <div class="asset-select-current">
-                                    <div class="asset-badge asset-badge--btc" id="asset-badge">BTC</div>
+                                    <img id="asset-badge" src="https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@master/svg/color/btc.svg" alt="BTC" style="width:32px;height:32px;border-radius:50%;object-fit:contain;background:#f8fafc;border:1px solid #e2e8f0;padding:2px;flex-shrink:0;" onerror="this.style.display='none'">
                                     <span class="asset-select-name" id="asset-select-name">Bitcoin (BTC)</span>
                                 </div>
                                 <svg class="dropdown-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>
                             </div>
                             <ul class="asset-select-dropdown" id="asset-select-dropdown" role="listbox">
-                                <li class="asset-option selected" data-value="BTC" data-badge-class="asset-badge--btc" data-label="Bitcoin (BTC)" role="option">
-                                    <div class="asset-badge asset-badge--btc">BTC</div>
+                                <li class="asset-option selected" data-value="BTC" data-logo="btc" data-label="Bitcoin (BTC)" role="option">
+                                    <img src="https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@master/svg/color/btc.svg" alt="BTC" style="width:32px;height:32px;border-radius:50%;object-fit:contain;background:#f8fafc;border:1px solid #e2e8f0;padding:2px;flex-shrink:0;" onerror="this.style.display='none'">
                                     <div class="asset-option__info">
                                         <span class="asset-option__name">Bitcoin</span>
                                         <span class="asset-option__ticker">BTC</span>
                                     </div>
                                 </li>
-                                <li class="asset-option" data-value="ETH" data-badge-class="asset-badge--eth" data-label="Ethereum (ETH)" role="option">
-                                    <div class="asset-badge asset-badge--eth">ETH</div>
+                                <li class="asset-option" data-value="ETH" data-logo="eth" data-label="Ethereum (ETH)" role="option">
+                                    <img src="https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@master/svg/color/eth.svg" alt="ETH" style="width:32px;height:32px;border-radius:50%;object-fit:contain;background:#f8fafc;border:1px solid #e2e8f0;padding:2px;flex-shrink:0;" onerror="this.style.display='none'">
                                     <div class="asset-option__info">
                                         <span class="asset-option__name">Ethereum</span>
                                         <span class="asset-option__ticker">ETH</span>
                                     </div>
                                 </li>
-                                <li class="asset-option" data-value="USDT_TRC20" data-badge-class="asset-badge--trc20" data-label="Tether (TRC-20)" role="option">
-                                    <div class="asset-badge asset-badge--trc20">USDT</div>
+                                <li class="asset-option" data-value="USDT_TRC20" data-logo="usdt" data-label="Tether (TRC-20)" role="option">
+                                    <img src="https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@master/svg/color/usdt.svg" alt="USDT" style="width:32px;height:32px;border-radius:50%;object-fit:contain;background:#f8fafc;border:1px solid #e2e8f0;padding:2px;flex-shrink:0;" onerror="this.style.display='none'">
                                     <div class="asset-option__info">
                                         <span class="asset-option__name">Tether (TRC-20)</span>
                                         <span class="asset-option__ticker">USDT_TRC20</span>
                                     </div>
                                 </li>
-                                <li class="asset-option" data-value="USDT_ERC20" data-badge-class="asset-badge--erc20" data-label="Tether (ERC-20)" role="option">
-                                    <div class="asset-badge asset-badge--erc20">USDT</div>
+                                <li class="asset-option" data-value="USDT_ERC20" data-logo="usdt" data-label="Tether (ERC-20)" role="option">
+                                    <img src="https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@master/svg/color/usdt.svg" alt="USDT" style="width:32px;height:32px;border-radius:50%;object-fit:contain;background:#f8fafc;border:1px solid #e2e8f0;padding:2px;flex-shrink:0;" onerror="this.style.display='none'">
                                     <div class="asset-option__info">
                                         <span class="asset-option__name">Tether (ERC-20)</span>
                                         <span class="asset-option__ticker">USDT_ERC20</span>
@@ -640,13 +635,13 @@
 
         options.forEach(opt => {
             opt.addEventListener('click', () => {
-                const val       = opt.dataset.value;
-                const badgeCls  = opt.dataset.badgeClass;
-                const label     = opt.dataset.label;
+                const val   = opt.dataset.value;
+                const logo  = opt.dataset.logo;
+                const label = opt.dataset.label;
 
-                // Update visible trigger
-                badge.className = `asset-badge ${badgeCls}`;
-                badge.textContent = val;
+                // Update visible trigger — swap the logo img src
+                badge.src = `https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@master/svg/color/${logo}.svg`;
+                badge.alt = val;
                 nameEl.textContent = label;
 
                 // Mark selected

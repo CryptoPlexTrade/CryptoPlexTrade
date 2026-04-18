@@ -1,575 +1,480 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <link rel="icon" type="image/png" href="css/logo.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Identity Verification - CryptoPlexTrade</title>
+    <meta name="description" content="Verify your identity to unlock full trading access on CryptoPlexTrade.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/app.css">
     <style>
-        *,
-        *::before,
-        *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        :root {
-            --blue-deep: #004a8a;
-            --blue-main: #005baa;
-            --blue-light: #00a9e0;
-            --blue-pale: #e8f4fe;
-            --white: #ffffff;
-            --text-dark: #0f172a;
-            --text-mid: #334155;
-            --text-muted: #94a3b8;
-            --border: #dde9f7;
-            --shadow: rgba(0, 91, 170, 0.1);
-            --green: #16a34a;
-            --red: #dc2626;
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: #f4f7fb;
-            color: var(--text-dark);
-            min-height: 100vh;
+        /* KYC card — centred inside page-content */
+        .kyc-wrap {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            padding: 40px 20px;
+            justify-content: center;
+            padding: 8px 0 40px;
         }
-
-        .header-brand {
-            margin-bottom: 30px;
-            display: inline-block;
-        }
-
-        .header-brand img {
-            height: 44px;
-            border-radius: 12px;
-        }
-
         .kyc-card {
-            background: var(--white);
+            background: var(--bg-white);
             width: 100%;
             max-width: 600px;
             border-radius: 20px;
-            box-shadow: 0 10px 40px var(--shadow);
-            padding: 40px 50px;
-            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            padding: 40px 48px;
             position: relative;
+            overflow: hidden;
         }
-
         .kyc-card::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 5px;
-            background: linear-gradient(90deg, var(--blue-main), var(--blue-light));
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
         }
-
         .page-title {
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             font-weight: 700;
-            color: var(--blue-deep);
-            margin-bottom: 8px;
+            color: var(--text-1);
+            margin-bottom: 6px;
         }
-
         .page-sub {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            margin-bottom: 30px;
+            font-size: 0.88rem;
+            color: var(--text-3);
+            margin-bottom: 28px;
             line-height: 1.6;
         }
-
-        .form-group {
-            margin-bottom: 24px;
-        }
-
+        .form-group { margin-bottom: 22px; }
         .form-label {
             display: block;
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             font-weight: 600;
-            color: var(--text-mid);
-            margin-bottom: 8px;
+            color: var(--text-2);
+            margin-bottom: 7px;
         }
-
         select.form-control {
             width: 100%;
-            padding: 14px 18px;
+            padding: 13px 16px;
             border: 1.5px solid var(--border);
             border-radius: 12px;
             font-family: 'Poppins', sans-serif;
-            font-size: 0.95rem;
-            color: var(--text-dark);
-            background: #fafcff;
+            font-size: 0.93rem;
+            color: var(--text-1);
+            background: var(--bg);
             outline: none;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: border-color .2s, box-shadow .2s;
         }
-
         select.form-control:focus {
-            border-color: var(--blue-main);
-            box-shadow: 0 0 0 3px rgba(0, 91, 170, .1);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0,91,170,.1);
         }
-
-        /* Upload Zone */
+        /* Upload Zones */
         .upload-zone {
             border: 2px dashed var(--border);
-            background: #fafcff;
+            background: var(--bg);
             border-radius: 14px;
             padding: 24px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all .2s;
             position: relative;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
         }
-
-        .upload-zone:hover {
-            border-color: var(--blue-main);
-            background: #f0f7fe;
-        }
-
-        .upload-zone.has-file {
-            border-style: solid;
-            border-color: var(--green);
-            background: #f0fdf4;
-        }
-
-        .upload-icon {
-            width: 32px;
-            height: 32px;
-            color: var(--blue-main);
-            margin-bottom: 10px;
-        }
-
-        .upload-zone.has-file .upload-icon {
-            color: var(--green);
-        }
-
-        .upload-title {
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: var(--text-dark);
-            margin-bottom: 4px;
-        }
-
-        .upload-desc {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-        }
-
-        .upload-input {
-            position: absolute;
-            inset: 0;
-            opacity: 0;
-            cursor: pointer;
-            width: 100%;
-            height: 100%;
-        }
-
-        .preview-img {
-            max-height: 120px;
-            border-radius: 8px;
-            margin-top: 14px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            display: none;
-        }
-
+        .upload-zone:hover { border-color: var(--primary); background: #f0f7fe; }
+        .upload-zone.has-file { border-style: solid; border-color: #16a34a; background: #f0fdf4; }
+        .upload-icon { width: 30px; height: 30px; color: var(--primary); margin-bottom: 10px; }
+        .upload-zone.has-file .upload-icon { color: #16a34a; }
+        .upload-title { font-size: 0.92rem; font-weight: 600; color: var(--text-1); margin-bottom: 4px; }
+        .upload-desc  { font-size: 0.73rem; color: var(--text-3); }
+        .upload-input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+        .preview-img  { max-height: 110px; border-radius: 8px; margin-top: 12px; box-shadow: 0 4px 12px rgba(0,0,0,.1); display: none; }
+        /* Submit btn */
         .btn-submit {
             width: 100%;
-            padding: 16px;
-            margin-top: 10px;
+            padding: 15px;
+            margin-top: 8px;
             border: none;
             border-radius: 12px;
             font-family: 'Poppins', sans-serif;
-            font-size: 1.05rem;
+            font-size: 1rem;
             font-weight: 700;
             color: #fff;
-            background: linear-gradient(90deg, var(--blue-main), var(--blue-light));
-            background-size: 200% auto;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
             cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 6px 20px rgba(0, 91, 170, .25);
+            transition: all .3s;
+            box-shadow: 0 6px 20px rgba(0,91,170,.25);
         }
-
-        .btn-submit:hover {
-            background-position: right center;
-            transform: translateY(-2px);
-        }
-
-        .btn-submit:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-            transform: none;
-        }
-
+        .btn-submit:hover { transform: translateY(-2px); opacity: .92; }
+        .btn-submit:disabled { opacity: .7; cursor: not-allowed; transform: none; }
+        /* Alert */
         .alert-box {
-            padding: 14px 18px;
-            border-radius: 10px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            margin-bottom: 24px;
-            display: none;
+            padding: 13px 16px; border-radius: 10px;
+            font-size: 0.84rem; font-weight: 500;
+            margin-bottom: 22px; display: none;
         }
-
-        .alert-error {
-            background: #fef2f2;
-            border: 1px solid #fecaca;
-            color: var(--red);
-        }
-
+        .alert-error { background: #fef2f2; border: 1px solid #fecaca; color: #dc2626; }
+        /* Skip link */
         .skip-link {
-            display: block;
-            text-align: center;
-            margin-top: 20px;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.2s;
+            display: block; text-align: center; margin-top: 18px;
+            font-size: 0.82rem; color: var(--text-3);
+            text-decoration: none; font-weight: 500; transition: color .2s;
         }
-
-        .skip-link:hover {
-            color: var(--text-dark);
-            text-decoration: underline;
-        }
-
-        @media (max-width: 600px) {
-            .kyc-card {
-                padding: 30px 24px;
-            }
-
-            .page-title {
-                font-size: 1.5rem;
-            }
-        }
-        /* Loading state — hide all content until KYC status is known */
-        #kyc-loading { text-align:center; padding: 40px 0; }
+        .skip-link:hover { color: var(--text-1); text-decoration: underline; }
+        /* Loading state */
+        #kyc-loading { text-align: center; padding: 40px 0; }
         #kyc-content { display: none; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @media (max-width: 600px) {
+            .kyc-card { padding: 28px 20px; }
+            .page-title { font-size: 1.3rem; }
+        }
     </style>
 </head>
-
 <body>
 
-    <a href="index.html" class="header-brand"
-        style="display: flex; align-items: center; gap: 10px; text-decoration: none;">
-        <img src="css/logo.jpg" alt="Logo" style="height: 44px; border-radius: 12px; width: auto;">
-        <span
-            style="font-size: 1.25rem; font-weight: 700; color: var(--blue-deep); letter-spacing: 0.5px;">CryptoPlexTrade</span>
-    </a>
+<!-- Mobile sidebar overlay -->
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
 
-    <div class="kyc-card">
-        <!-- Loading spinner shown while we check KYC status -->
-        <div id="kyc-loading">
-            <div style="width:56px;height:56px;border:4px solid #e2e8f0;border-top-color:#005baa;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 18px;"></div>
-            <p style="color:#64748b;font-size:0.9rem;">Checking verification status...</p>
-        </div>
-        <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+<div class="app-shell">
 
-        <!-- Actual content — hidden until check is done -->
-        <div id="kyc-content">
-        <h1 class="page-title">Identity Verification</h1>
-        <p class="page-sub">To comply with financial regulations and ensure the safety of your funds, please verify your
-            identity.</p>
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="sidebar" id="sidebar">
+        <a href="dashboard.html" class="sidebar-brand">
+            <img src="css/logo.jpg" alt="Logo" class="sidebar-brand__orb" style="width:auto!important;height:44px!important;max-height:44px;border-radius:16px!important;object-fit:contain!important;background:none!important;padding:0!important;box-shadow:none!important;">
+            <span class="sidebar-brand__name">CryptoPlexTrade</span>
+        </a>
+        <nav class="sidebar-nav">
+            <ul>
+                <li><a href="dashboard.html">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11.47 3.841a.75.75 0 0 1 1.06 0l8.69 8.69a.75.75 0 1 0 1.06-1.061l-8.689-8.69a2.25 2.25 0 0 0-3.182 0l-8.69 8.69a.75.75 0 1 0 1.061 1.06l8.69-8.689Z"/><path d="m12 5.432 8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 0 1-.75-.75v-4.5a.75.75 0 0 0-.75-.75h-3a.75.75 0 0 0-.75.75V21a.75.75 0 0 1-.75.75H5.625a1.875 1.875 0 0 1-1.875-1.875v-6.198a2.29 2.29 0 0 0 .091-.086L12 5.432Z"/></svg>
+                    Dashboard
+                </a></li>
+                <li><a href="trade.html">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M3 4.5h18v15H3v-15Zm6.75 10.5a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM12 15a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM15.75 15a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM9.75 9a.75.75 0 0 0-1.5 0v4.5a.75.75 0 0 0 1.5 0V9Zm3.75-3a.75.75 0 0 0-1.5 0v7.5a.75.75 0 0 0 1.5 0V6Zm2.25 1.5a.75.75 0 0 0-1.5 0v6a.75.75 0 0 0 1.5 0v-6Z"/></svg>
+                    Trade
+                </a></li>
+                <li><a href="transactions.html">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clip-rule="evenodd"/></svg>
+                    Transactions
+                </a></li>
+                <li><a href="profile.html">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd"/></svg>
+                    Profile
+                </a></li>
+                <li><a href="kyc.html" class="active">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M4.5 3.75a3 3 0 0 0-3 3v10.5a3 3 0 0 0 3 3h15a3 3 0 0 0 3-3V6.75a3 3 0 0 0-3-3h-15Zm7.5 10.5a3 3 0 1 1 0-6 3 3 0 0 1 0 6ZM5.25 15.75a.75.75 0 0 1 .75-.75h12a.75.75 0 0 1 0 1.5H6a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd"/></svg>
+                    KYC
+                </a></li>
+                <li><a href="support.html">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm11.378-3.917c-.89-.777-2.366-.777-3.255 0a.75.75 0 0 1-1.06-1.06c2.298-2.013 5.824-2.013 8.122 0a.75.75 0 0 1-1.06 1.06ZM12 15.75a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" clip-rule="evenodd"/></svg>
+                    Support
+                </a></li>
+            </ul>
+        </nav>
+    </aside>
 
-        <div id="alert-msg" class="alert-box alert-error"></div>
+    <!-- ===== MAIN WRAP ===== -->
+    <div class="main-wrap">
 
-        <form id="kyc-form">
-            <!-- ID Type Selection -->
-            <div class="form-group">
-                <label class="form-label">Document Type</label>
-                <select id="id_type" class="form-control" required>
-                    <option value="" disabled selected>Select an ID Type</option>
-                    <option value="Ghana Card">Ghana Card</option>
-                    <option value="Passport">Passport</option>
-                    <option value="Driver License">Driver License</option>
-                </select>
+        <!-- Topbar -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <button class="hamburger-btn" id="hamburger-btn" aria-label="Toggle sidebar">
+                    <span></span><span></span><span></span>
+                </button>
+                <span class="topbar-title">Identity Verification</span>
             </div>
-
-            <!-- Front of ID -->
-            <div class="form-group">
-                <label class="form-label">Front of Document</label>
-                <div class="upload-zone" id="zone_front">
-                    <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
-                    </svg>
-                    <div class="upload-title" id="title_front">Tap to upload Front</div>
-                    <div class="upload-desc">Clear photo, no glare. JPEG/PNG</div>
-                    <input type="file" class="upload-input" id="file_front" accept="image/*" required>
-                    <img class="preview-img" id="preview_front">
-                </div>
+            <div class="topbar-right">
+                <a href="#" id="logout-btn" class="btn btn-danger btn-sm">Logout</a>
             </div>
+        </header>
 
-            <!-- Back of ID -->
-            <div class="form-group">
-                <label class="form-label">Back of Document</label>
-                <div class="upload-zone" id="zone_back">
-                    <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
-                    </svg>
-                    <div class="upload-title" id="title_back">Tap to upload Back</div>
-                    <div class="upload-desc">Clear photo, no glare. JPEG/PNG</div>
-                    <input type="file" class="upload-input" id="file_back" accept="image/*" required>
-                    <img class="preview-img" id="preview_back">
-                </div>
-            </div>
+        <!-- Page Content -->
+        <main class="page-content">
+            <div class="kyc-wrap">
+                <div class="kyc-card">
 
-            <!-- Selfie -->
-            <div class="form-group">
-                <label class="form-label">Selfie holding ID</label>
-                <div class="upload-zone" id="zone_selfie">
-                    <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z">
-                        </path>
-                    </svg>
-                    <div class="upload-title" id="title_selfie">Tap to upload Selfie</div>
-                    <div class="upload-desc">Make sure your face and the ID are both clearly visible.</div>
-                    <input type="file" class="upload-input" id="file_selfie" accept="image/*" required capture="user">
-                    <img class="preview-img" id="preview_selfie">
-                </div>
-            </div>
+                    <!-- Loading spinner -->
+                    <div id="kyc-loading">
+                        <div style="width:56px;height:56px;border:4px solid #e2e8f0;border-top-color:#005baa;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 18px;"></div>
+                        <p style="color:#64748b;font-size:0.9rem;">Checking verification status...</p>
+                    </div>
 
-            <button type="submit" class="btn-submit" id="btn-submit">Submit Documents</button>
-        </form>
+                    <!-- Actual content — hidden until check is done -->
+                    <div id="kyc-content">
+                        <h1 class="page-title">Identity Verification</h1>
+                        <p class="page-sub">To comply with financial regulations and ensure the safety of your funds, please verify your identity.</p>
 
-        <a href="dashboard.html" class="skip-link">Skip for now, I'll do this later <br><span style="font-size:0.75rem; color: #dc2626;">(Meaning: You won't be able to perform any trades until verified)</span></a>
-        </div><!-- /#kyc-content -->
+                        <div id="alert-msg" class="alert-box alert-error"></div>
+
+                        <form id="kyc-form">
+                            <!-- ID Type -->
+                            <div class="form-group">
+                                <label class="form-label">Document Type</label>
+                                <select id="id_type" class="form-control" required>
+                                    <option value="" disabled selected>Select an ID Type</option>
+                                    <option value="Ghana Card">Ghana Card</option>
+                                    <option value="Passport">Passport</option>
+                                    <option value="Driver License">Driver License</option>
+                                </select>
+                            </div>
+                            <!-- Front -->
+                            <div class="form-group">
+                                <label class="form-label">Front of Document</label>
+                                <div class="upload-zone" id="zone_front">
+                                    <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                                    <div class="upload-title" id="title_front">Tap to upload Front</div>
+                                    <div class="upload-desc">Clear photo, no glare. JPEG/PNG</div>
+                                    <input type="file" class="upload-input" id="file_front" accept="image/*" required>
+                                    <img class="preview-img" id="preview_front">
+                                </div>
+                            </div>
+                            <!-- Back -->
+                            <div class="form-group">
+                                <label class="form-label">Back of Document</label>
+                                <div class="upload-zone" id="zone_back">
+                                    <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                                    <div class="upload-title" id="title_back">Tap to upload Back</div>
+                                    <div class="upload-desc">Clear photo, no glare. JPEG/PNG</div>
+                                    <input type="file" class="upload-input" id="file_back" accept="image/*" required>
+                                    <img class="preview-img" id="preview_back">
+                                </div>
+                            </div>
+                            <!-- Selfie -->
+                            <div class="form-group">
+                                <label class="form-label">Selfie holding ID</label>
+                                <div class="upload-zone" id="zone_selfie">
+                                    <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    <div class="upload-title" id="title_selfie">Tap to upload Selfie</div>
+                                    <div class="upload-desc">Make sure your face and the ID are both clearly visible.</div>
+                                    <input type="file" class="upload-input" id="file_selfie" accept="image/*" required capture="user">
+                                    <img class="preview-img" id="preview_selfie">
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn-submit" id="btn-submit">Submit Documents</button>
+                        </form>
+
+                        <a href="dashboard.html" class="skip-link">Skip for now, I'll do this later
+                            <br><span style="font-size:0.75rem;color:#dc2626;">(Meaning: You won't be able to perform any trades until verified)</span>
+                        </a>
+                    </div><!-- /#kyc-content -->
+
+                </div><!-- /.kyc-card -->
+            </div><!-- /.kyc-wrap -->
+        </main>
     </div>
+</div>
 
-    <script>
-        // === KYC STATUS GUARD ===
-        // Shows the correct screen based on the user's current KYC status.
-        (async function checkKycStatus() {
-            const loading   = document.getElementById('kyc-loading');
-            const content   = document.getElementById('kyc-content');
+<!-- Ticker Tape -->
+<div class="ticker-tape"><div class="ticker-tape__track"></div></div>
 
-            function showContent() {
-                loading.style.display = 'none';
-                content.style.display = 'block';
+<script src="inactivity-timer.js"></script>
+<script src="chat-widget.js"></script>
+<script>
+(function () {
+    // --- Sidebar toggle ---
+    const sidebar  = document.getElementById('sidebar');
+    const overlay  = document.getElementById('sidebar-overlay');
+    const hamburger = document.getElementById('hamburger-btn');
+    hamburger.addEventListener('click', () => { sidebar.classList.add('open'); overlay.classList.add('open'); });
+    overlay.addEventListener('click',   () => { sidebar.classList.remove('open'); overlay.classList.remove('open'); });
+
+    // --- Cookie helper ---
+    function getCookie(name) {
+        const v = `; ${document.cookie}`, p = v.split(`; ${name}=`);
+        if (p.length === 2) return p.pop().split(';').shift();
+    }
+    const csrfToken = getCookie('csrf-token');
+
+    // --- Logout ---
+    document.getElementById('logout-btn').addEventListener('click', async (e) => {
+        e.preventDefault();
+        try {
+            const r = await fetch('/api/logout', { method: 'POST', headers: { 'X-CSRF-Token': csrfToken } });
+            if (r.ok) window.location.href = 'login.html';
+        } catch (err) { console.error(err); }
+    });
+
+    // === KYC STATUS GUARD ===
+    (async function checkKycStatus() {
+        const loading = document.getElementById('kyc-loading');
+        const content = document.getElementById('kyc-content');
+
+        function showContent() {
+            loading.style.display = 'none';
+            content.style.display = 'block';
+        }
+
+        try {
+            const res = await fetch('/api/user/me', { credentials: 'include' });
+            if (res.status === 401 || res.status === 403) { window.location.href = 'login.html'; return; }
+            if (!res.ok) { showContent(); return; }
+
+            const user = await res.json();
+
+            // ── APPROVED ─────────────────────────────────────────────
+            if (user.kyc_status === 'approved') {
+                document.querySelector('.page-title').textContent = 'Identity Verified';
+                document.querySelector('.page-sub').textContent   = '';
+                document.getElementById('kyc-form').style.display = 'none';
+                document.querySelector('.skip-link').style.display = 'none';
+                const banner = document.createElement('div');
+                banner.innerHTML = `
+                    <div style="text-align:center;padding:10px 0 24px;">
+                        <div style="width:88px;height:88px;border-radius:50%;background:linear-gradient(135deg,#16a34a,#22c55e);display:flex;align-items:center;justify-content:center;margin:0 auto 22px;font-size:2.8rem;box-shadow:0 8px 24px rgba(22,163,74,0.3);">✅</div>
+                        <h2 style="font-size:1.3rem;font-weight:700;color:#15803d;margin-bottom:8px;">Account Verified!</h2>
+                        <p style="color:#334155;font-size:0.92rem;line-height:1.8;margin-bottom:10px;">
+                            Your identity has been <strong>successfully verified</strong>. You now have full access to buy and sell crypto on CryptoPlexTrade.
+                        </p>
+                        <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:14px 18px;margin:20px 0 28px;font-size:0.82rem;color:#166534;font-weight:500;">
+                            🛡️ Your account is KYC-compliant and fully activated.
+                        </div>
+                        <a href="dashboard.html" style="display:inline-block;width:100%;padding:15px;background:linear-gradient(90deg,#16a34a,#22c55e);color:#fff;border-radius:12px;font-weight:700;text-decoration:none;font-size:1rem;box-shadow:0 6px 20px rgba(22,163,74,.25);" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+                            Go to Dashboard →
+                        </a>
+                    </div>`;
+                document.getElementById('alert-msg').insertAdjacentElement('afterend', banner);
+                showContent(); return;
             }
 
-            try {
-                const res = await fetch('/api/user/me', { credentials: 'include' });
-                if (res.status === 401 || res.status === 403) {
-                    window.location.href = 'login.html';
-                    return;
-                }
-                if (!res.ok) { showContent(); return; }
-
-                const user = await res.json();
-
-                // ── APPROVED ─────────────────────────────────────────────
-                if (user.kyc_status === 'approved') {
-                    document.querySelector('.page-title').textContent = 'Identity Verified';
-                    document.querySelector('.page-sub').textContent = '';
-                    document.getElementById('kyc-form').style.display = 'none';
-                    document.querySelector('.skip-link').style.display = 'none';
-
-                    const banner = document.createElement('div');
-                    banner.innerHTML = `
-                        <div style="text-align:center;padding:10px 0 24px;">
-                            <div style="width:88px;height:88px;border-radius:50%;background:linear-gradient(135deg,#16a34a,#22c55e);display:flex;align-items:center;justify-content:center;margin:0 auto 22px;font-size:2.8rem;box-shadow:0 8px 24px rgba(22,163,74,0.3);">✅</div>
-                            <h2 style="font-size:1.3rem;font-weight:700;color:#15803d;margin-bottom:8px;">Account Verified!</h2>
-                            <p style="color:#334155;font-size:0.92rem;line-height:1.8;margin-bottom:10px;">
-                                Your identity has been <strong>successfully verified</strong>. You now have full access to buy and sell crypto on CryptoPlexTrade.
-                            </p>
-                            <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:14px 18px;margin:20px 0 28px;font-size:0.82rem;color:#166534;font-weight:500;">
-                                🛡️ Your account is KYC-compliant and fully activated.
-                            </div>
-                            <a href="dashboard.html" style="display:inline-block;width:100%;padding:15px;background:linear-gradient(90deg,#16a34a,#22c55e);color:#fff;border-radius:12px;font-weight:700;text-decoration:none;font-size:1rem;box-shadow:0 6px 20px rgba(22,163,74,.25);" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
-                                Go to Dashboard →
-                            </a>
+            // ── PENDING ───────────────────────────────────────────────
+            if (user.kyc_status === 'pending') {
+                document.querySelector('.page-title').textContent = 'Verification Under Review';
+                document.querySelector('.page-sub').textContent   = '';
+                document.getElementById('kyc-form').style.display = 'none';
+                document.querySelector('.skip-link').style.display = 'none';
+                const banner = document.createElement('div');
+                banner.innerHTML = `
+                    <div style="text-align:center;padding:10px 0 24px;">
+                        <div style="width:88px;height:88px;border-radius:50%;background:linear-gradient(135deg,#fbbf24,#f59e0b);display:flex;align-items:center;justify-content:center;margin:0 auto 22px;font-size:2.8rem;box-shadow:0 8px 24px rgba(245,158,11,0.3);">⏳</div>
+                        <h2 style="font-size:1.3rem;font-weight:700;color:#92400e;margin-bottom:8px;">Documents Under Review</h2>
+                        <p style="color:#334155;font-size:0.92rem;line-height:1.8;margin-bottom:10px;">
+                            Your identity documents have been <strong>successfully submitted</strong> and are currently being reviewed by our compliance team.
+                        </p>
+                        <p style="color:#64748b;font-size:0.875rem;line-height:1.7;margin-bottom:28px;">
+                            You will gain full trading access once your account is approved.<br>
+                            This typically takes <strong>1–24 hours</strong>.
+                        </p>
+                        <div style="background:#fef9c3;border:1px solid #fde68a;border-radius:12px;padding:14px 18px;margin-bottom:28px;font-size:0.82rem;color:#92400e;font-weight:500;">
+                            📧 You'll receive an email notification when your verification is complete.
                         </div>
-                    `;
-                    document.getElementById('alert-msg').insertAdjacentElement('afterend', banner);
-                    showContent();
-                    return;
-                }
-
-                // ── PENDING ───────────────────────────────────────────────
-                if (user.kyc_status === 'pending') {
-                    document.querySelector('.page-title').textContent = 'Verification Under Review';
-                    document.querySelector('.page-sub').textContent = '';
-                    document.getElementById('kyc-form').style.display = 'none';
-                    document.querySelector('.skip-link').style.display = 'none';
-
-                    const banner = document.createElement('div');
-                    banner.innerHTML = `
-                        <div style="text-align:center;padding:10px 0 24px;">
-                            <div style="width:88px;height:88px;border-radius:50%;background:linear-gradient(135deg,#fbbf24,#f59e0b);display:flex;align-items:center;justify-content:center;margin:0 auto 22px;font-size:2.8rem;box-shadow:0 8px 24px rgba(245,158,11,0.3);">⏳</div>
-                            <h2 style="font-size:1.3rem;font-weight:700;color:#92400e;margin-bottom:8px;">Documents Under Review</h2>
-                            <p style="color:#334155;font-size:0.92rem;line-height:1.8;margin-bottom:10px;">
-                                Your identity documents have been <strong>successfully submitted</strong> and are currently being reviewed by our compliance team.
-                            </p>
-                            <p style="color:#64748b;font-size:0.875rem;line-height:1.7;margin-bottom:28px;">
-                                You will gain full trading access once your account is approved.<br>
-                                This typically takes <strong>1–24 hours</strong>.
-                            </p>
-                            <div style="background:#fef9c3;border:1px solid #fde68a;border-radius:12px;padding:14px 18px;margin-bottom:28px;font-size:0.82rem;color:#92400e;font-weight:500;">
-                                📧 You'll receive an email notification when your verification is complete.
-                            </div>
-                            <a href="dashboard.html" style="display:inline-block;width:100%;padding:15px;background:linear-gradient(90deg,#005baa,#00a9e0);color:#fff;border-radius:12px;font-weight:700;text-decoration:none;font-size:1rem;box-shadow:0 6px 20px rgba(0,91,170,.25);" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
-                                ← Back to Dashboard
-                            </a>
-                        </div>
-                    `;
-                    document.getElementById('alert-msg').insertAdjacentElement('afterend', banner);
-                    showContent();
-                    return;
-                }
-
-                // ── UNVERIFIED → show the form normally ───────────────────
-                showContent();
-
-            } catch (e) {
-                // Network error — show the form as fallback
-                showContent();
+                        <a href="dashboard.html" style="display:inline-block;width:100%;padding:15px;background:linear-gradient(90deg,#005baa,#00a9e0);color:#fff;border-radius:12px;font-weight:700;text-decoration:none;font-size:1rem;box-shadow:0 6px 20px rgba(0,91,170,.25);" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+                            ← Back to Dashboard
+                        </a>
+                    </div>`;
+                document.getElementById('alert-msg').insertAdjacentElement('afterend', banner);
+                showContent(); return;
             }
-        })();
 
-        /**
-         * Client-side Image Compression built deeply into the app.
-         * Shrinks 5MB camera photos down to ~200kb to prevent database bloat!
-         */
-        async function compressImage(file, maxWidth = 1000, quality = 0.8) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = event => {
-                    const img = new Image();
-                    img.src = event.target.result;
-                    img.onload = () => {
-                        const canvas = document.createElement('canvas');
-                        let width = img.width;
-                        let height = img.height;
+            // ── UNVERIFIED → show the form normally ──────────────────
+            showContent();
 
-                        if (width > maxWidth) {
-                            height = Math.round((height * maxWidth) / width);
-                            width = maxWidth;
-                        }
+        } catch (e) {
+            showContent(); // Network error — show form as fallback
+        }
+    })();
 
-                        canvas.width = width;
-                        canvas.height = height;
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0, width, height);
-
-                        // Output as base64 jpeg
-                        resolve(canvas.toDataURL('image/jpeg', quality));
-                    };
-                    img.onerror = error => reject(error);
+    // ── Image Compression ───────────────────────────────────────────
+    async function compressImage(file, maxWidth = 1000, quality = 0.8) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = event => {
+                const img = new Image();
+                img.src = event.target.result;
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    let width = img.width, height = img.height;
+                    if (width > maxWidth) { height = Math.round((height * maxWidth) / width); width = maxWidth; }
+                    canvas.width = width; canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    resolve(canvas.toDataURL('image/jpeg', quality));
                 };
-                reader.onerror = error => reject(error);
-            });
-        }
+                img.onerror = reject;
+            };
+            reader.onerror = reject;
+        });
+    }
 
-        // Handle file previews and compression states
-        const fileData = { front: null, back: null, selfie: null };
+    const fileData = { front: null, back: null, selfie: null };
 
-        function setupUploadHandler(inputId, zoneId, previewId, titleId, dataKey) {
-            const input = document.getElementById(inputId);
-            const zone = document.getElementById(zoneId);
-            const preview = document.getElementById(previewId);
-            const title = document.getElementById(titleId);
-
-            input.addEventListener('change', async (e) => {
-                const file = e.target.files[0];
-                if (!file) return;
-
-                title.textContent = 'Compressing image...';
-                zone.style.pointerEvents = 'none';
-
-                try {
-                    // Compress!
-                    const compressedBase64 = await compressImage(file);
-                    fileData[dataKey] = compressedBase64;
-
-                    // Show preview
-                    preview.src = compressedBase64;
-                    preview.style.display = 'block';
-                    zone.classList.add('has-file');
-                    title.textContent = 'Image attached ✅ (Tap to change)';
-                } catch (err) {
-                    console.error('Compression failed', err);
-                    title.textContent = 'Compression failed. Tap to retry.';
-                } finally {
-                    zone.style.pointerEvents = 'auto';
-                }
-            });
-        }
-
-        setupUploadHandler('file_front', 'zone_front', 'preview_front', 'title_front', 'front');
-        setupUploadHandler('file_back', 'zone_back', 'preview_back', 'title_back', 'back');
-        setupUploadHandler('file_selfie', 'zone_selfie', 'preview_selfie', 'title_selfie', 'selfie');
-
-        // Form Submission
-        document.getElementById('kyc-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const btn = document.getElementById('btn-submit');
-            const alertMsg = document.getElementById('alert-msg');
-            const idType = document.getElementById('id_type').value;
-
-            alertMsg.style.display = 'none';
-
-            if (!fileData.front || !fileData.back || !fileData.selfie) {
-                alertMsg.style.display = 'block';
-                alertMsg.textContent = 'Please completely upload all 3 photos.';
-                return;
-            }
-
-            btn.disabled = true;
-            btn.textContent = 'Uploading to Secure Server...';
-
+    function setupUploadHandler(inputId, zoneId, previewId, titleId, dataKey) {
+        const input   = document.getElementById(inputId);
+        const zone    = document.getElementById(zoneId);
+        const preview = document.getElementById(previewId);
+        const title   = document.getElementById(titleId);
+        input.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            title.textContent = 'Compressing image...';
+            zone.style.pointerEvents = 'none';
             try {
-                const response = await fetch('/api/kyc-submit', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        id_type: idType,
-                        id_front: fileData.front,
-                        id_back: fileData.back,
-                        id_selfie: fileData.selfie
-                    })
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    btn.textContent = 'Success! Redirecting...';
-                    btn.style.background = 'var(--green)';
-                    setTimeout(() => {
-                        window.location.href = 'dashboard.html';
-                    }, 1500);
-                } else {
-                    alertMsg.style.display = 'block';
-                    alertMsg.textContent = data.message || 'Verification failed. Please try again.';
-                    btn.disabled = false;
-                    btn.textContent = 'Submit Documents';
-                }
+                const compressed = await compressImage(file);
+                fileData[dataKey] = compressed;
+                preview.src = compressed; preview.style.display = 'block';
+                zone.classList.add('has-file');
+                title.textContent = 'Image attached ✅ (Tap to change)';
             } catch (err) {
+                title.textContent = 'Compression failed. Tap to retry.';
+            } finally {
+                zone.style.pointerEvents = 'auto';
+            }
+        });
+    }
+
+    setupUploadHandler('file_front',  'zone_front',  'preview_front',  'title_front',  'front');
+    setupUploadHandler('file_back',   'zone_back',   'preview_back',   'title_back',   'back');
+    setupUploadHandler('file_selfie', 'zone_selfie', 'preview_selfie', 'title_selfie', 'selfie');
+
+    // ── Form Submission ─────────────────────────────────────────────
+    document.getElementById('kyc-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn      = document.getElementById('btn-submit');
+        const alertMsg = document.getElementById('alert-msg');
+        const idType   = document.getElementById('id_type').value;
+        alertMsg.style.display = 'none';
+
+        if (!fileData.front || !fileData.back || !fileData.selfie) {
+            alertMsg.style.display = 'block';
+            alertMsg.textContent = 'Please upload all 3 photos before submitting.';
+            return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = 'Uploading to Secure Server...';
+
+        try {
+            const response = await fetch('/api/kyc-submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id_type: idType, id_front: fileData.front, id_back: fileData.back, id_selfie: fileData.selfie })
+            });
+            const data = await response.json();
+            if (response.ok) {
+                btn.textContent = 'Success! Redirecting...';
+                btn.style.background = '#16a34a';
+                setTimeout(() => { window.location.href = 'dashboard.html'; }, 1500);
+            } else {
                 alertMsg.style.display = 'block';
-                alertMsg.textContent = 'Network error. Please try again.';
+                alertMsg.textContent = data.message || 'Verification failed. Please try again.';
                 btn.disabled = false;
                 btn.textContent = 'Submit Documents';
             }
-        });
-    </script>
+        } catch (err) {
+            alertMsg.style.display = 'block';
+            alertMsg.textContent = 'Network error. Please try again.';
+            btn.disabled = false;
+            btn.textContent = 'Submit Documents';
+        }
+    });
+})();
+</script>
 </body>
-
 </html>
