@@ -59,12 +59,6 @@ app.use(async (req, res, next) => {
     next();
 });
 
-// Health-check route — must be declared BEFORE express.static so that
-// it isn't shadowed by public/index.html when that file exists.
-app.get('/', (req, res) => {
-    res.json({ message: 'Welcome to the CryptoPlexTrade API! The server is running.' });
-});
-
 // Middleware
 app.use(express.static(path.join(__dirname, 'public'), { 
     dotfiles: 'ignore',
