@@ -215,8 +215,9 @@
     let allTransactions = [];
 
     function updateKpis() {
-        const bought = allTransactions.filter(t => t.order_type === 'buy');
-        const sold   = allTransactions.filter(t => t.order_type === 'sell');
+        // Only count completed orders — failed/cancelled/pending must not inflate the totals
+        const bought = allTransactions.filter(t => t.order_type === 'buy'  && t.status === 'completed');
+        const sold   = allTransactions.filter(t => t.order_type === 'sell' && t.status === 'completed');
         const fmtAmt = (arr) => '₵ ' + arr.reduce((s, t) => s + parseFloat(t.total_paid || 0), 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         document.getElementById('kpi-total-bought').textContent = fmtAmt(bought);
         document.getElementById('kpi-total-sold').textContent   = fmtAmt(sold);

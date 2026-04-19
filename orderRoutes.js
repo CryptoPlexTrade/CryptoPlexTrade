@@ -145,10 +145,12 @@ router.post('/create-sell-order', authenticateToken, async (req, res) => {
 
         const payoutDetailsString = JSON.stringify(payoutInfo);
 
-        // Insert new sell order into the database
+        // Insert new sell order into the database.
+        // wallet_address stores the JSON payout details (bank/MoMo) for sell orders — see schema comment.
+        // fee_ghs is explicitly 0 for sell orders (no miner fee charged to seller).
         const [, sellMeta] = await db.query(
-            `INSERT INTO orders (user_id, order_type, product, usd_amount, ghs_amount, total_paid, wallet_address, transaction_id, status) 
-             VALUES (?, 'sell', ?, ?, ?, ?, ?, ?, ?)`,
+            `INSERT INTO orders (user_id, order_type, product, usd_amount, ghs_amount, fee_ghs, total_paid, wallet_address, transaction_id, status) 
+             VALUES (?, 'sell', ?, ?, ?, 0, ?, ?, ?, ?)`,
             [userId, product, parsedProductAmount, calculatedGhsToReceive, calculatedGhsToReceive, payoutDetailsString, transactionId, ORDER_STATUS.PENDING_CONFIRMATION]
         );
         const newSellOrderId = sellMeta.insertId;

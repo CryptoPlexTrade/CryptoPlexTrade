@@ -153,15 +153,28 @@ router.post('/:sessionId/send', async (req, res) => {
 });
 
 // PUT /api/chat/:sessionId/close  – customer ends their own chat
+// Requires the sessionKey to verify ownership (prevents unauthenticated close of any session).
 router.put('/:sessionId/close', async (req, res) => {
     await ensureTables();
     try {
         const { sessionId } = req.params;
+        const { sessionKey } = req.body;
+
+        if (!sessionKey) {
+            return res.status(400).json({ message: 'sessionKey is required to close the session.' });
+        }
+
         const [session] = await db.query(
-            'SELECT id, status FROM chat_sessions WHERE id = ?',
+            'SELECT id, status, session_key FROM chat_sessions WHERE id = ?',
             [sessionId]
         );
         if (session.length === 0) return res.status(404).json({ message: 'Session not found.' });
+
+        // Ownership check: the caller must know the sessionKey
+        if (session[0].session_key !== sessionKey) {
+            return res.status(403).json({ message: 'Access denied.' });
+        }
+
         if (session[0].status === 'closed') return res.json({ success: true });
 
         await db.query("UPDATE chat_sessions SET status = 'closed', updated_at = NOW() WHERE id = ?", [sessionId]);
@@ -223,6 +236,13 @@ adminChat.post('/:sessionId/reply', async (req, res) => {
         const { sessionId } = req.params;
         const { message } = req.body;
         if (!message?.trim()) return res.status(400).json({ message: 'Message is required.' });
+
+        // Verify the session exists before inserting to return a clean 404
+        const [session] = await db.query(
+            'SELECT id FROM chat_sessions WHERE id = ?',
+            [sessionId]
+        );
+        if (session.length === 0) return res.status(404).json({ message: 'Chat session not found.' });
 
         await db.query(
             'INSERT INTO chat_messages (session_id, sender, message) VALUES (?, ?, ?)',

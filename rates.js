@@ -14,7 +14,7 @@ const logger = require('./logger');
 let tableReady = false;
 let cache = null;
 let cacheTime = 0;
-const CACHE_TTL = 30_000; // 30 seconds
+const CACHE_TTL = 5_000; // 5 seconds — minimises stale-price window across serverless instances
 
 const DEFAULT_RATES = {
     BTC: {

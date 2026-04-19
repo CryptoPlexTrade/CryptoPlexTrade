@@ -8,26 +8,34 @@ const { sendPasswordResetEmail, sendVerificationEmail, sendKycSubmissionAlert } 
 // In-memory token stores removed to support Vercel serverless persistence.
 // Tokens will now be stored in the database.
 
-// const rateLimit = require('express-rate-limit');
+const rateLimit = require('express-rate-limit');
 const logger = require('./logger');
 const db = require('./database'); // Our database connection
 require('dotenv').config();
 
 const router = express.Router();
 
+// Rate limiter for auth endpoints — prevents brute-force attacks.
+const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 15, // Limit each IP to 15 requests per windowMs
+    standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+    legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+    message: { message: 'Too many requests from this IP, please try again after 15 minutes.' },
+});
 
-// Rate limiter is disabled for development
-// const authLimiter = rateLimit({
-// 	windowMs: 15 * 60 * 1000, // 15 minutes
-// 	max: 10, // Limit each IP to 10 requests per windowMs
-// 	standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
-// 	legacyHeaders: false, // Disable the `X-RateLimit-*` headers
-// 	message: { message: 'Too many requests from this IP, please try again after 15 minutes.' },
-// });
+// Strict limiter for OTP endpoints (lower threshold)
+const otpLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 5,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { message: 'Too many verification attempts. Please wait 15 minutes and try again.' },
+});
 
 
 // === REGISTRATION ENDPOINT ===
-router.post('/register', async (req, res) => {
+router.post('/register', authLimiter, async (req, res) => {
     const { fullname, phone, email, password, referralCode } = req.body;
 
     // Basic validation
@@ -66,10 +74,10 @@ router.post('/register', async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        // Insert new user into the database
+        // Insert new user into the database (always store the normalised lowercase email)
         const [result] = await db.query(
             'INSERT INTO users (fullname, phone, email, password, referred_by_id, is_verified) VALUES (?, ?, ?, ?, ?, ?)',
-            [fullname, phone, email, hashedPassword, referredById, false]
+            [fullname, phone, emailLower, hashedPassword, referredById, false]
         );
 
         // Generate and update the referral code for the new user
@@ -79,8 +87,8 @@ router.post('/register', async (req, res) => {
         const newUserReferralCode = `CE-${namePart}${randomPart}`;
         await db.query('UPDATE users SET referral_code = ? WHERE id = ?', [newUserReferralCode, newUserId]);
 
-        // Generate 6-digit OTP
-        const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
+        // Generate 6-digit OTP (crypto.randomInt is a CSPRNG — Math.random() is not)
+        const otpCode = crypto.randomInt(100000, 1000000).toString();
         const expiresAt = Date.now() + 5 * 60 * 1000;
         
         // Store the token in the DB (valid for 5 mins)
@@ -103,7 +111,7 @@ router.post('/register', async (req, res) => {
 
 
 // === LOGIN ENDPOINT ===
-router.post('/login', async (req, res) => {
+router.post('/login', authLimiter, async (req, res) => {
     const { password } = req.body;
     const email = (req.body.email || '').toLowerCase().trim();
 
@@ -129,7 +137,7 @@ router.post('/login', async (req, res) => {
         // Check if user is verified
         if (user.role === 'user' && !user.is_verified) {
             // Generate a new code so they can verify now if the old one expired
-            const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
+            const otpCode = crypto.randomInt(100000, 1000000).toString();
             const expiresAt = Date.now() + 5 * 60 * 1000;
             await db.query('UPDATE users SET verify_token = ?, verify_expires = ? WHERE id = ?', [otpCode, expiresAt, user.id]);
             try {
@@ -244,7 +252,7 @@ router.put('/user/change-password', authenticateToken, async (req, res) => {
 
 // === FORGOT PASSWORD ENDPOINT ===
 
-router.post('/forgot-password', async (req, res) => {
+router.post('/forgot-password', authLimiter, async (req, res) => {
     const email = (req.body.email || '').toLowerCase().trim();
     if (!email) {
         return res.status(400).json({ message: 'Email address is required.' });
@@ -288,7 +296,7 @@ router.post('/forgot-password', async (req, res) => {
 
 
 // === RESET PASSWORD ENDPOINT ===
-router.post('/reset-password', async (req, res) => {
+router.post('/reset-password', authLimiter, async (req, res) => {
     const email = (req.body.email || '').toLowerCase().trim();
     const { token, newPassword } = req.body;
     if (!email || !token || !newPassword) {
@@ -373,7 +381,7 @@ router.post('/verify-email', async (req, res) => {
 });
 
 // === RESEND VERIFICATION ENDPOINT ===
-router.post('/resend-verification', async (req, res) => {
+router.post('/resend-verification', otpLimiter, async (req, res) => {
     const email = (req.body.email || '').toLowerCase().trim();
     if (!email) {
         return res.status(400).json({ message: 'Email is required.' });
@@ -385,7 +393,7 @@ router.post('/resend-verification', async (req, res) => {
     try {
         const [users] = await db.query('SELECT id, is_verified FROM users WHERE LOWER(email) = ?', [email]);
         if (users.length > 0 && !users[0].is_verified) {
-            const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
+            const otpCode = crypto.randomInt(100000, 1000000).toString();
             const expiresAt = Date.now() + 5 * 60 * 1000;
             await db.query('UPDATE users SET verify_token = ?, verify_expires = ? WHERE id = ?', [otpCode, expiresAt, users[0].id]);
             try {

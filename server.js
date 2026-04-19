@@ -59,6 +59,12 @@ app.use(async (req, res, next) => {
     next();
 });
 
+// Health-check route — must be declared BEFORE express.static so that
+// it isn't shadowed by public/index.html when that file exists.
+app.get('/', (req, res) => {
+    res.json({ message: 'Welcome to the CryptoPlexTrade API! The server is running.' });
+});
+
 // Middleware
 app.use(express.static(path.join(__dirname, 'public'), { 
     dotfiles: 'ignore',
@@ -115,14 +121,16 @@ app.get('/admin-login', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'admin-login.html'));
 });
 
-// A simple root route to confirm the server is running
-app.get('/', (req, res) => {
-    res.json({ message: 'Welcome to the CryptoPlexTrade API! The server is running.' });
-});
 
 // A simple endpoint to get the current user's name for the welcome message
 // This requires the user to be authenticated.
-const { authenticateToken } = require('./authMiddleware');
+const { authenticateToken, validateCsrf } = require('./authMiddleware');
+
+// Apply CSRF validation to all mutating API requests that carry an auth token.
+// GET / HEAD / OPTIONS are skipped automatically inside validateCsrf.
+// This must be mounted AFTER cookie-parser and BEFORE individual route handlers.
+app.use('/api', validateCsrf);
+
 app.get('/api/user/me', authenticateToken, async (req, res) => {
     try {
         const [users] = await db.query('SELECT id, fullname, referral_code, kyc_status FROM users WHERE id = ?', [req.user.userId]);
