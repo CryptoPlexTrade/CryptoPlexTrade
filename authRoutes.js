@@ -51,8 +51,10 @@ router.post('/register', authLimiter, async (req, res) => {
     try {
         // Check if user already exists (case-insensitive)
         const emailLower = email.toLowerCase().trim();
-        const [userExists] = await db.query('SELECT email FROM users WHERE LOWER(email) = ?', [emailLower]);
-        if (userExists.length > 0) {
+        const [userExists] = await db.query('SELECT id, is_verified FROM users WHERE LOWER(email) = ?', [emailLower]);
+
+        if (userExists.length > 0 && userExists[0].is_verified) {
+            // Fully verified account — block duplicate registration
             return res.status(409).json({ message: 'An account with this email already exists.' });
         }
 
@@ -67,25 +69,34 @@ router.post('/register', authLimiter, async (req, res) => {
             }
         }
 
-        // Generate a unique referral code for the new user.
-        // We will insert the user first, get their ID, and then generate the code.
-
         // Hash the password
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        // Insert new user into the database (always store the normalised lowercase email)
-        const [result] = await db.query(
-            'INSERT INTO users (fullname, phone, email, password, referred_by_id, is_verified) VALUES (?, ?, ?, ?, ?, ?)',
-            [fullname, phone, emailLower, hashedPassword, referredById, false]
-        );
+        let newUserId;
 
-        // Generate and update the referral code for the new user
-        const newUserId = result.insertId;
-        const namePart = fullname.replace(/\s+/g, '').substring(0, 10).toUpperCase();
-        const randomPart = crypto.randomBytes(4).toString('hex').substring(0, 6).toUpperCase();
-        const newUserReferralCode = `CE-${namePart}${randomPart}`;
-        await db.query('UPDATE users SET referral_code = ? WHERE id = ?', [newUserReferralCode, newUserId]);
+        if (userExists.length > 0 && !userExists[0].is_verified) {
+            // Unverified account exists — update it with the new details
+            newUserId = userExists[0].id;
+            await db.query(
+                'UPDATE users SET fullname = ?, phone = ?, password = ?, referred_by_id = ? WHERE id = ?',
+                [fullname, phone, hashedPassword, referredById, newUserId]
+            );
+            logger.info(`Re-registration: updated unverified account for ${emailLower} (ID: ${newUserId})`);
+        } else {
+            // Brand new user — insert
+            const [result] = await db.query(
+                'INSERT INTO users (fullname, phone, email, password, referred_by_id, is_verified) VALUES (?, ?, ?, ?, ?, ?)',
+                [fullname, phone, emailLower, hashedPassword, referredById, false]
+            );
+            newUserId = result.insertId;
+
+            // Generate and set a referral code for the new user
+            const namePart = fullname.replace(/\s+/g, '').substring(0, 10).toUpperCase();
+            const randomPart = crypto.randomBytes(4).toString('hex').substring(0, 6).toUpperCase();
+            const newUserReferralCode = `CE-${namePart}${randomPart}`;
+            await db.query('UPDATE users SET referral_code = ? WHERE id = ?', [newUserReferralCode, newUserId]);
+        }
 
         // Generate 6-digit OTP (crypto.randomInt is a CSPRNG — Math.random() is not)
         const otpCode = crypto.randomInt(100000, 1000000).toString();
