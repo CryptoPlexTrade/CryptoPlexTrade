@@ -27,6 +27,7 @@ const { getRates } = require('./rates');
         await db.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS id_front TEXT');
         await db.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS id_back TEXT');
         await db.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS id_selfie TEXT');
+        await db.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS airtime_sent BOOLEAN DEFAULT FALSE');
     } catch (e) {
         logger.error('Token migration failed:', e);
     }

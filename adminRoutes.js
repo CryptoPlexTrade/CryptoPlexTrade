@@ -235,12 +235,14 @@ router.get('/referrals', async (req, res) => {
     try {
         const [referrals] = await db.query(`
             SELECT
+                referred.id AS referred_id,
                 referrer.fullname AS referrer_name,
                 referrer.email AS referrer_email,
                 referred.fullname AS referred_name,
                 referred.email AS referred_email,
                 referred.created_at AS referred_join_date,
-                (SELECT COUNT(*) FROM orders WHERE user_id = referred.id) > 0 AS has_transacted
+                (SELECT COUNT(*) FROM orders WHERE user_id = referred.id) > 0 AS has_transacted,
+                COALESCE(referred.airtime_sent, FALSE) AS airtime_sent
             FROM users AS referred
             JOIN users AS referrer ON referred.referred_by_id = referrer.id
             WHERE referred.referred_by_id IS NOT NULL AND referred.is_verified = TRUE
@@ -250,6 +252,22 @@ router.get('/referrals', async (req, res) => {
     } catch (error) {
         logger.error('Error fetching referral data:', error);
         res.status(500).json({ message: 'Server error while fetching referral data.' });
+    }
+});
+
+// Toggle airtime sent status for a referred user
+router.put('/referrals/:id/airtime', async (req, res) => {
+    const { status } = req.body; // 'sent' or 'not_sent'
+    if (!['sent', 'not_sent'].includes(status)) {
+        return res.status(400).json({ message: 'Invalid status. Must be "sent" or "not_sent".' });
+    }
+    try {
+        const isSent = status === 'sent';
+        await db.query('UPDATE users SET airtime_sent = ? WHERE id = ?', [isSent, req.params.id]);
+        res.status(200).json({ message: `Airtime status updated to ${status}.` });
+    } catch (error) {
+        logger.error('Airtime status update error:', error);
+        res.status(500).json({ message: 'Server error updating airtime status.' });
     }
 });
 // === ANNOUNCEMENT MANAGEMENT ===

@@ -6,6 +6,108 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Referrals - Admin</title>
     <link rel="stylesheet" href="admin.css?v=2">
+    <style>
+        /* Airtime toggle buttons */
+        .airtime-toggle {
+            display: inline-flex;
+            gap: 6px;
+            align-items: center;
+        }
+        .airtime-btn {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            border: 2px solid var(--border-medium);
+            background: var(--bg-white);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            padding: 0;
+        }
+        .airtime-btn:hover {
+            transform: scale(1.1);
+        }
+        .airtime-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+        /* Sent (check) button */
+        .airtime-btn.btn-sent {
+            border-color: var(--accent-green);
+            color: var(--accent-green);
+        }
+        .airtime-btn.btn-sent.active {
+            background: var(--accent-green);
+            color: white;
+            box-shadow: 0 2px 8px rgba(40, 167, 69, 0.35);
+        }
+        /* Not sent (cross) button */
+        .airtime-btn.btn-not-sent {
+            border-color: var(--accent-red);
+            color: var(--accent-red);
+        }
+        .airtime-btn.btn-not-sent.active {
+            background: var(--accent-red);
+            color: white;
+            box-shadow: 0 2px 8px rgba(220, 53, 69, 0.35);
+        }
+        /* Disabled state while saving */
+        .airtime-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        /* Airtime status badge */
+        .airtime-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 50px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            margin-left: 6px;
+            vertical-align: middle;
+        }
+        .airtime-badge.sent {
+            background-color: #e9f5ec;
+            color: #28a745;
+        }
+        .airtime-badge.not-sent {
+            background-color: #fbe9e7;
+            color: #dc3545;
+        }
+        .airtime-badge.clickable {
+            cursor: pointer;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+        .airtime-badge.clickable:hover {
+            opacity: 0.75;
+            transform: scale(1.05);
+        }
+        /* Toast notification */
+        .toast-notification {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            padding: 14px 22px;
+            border-radius: 10px;
+            font-size: 0.88rem;
+            font-weight: 500;
+            color: white;
+            z-index: 9999;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+        .toast-notification.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .toast-notification.success { background: var(--accent-green); }
+        .toast-notification.error { background: var(--accent-red); }
+    </style>
 </head>
 <body>
     <!-- Mobile Hamburger Button -->
@@ -52,7 +154,7 @@
         <main class="admin-content">
             <div class="admin-header">
                 <h1>Referral Tracking</h1>
-                <p>Monitor successful referrals and user activity.</p>
+                <p>Monitor successful referrals and airtime reward status.</p>
             </div>
 
             <div class="filter-controls">
@@ -75,6 +177,25 @@
                         </select>
                     </div>
                 </div>
+                <div class="filter-group">
+                    <label>Filter by Airtime Status</label>
+                    <div class="csd-wrapper" id="filter-airtime-csd" data-value="all">
+                        <button type="button" class="csd-trigger">
+                            <span class="csd-label">All</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        </button>
+                        <div class="csd-dropdown">
+                            <div class="csd-option csd-active" data-value="all">All</div>
+                            <div class="csd-option" data-value="sent">Sent</div>
+                            <div class="csd-option" data-value="not_sent">Not Sent</div>
+                        </div>
+                        <select id="filter-airtime" style="display:none">
+                            <option value="all" selected>All</option>
+                            <option value="sent">Sent</option>
+                            <option value="not_sent">Not Sent</option>
+                        </select>
+                    </div>
+                </div>
             </div>
 
             <div class="table-container">
@@ -85,6 +206,7 @@
                             <th>Referred User</th>
                             <th>Referred User Joined</th>
                             <th>Has Transacted?</th>
+                            <th>Airtime Sent</th>
                         </tr>
                     </thead>
                     <tbody id="referrals-tbody">
@@ -95,6 +217,9 @@
             <div id="pagination-bar"></div>
         </main>
     </div>
+
+    <!-- Toast notification -->
+    <div class="toast-notification" id="toast"></div>
 
     <script src="admin.js"></script>
     <script src="admin-pagination.js"></script>
@@ -121,6 +246,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', async function() {
             const tbody = document.getElementById('referrals-tbody');
+            const toast = document.getElementById('toast');
             let allReferrals = [];
             let filteredReferrals = [];
 
@@ -130,9 +256,16 @@
                 onPageChange: () => renderReferrals(pager.getSlice(filteredReferrals))
             });
 
+            function showToast(message, type = 'success') {
+                toast.textContent = message;
+                toast.className = 'toast-notification ' + type;
+                requestAnimationFrame(() => toast.classList.add('show'));
+                setTimeout(() => toast.classList.remove('show'), 3000);
+            }
+
             async function fetchReferrals() {
                 try {
-                    tbody.innerHTML = '<tr><td colspan="4">Loading...</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="5">Loading...</td></tr>';
                     const response = await fetch('/api/admin/referrals', { credentials: 'include' });
                     if (response.status === 401 || response.status === 403) {
                         window.location.href = '/admin-login';
@@ -142,19 +275,63 @@
                     allReferrals = await response.json();
                     applyFilters();
                 } catch (error) {
-                    tbody.innerHTML = `<tr><td colspan="4" class="error-message">${error.message}</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="5" class="error-message">${error.message}</td></tr>`;
                 }
+            }
+
+            async function toggleAirtime(referredId, newStatus, toggleContainer) {
+                const btns = toggleContainer.querySelectorAll('.airtime-btn');
+                btns.forEach(b => b.disabled = true);
+                try {
+                    const res = await fetch(`/api/admin/referrals/${referredId}/airtime`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        credentials: 'include',
+                        body: JSON.stringify({ status: newStatus })
+                    });
+                    if (!res.ok) {
+                        const data = await res.json();
+                        throw new Error(data.message || 'Failed to update');
+                    }
+                    // Update local data
+                    const ref = allReferrals.find(r => r.referred_id === referredId);
+                    if (ref) ref.airtime_sent = newStatus === 'sent';
+
+                    const isSent = newStatus === 'sent';
+
+                    // Hide buttons, show only badge
+                    btns.forEach(b => b.style.display = 'none');
+                    const badge = toggleContainer.querySelector('.airtime-badge');
+                    badge.className = 'airtime-badge clickable ' + (isSent ? 'sent' : 'not-sent');
+                    badge.textContent = isSent ? 'Sent' : 'Not Sent';
+                    badge.style.display = '';
+
+                    showToast(`Airtime marked as ${isSent ? 'Sent' : 'Not Sent'}`, 'success');
+                } catch (err) {
+                    showToast(err.message, 'error');
+                    btns.forEach(b => b.disabled = false);
+                }
+            }
+
+            function showButtons(toggleContainer) {
+                toggleContainer.querySelectorAll('.airtime-btn').forEach(b => b.style.display = '');
+                const badge = toggleContainer.querySelector('.airtime-badge');
+                badge.style.display = 'none';
             }
 
             function renderReferrals(referrals) {
                 tbody.innerHTML = '';
                 if (referrals.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="4">No referral data found.</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="5">No referral data found.</td></tr>';
                     return;
                 }
                 referrals.forEach(ref => {
                     const row = document.createElement('tr');
                     const hasTransacted = ref.has_transacted;
+                    const isSent = ref.airtime_sent;
+                    // If already set (sent=true), hide buttons and show badge only
+                    const btnDisplay = isSent ? 'display:none' : '';
+                    const badgeDisplay = isSent ? '' : 'display:none';
                     row.innerHTML = `
                         <td data-label="Referrer">${ref.referrer_name} (${ref.referrer_email})</td>
                         <td data-label="Referred User">${ref.referred_name} (${ref.referred_email})</td>
@@ -164,19 +341,51 @@
                                 ${hasTransacted ? 'Yes' : 'No'}
                             </span>
                         </td>
+                        <td data-label="Airtime Sent">
+                            <div class="airtime-toggle">
+                                <button class="airtime-btn btn-sent" title="Mark as Sent" style="${btnDisplay}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
+                                </button>
+                                <button class="airtime-btn btn-not-sent" title="Mark as Not Sent" style="${btnDisplay}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                                </button>
+                                <span class="airtime-badge clickable ${isSent ? 'sent' : 'not-sent'}" style="${badgeDisplay}">${isSent ? 'Sent' : 'Not Sent'}</span>
+                            </div>
+                        </td>
                     `;
+
+                    const toggleContainer = row.querySelector('.airtime-toggle');
+                    const btnSent = row.querySelector('.btn-sent');
+                    const btnNotSent = row.querySelector('.btn-not-sent');
+                    const badge = row.querySelector('.airtime-badge');
+
+                    btnSent.addEventListener('click', () => toggleAirtime(ref.referred_id, 'sent', toggleContainer));
+                    btnNotSent.addEventListener('click', () => toggleAirtime(ref.referred_id, 'not_sent', toggleContainer));
+                    // Click badge to reveal buttons again for changing
+                    badge.addEventListener('click', () => showButtons(toggleContainer));
+
                     tbody.appendChild(row);
                 });
             }
 
             function applyFilters() {
-                const filterValue = document.getElementById('filter-transacted').value;
+                const transactedFilter = document.getElementById('filter-transacted').value;
+                const airtimeFilter = document.getElementById('filter-airtime').value;
+
                 filteredReferrals = [...allReferrals];
 
-                if (filterValue === 'yes') {
-                    filteredReferrals = allReferrals.filter(ref => ref.has_transacted);
-                } else if (filterValue === 'no') {
-                    filteredReferrals = allReferrals.filter(ref => !ref.has_transacted);
+                // Transaction filter
+                if (transactedFilter === 'yes') {
+                    filteredReferrals = filteredReferrals.filter(ref => ref.has_transacted);
+                } else if (transactedFilter === 'no') {
+                    filteredReferrals = filteredReferrals.filter(ref => !ref.has_transacted);
+                }
+
+                // Airtime filter
+                if (airtimeFilter === 'sent') {
+                    filteredReferrals = filteredReferrals.filter(ref => ref.airtime_sent);
+                } else if (airtimeFilter === 'not_sent') {
+                    filteredReferrals = filteredReferrals.filter(ref => !ref.airtime_sent);
                 }
 
                 pager.setTotal(filteredReferrals.length);
