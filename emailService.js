@@ -7,7 +7,6 @@ let transporter;
 // Initialize the transporter only if SMTP settings are present
 if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
     transporter = nodemailer.createTransport({
-        pool: true, // Enable connection pooling
         host: process.env.SMTP_HOST,
         port: parseInt(process.env.SMTP_PORT, 10),
         secure: process.env.SMTP_SECURE === 'true', // true for 465, false for other ports
@@ -15,7 +14,6 @@ if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
             user: process.env.SMTP_USER,
             pass: process.env.SMTP_PASS,
         },
-        // Improve deliverability
         tls: { rejectUnauthorized: true },
     });
 
@@ -30,9 +28,10 @@ if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
     logger.warn('SMTP configuration is missing. Email notifications will be disabled.');
 }
 
-// Consistent sender identity — always use the same From address & name
+// Consistent sender identity — always use SMTP_USER as the From address
+// Gmail/Google Workspace rejects emails from non-verified aliases
 const SENDER_NAME  = 'CryptoPlexTrade';
-const getSender    = () => `"${SENDER_NAME}" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`;
+const getSender    = () => `"${SENDER_NAME}" <${process.env.SMTP_USER}>`;
 const getReplyTo   = () => process.env.ADMIN_EMAIL || process.env.SMTP_USER;
 const getAppDomain = () => process.env.APP_URL || 'cryptoplextrade.com';
 
