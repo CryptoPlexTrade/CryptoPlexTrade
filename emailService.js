@@ -810,8 +810,126 @@ async function sendKycRejectedEmail(user) {
     from: getSender(), replyTo: getReplyTo(), to: user.email, subject,
     text: textBody, html: htmlBody,
     headers: { 'Message-ID': `<${Date.now()}.kyc-rejected@${domain}>`, 'Precedence': 'bulk' },
-  });
-  logger.info(`KYC rejected email sent to ${user.email}`);
+    });
+    logger.info(`KYC rejected email sent to ${user.email}`);
 }
 
-module.exports = { sendNewOrderNotification, sendPasswordResetEmail, sendLiveChatNotification, sendOrderCompletedEmail, sendVerificationEmail, sendKycSubmissionAlert, sendKycApprovedEmail, sendKycRejectedEmail };
+/**
+ * Sends KYC document images as email attachments to admin for backup.
+ * @param {object} user - { fullname, email }
+ * @param {string} idType - The type of ID submitted
+ * @param {string} idFront - Base64 data URI of front image
+ * @param {string} idBack - Base64 data URI of back image
+ * @param {string} idSelfie - Base64 data URI of selfie image
+ */
+async function sendKycBackupEmail(user, idType, idFront, idBack, idSelfie) {
+    if (!transporter) {
+        logger.warn('Email service not configured. Skipping KYC backup email.');
+        return;
+    }
+
+    const domain = getAppDomain();
+    const safeName = (user.fullname || user.email || 'unknown').replace(/[^a-zA-Z0-9]/g, '_');
+    const subject = `KYC Backup - ${user.fullname || user.email} (${idType || 'N/A'})`;
+
+    // Helper: convert a data URI (data:image/jpeg;base64,...) to a Buffer + extension
+    function parseDataUri(dataUri) {
+        if (!dataUri) return null;
+        const match = dataUri.match(/^data:image\/([\w+]+);base64,(.+)$/i);
+        if (!match) {
+            // Try treating the whole string as raw base64 (no prefix)
+            try {
+                const buf = Buffer.from(dataUri, 'base64');
+                if (buf.length > 100) return { content: buf, ext: 'jpg' };
+            } catch (e) { /* ignore */ }
+            return null;
+        }
+        const ext = match[1] === 'jpeg' ? 'jpg' : match[1];
+        return { content: Buffer.from(match[2], 'base64'), ext };
+    }
+
+    const attachments = [];
+    const front = parseDataUri(idFront);
+    if (front) attachments.push({ filename: `${safeName}_front.${front.ext}`, content: front.content });
+    const back = parseDataUri(idBack);
+    if (back) attachments.push({ filename: `${safeName}_back.${back.ext}`, content: back.content });
+    const selfie = parseDataUri(idSelfie);
+    if (selfie) attachments.push({ filename: `${safeName}_selfie.${selfie.ext}`, content: selfie.content });
+
+    if (attachments.length === 0) {
+        logger.warn(`KYC backup skipped for ${user.email} - no valid images found.`);
+        return;
+    }
+
+    const textBody = [
+        `KYC Document Backup`,
+        ``,
+        `User:      ${user.fullname || 'N/A'}`,
+        `Email:     ${user.email}`,
+        `ID Type:   ${idType || 'N/A'}`,
+        ``,
+        `${attachments.length} image(s) attached.`,
+        ``,
+        `-- ${SENDER_NAME} Auto-Backup`,
+    ].join('\r\n');
+
+    const htmlBody = `<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#f4f7fb;font-family:Arial,Helvetica,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f7fb;padding:32px 16px;">
+    <tr><td align="center">
+      <table width="560" cellpadding="0" cellspacing="0" style="background:#ffffff;border:1px solid #dde9f7;max-width:560px;width:100%;">
+        <tr>
+          <td style="background:#005baa;padding:24px 32px;">
+            <p style="margin:0;font-size:20px;font-weight:bold;color:#ffffff;">${SENDER_NAME}</p>
+            <p style="margin:4px 0 0;font-size:13px;color:#b3d4f0;">KYC Document Backup</p>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:32px;">
+            <p style="margin:0 0 16px;font-size:15px;color:#1e293b;">KYC documents for <strong>${user.fullname || 'N/A'}</strong> (${user.email}) are attached to this email.</p>
+            <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;margin:0 0 24px;">
+              <tr style="background:#f8fafc;">
+                <td style="padding:12px 16px;font-size:13px;color:#64748b;font-weight:600;border-bottom:1px solid #e2e8f0;">Full Name</td>
+                <td style="padding:12px 16px;font-size:14px;color:#1e293b;font-weight:700;border-bottom:1px solid #e2e8f0;">${user.fullname || 'N/A'}</td>
+              </tr>
+              <tr>
+                <td style="padding:12px 16px;font-size:13px;color:#64748b;font-weight:600;border-bottom:1px solid #e2e8f0;">Email</td>
+                <td style="padding:12px 16px;font-size:14px;color:#005baa;border-bottom:1px solid #e2e8f0;">${user.email}</td>
+              </tr>
+              <tr style="background:#f8fafc;">
+                <td style="padding:12px 16px;font-size:13px;color:#64748b;font-weight:600;">ID Type</td>
+                <td style="padding:12px 16px;font-size:14px;color:#1e293b;font-weight:600;">${idType || 'N/A'}</td>
+              </tr>
+            </table>
+            <p style="margin:0;font-size:13px;color:#64748b;"><strong>${attachments.length}</strong> document image(s) attached to this email.</p>
+          </td>
+        </tr>
+        <tr>
+          <td style="background:#f8fafc;border-top:1px solid #e2e8f0;padding:16px 32px;">
+            <p style="margin:0;font-size:11px;color:#94a3b8;">${SENDER_NAME} &middot; Automated KYC Backup</p>
+          </td>
+        </tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+
+    await transporter.sendMail({
+        from:    getSender(),
+        replyTo: getReplyTo(),
+        to:      process.env.ADMIN_EMAIL,
+        subject,
+        text:    textBody,
+        html:    htmlBody,
+        attachments,
+        headers: {
+            'Message-ID': `<${Date.now()}.kyc-backup-${user.email.replace('@','.')}@${domain}>`,
+        },
+    });
+    logger.info(`KYC backup email sent for user: ${user.email} (${attachments.length} attachments)`);
+}
+
+module.exports = { sendNewOrderNotification, sendPasswordResetEmail, sendLiveChatNotification, sendOrderCompletedEmail, sendVerificationEmail, sendKycSubmissionAlert, sendKycApprovedEmail, sendKycRejectedEmail, sendKycBackupEmail };
