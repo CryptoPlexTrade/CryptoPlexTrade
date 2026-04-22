@@ -85,6 +85,33 @@
         </main>
     </div>
 
+    <!-- Edit User Modal -->
+    <div id="edit-user-modal" class="modal-overlay">
+        <div class="modal-content" style="max-width:480px;">
+            <div class="modal-header">
+                <h2 id="edit-modal-title">Edit User</h2>
+                <button id="close-edit-modal" class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="edit-user-id">
+                <div style="margin-bottom:16px;">
+                    <label style="display:block;font-size:0.82rem;font-weight:600;color:#64748b;margin-bottom:5px;">Full Name</label>
+                    <input type="text" id="edit-fullname" style="width:100%;padding:10px 12px;border:1px solid #cbd5e1;border-radius:8px;font-family:'Poppins',sans-serif;font-size:0.9rem;box-sizing:border-box;">
+                </div>
+                <div style="margin-bottom:16px;">
+                    <label style="display:block;font-size:0.82rem;font-weight:600;color:#64748b;margin-bottom:5px;">Email</label>
+                    <input type="email" id="edit-email" style="width:100%;padding:10px 12px;border:1px solid #cbd5e1;border-radius:8px;font-family:'Poppins',sans-serif;font-size:0.9rem;box-sizing:border-box;">
+                </div>
+                <div style="margin-bottom:20px;">
+                    <label style="display:block;font-size:0.82rem;font-weight:600;color:#64748b;margin-bottom:5px;">Phone</label>
+                    <input type="tel" id="edit-phone" style="width:100%;padding:10px 12px;border:1px solid #cbd5e1;border-radius:8px;font-family:'Poppins',sans-serif;font-size:0.9rem;box-sizing:border-box;">
+                </div>
+                <div id="edit-msg" style="display:none;padding:10px 14px;border-radius:8px;font-size:0.84rem;font-weight:500;margin-bottom:14px;"></div>
+                <button id="save-edit-btn" class="action-btn" style="width:100%;padding:12px;font-size:0.95rem;font-weight:700;border-radius:8px;cursor:pointer;">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
     <script src="admin.js"></script>
     <script src="admin-pagination.js"></script>
     <script>
@@ -150,13 +177,14 @@
 
                     let actionBtns = '';
                     if (user.role !== 'admin') {
+                        actionBtns = `<button class="action-btn action-view" style="background:#005baa;" onclick='openEditModal(${JSON.stringify(user).replace(/'/g, "&#39;")})'>Edit</button> `;
                         if (status === 'active') {
-                            actionBtns = `
+                            actionBtns += `
                                 <button class="action-btn action-view" style="background:#f59e0b;" onclick="toggleUserStatus(${user.id}, 'suspended')">Suspend</button>
                                 <button class="action-btn action-view" style="background:#dc2626; margin-left:5px;" onclick="toggleUserStatus(${user.id}, 'deactivated')">Deactivate</button>
                             `;
                         } else {
-                            actionBtns = `<button class="action-btn action-view" style="background:#16a34a;" onclick="toggleUserStatus(${user.id}, 'active')">Activate</button>`;
+                            actionBtns += `<button class="action-btn action-view" style="background:#16a34a;" onclick="toggleUserStatus(${user.id}, 'active')">Activate</button>`;
                         }
                     }
 
@@ -224,6 +252,60 @@
 
             fetchUsers();
             document.getElementById('search-user').addEventListener('input', applyFilters);
+
+            // ── Edit User Modal ──
+            const editModal = document.getElementById('edit-user-modal');
+            document.getElementById('close-edit-modal').addEventListener('click', () => editModal.classList.remove('show'));
+            editModal.addEventListener('click', (e) => { if (e.target === editModal) editModal.classList.remove('show'); });
+
+            window.openEditModal = function(user) {
+                document.getElementById('edit-user-id').value = user.id;
+                document.getElementById('edit-fullname').value = user.fullname;
+                document.getElementById('edit-email').value = user.email;
+                document.getElementById('edit-phone').value = user.phone || '';
+                document.getElementById('edit-modal-title').textContent = `Edit User: ${user.fullname}`;
+                document.getElementById('edit-msg').style.display = 'none';
+                editModal.classList.add('show');
+            };
+
+            document.getElementById('save-edit-btn').addEventListener('click', async () => {
+                const userId = document.getElementById('edit-user-id').value;
+                const fullname = document.getElementById('edit-fullname').value.trim();
+                const email = document.getElementById('edit-email').value.trim();
+                const phone = document.getElementById('edit-phone').value.trim();
+                const msgEl = document.getElementById('edit-msg');
+
+                if (!fullname || !email || !phone) {
+                    msgEl.textContent = 'All fields are required.';
+                    msgEl.style.cssText = 'display:block;background:#fef2f2;color:#dc2626;border:1px solid #fecaca;padding:10px 14px;border-radius:8px;font-size:0.84rem;margin-bottom:14px;';
+                    return;
+                }
+
+                const btn = document.getElementById('save-edit-btn');
+                btn.disabled = true; btn.textContent = 'Saving...';
+                try {
+                    const res = await fetch(`/api/admin/users/${userId}/profile`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ fullname, email, phone })
+                    });
+                    const data = await res.json();
+                    if (res.ok) {
+                        msgEl.textContent = data.message;
+                        msgEl.style.cssText = 'display:block;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;padding:10px 14px;border-radius:8px;font-size:0.84rem;margin-bottom:14px;';
+                        fetchUsers();
+                        setTimeout(() => editModal.classList.remove('show'), 1200);
+                    } else {
+                        msgEl.textContent = data.message || 'Failed to update.';
+                        msgEl.style.cssText = 'display:block;background:#fef2f2;color:#dc2626;border:1px solid #fecaca;padding:10px 14px;border-radius:8px;font-size:0.84rem;margin-bottom:14px;';
+                    }
+                } catch (e) {
+                    msgEl.textContent = 'Network error.';
+                    msgEl.style.cssText = 'display:block;background:#fef2f2;color:#dc2626;border:1px solid #fecaca;padding:10px 14px;border-radius:8px;font-size:0.84rem;margin-bottom:14px;';
+                } finally {
+                    btn.disabled = false; btn.textContent = 'Save Changes';
+                }
+            });
         });
     </script>
 </body>

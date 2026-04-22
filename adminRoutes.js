@@ -189,6 +189,7 @@ router.get('/users', async (req, res) => {
     }
 });
 
+// === UPDATE USER STATUS ===
 router.put('/users/:id/status', async (req, res) => {
     const { status } = req.body;
     if (!['active', 'suspended', 'deactivated'].includes(status)) {
@@ -200,6 +201,27 @@ router.put('/users/:id/status', async (req, res) => {
     } catch (error) {
         logger.error('Error updating user status:', error);
         res.status(500).json({ message: 'Server error updating user status.' });
+    }
+});
+
+// === ADMIN: EDIT USER PROFILE ===
+router.put('/users/:id/profile', async (req, res) => {
+    const { fullname, phone, email } = req.body;
+    if (!fullname || !phone || !email) {
+        return res.status(400).json({ message: 'Full name, phone, and email are required.' });
+    }
+    try {
+        const emailLower = email.toLowerCase().trim();
+        // Check if email is already taken by another user
+        const [existing] = await db.query('SELECT id FROM users WHERE LOWER(email) = ? AND id != ?', [emailLower, req.params.id]);
+        if (existing.length > 0) {
+            return res.status(409).json({ message: 'This email is already used by another account.' });
+        }
+        await db.query('UPDATE users SET fullname = ?, phone = ?, email = ? WHERE id = ?', [fullname.trim(), phone.trim(), emailLower, req.params.id]);
+        res.status(200).json({ message: 'User profile updated successfully.' });
+    } catch (error) {
+        logger.error('Error updating user profile:', error);
+        res.status(500).json({ message: 'Server error updating user profile.' });
     }
 });
 
