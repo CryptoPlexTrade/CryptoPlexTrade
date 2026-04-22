@@ -421,10 +421,21 @@
 
                 if (order.order_type === 'buy') {
                     modalBody.appendChild(createDetailItem('Receiving Wallet', order.wallet_address));
-                    modalBody.appendChild(createDetailItem('User TXID', order.transaction_id || 'N/A'));
+                    modalBody.appendChild(createDetailItem("User's Payment TXID", order.transaction_id || 'N/A'));
                 } else { // Sell order
                     modalBody.appendChild(createDetailItem('Crypto Sent by User', `${order.usd_amount} ${order.product}`));
-                    modalBody.appendChild(createDetailItem('User TXID', order.transaction_id || 'N/A'));
+
+                    // Detect if transaction_id is actually a crypto address (legacy orders) vs a real TXID
+                    const txid = order.transaction_id || '';
+                    const isLikelyCryptoAddress = /^(bc1[a-z0-9]{25,}|[13][a-km-zA-HJ-NP-Z1-9]{25,34}|0x[0-9a-fA-F]{40}|T[1-9A-HJ-NP-Za-km-z]{33})$/.test(txid.trim());
+
+                    if (!txid) {
+                        modalBody.appendChild(createDetailItem("User's Crypto TXID", 'N/A'));
+                    } else if (isLikelyCryptoAddress) {
+                        modalBody.appendChild(createDetailItem("User's Crypto TXID", `<span style="color:#9a3412;font-size:0.82em;">⚠ Legacy order — stored deposit address instead of TXID:<br><code style="font-size:0.9em;word-break:break-all;">${txid}</code></span>`));
+                    } else {
+                        modalBody.appendChild(createDetailItem("User's Crypto TXID", txid));
+                    }
                     try {
                         const payoutInfo = JSON.parse(order.wallet_address);
                         modalBody.appendChild(createDetailItem('Payout Method', payoutInfo.method === 'momo' ? 'Mobile Money' : 'Bank Transfer'));
