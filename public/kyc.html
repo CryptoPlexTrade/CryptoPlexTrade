@@ -214,7 +214,7 @@
 
                         <form id="kyc-form">
                             <!-- ID Type -->
-                            <div class="form-group" style="position:relative; z-index: 10;">
+                            <div class="form-group" id="id-type-group" style="position:relative;">
                                 <label class="form-label">Document Type</label>
                                 <div class="asset-select-wrap" id="id-select-wrap" style="margin-bottom:0;">
                                     <div class="asset-select-trigger" id="id-select-trigger" role="button" tabindex="0" aria-haspopup="listbox" aria-expanded="false">
@@ -474,9 +474,10 @@
         const options = wrap.querySelectorAll('.asset-option');
         const nameEl  = document.getElementById('id-select-name');
         const idSelect = document.getElementById('id_type');
+        const parentGroup = document.getElementById('id-type-group');
 
-        function openDropdown() { wrap.classList.add('open'); trigger.setAttribute('aria-expanded', 'true'); }
-        function closeDropdown() { wrap.classList.remove('open'); trigger.setAttribute('aria-expanded', 'false'); }
+        function openDropdown() { wrap.classList.add('open'); trigger.setAttribute('aria-expanded', 'true'); if (parentGroup) parentGroup.style.zIndex = '10'; }
+        function closeDropdown() { wrap.classList.remove('open'); trigger.setAttribute('aria-expanded', 'false'); if (parentGroup) parentGroup.style.zIndex = ''; }
 
         trigger.addEventListener('click', () => { wrap.classList.contains('open') ? closeDropdown() : openDropdown(); });
 
