@@ -48,6 +48,7 @@ async function sendNewOrderNotification(orderDetails, orderId) {
     }
 
     const { order_type, user_email } = orderDetails;
+    const formattedId = `#${orderId}`;
     const subject = `New ${order_type.toUpperCase()} Order Received - #${orderId}`;
     let textBody = `A new order has been placed by ${user_email}.\r\n\r\n`;
     let htmlBody = `<!DOCTYPE html>
