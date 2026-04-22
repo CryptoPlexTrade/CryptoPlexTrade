@@ -22,7 +22,8 @@ CREATE TABLE IF NOT EXISTS users (
     referral_code   VARCHAR(50)         UNIQUE,
     referred_by_id  INTEGER             REFERENCES users(id) ON DELETE SET NULL,
     created_at      TIMESTAMPTZ         NOT NULL DEFAULT NOW(),
-    updated_at      TIMESTAMPTZ         NOT NULL DEFAULT NOW()
+    updated_at      TIMESTAMPTZ         NOT NULL DEFAULT NOW(),
+    status          VARCHAR(20)         DEFAULT 'active'           -- 'active' | 'suspended' | 'deactivated'
 );
 
 -- Index for fast login lookups

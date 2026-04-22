@@ -71,7 +71,9 @@
                             <th>Email</th>
                             <th>Phone</th>
                             <th>Role</th>
+                            <th>Status</th>
                             <th>Date Joined</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody id="users-tbody">
@@ -119,7 +121,7 @@
 
             async function fetchUsers() {
                 try {
-                    tbody.innerHTML = '<tr><td colspan="6">Loading...</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="8">Loading...</td></tr>';
                     const response = await fetch('/api/admin/users', { credentials: 'include' });
                     if (response.status === 401 || response.status === 403) {
                         window.location.href = '/admin-login';
@@ -129,28 +131,86 @@
                     allUsers = await response.json();
                     applyFilters();
                 } catch (error) {
-                    tbody.innerHTML = `<tr><td colspan="6" class="error-message">${error.message}</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="8" class="error-message">${error.message}</td></tr>`;
                 }
             }
 
             function renderUsers(users) {
                 tbody.innerHTML = '';
                 if (users.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="6">No users found.</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="8">No users found.</td></tr>';
                     return;
                 }
                 users.forEach(user => {
                     const row = document.createElement('tr');
+                    const status = user.status || 'active';
+                    let statusClass = 'status-completed'; // green for active
+                    if (status === 'suspended') statusClass = 'status-pending'; // orange
+                    if (status === 'deactivated') statusClass = 'status-cancelled'; // red
+
+                    let actionBtns = '';
+                    if (user.role !== 'admin') {
+                        if (status === 'active') {
+                            actionBtns = `
+                                <button class="action-btn action-view" style="background:#f59e0b;" onclick="toggleUserStatus(${user.id}, 'suspended')">Suspend</button>
+                                <button class="action-btn action-view" style="background:#dc2626; margin-left:5px;" onclick="toggleUserStatus(${user.id}, 'deactivated')">Deactivate</button>
+                            `;
+                        } else {
+                            actionBtns = `<button class="action-btn action-view" style="background:#16a34a;" onclick="toggleUserStatus(${user.id}, 'active')">Activate</button>`;
+                        }
+                    }
+
                     row.innerHTML = `
                         <td data-label="User ID">USR-${String(user.id).padStart(4, '0')}</td>
                         <td data-label="Full Name">${user.fullname}</td>
                         <td data-label="Email">${user.email}</td>
                         <td data-label="Phone">${user.phone || 'N/A'}</td>
                         <td data-label="Role"><span class="status-badge status-${user.role === 'admin' ? 'completed' : 'open'}">${user.role}</span></td>
+                        <td data-label="Status"><span class="status-badge ${statusClass}">${status.toUpperCase()}</span></td>
                         <td data-label="Date Joined">${new Date(user.created_at).toLocaleString()}</td>
+                        <td data-label="Actions">${actionBtns}</td>
                     `;
                     tbody.appendChild(row);
                 });
+            }
+
+            window.toggleUserStatus = async function(userId, newStatus) {
+                if (!confirm(`Are you sure you want to set this user to ${newStatus}?`)) return;
+                try {
+                    const res = await fetch(`/api/admin/users/${userId}/status`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ status: newStatus })
+                    });
+                    if (res.ok) {
+                        showStatusToast(`User ${newStatus} successfully!`, '#16a34a');
+                        fetchUsers();
+                    } else {
+                        const data = await res.json();
+                        showStatusToast(data.message || 'Error updating status', '#dc2626');
+                    }
+                } catch (e) {
+                    showStatusToast('Network error', '#dc2626');
+                }
+            };
+
+            function showStatusToast(message, color) {
+                const t = document.createElement('div');
+                t.textContent = message;
+                t.style.cssText = `
+                    position:fixed; bottom:28px; right:28px; z-index:10000;
+                    background:${color}; color:#fff; padding:14px 22px;
+                    border-radius:12px; font-weight:700; font-size:0.9rem;
+                    box-shadow:0 8px 24px rgba(0,0,0,0.18);
+                    opacity:0; transform:translateY(20px);
+                    transition:opacity 0.3s, transform 0.3s;
+                `;
+                document.body.appendChild(t);
+                requestAnimationFrame(() => { t.style.opacity = '1'; t.style.transform = 'translateY(0)'; });
+                setTimeout(() => {
+                    t.style.opacity = '0'; t.style.transform = 'translateY(20px)';
+                    setTimeout(() => t.remove(), 350);
+                }, 3000);
             }
 
             function applyFilters() {

@@ -138,6 +138,14 @@ router.post('/login', authLimiter, async (req, res) => {
         }
 
         const user = users[0];
+        
+        // Check user status (suspended or deactivated)
+        if (user.status === 'suspended') {
+            return res.status(403).json({ message: 'Your account has been suspended. Please contact support.' });
+        }
+        if (user.status === 'deactivated') {
+            return res.status(403).json({ message: 'Your account has been deactivated.' });
+        }
 
         // Compare the provided password with the stored hashed password
         const isMatch = await bcrypt.compare(password, user.password);

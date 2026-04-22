@@ -287,7 +287,7 @@
                     <td data-label="ID Type">${user.id_type || 'N/A'}</td>
                     <td data-label="Status"><span class="status-badge ${badgeClass}">${user.kyc_status.toUpperCase()}</span></td>
                     <td data-label="Date">${new Date(user.created_at).toLocaleDateString()}</td>
-                    <td data-label="Action"><button class="action-btn action-view" onclick='openReviewModal(${JSON.stringify(user).replace(/'/g, "&#39;")})'>Review</button></td>
+                    <td data-label="Action"><button class="action-btn action-view" onclick='openReviewModal(${user.id})'>Review</button></td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -313,27 +313,42 @@
             document.getElementById('fullImgOverlay').style.display = 'flex';
         }
 
-        function openReviewModal(user) {
-            viewingUser = user;
-            document.getElementById('modal-user-info').innerHTML = `<strong>${user.fullname}</strong> (${user.email}) - ${user.id_type}`;
-            document.getElementById('img-front').src = user.id_front || 'https://via.placeholder.com/400x200?text=No+Image';
-            document.getElementById('img-back').src = user.id_back || 'https://via.placeholder.com/400x200?text=No+Image';
-            document.getElementById('img-selfie').src = user.id_selfie || 'https://via.placeholder.com/400x400?text=No+Image';
-            
-            const msgObj = document.getElementById('review-msg');
-            const btns = document.getElementById('action-btns');
-            
-            if(user.kyc_status !== 'pending') {
-                btns.style.display = 'none';
-                msgObj.style.display = 'block';
-                msgObj.textContent = `This submission has already been ${user.kyc_status.toUpperCase()}.`;
-                msgObj.style.color = user.kyc_status === 'approved' ? '#16a34a' : '#dc2626';
-            } else {
-                btns.style.display = 'flex';
-                msgObj.style.display = 'none';
-            }
+        async function openReviewModal(userId) {
+            try {
+                // Show modal in loading state
+                document.getElementById('modal-user-info').textContent = 'Loading details...';
+                document.getElementById('img-front').src = 'https://via.placeholder.com/400x200?text=Loading...';
+                document.getElementById('img-back').src = 'https://via.placeholder.com/400x200?text=Loading...';
+                document.getElementById('img-selfie').src = 'https://via.placeholder.com/400x400?text=Loading...';
+                document.getElementById('action-btns').style.display = 'none';
+                document.getElementById('review-msg').style.display = 'none';
+                modal.style.display = "flex";
 
-            modal.style.display = "flex";
+                const response = await fetch(`/api/admin/kyc/${userId}`, { credentials: 'include' });
+                if (!response.ok) throw new Error('Failed to fetch KYC details');
+                const user = await response.json();
+                viewingUser = user;
+
+                document.getElementById('modal-user-info').innerHTML = `<strong>${user.fullname}</strong> (${user.email}) - ${user.id_type}`;
+                document.getElementById('img-front').src = user.id_front || 'https://via.placeholder.com/400x200?text=No+Image';
+                document.getElementById('img-back').src = user.id_back || 'https://via.placeholder.com/400x200?text=No+Image';
+                document.getElementById('img-selfie').src = user.id_selfie || 'https://via.placeholder.com/400x400?text=No+Image';
+                
+                const msgObj = document.getElementById('review-msg');
+                const btns = document.getElementById('action-btns');
+                
+                if(user.kyc_status !== 'pending') {
+                    btns.style.display = 'none';
+                    msgObj.style.display = 'block';
+                    msgObj.textContent = `This submission has already been ${user.kyc_status.toUpperCase()}.`;
+                    msgObj.style.color = user.kyc_status === 'approved' ? '#16a34a' : '#dc2626';
+                } else {
+                    btns.style.display = 'flex';
+                    msgObj.style.display = 'none';
+                }
+            } catch (error) {
+                document.getElementById('modal-user-info').textContent = 'Error: ' + error.message;
+            }
         }
 
         // ── Custom Confirm Toast ────────────────────────────
