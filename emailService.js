@@ -6,33 +6,33 @@ let transporter;
 
 // Initialize the transporter only if SMTP settings are present
 if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
-    transporter = nodemailer.createTransport({
-        host: process.env.SMTP_HOST,
-        port: parseInt(process.env.SMTP_PORT, 10),
-        secure: process.env.SMTP_SECURE === 'true', // true for 465, false for other ports
-        auth: {
-            user: process.env.SMTP_USER,
-            pass: process.env.SMTP_PASS,
-        },
-        tls: { rejectUnauthorized: true },
-    });
+  transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: parseInt(process.env.SMTP_PORT, 10),
+    secure: process.env.SMTP_SECURE === 'true', // true for 465, false for other ports
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS,
+    },
+    tls: { rejectUnauthorized: true },
+  });
 
-    transporter.verify((error, success) => {
-        if (error) {
-            logger.error('Email transporter configuration error:', error);
-        } else {
-            logger.info('Email transporter is configured and ready to send emails.');
-        }
-    });
+  transporter.verify((error, success) => {
+    if (error) {
+      logger.error('Email transporter configuration error:', error);
+    } else {
+      logger.info('Email transporter is configured and ready to send emails.');
+    }
+  });
 } else {
-    logger.warn('SMTP configuration is missing. Email notifications will be disabled.');
+  logger.warn('SMTP configuration is missing. Email notifications will be disabled.');
 }
 
 // Consistent sender identity — always use SMTP_USER as the From address
 // Gmail/Google Workspace rejects emails from non-verified aliases
-const SENDER_NAME  = 'CryptoPlexTrade';
-const getSender    = () => `"${SENDER_NAME}" <${process.env.SMTP_USER}>`;
-const getReplyTo   = () => process.env.ADMIN_EMAIL || process.env.SMTP_USER;
+const SENDER_NAME = 'CryptoPlexTrade';
+const getSender = () => `"${SENDER_NAME}" <${process.env.SMTP_USER}>`;
+const getReplyTo = () => process.env.ADMIN_EMAIL || process.env.SMTP_USER;
 const getAppDomain = () => process.env.APP_URL || 'cryptoplextrade.com';
 
 /**
@@ -41,16 +41,16 @@ const getAppDomain = () => process.env.APP_URL || 'cryptoplextrade.com';
  * @param {number} orderId - The ID of the newly created order.
  */
 async function sendNewOrderNotification(orderDetails, orderId) {
-    if (!transporter) {
-        logger.warn('Email service is not configured. Skipping new order notification.');
-        return;
-    }
+  if (!transporter) {
+    logger.warn('Email service is not configured. Skipping new order notification.');
+    return;
+  }
 
-    const { order_type, user_email } = orderDetails;
-    const formattedId = `#${orderId}`;
-    const subject = `New ${order_type.toUpperCase()} Order Received - #${orderId}`;
-    let textBody = `A new order has been placed by ${user_email}.\r\n\r\n`;
-    let htmlBody = `<!DOCTYPE html>
+  const { order_type, user_email } = orderDetails;
+  const formattedId = `#${orderId}`;
+  const subject = `New ${order_type.toUpperCase()} Order Received - #${orderId}`;
+  let textBody = `A new order has been placed by ${user_email}.\r\n\r\n`;
+  let htmlBody = `<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
 <body style="margin:0;padding:0;background:#f4f7fb;font-family:Arial,Helvetica,sans-serif;">
@@ -70,8 +70,8 @@ async function sendNewOrderNotification(orderDetails, orderId) {
             <p style="margin:0 0 16px;font-size:15px;color:#1e293b;">A new <strong>${order_type.toUpperCase()}</strong> order has been placed by <strong>${user_email}</strong>.</p>
             <h2 style="margin:0 0 16px;font-size:17px;color:#1e293b;">Order Summary (ID: ${formattedId})</h2>`;
 
-    if (order_type === 'buy') {
-        htmlBody += `
+  if (order_type === 'buy') {
+    htmlBody += `
             <ul style="padding-left:20px;color:#475569;font-size:14px;line-height:1.8;">
                 <li><strong>Product:</strong> ${orderDetails.product}</li>
                 <li><strong>Amount User Buys:</strong> ${orderDetails.usd_amount} ${orderDetails.product}</li>
@@ -79,9 +79,9 @@ async function sendNewOrderNotification(orderDetails, orderId) {
                 <li><strong>User's Receiving Wallet:</strong> ${orderDetails.wallet_address}</li>
                 <li><strong>User's Payment TXID:</strong> ${orderDetails.user_transaction_id}</li>
             </ul>`;
-        textBody += `Order ID: ${formattedId}\r\nType: BUY\r\nProduct: ${orderDetails.product}\r\nAmount User Buys: ${orderDetails.usd_amount} ${orderDetails.product}\r\nTotal Paid (GHS): ${orderDetails.total_paid_ghs.toFixed(2)}\r\nUser's Receiving Wallet: ${orderDetails.wallet_address}\r\nUser's Payment TXID: ${orderDetails.user_transaction_id}`;
-    } else { // Sell Order
-        htmlBody += `
+    textBody += `Order ID: ${formattedId}\r\nType: BUY\r\nProduct: ${orderDetails.product}\r\nAmount User Buys: ${orderDetails.usd_amount} ${orderDetails.product}\r\nTotal Paid (GHS): ${orderDetails.total_paid_ghs.toFixed(2)}\r\nUser's Receiving Wallet: ${orderDetails.wallet_address}\r\nUser's Payment TXID: ${orderDetails.user_transaction_id}`;
+  } else { // Sell Order
+    htmlBody += `
             <ul style="padding-left:20px;color:#475569;font-size:14px;line-height:1.8;">
                 <li><strong>Product:</strong> ${orderDetails.product}</li>
                 <li><strong>Amount User Sells:</strong> ${orderDetails.product_amount} ${orderDetails.product}</li>
@@ -92,14 +92,14 @@ async function sendNewOrderNotification(orderDetails, orderId) {
             <ul style="padding-left:20px;color:#475569;font-size:14px;line-height:1.8;">
                 <li><strong>Method:</strong> ${orderDetails.payout_info.method === 'momo' ? 'Mobile Money' : 'Bank Transfer'}</li>
                 ${orderDetails.payout_info.method === 'momo'
-                    ? `<li><strong>MoMo Number:</strong> ${orderDetails.payout_info.number}</li><li><strong>MoMo Name:</strong> ${orderDetails.payout_info.name}</li>`
-                    : `<li><strong>Bank Name:</strong> ${orderDetails.payout_info.bankName}</li><li><strong>Account Name:</strong> ${orderDetails.payout_info.accountName}</li><li><strong>Account Number:</strong> ${orderDetails.payout_info.accountNumber}</li>`
-                }
+        ? `<li><strong>MoMo Number:</strong> ${orderDetails.payout_info.number}</li><li><strong>MoMo Name:</strong> ${orderDetails.payout_info.name}</li>`
+        : `<li><strong>Bank Name:</strong> ${orderDetails.payout_info.bankName}</li><li><strong>Account Name:</strong> ${orderDetails.payout_info.accountName}</li><li><strong>Account Number:</strong> ${orderDetails.payout_info.accountNumber}</li>`
+      }
             </ul>`;
-        textBody += `Order ID: #${orderId}\r\nType: SELL\r\nProduct: ${orderDetails.product}\r\nAmount User Sells: ${orderDetails.product_amount} ${orderDetails.product}\r\nGHS to Pay User: ${orderDetails.ghs_to_receive.toFixed(2)}\r\nUser's Crypto TXID: ${orderDetails.user_transaction_id}\r\n\r\nPayout Method: ${orderDetails.payout_info.method}`;
-    }
+    textBody += `Order ID: #${orderId}\r\nType: SELL\r\nProduct: ${orderDetails.product}\r\nAmount User Sells: ${orderDetails.product_amount} ${orderDetails.product}\r\nGHS to Pay User: ${orderDetails.ghs_to_receive.toFixed(2)}\r\nUser's Crypto TXID: ${orderDetails.user_transaction_id}\r\n\r\nPayout Method: ${orderDetails.payout_info.method}`;
+  }
 
-    htmlBody += `
+  htmlBody += `
             <p style="margin:24px 0 0;font-size:14px;color:#475569;">Please log in to the admin panel to review and process the order.</p>
           </td>
         </tr>
@@ -114,22 +114,22 @@ async function sendNewOrderNotification(orderDetails, orderId) {
   </table>
 </body>
 </html>`;
-    textBody += `\r\n\r\nPlease log in to the admin panel to review and process the order.`;
+  textBody += `\r\n\r\nPlease log in to the admin panel to review and process the order.`;
 
-    const domain = getAppDomain();
-    await transporter.sendMail({
-        from:      getSender(),
-        replyTo:   getReplyTo(),
-        to:        process.env.ADMIN_EMAIL,
-        subject,
-        text:      textBody,
-        html:      htmlBody,
-        headers: {
-            'Message-ID': `<${Date.now()}.order-${orderId}@${domain}>`,
-            'Precedence': 'bulk',
-        },
-    });
-    logger.info(`Admin notification sent for new order #${orderId}`);
+  const domain = getAppDomain();
+  await transporter.sendMail({
+    from: getSender(),
+    replyTo: getReplyTo(),
+    to: process.env.ADMIN_EMAIL,
+    subject,
+    text: textBody,
+    html: htmlBody,
+    headers: {
+      'Message-ID': `<${Date.now()}.order-${orderId}@${domain}>`,
+      'Precedence': 'bulk',
+    },
+  });
+  logger.info(`Admin notification sent for new order #${orderId}`);
 }
 
 /**
@@ -138,34 +138,34 @@ async function sendNewOrderNotification(orderDetails, orderId) {
  * @param {string} resetUrl - The full reset URL with token.
  */
 async function sendPasswordResetEmail(user, resetUrl) {
-    if (!transporter) {
-        logger.warn('Email service is not configured. Skipping password reset email.');
-        return;
-    }
+  if (!transporter) {
+    logger.warn('Email service is not configured. Skipping password reset email.');
+    return;
+  }
 
-    const domain    = getAppDomain();
-    const messageId = `<${Date.now()}.reset@${domain}>`;
-    const subject   = 'Your password reset link';
+  const domain = getAppDomain();
+  const messageId = `<${Date.now()}.reset@${domain}>`;
+  const subject = 'Your password reset link';
 
-    // Plain-text — required and important for spam scoring
-    const textBody = [
-        `Hi ${user.fullname},`,
-        ``,
-        `We received a request to reset your CryptoPlexTrade account password.`,
-        `Click or paste the link below into your browser to set a new password.`,
-        `This link expires in 1 hour.`,
-        ``,
-        `${resetUrl}`,
-        ``,
-        `If you did not request this, you can safely ignore this email.`,
-        `Your password will not change unless you click the link above.`,
-        ``,
-        `-- CryptoPlexTrade Support`,
-        `${process.env.ADMIN_EMAIL}`,
-    ].join('\r\n');
+  // Plain-text — required and important for spam scoring
+  const textBody = [
+    `Hi ${user.fullname},`,
+    ``,
+    `We received a request to reset your CryptoPlexTrade account password.`,
+    `Click or paste the link below into your browser to set a new password.`,
+    `This link expires in 1 hour.`,
+    ``,
+    `${resetUrl}`,
+    ``,
+    `If you did not request this, you can safely ignore this email.`,
+    `Your password will not change unless you click the link above.`,
+    ``,
+    `-- CryptoPlexTrade Support`,
+    `${process.env.ADMIN_EMAIL}`,
+  ].join('\r\n');
 
-    // Clean, simple HTML — avoid CSS tricks that spam filters flag
-    const htmlBody = `<!DOCTYPE html>
+  // Clean, simple HTML — avoid CSS tricks that spam filters flag
+  const htmlBody = `<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
 <body style="margin:0;padding:0;background:#f4f7fb;font-family:Arial,Helvetica,sans-serif;">
@@ -210,20 +210,20 @@ async function sendPasswordResetEmail(user, resetUrl) {
 </body>
 </html>`;
 
-    await transporter.sendMail({
-        from:    getSender(),
-        replyTo: getReplyTo(),
-        to:      user.email,
-        subject,
-        text:    textBody,
-        html:    htmlBody,
-        headers: {
-            'Message-ID':       messageId,
-            'List-Unsubscribe': `<mailto:${process.env.ADMIN_EMAIL}?subject=unsubscribe>`,
-            'Precedence':       'bulk',
-        },
-    });
-    logger.info(`Password reset email sent to ${user.email}`);
+  await transporter.sendMail({
+    from: getSender(),
+    replyTo: getReplyTo(),
+    to: user.email,
+    subject,
+    text: textBody,
+    html: htmlBody,
+    headers: {
+      'Message-ID': messageId,
+      'List-Unsubscribe': `<mailto:${process.env.ADMIN_EMAIL}?subject=unsubscribe>`,
+      'Precedence': 'bulk',
+    },
+  });
+  logger.info(`Password reset email sent to ${user.email}`);
 }
 
 /**
@@ -232,20 +232,20 @@ async function sendPasswordResetEmail(user, resetUrl) {
  * @param {number} sessionId - The ID of the chat session.
  */
 async function sendLiveChatNotification(guestName, sessionId) {
-    if (!transporter) {
-        logger.warn('Email service is not configured. Skipping live chat notification.');
-        return;
-    }
+  if (!transporter) {
+    logger.warn('Email service is not configured. Skipping live chat notification.');
+    return;
+  }
 
-    const subject = `New Live Chat Initiated - ${guestName}`;
-    const domain = getAppDomain();
-    const adminUrl = `${process.env.APP_URL || 'http://' + domain}/admin/livechat.html`;
+  const subject = `New Live Chat Initiated - ${guestName}`;
+  const domain = getAppDomain();
+  const adminUrl = `${process.env.APP_URL || 'http://' + domain}/admin/livechat.html`;
 
-    const textBody = `A new live chat session has been started by ${guestName}.\r\n\r\n` +
-                     `Session ID: #${sessionId}\r\n` +
-                     `You can reply to this chat in the admin panel: ${adminUrl}`;
+  const textBody = `A new live chat session has been started by ${guestName}.\r\n\r\n` +
+    `Session ID: #${sessionId}\r\n` +
+    `You can reply to this chat in the admin panel: ${adminUrl}`;
 
-    const htmlBody = `<!DOCTYPE html>
+  const htmlBody = `<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
 <body style="margin:0;padding:0;background:#f4f7fb;font-family:Arial,Helvetica,sans-serif;">
@@ -288,19 +288,19 @@ async function sendLiveChatNotification(guestName, sessionId) {
 </body>
 </html>`;
 
-    await transporter.sendMail({
-        from:      getSender(),
-        replyTo:   getReplyTo(),
-        to:        process.env.ADMIN_EMAIL,
-        subject,
-        text:      textBody,
-        html:      htmlBody,
-        headers: {
-            'Message-ID': `<${Date.now()}.chat-${sessionId}@${domain}>`,
-            'Precedence': 'bulk',
-        },
-    });
-    logger.info(`Admin notification sent for new chat session #${sessionId}`);
+  await transporter.sendMail({
+    from: getSender(),
+    replyTo: getReplyTo(),
+    to: process.env.ADMIN_EMAIL,
+    subject,
+    text: textBody,
+    html: htmlBody,
+    headers: {
+      'Message-ID': `<${Date.now()}.chat-${sessionId}@${domain}>`,
+      'Precedence': 'bulk',
+    },
+  });
+  logger.info(`Admin notification sent for new chat session #${sessionId}`);
 }
 
 /**
@@ -309,42 +309,42 @@ async function sendLiveChatNotification(guestName, sessionId) {
  * @param {string} userEmail - The customer's email address.
  */
 async function sendOrderCompletedEmail(order, userEmail) {
-    if (!transporter) {
-        logger.warn('Email service is not configured. Skipping order completed email.');
-        return;
-    }
+  if (!transporter) {
+    logger.warn('Email service is not configured. Skipping order completed email.');
+    return;
+  }
 
-    const domain = getAppDomain();
-    // Ensure the URL has https:// prefix for email image loading
-    let appUrl = process.env.APP_URL || 'https://cryptoplextrade.com';
-    if (!appUrl.startsWith('http')) appUrl = 'https://' + appUrl;
-    const orderId = order.id;
-    const orderType = order.order_type === 'buy' ? 'Purchase' : 'Sale';
-    const product = order.product;
-    const totalPaid = parseFloat(order.total_paid || 0).toFixed(2);
+  const domain = getAppDomain();
+  // Ensure the URL has https:// prefix for email image loading
+  let appUrl = process.env.APP_URL || 'https://cryptoplextrade.com';
+  if (!appUrl.startsWith('http')) appUrl = 'https://' + appUrl;
+  const orderId = order.id;
+  const orderType = order.order_type === 'buy' ? 'Purchase' : 'Sale';
+  const product = order.product;
+  const totalPaid = parseFloat(order.total_paid || 0).toFixed(2);
 
-    const subject = `Your ${orderType} Order #${orderId} is Complete ✓`;
+  const subject = `Your ${orderType} Order #${orderId} is Complete ✓`;
 
-    const textBody = [
-        `Dear Valued Customer,`,
-        ``,
-        `Great news! Your ${orderType.toLowerCase()} order #${orderId} has been successfully completed.`,
-        ``,
-        `Order Summary:`,
-        `  Order ID: #${orderId}`,
-        `  Type: ${orderType}`,
-        `  Product: ${product}`,
-        `  Amount: ₵${totalPaid}`,
-        ``,
-        `If you have any questions about this transaction, please don't hesitate to reach out to our support team.`,
-        ``,
-        `Thank you for choosing CryptoPlexTrade!`,
-        ``,
-        `-- CryptoPlexTrade`,
-        `${process.env.ADMIN_EMAIL}`,
-    ].join('\r\n');
+  const textBody = [
+    `Dear Valued Customer,`,
+    ``,
+    `Great news! Your ${orderType.toLowerCase()} order #${orderId} has been successfully completed.`,
+    ``,
+    `Order Summary:`,
+    `  Order ID: #${orderId}`,
+    `  Type: ${orderType}`,
+    `  Product: ${product}`,
+    `  Amount: ₵${totalPaid}`,
+    ``,
+    `If you have any questions about this transaction, please don't hesitate to reach out to our support team.`,
+    ``,
+    `Thank you for choosing CryptoPlexTrade!`,
+    ``,
+    `-- CryptoPlexTrade`,
+    `${process.env.ADMIN_EMAIL}`,
+  ].join('\r\n');
 
-    const htmlBody = `<!DOCTYPE html>
+  const htmlBody = `<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
 <body style="margin:0;padding:0;background-color:#f0f7ff;font-family:Arial,Helvetica,sans-serif;">
@@ -416,20 +416,20 @@ async function sendOrderCompletedEmail(order, userEmail) {
 </body>
 </html>`;
 
-    await transporter.sendMail({
-        from:    getSender(),
-        replyTo: getReplyTo(),
-        to:      userEmail,
-        subject,
-        text:    textBody,
-        html:    htmlBody,
-        headers: {
-            'Message-ID':       `<${Date.now()}.completed-${orderId}@${domain}>`,
-            'List-Unsubscribe': `<mailto:${process.env.ADMIN_EMAIL}?subject=unsubscribe>`,
-            'Precedence':       'bulk',
-        },
-    });
-    logger.info(`Order completed email sent to ${userEmail} for order #${orderId}`);
+  await transporter.sendMail({
+    from: getSender(),
+    replyTo: getReplyTo(),
+    to: userEmail,
+    subject,
+    text: textBody,
+    html: htmlBody,
+    headers: {
+      'Message-ID': `<${Date.now()}.completed-${orderId}@${domain}>`,
+      'List-Unsubscribe': `<mailto:${process.env.ADMIN_EMAIL}?subject=unsubscribe>`,
+      'Precedence': 'bulk',
+    },
+  });
+  logger.info(`Order completed email sent to ${userEmail} for order #${orderId}`);
 }
 /**
  * Sends a 6-digit OTP verification email for new account sign-ups.
@@ -437,29 +437,29 @@ async function sendOrderCompletedEmail(order, userEmail) {
  * @param {string} otpCode - The 6-digit OTP code to send.
  */
 async function sendVerificationEmail(email, otpCode) {
-    if (!transporter) {
-        logger.warn('Email service is not configured. Skipping verification email.');
-        return;
-    }
+  if (!transporter) {
+    logger.warn('Email service is not configured. Skipping verification email.');
+    return;
+  }
 
-    const domain = getAppDomain();
-    let appUrl = process.env.APP_URL || 'https://cryptoplextrade.com';
-    if (!appUrl.startsWith('http')) appUrl = 'https://' + appUrl;
+  const domain = getAppDomain();
+  let appUrl = process.env.APP_URL || 'https://cryptoplextrade.com';
+  if (!appUrl.startsWith('http')) appUrl = 'https://' + appUrl;
 
-    const subject = 'Verify your email address - CryptoPlexTrade';
+  const subject = 'Verify your email address - CryptoPlexTrade';
 
-    const textBody = [
-        `Welcome to CryptoPlexTrade!`,
-        ``,
-        `Your email verification code is: ${otpCode}`,
-        ``,
-        `This code will expire in 5 minutes.`,
-        `If you didn't request this, you can safely ignore this email.`,
-        ``,
-        `-- CryptoPlexTrade`,
-    ].join('\r\n');
+  const textBody = [
+    `Welcome to CryptoPlexTrade!`,
+    ``,
+    `Your email verification code is: ${otpCode}`,
+    ``,
+    `This code will expire in 5 minutes.`,
+    `If you didn't request this, you can safely ignore this email.`,
+    ``,
+    `-- CryptoPlexTrade`,
+  ].join('\r\n');
 
-    const htmlBody = `<!DOCTYPE html>
+  const htmlBody = `<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
 <body style="margin:0;padding:0;background-color:#f0f7ff;font-family:Arial,Helvetica,sans-serif;">
@@ -501,18 +501,18 @@ async function sendVerificationEmail(email, otpCode) {
 </body>
 </html>`;
 
-    await transporter.sendMail({
-        from:    `"${SENDER_NAME}" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
-        replyTo: getReplyTo(),
-        to:      email,
-        subject,
-        text:    textBody,
-        html:    htmlBody,
-        headers: {
-            'Message-ID':       `<${Date.now()}.verify@${domain}>`
-        },
-    });
-    logger.info(`Verification email sent to ${email}`);
+  await transporter.sendMail({
+    from: `"${SENDER_NAME}" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
+    replyTo: getReplyTo(),
+    to: email,
+    subject,
+    text: textBody,
+    html: htmlBody,
+    headers: {
+      'Message-ID': `<${Date.now()}.verify@${domain}>`
+    },
+  });
+  logger.info(`Verification email sent to ${email}`);
 }
 
 /**
@@ -521,37 +521,37 @@ async function sendVerificationEmail(email, otpCode) {
  * @param {string} idType - The type of ID submitted (e.g. 'passport').
  */
 async function sendKycSubmissionAlert(user, idType) {
-    if (!transporter) {
-        logger.warn('Email service is not configured. Skipping KYC alert.');
-        return;
-    }
+  if (!transporter) {
+    logger.warn('Email service is not configured. Skipping KYC alert.');
+    return;
+  }
 
-    const domain   = getAppDomain();
-    let appUrl = process.env.APP_URL || 'https://cryptoplextrade.com';
-    if (!appUrl.startsWith('http')) appUrl = 'https://' + appUrl;
-    const kycAdminUrl = `${appUrl}/admin/kyc.html`;
-    const subject     = `🔔 KYC Submission — ${user.fullname || user.email}`;
+  const domain = getAppDomain();
+  let appUrl = process.env.APP_URL || 'https://cryptoplextrade.com';
+  if (!appUrl.startsWith('http')) appUrl = 'https://' + appUrl;
+  const kycAdminUrl = `${appUrl}/admin/kyc.html`;
+  const subject = `🔔 KYC Submission — ${user.fullname || user.email}`;
 
-    const idLabel = (idType || 'Unknown')
-        .replace(/_/g, ' ')
-        .replace(/\b\w/g, c => c.toUpperCase());
+  const idLabel = (idType || 'Unknown')
+    .replace(/_/g, ' ')
+    .replace(/\b\w/g, c => c.toUpperCase());
 
-    const textBody = [
-        `New KYC Submission`,
-        ``,
-        `A user has submitted their KYC documents and is awaiting approval.`,
-        ``,
-        `User:     ${user.fullname || 'N/A'}`,
-        `Email:    ${user.email}`,
-        `ID Type:  ${idLabel}`,
-        ``,
-        `Review and approve or reject the submission in the admin panel:`,
-        kycAdminUrl,
-        ``,
-        `-- ${SENDER_NAME}`,
-    ].join('\r\n');
+  const textBody = [
+    `New KYC Submission`,
+    ``,
+    `A user has submitted their KYC documents and is awaiting approval.`,
+    ``,
+    `User:     ${user.fullname || 'N/A'}`,
+    `Email:    ${user.email}`,
+    `ID Type:  ${idLabel}`,
+    ``,
+    `Review and approve or reject the submission in the admin panel:`,
+    kycAdminUrl,
+    ``,
+    `-- ${SENDER_NAME}`,
+  ].join('\r\n');
 
-    const htmlBody = `<!DOCTYPE html>
+  const htmlBody = `<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
 <body style="margin:0;padding:0;background-color:#f0f7ff;font-family:Arial,Helvetica,sans-serif;">
@@ -628,19 +628,19 @@ async function sendKycSubmissionAlert(user, idType) {
 </body>
 </html>`;
 
-    await transporter.sendMail({
-        from:    getSender(),
-        replyTo: getReplyTo(),
-        to:      process.env.ADMIN_EMAIL,
-        subject,
-        text:    textBody,
-        html:    htmlBody,
-        headers: {
-            'Message-ID': `<${Date.now()}.kyc-${user.email.replace('@','.')}@${domain}>`,
-            'Precedence': 'bulk',
-        },
-    });
-    logger.info(`KYC submission alert sent to admin for user: ${user.email}`);
+  await transporter.sendMail({
+    from: getSender(),
+    replyTo: getReplyTo(),
+    to: process.env.ADMIN_EMAIL,
+    subject,
+    text: textBody,
+    html: htmlBody,
+    headers: {
+      'Message-ID': `<${Date.now()}.kyc-${user.email.replace('@', '.')}@${domain}>`,
+      'Precedence': 'bulk',
+    },
+  });
+  logger.info(`KYC submission alert sent to admin for user: ${user.email}`);
 }
 
 /**
@@ -648,27 +648,27 @@ async function sendKycSubmissionAlert(user, idType) {
  * @param {object} user - { fullname, email }
  */
 async function sendKycApprovedEmail(user) {
-    if (!transporter) { logger.warn('Email service not configured. Skipping KYC approved email.'); return; }
+  if (!transporter) { logger.warn('Email service not configured. Skipping KYC approved email.'); return; }
 
-    const domain = getAppDomain();
-    let appUrl = process.env.APP_URL || 'https://cryptoplextrade.com';
-    if (!appUrl.startsWith('http')) appUrl = 'https://' + appUrl;
-    const tradeUrl = `${appUrl}/trade.html`;
-    const subject  = `✅ Your Account is Verified — You Can Now Trade!`;
+  const domain = getAppDomain();
+  let appUrl = process.env.APP_URL || 'https://cryptoplextrade.com';
+  if (!appUrl.startsWith('http')) appUrl = 'https://' + appUrl;
+  const tradeUrl = `${appUrl}/trade.html`;
+  const subject = `✅ Your Account is Verified — You Can Now Trade!`;
 
-    const textBody = [
-        `Hi ${user.fullname || 'there'},`,
-        ``,
-        `Great news! Your identity verification has been approved.`,
-        `You can now buy and sell crypto on CryptoPlexTrade.`,
-        ``,
-        `Start trading: ${tradeUrl}`,
-        ``,
-        `Thank you for completing the verification process.`,
-        `-- ${SENDER_NAME}`,
-    ].join('\r\n');
+  const textBody = [
+    `Hi ${user.fullname || 'there'},`,
+    ``,
+    `Great news! Your identity verification has been approved.`,
+    `You can now buy and sell crypto on CryptoPlexTrade.`,
+    ``,
+    `Start trading: ${tradeUrl}`,
+    ``,
+    `Thank you for completing the verification process.`,
+    `-- ${SENDER_NAME}`,
+  ].join('\r\n');
 
-    const htmlBody = `<!DOCTYPE html>
+  const htmlBody = `<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
 <body style="margin:0;padding:0;background-color:#f0f7ff;font-family:Arial,Helvetica,sans-serif;">
@@ -714,12 +714,12 @@ async function sendKycApprovedEmail(user) {
 </body>
 </html>`;
 
-    await transporter.sendMail({
-        from: getSender(), replyTo: getReplyTo(), to: user.email, subject,
-        text: textBody, html: htmlBody,
-        headers: { 'Message-ID': `<${Date.now()}.kyc-approved@${domain}>`, 'Precedence': 'bulk' },
-    });
-    logger.info(`KYC approved email sent to ${user.email}`);
+  await transporter.sendMail({
+    from: getSender(), replyTo: getReplyTo(), to: user.email, subject,
+    text: textBody, html: htmlBody,
+    headers: { 'Message-ID': `<${Date.now()}.kyc-approved@${domain}>`, 'Precedence': 'bulk' },
+  });
+  logger.info(`KYC approved email sent to ${user.email}`);
 }
 
 /**
@@ -727,32 +727,32 @@ async function sendKycApprovedEmail(user) {
  * @param {object} user - { fullname, email }
  */
 async function sendKycRejectedEmail(user) {
-    if (!transporter) { logger.warn('Email service not configured. Skipping KYC rejected email.'); return; }
+  if (!transporter) { logger.warn('Email service not configured. Skipping KYC rejected email.'); return; }
 
-    const domain = getAppDomain();
-    let appUrl = process.env.APP_URL || 'https://cryptoplextrade.com';
-    if (!appUrl.startsWith('http')) appUrl = 'https://' + appUrl;
-    const kycUrl  = `${appUrl}/kyc.html`;
-    const subject = `Action Required — KYC Verification Unsuccessful`;
+  const domain = getAppDomain();
+  let appUrl = process.env.APP_URL || 'https://cryptoplextrade.com';
+  if (!appUrl.startsWith('http')) appUrl = 'https://' + appUrl;
+  const kycUrl = `${appUrl}/kyc.html`;
+  const subject = `Action Required — KYC Verification Unsuccessful`;
 
-    const textBody = [
-        `Hi ${user.fullname || 'there'},`,
-        ``,
-        `Unfortunately, we were unable to verify your identity with the documents submitted.`,
-        ``,
-        `This may be due to:`,
-        `  - Blurry or unclear document images`,
-        `  - Documents that are expired`,
-        `  - Mismatched personal information`,
-        ``,
-        `Please re-submit your KYC with clearer, valid documents:`,
-        kycUrl,
-        ``,
-        `If you believe this is a mistake, please contact our support team.`,
-        `-- ${SENDER_NAME}`,
-    ].join('\r\n');
+  const textBody = [
+    `Hi ${user.fullname || 'there'},`,
+    ``,
+    `Unfortunately, we were unable to verify your identity with the documents submitted.`,
+    ``,
+    `This may be due to:`,
+    `  - Blurry or unclear document images`,
+    `  - Documents that are expired`,
+    `  - Mismatched personal information`,
+    ``,
+    `Please re-submit your KYC with clearer, valid documents:`,
+    kycUrl,
+    ``,
+    `If you believe this is a mistake, please contact our support team.`,
+    `-- ${SENDER_NAME}`,
+  ].join('\r\n');
 
-    const htmlBody = `<!DOCTYPE html>
+  const htmlBody = `<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
 <body style="margin:0;padding:0;background-color:#f0f7ff;font-family:Arial,Helvetica,sans-serif;">
@@ -806,12 +806,12 @@ async function sendKycRejectedEmail(user) {
 </body>
 </html>`;
 
-    await transporter.sendMail({
-        from: getSender(), replyTo: getReplyTo(), to: user.email, subject,
-        text: textBody, html: htmlBody,
-        headers: { 'Message-ID': `<${Date.now()}.kyc-rejected@${domain}>`, 'Precedence': 'bulk' },
-    });
-    logger.info(`KYC rejected email sent to ${user.email}`);
+  await transporter.sendMail({
+    from: getSender(), replyTo: getReplyTo(), to: user.email, subject,
+    text: textBody, html: htmlBody,
+    headers: { 'Message-ID': `<${Date.now()}.kyc-rejected@${domain}>`, 'Precedence': 'bulk' },
+  });
+  logger.info(`KYC rejected email sent to ${user.email}`);
 }
 
 module.exports = { sendNewOrderNotification, sendPasswordResetEmail, sendLiveChatNotification, sendOrderCompletedEmail, sendVerificationEmail, sendKycSubmissionAlert, sendKycApprovedEmail, sendKycRejectedEmail };

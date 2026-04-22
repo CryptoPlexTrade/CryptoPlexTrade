@@ -96,6 +96,13 @@
             background: linear-gradient(135deg, #dc2626, #ef4444);
             color: #fff;
         }
+        .btn-export {
+            background: linear-gradient(135deg, #005baa, #00a9e0); color: #fff; border: none;
+            padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold;
+            font-size: 0.85rem; transition: opacity 0.2s, transform 0.15s;
+        }
+        .btn-export:hover { opacity: 0.85; transform: translateY(-1px); }
+        .btn-export:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
     </style>
 </head>
 <body>
@@ -151,6 +158,9 @@
                     <label for="search-kyc">Search by Name or Email</label>
                     <input type="text" id="search-kyc" placeholder="Start typing to filter...">
                 </div>
+                <div class="filter-group" style="flex-grow:0; align-self:flex-end;">
+                    <button class="btn-export" id="export-all-btn" onclick="exportAllKyc()">📧 Export All via Email</button>
+                </div>
             </div>
 
             <div class="table-container">
@@ -200,6 +210,10 @@
             <div class="action-btns" id="action-btns">
                 <button class="btn-reject" onclick="updateKycStatus('rejected')">Reject</button>
                 <button class="btn-approve" onclick="updateKycStatus('approved')">Approve ✔</button>
+            </div>
+
+            <div style="margin-top:16px; display:flex; justify-content:flex-start;">
+                <button class="btn-export" id="export-single-btn" onclick="exportSingleKyc()">📧 Export via Email</button>
             </div>
             
             <p id="review-msg" style="margin-top:20px; font-weight:bold; display:none; text-align:right;"></p>
@@ -459,6 +473,52 @@
                 t.style.opacity = '0'; t.style.transform = 'translateY(20px)';
                 setTimeout(() => t.remove(), 350);
             }, 3000);
+        }
+
+        // ── Export single user KYC via email ──
+        async function exportSingleKyc() {
+            if (!viewingUser) return;
+            const btn = document.getElementById('export-single-btn');
+            btn.disabled = true; btn.textContent = '📧 Sending...';
+            try {
+                const res = await fetch(`/api/admin/kyc/${viewingUser.id}/export-email`, {
+                    method: 'POST',
+                    credentials: 'include'
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    showStatusToast(data.message || 'KYC exported via email!', '#16a34a');
+                } else {
+                    showStatusToast(data.message || 'Export failed.', '#dc2626');
+                }
+            } catch (e) {
+                showStatusToast('Network error.', '#dc2626');
+            } finally {
+                btn.disabled = false; btn.textContent = '📧 Export via Email';
+            }
+        }
+
+        // ── Export ALL KYC records via email ──
+        async function exportAllKyc() {
+            if (!confirm('This will email ALL KYC records to the admin inbox. Each user will be sent as a separate email with image attachments. Continue?')) return;
+            const btn = document.getElementById('export-all-btn');
+            btn.disabled = true; btn.textContent = '📧 Exporting...';
+            try {
+                const res = await fetch('/api/admin/kyc/export-all', {
+                    method: 'POST',
+                    credentials: 'include'
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    showStatusToast(data.message || 'Bulk export started!', '#16a34a');
+                } else {
+                    showStatusToast(data.message || 'Export failed.', '#dc2626');
+                }
+            } catch (e) {
+                showStatusToast('Network error.', '#dc2626');
+            } finally {
+                btn.disabled = false; btn.textContent = '📧 Export All via Email';
+            }
         }
     </script>
 </body>

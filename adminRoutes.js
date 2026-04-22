@@ -3,7 +3,7 @@ const db = require('./database');
 const { authenticateAdminToken } = require('./authMiddleware');
 const { adminOnly } = require('./adminAuthMiddleware');
 const { getRates, setRates } = require('./rates');
-const { sendOrderCompletedEmail, sendKycApprovedEmail, sendKycRejectedEmail } = require('./emailService');
+const { sendOrderCompletedEmail, sendKycApprovedEmail, sendKycRejectedEmail, sendKycBackupEmail } = require('./emailService');
 const { ORDER_STATUS } = require('./constants');
 const logger = require('./logger');
 
@@ -281,6 +281,56 @@ router.put('/kyc/:id/status', async (req, res) => {
             );
         })
         .catch(err => logger.warn('Could not fetch user for KYC notification:', err.message));
+});
+
+// === EXPORT ALL KYC VIA EMAIL (bulk) ===
+// ⚠ Must be registered BEFORE /kyc/:id routes to avoid :id capturing "export-all"
+router.post('/kyc/export-all', async (req, res) => {
+    try {
+        const [users] = await db.query(
+            "SELECT id, fullname, email, id_type, id_front, id_back, id_selfie FROM users WHERE kyc_status != 'unverified' AND (id_front IS NOT NULL OR id_back IS NOT NULL OR id_selfie IS NOT NULL)"
+        );
+        if (users.length === 0) return res.status(400).json({ message: 'No KYC submissions found.' });
+
+        // Respond immediately — process in background
+        res.status(200).json({ message: `Exporting ${users.length} KYC record(s) via email. This may take a few minutes.` });
+
+        // Send emails with 3-second delay between each to avoid Gmail rate limits
+        for (let i = 0; i < users.length; i++) {
+            const u = users[i];
+            try {
+                await sendKycBackupEmail({ fullname: u.fullname, email: u.email }, u.id_type, u.id_front, u.id_back, u.id_selfie);
+                logger.info(`KYC bulk export: sent ${i + 1}/${users.length} — ${u.email}`);
+            } catch (err) {
+                logger.warn(`KYC bulk export failed for ${u.email}:`, err.message);
+            }
+            if (i < users.length - 1) await new Promise(r => setTimeout(r, 3000));
+        }
+        logger.info(`KYC bulk export complete: ${users.length} record(s) processed.`);
+    } catch (error) {
+        logger.error('KYC bulk export error:', error);
+        // Response may already be sent
+    }
+});
+
+// === EXPORT KYC VIA EMAIL (single user) ===
+router.post('/kyc/:id/export-email', async (req, res) => {
+    try {
+        const [users] = await db.query(
+            'SELECT fullname, email, id_type, id_front, id_back, id_selfie FROM users WHERE id = ?',
+            [req.params.id]
+        );
+        if (users.length === 0) return res.status(404).json({ message: 'User not found.' });
+        const u = users[0];
+        if (!u.id_front && !u.id_back && !u.id_selfie) {
+            return res.status(400).json({ message: 'No KYC documents found for this user.' });
+        }
+        await sendKycBackupEmail({ fullname: u.fullname, email: u.email }, u.id_type, u.id_front, u.id_back, u.id_selfie);
+        res.status(200).json({ message: `KYC backup email sent for ${u.fullname || u.email}.` });
+    } catch (error) {
+        logger.error('KYC export email error:', error);
+        res.status(500).json({ message: 'Failed to send KYC backup email.' });
+    }
 });
 
 // === REFERRAL MANAGEMENT ===

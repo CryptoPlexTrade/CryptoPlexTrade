@@ -101,7 +101,7 @@ router.post('/register', authLimiter, async (req, res) => {
         // Generate 6-digit OTP (crypto.randomInt is a CSPRNG — Math.random() is not)
         const otpCode = crypto.randomInt(100000, 1000000).toString();
         const expiresAt = Date.now() + 5 * 60 * 1000;
-        
+
         // Store the token in the DB (valid for 5 mins)
         await db.query('UPDATE users SET verify_token = ?, verify_expires = ? WHERE id = ?', [otpCode, expiresAt, newUserId]);
 
@@ -138,7 +138,7 @@ router.post('/login', authLimiter, async (req, res) => {
         }
 
         const user = users[0];
-        
+
         // Check user status (suspended or deactivated)
         if (user.status === 'suspended') {
             return res.status(403).json({ message: 'Your account has been suspended. Please contact support.' });
@@ -180,8 +180,8 @@ router.post('/login', authLimiter, async (req, res) => {
         const isAdmin = req.body.isAdminLogin && user.role === 'admin';
         // Admin logins get their OWN cookie name so they never overwrite a
         // simultaneously-logged-in regular user's session (and vice-versa).
-        const tokenCookieName  = isAdmin ? 'admin-token'      : 'token';
-        const csrfCookieName   = isAdmin ? 'admin-csrf-token'  : 'csrf-token';
+        const tokenCookieName = isAdmin ? 'admin-token' : 'token';
+        const csrfCookieName = isAdmin ? 'admin-csrf-token' : 'csrf-token';
 
         const cookieOpts = {
             httpOnly: true,
@@ -287,7 +287,7 @@ router.post('/forgot-password', authLimiter, async (req, res) => {
         if (users.length > 0) {
             const user = users[0];
             const token = crypto.randomBytes(32).toString('hex');
-            
+
             // Store token in DB, valid for 1 hour
             const expiresAt = Date.now() + 60 * 60 * 1000;
             await db.query('UPDATE users SET reset_token = ?, reset_expires = ? WHERE id = ?', [token, expiresAt, user.id]);
