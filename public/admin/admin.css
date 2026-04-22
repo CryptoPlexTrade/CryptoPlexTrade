@@ -169,7 +169,12 @@ th {
     font-weight: 500;
     font-size: 0.8rem;
     border: none;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.15s;
+    white-space: nowrap;
 }
+.action-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+.action-btn:active { transform: translateY(0); }
 
 /* ── Custom Status Dropdown (CSD) ───────────────────────── */
 .csd-wrapper {
@@ -814,6 +819,50 @@ th {
     .form-group-inline { grid-template-columns: 1fr; gap: 0; }
 
     .btn-primary { width: 100%; padding: 13px; }
+
+    /* ── Action Buttons in Table Cards ── */
+    /* On mobile table cards, the Actions cell needs to wrap buttons nicely */
+    tbody td[data-label="Actions"] {
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+    tbody td[data-label="Actions"] .action-btn {
+        flex: 1 1 auto;
+        min-width: 70px;
+        text-align: center;
+        padding: 7px 10px;
+        font-size: 0.76rem;
+        margin-left: 0 !important;
+    }
+    tbody td[data-label="Action"] {
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    /* ── Edit User Modal on Mobile ── */
+    #edit-user-modal .modal-content {
+        max-width: 96%;
+        width: 96%;
+    }
+
+    /* ── KYC Modal Action Buttons ── */
+    .action-btns {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .action-btns button {
+        width: 100%;
+        padding: 12px;
+        font-size: 0.9rem;
+    }
+
+    /* ── KYC Image Grid ── */
+    .img-grid {
+        grid-template-columns: 1fr !important;
+    }
+    .img-grid .img-card[style*="grid-column"] {
+        grid-column: auto !important;
+    }
 }
 
 /* =========================================================
