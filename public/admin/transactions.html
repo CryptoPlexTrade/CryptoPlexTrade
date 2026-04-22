@@ -158,6 +158,36 @@
             let allOrders = []; // Store all fetched orders
             let filteredOrders = [];
 
+            // ── Live crypto prices (Binance) for showing crypto quantity ──
+            let livePrices = {};
+            async function fetchLivePrices() {
+                try {
+                    const pairs = JSON.stringify(['BTCUSDT', 'ETHUSDT']);
+                    const r = await fetch(`https://api.binance.com/api/v3/ticker/price?symbols=${pairs}`);
+                    if (!r.ok) return;
+                    const data = await r.json();
+                    livePrices = { USDT: 1, USDT_TRC20: 1, USDT_ERC20: 1 };
+                    data.forEach(item => {
+                        const sym = item.symbol.replace('USDT', '');
+                        livePrices[sym] = parseFloat(item.price);
+                    });
+                } catch (e) { console.warn('Live price fetch failed:', e); }
+            }
+            fetchLivePrices();
+            setInterval(fetchLivePrices, 30000);
+
+            function getCryptoQty(product, usdAmount) {
+                const sym = product.replace('_TRC20', '').replace('_ERC20', '');
+                const price = livePrices[product] || livePrices[sym];
+                if (!price || !usdAmount || usdAmount <= 0) return null;
+                const qty = usdAmount / price;
+                return qty < 0.001 ? qty.toFixed(8) : qty < 1 ? qty.toFixed(6) : qty.toFixed(4);
+            }
+
+            function getCryptoTicker(product) {
+                return product.replace('_TRC20', '').replace('_ERC20', '');
+            }
+
             const pager = new AdminPagination({
                 containerId: 'pagination-bar',
                 defaultPerPage: 10,
@@ -419,14 +449,22 @@
                 modalBody.appendChild(createDetailItem('Date', new Date(order.created_at).toLocaleString()));
                 modalBody.appendChild(createDetailItem('Status', `<span class="status-badge status-${order.status}">${order.status.replace('_', ' ')}</span>`));
 
+                // Crypto quantity from live price
+                const usdVal = parseFloat(order.usd_amount) || 0;
+                const ticker = getCryptoTicker(order.product);
+                const cryptoQty = getCryptoQty(order.product, usdVal);
+                const cryptoDisplay = cryptoQty ? `≈ ${cryptoQty} ${ticker}` : 'Price unavailable';
+
                 if (order.order_type === 'buy') {
-                    modalBody.appendChild(createDetailItem('Amount Bought (USD)', `$${parseFloat(order.usd_amount).toFixed(2)} of ${order.product}`));
+                    modalBody.appendChild(createDetailItem('Crypto Quantity', cryptoDisplay));
+                    modalBody.appendChild(createDetailItem('Amount (USD)', `$${usdVal.toFixed(2)}`));
                     modalBody.appendChild(createDetailItem('Miner Fee (GHS)', `₵${parseFloat(order.fee_ghs).toFixed(2)}`));
                     modalBody.appendChild(createDetailItem('Total Paid (GHS)', `₵${parseFloat(order.total_paid).toFixed(2)}`));
                     modalBody.appendChild(createDetailItem('Receiving Wallet', order.wallet_address));
                     modalBody.appendChild(createDetailItem("User's Payment TXID", order.transaction_id || 'N/A'));
                 } else { // Sell order
-                    modalBody.appendChild(createDetailItem('Amount Sold (USD)', `$${parseFloat(order.usd_amount).toFixed(2)} worth of ${order.product}`));
+                    modalBody.appendChild(createDetailItem('Crypto Quantity', cryptoDisplay));
+                    modalBody.appendChild(createDetailItem('Amount (USD)', `$${usdVal.toFixed(2)}`));
                     modalBody.appendChild(createDetailItem('GHS to Pay User', `₵${parseFloat(order.ghs_amount).toFixed(2)}`));
 
                     // Detect if transaction_id is actually a crypto address (legacy orders) vs a real TXID
