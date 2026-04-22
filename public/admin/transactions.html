@@ -420,10 +420,14 @@
                 modalBody.appendChild(createDetailItem('Status', `<span class="status-badge status-${order.status}">${order.status.replace('_', ' ')}</span>`));
 
                 if (order.order_type === 'buy') {
+                    modalBody.appendChild(createDetailItem('Amount Bought (USD)', `$${parseFloat(order.usd_amount).toFixed(2)} of ${order.product}`));
+                    modalBody.appendChild(createDetailItem('Miner Fee (GHS)', `₵${parseFloat(order.fee_ghs).toFixed(2)}`));
+                    modalBody.appendChild(createDetailItem('Total Paid (GHS)', `₵${parseFloat(order.total_paid).toFixed(2)}`));
                     modalBody.appendChild(createDetailItem('Receiving Wallet', order.wallet_address));
                     modalBody.appendChild(createDetailItem("User's Payment TXID", order.transaction_id || 'N/A'));
                 } else { // Sell order
-                    modalBody.appendChild(createDetailItem('Crypto Sent by User', `${order.usd_amount} ${order.product}`));
+                    modalBody.appendChild(createDetailItem('Amount Sold (USD)', `$${parseFloat(order.usd_amount).toFixed(2)} worth of ${order.product}`));
+                    modalBody.appendChild(createDetailItem('GHS to Pay User', `₵${parseFloat(order.ghs_amount).toFixed(2)}`));
 
                     // Detect if transaction_id is actually a crypto address (legacy orders) vs a real TXID
                     const txid = order.transaction_id || '';
