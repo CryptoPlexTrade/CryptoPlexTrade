@@ -256,9 +256,9 @@ router.get('/kyc/:id', async (req, res) => {
 });
 
 router.put('/kyc/:id/status', async (req, res) => {
-    const { status } = req.body; // 'approved' or 'rejected'
-    if (!['approved', 'rejected'].includes(status))
-        return res.status(400).json({ message: 'Invalid status. Must be approved or rejected.' });
+    const { status } = req.body; // 'approved', 'rejected', or 'pending'
+    if (!['approved', 'rejected', 'pending'].includes(status))
+        return res.status(400).json({ message: 'Invalid status. Must be approved, rejected, or pending.' });
 
     try {
         await db.query('UPDATE users SET kyc_status = ? WHERE id = ?', [status, req.params.id]);

@@ -336,15 +336,31 @@
                 
                 const msgObj = document.getElementById('review-msg');
                 const btns = document.getElementById('action-btns');
+                btns.innerHTML = ''; // Clear old buttons
+                btns.style.display = 'flex';
+                msgObj.style.display = 'none';
                 
-                if(user.kyc_status !== 'pending') {
-                    btns.style.display = 'none';
+                if (user.kyc_status === 'pending') {
+                    btns.innerHTML = `
+                        <button class="btn-reject" onclick="updateKycStatus('rejected')">Reject</button>
+                        <button class="btn-approve" onclick="updateKycStatus('approved')">Approve ✔</button>
+                    `;
+                } else if (user.kyc_status === 'approved') {
                     msgObj.style.display = 'block';
-                    msgObj.textContent = `This submission has already been ${user.kyc_status.toUpperCase()}.`;
-                    msgObj.style.color = user.kyc_status === 'approved' ? '#16a34a' : '#dc2626';
-                } else {
-                    btns.style.display = 'flex';
-                    msgObj.style.display = 'none';
+                    msgObj.textContent = 'This submission has been APPROVED.';
+                    msgObj.style.color = '#16a34a';
+                    btns.innerHTML = `
+                        <button class="btn-reject" onclick="updateKycStatus('pending')" style="background:#f59e0b;">⟲ Revert to Pending</button>
+                        <button class="btn-reject" onclick="updateKycStatus('rejected')">Reject</button>
+                    `;
+                } else if (user.kyc_status === 'rejected') {
+                    msgObj.style.display = 'block';
+                    msgObj.textContent = 'This submission has been REJECTED.';
+                    msgObj.style.color = '#dc2626';
+                    btns.innerHTML = `
+                        <button class="btn-reject" onclick="updateKycStatus('pending')" style="background:#f59e0b;">⟲ Revert to Pending</button>
+                        <button class="btn-approve" onclick="updateKycStatus('approved')">Approve ✔</button>
+                    `;
                 }
             } catch (error) {
                 document.getElementById('modal-user-info').textContent = 'Error: ' + error.message;
@@ -361,26 +377,29 @@
 
         function showConfirmToast(status, onConfirm) {
             const isApprove = status === 'approved';
-            const label     = isApprove ? 'Approve' : 'Reject';
-            const emoji     = isApprove ? '✔️' : '✖️';
+            const isPending = status === 'pending';
+            const label     = isPending ? 'Revert to Pending' : (isApprove ? 'Approve' : 'Reject');
+            const emoji     = isPending ? '⟲' : (isApprove ? '✔️' : '✖️');
             const name      = viewingUser ? viewingUser.fullname : 'this user';
 
             confirmToast.className = '';
-            confirmToast.classList.add(isApprove ? 'toast-approve' : 'toast-reject');
+            confirmToast.classList.add(isPending ? 'toast-approve' : (isApprove ? 'toast-approve' : 'toast-reject'));
 
-            toastIcon.className   = 'toast-icon ' + (isApprove ? 'icon-approve' : 'icon-reject');
+            toastIcon.className   = 'toast-icon ' + (isPending ? 'icon-approve' : (isApprove ? 'icon-approve' : 'icon-reject'));
             toastIcon.textContent = emoji;
-            toastTitle.textContent = `${label} KYC Submission?`;
-            toastBody.innerHTML   = `Are you sure you want to <strong>${label.toLowerCase()}</strong> the identity documents submitted by <strong>${name}</strong>? This action cannot be undone.`;
+            toastTitle.textContent = isPending ? 'Revert KYC to Pending?' : `${label} KYC Submission?`;
+            toastBody.innerHTML   = isPending
+                ? `Are you sure you want to revert <strong>${name}</strong>'s KYC back to <strong>pending</strong>? They will need to be re-reviewed.`
+                : `Are you sure you want to <strong>${label.toLowerCase()}</strong> the identity documents submitted by <strong>${name}</strong>?`;
 
             toastConfirmBtn.textContent = `Yes, ${label}`;
-            toastConfirmBtn.className   = `toast-btn toast-btn-confirm-${status === 'approved' ? 'approve' : 'reject'}`;
+            toastConfirmBtn.className   = `toast-btn toast-btn-confirm-${isApprove || isPending ? 'approve' : 'reject'}`;
 
             // Wire up buttons (replace old listeners each time)
             const newConfirm = toastConfirmBtn.cloneNode(true);
             toastConfirmBtn.parentNode.replaceChild(newConfirm, toastConfirmBtn);
             newConfirm.textContent = `Yes, ${label}`;
-            newConfirm.className   = `toast-btn toast-btn-confirm-${isApprove ? 'approve' : 'reject'}`;
+            newConfirm.className   = `toast-btn toast-btn-confirm-${isApprove || isPending ? 'approve' : 'reject'}`;
             newConfirm.addEventListener('click', () => { hideConfirmToast(); onConfirm(); });
 
             const newCancel = toastCancelBtn.cloneNode(true);
@@ -410,11 +429,9 @@
                     if (res.ok) {
                         modal.style.display = 'none';
                         fetchKyc();
-                        showStatusToast(status === 'approved'
-                            ? '✔ KYC Approved successfully!'
-                            : '✖ KYC Rejected.',
-                            status === 'approved' ? '#16a34a' : '#dc2626'
-                        );
+                        const msgs = { approved: '✔ KYC Approved successfully!', rejected: '✖ KYC Rejected.', pending: '⟲ KYC reverted to Pending.' };
+                        const colors = { approved: '#16a34a', rejected: '#dc2626', pending: '#f59e0b' };
+                        showStatusToast(msgs[status], colors[status]);
                     } else {
                         showStatusToast('Error updating KYC status.', '#dc2626');
                     }
