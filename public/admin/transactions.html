@@ -6,6 +6,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Transactions - Admin</title>
     <link rel="stylesheet" href="admin.css?v=2">
+    <style>
+        /* Order Type Badges */
+        .type-badge {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 4px 12px; border-radius: 20px;
+            font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em;
+        }
+        .type-badge--buy  { background: #e9f5ec; color: #16a34a; }
+        .type-badge--sell { background: #fff7ed; color: #ea580c; }
+        .type-badge__arrow { font-size: 0.85em; }
+
+        /* Modal Order Type Banner */
+        .modal-type-banner {
+            display: flex; align-items: center; gap: 14px;
+            padding: 16px 20px; border-radius: 12px;
+            margin-bottom: 18px;
+        }
+        .modal-type-banner--buy {
+            background: linear-gradient(135deg, #e9f5ec 0%, #d1fae5 100%);
+            border: 1px solid #a7f3d0;
+        }
+        .modal-type-banner--sell {
+            background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+            border: 1px solid #fed7aa;
+        }
+        .modal-type-banner__icon {
+            width: 42px; height: 42px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem; flex-shrink: 0;
+        }
+        .modal-type-banner--buy .modal-type-banner__icon {
+            background: linear-gradient(135deg, #16a34a, #22c55e); color: white;
+        }
+        .modal-type-banner--sell .modal-type-banner__icon {
+            background: linear-gradient(135deg, #ea580c, #f97316); color: white;
+        }
+        .modal-type-banner__text h3 {
+            margin: 0 0 2px; font-size: 0.95rem; font-weight: 700;
+        }
+        .modal-type-banner--buy .modal-type-banner__text h3 { color: #15803d; }
+        .modal-type-banner--sell .modal-type-banner__text h3 { color: #c2410c; }
+        .modal-type-banner__text p {
+            margin: 0; font-size: 0.78rem; font-weight: 500;
+        }
+        .modal-type-banner--buy .modal-type-banner__text p { color: #16a34a; }
+        .modal-type-banner--sell .modal-type-banner__text p { color: #ea580c; }
+    </style>
 </head>
 <body>
     <!-- Mobile Hamburger Button -->
@@ -220,10 +267,14 @@
                 }
                 orders.forEach(order => {
                     const row = document.createElement('tr');
+                    const isBuy = order.order_type === 'buy';
+                    const typeBadge = isBuy
+                        ? '<span class="type-badge type-badge--buy"><span class="type-badge__arrow">↓</span> BUY</span>'
+                        : '<span class="type-badge type-badge--sell"><span class="type-badge__arrow">↑</span> SELL</span>';
                     row.innerHTML = `
                         <td data-label="Order ID">ORD-${String(order.id).padStart(4, '0')}</td>
                         <td data-label="User Email">${order.email}</td>
-                        <td data-label="Type">${order.order_type}</td>
+                        <td data-label="Type">${typeBadge}</td>
                         <td data-label="Product">${order.product}</td>
                         <td data-label="Amount (GHS)">${parseFloat(order.total_paid).toFixed(2)}</td>
                         <td data-label="Date">${new Date(order.created_at).toLocaleString()}</td>
@@ -441,13 +492,30 @@
                     return item;
                 };
 
-                modalBody.appendChild(createDetailItem('Order ID', order.id));
+                // ── Order Type Banner ──
+                const isBuy = order.order_type === 'buy';
+                const bannerClass = isBuy ? 'modal-type-banner--buy' : 'modal-type-banner--sell';
+                const bannerIcon = isBuy ? '↓' : '↑';
+                const bannerTitle = isBuy ? 'Buy Order' : 'Sell Order';
+                const bannerSub = isBuy
+                    ? `User is buying ${order.product} — you receive GHS, send crypto`
+                    : `User is selling ${order.product} — you receive crypto, send GHS`;
+                const banner = document.createElement('div');
+                banner.className = `modal-type-banner ${bannerClass}`;
+                banner.innerHTML = `
+                    <div class="modal-type-banner__icon">${bannerIcon}</div>
+                    <div class="modal-type-banner__text">
+                        <h3>${bannerTitle}</h3>
+                        <p>${bannerSub}</p>
+                    </div>
+                `;
+                modalBody.appendChild(banner);
+
+                modalBody.appendChild(createDetailItem('Order ID', `ORD-${String(order.id).padStart(4, '0')}`));
                 modalBody.appendChild(createDetailItem('User Email', order.email));
-                modalBody.appendChild(createDetailItem('Order Type', order.order_type));
                 modalBody.appendChild(createDetailItem('Product', order.product));
-                modalBody.appendChild(createDetailItem('Amount (GHS)', `₵${parseFloat(order.total_paid).toFixed(2)}`));
                 modalBody.appendChild(createDetailItem('Date', new Date(order.created_at).toLocaleString()));
-                modalBody.appendChild(createDetailItem('Status', `<span class="status-badge status-${order.status}">${order.status.replace('_', ' ')}</span>`));
+                modalBody.appendChild(createDetailItem('Status', `<span class="status-badge status-${order.status}">${order.status.replace(/_/g, ' ')}</span>`));
 
                 // Crypto quantity from live price
                 const usdVal = parseFloat(order.usd_amount) || 0;
