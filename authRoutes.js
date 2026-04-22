@@ -217,14 +217,14 @@ router.get('/user/profile', authenticateToken, async (req, res) => {
 
 // === UPDATE USER PROFILE ENDPOINT ===
 router.put('/user/profile', authenticateToken, async (req, res) => {
-    const { fullname, phone } = req.body;
+    const { phone } = req.body;
 
-    if (!fullname || !phone) {
-        return res.status(400).json({ message: 'Full name and phone number are required.' });
+    if (!phone) {
+        return res.status(400).json({ message: 'Phone number is required.' });
     }
 
     try {
-        await db.query('UPDATE users SET fullname = ?, phone = ? WHERE id = ?', [fullname, phone, req.user.userId]);
+        await db.query('UPDATE users SET phone = ? WHERE id = ?', [phone, req.user.userId]);
         res.status(200).json({ message: 'Profile updated successfully!' });
     } catch (error) {
         logger.error('Profile update error:', error);

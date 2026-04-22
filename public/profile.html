@@ -81,7 +81,7 @@
                     <form id="profile-form">
                         <div class="form-group">
                             <label for="fullname">Full Name</label>
-                            <input type="text" id="fullname" name="fullname" required placeholder="Your full name">
+                            <input type="text" id="fullname" name="fullname" disabled placeholder="Your full name">
                         </div>
                         <div class="form-group">
                             <label for="email">Email Address</label>
@@ -188,7 +188,7 @@
             const r = await fetch('/api/user/profile', {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrfToken },
-                body: JSON.stringify({ fullname: fullnameInput.value, phone: phoneInput.value })
+                body: JSON.stringify({ phone: phoneInput.value })
             });
             const res = await r.json();
             if (!r.ok) throw new Error(res.message);
