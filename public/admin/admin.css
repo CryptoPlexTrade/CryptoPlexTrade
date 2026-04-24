@@ -964,3 +964,172 @@ th {
     .pagination-bar { padding: 10px 12px; font-size: .78rem; }
     .pagination-bar .pg-btn { min-width: 30px; height: 30px; font-size: .75rem; }
 }
+
+/* ─────────────────────────────────────────────────────────
+   MOBILE BACK BUTTON (shown in mobile topbar)
+   ───────────────────────────────────────────────────────── */
+.mobile-back-btn {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    border: 1.5px solid var(--border-medium);
+    background: var(--bg-light);
+    cursor: pointer;
+    margin-right: 10px;
+    flex-shrink: 0;
+    transition: background 0.2s, border-color 0.2s;
+}
+.mobile-back-btn:hover { background: var(--bg-highlight); border-color: var(--primary-color); }
+.mobile-back-btn svg { width: 18px; height: 18px; color: var(--text-primary); }
+
+@media (max-width: 900px) {
+    .mobile-back-btn { display: flex; }
+
+    /* ── Mobile topbar layout fix ───────── */
+    .mobile-topbar {
+        display: flex;
+        align-items: center;
+        padding-left: 68px;  /* space for hamburger */
+    }
+
+    /* ── Modal detail items: stack on mobile ── */
+    .modal-body .detail-item {
+        flex-direction: column;
+        gap: 4px;
+        align-items: flex-start;
+    }
+    .modal-body .detail-item .value {
+        text-align: left;
+        word-break: break-all;
+    }
+
+    /* ── Tx Hash input section responsive ── */
+    .modal-txhash-section .txhash-row {
+        flex-direction: column;
+    }
+    .modal-txhash-section input {
+        width: 100%;
+        box-sizing: border-box;
+    }
+    .modal-txhash-section .save-hash-btn {
+        width: 100%;
+        text-align: center;
+    }
+
+    /* ── Type banner responsive ── */
+    .modal-type-banner {
+        flex-direction: column;
+        gap: 8px;
+        text-align: center;
+        padding: 14px;
+    }
+    .modal-type-banner__icon {
+        margin: 0 auto;
+    }
+
+    /* ── Form card tri-column → single column ── */
+    .form-group-tri {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    /* ── Filter group buttons responsive ── */
+    .filter-controls {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .filter-controls .filter-group {
+        width: 100%;
+    }
+
+    /* ── Pagination responsive ── */
+    .pagination-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+        text-align: center;
+    }
+    .pagination-bar .pg-per-page {
+        justify-content: center;
+    }
+    .pagination-bar .pg-info {
+        text-align: center;
+    }
+    .pagination-bar .pg-buttons {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    /* ── Status controls inline on mobile ── */
+    .action-cell {
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+    .action-cell .csd-wrapper {
+        width: 100%;
+    }
+    .action-cell .action-btn {
+        flex: 1;
+        text-align: center;
+        min-width: 60px;
+    }
+
+    /* ── General table cell improvements ── */
+    tbody td .action-btn {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+        width: 100%;
+        text-align: center;
+        box-sizing: border-box;
+    }
+
+    /* ── Settings / Maintenance page form fixes ── */
+    .form-card .form-group input,
+    .form-card .form-group select,
+    .form-card .form-group textarea {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* ── Livechat panel responsive ── */
+    .chat-layout {
+        flex-direction: column !important;
+        height: auto !important;
+    }
+    .chat-sidebar {
+        width: 100% !important;
+        max-height: 40vh;
+        border-right: none !important;
+        border-bottom: 1px solid var(--border-light);
+    }
+    .chat-main {
+        width: 100% !important;
+        min-height: 50vh;
+    }
+}
+
+@media (max-width: 480px) {
+    /* ── Tighter modal spacing ── */
+    .modal-header { padding-bottom: 10px; margin-bottom: 14px; }
+    .modal-header h2 { font-size: 1rem; }
+    .modal-body .detail-item { padding: 10px 0; font-size: 0.84rem; }
+    .modal-body .label { font-size: 0.76rem; }
+
+    /* ── Mobile topbar tighter ── */
+    .mobile-topbar { height: 54px; padding-left: 62px; }
+    .mobile-menu-btn { top: 10px; left: 10px; width: 40px; height: 40px; }
+    .mobile-menu-btn svg { width: 20px; height: 20px; }
+
+    /* ── Stat cards single column ── */
+    .stats-grid { grid-template-columns: 1fr; }
+
+    /* ── KYC export buttons responsive ── */
+    .btn-export {
+        width: 100%;
+        text-align: center;
+        font-size: 0.8rem;
+        padding: 10px 14px;
+    }
+}
