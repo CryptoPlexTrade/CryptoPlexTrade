@@ -803,16 +803,62 @@ th {
         text-align: center;
     }
 
-    /* ── Modals ─────────────────────── */
-    .modal-content {
-        width: 96%;
-        max-width: 96%;
-        padding: 20px 16px;
-        border-radius: 14px;
-        max-height: 92vh;
-        overflow-y: auto;
+    /* ── Modals → FULL SCREEN on mobile ─── */
+    .modal-overlay {
+        align-items: stretch;
+        justify-content: stretch;
+        padding: 0;
     }
-    .modal-header h2 { font-size: 1.1rem; }
+    .modal-content {
+        width: 100%;
+        max-width: 100%;
+        height: 100%;
+        max-height: 100%;
+        border-radius: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+    }
+    .modal-header {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background: var(--bg-white);
+        padding: 16px 18px;
+        margin-bottom: 0;
+        border-bottom: 1px solid var(--border-light);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        flex-shrink: 0;
+    }
+    .modal-header h2 { font-size: 1.05rem; }
+
+    /* Big close button for mobile */
+    .close-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        background: var(--bg-light);
+        border: 1.5px solid var(--border-medium);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: var(--text-primary);
+        cursor: pointer;
+        flex-shrink: 0;
+    }
+    .close-btn:hover {
+        background: #fef2f2;
+        border-color: var(--accent-red);
+        color: var(--accent-red);
+    }
+
+    .modal-body {
+        flex: 1;
+        overflow-y: auto;
+        padding: 18px 16px 30px;
+        -webkit-overflow-scrolling: touch;
+    }
 
     /* ── Form card (Rates page) ─────── */
     .form-card { max-width: 100%; padding: 20px; }
