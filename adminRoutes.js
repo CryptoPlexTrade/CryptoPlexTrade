@@ -110,6 +110,21 @@ router.put('/orders/:id/status', async (req, res) => {
     }
 });
 
+// === UPDATE ORDER TX HASH (blockchain transaction hash) ===
+router.put('/orders/:id/tx-hash', async (req, res) => {
+    const { tx_hash } = req.body;
+    if (tx_hash === undefined) {
+        return res.status(400).json({ message: 'tx_hash field is required.' });
+    }
+    try {
+        await db.query('UPDATE orders SET tx_hash = ? WHERE id = ?', [tx_hash || null, req.params.id]);
+        res.json({ message: 'Transaction hash updated successfully.' });
+    } catch (error) {
+        logger.error('Admin tx_hash update error:', error);
+        res.status(500).json({ message: 'Server error updating transaction hash.' });
+    }
+});
+
 // === SUPPORT TICKET MANAGEMENT ===
 router.get('/tickets', async (req, res) => {
     try {

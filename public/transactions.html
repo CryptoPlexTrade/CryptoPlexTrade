@@ -304,6 +304,25 @@
                 }
             } catch { body.appendChild(row('Payout Info', 'Error parsing details')); }
         }
+
+        // ── Blockchain Tx Hash (set by admin after sending crypto) ──
+        if (tx.tx_hash) {
+            const hash = tx.tx_hash;
+            const product = (tx.product || '').toUpperCase();
+            let explorerUrl = '';
+            if (product.includes('BTC')) explorerUrl = `https://www.blockchain.com/btc/tx/${hash}`;
+            else if (product.includes('ETH') || product.includes('ERC20')) explorerUrl = `https://etherscan.io/tx/${hash}`;
+            else if (product.includes('TRC20') || product.includes('TRX')) explorerUrl = `https://tronscan.org/#/transaction/${hash}`;
+            else if (product.includes('BNB') || product.includes('BSC')) explorerUrl = `https://bscscan.com/tx/${hash}`;
+            else if (product.includes('SOL')) explorerUrl = `https://solscan.io/tx/${hash}`;
+            else if (product.includes('LTC')) explorerUrl = `https://blockchair.com/litecoin/transaction/${hash}`;
+            else if (product.includes('XRP')) explorerUrl = `https://xrpscan.com/tx/${hash}`;
+
+            const hashDisplay = explorerUrl
+                ? `<a href="${explorerUrl}" target="_blank" rel="noopener noreferrer" style="color:#005baa;font-family:monospace;word-break:break-all;font-size:0.88rem;">${hash}</a> <span style="font-size:0.75rem;color:#64748b;margin-left:4px;">🔗 View on chain</span>`
+                : `<span style="font-family:monospace;word-break:break-all;font-size:0.88rem;">${hash}</span>`;
+            body.appendChild(row('Blockchain Tx Hash', hashDisplay));
+        }
     }
 
     function applyFilters() {

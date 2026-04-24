@@ -59,6 +59,7 @@ CREATE TABLE IF NOT EXISTS orders (
     wallet_address  TEXT                NOT NULL,                   -- crypto wallet OR JSON payout info (sell)
     transaction_id  VARCHAR(255)        NOT NULL,                   -- payment reference supplied by user
     status          VARCHAR(50)         NOT NULL DEFAULT 'pending_confirmation',
+    tx_hash         VARCHAR(255),                                    -- blockchain tx hash entered by admin after sending crypto
     created_at      TIMESTAMPTZ         NOT NULL DEFAULT NOW(),
     updated_at      TIMESTAMPTZ         NOT NULL DEFAULT NOW()
 );
