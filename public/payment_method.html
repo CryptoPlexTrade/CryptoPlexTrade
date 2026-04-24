@@ -409,7 +409,10 @@ document.addEventListener('DOMContentLoaded', async function() {
                         </div>
                         <div class="panel-row">
                             <span class="panel-row__label">MoMo Number</span>
-                            <span class="panel-row__value">${a.number || 'N/A'}</span>
+                            <span class="panel-row__value" style="display:flex;align-items:center;gap:10px;">
+                                <span style="font-family:monospace;letter-spacing:1.5px;flex:1;">${a.number || 'N/A'}</span>
+                                <button class="copy-ref-btn copy-value-btn" data-copy="${a.number || ''}">Copy</button>
+                            </span>
                         </div>`;
                 });
                 momoRows.innerHTML = html;
@@ -431,7 +434,10 @@ document.addEventListener('DOMContentLoaded', async function() {
                     </div>
                     <div class="panel-row">
                         <span class="panel-row__label">Account Number</span>
-                        <span class="panel-row__value" style="font-family:monospace;letter-spacing:1px;">${pm.bank.accountNumber || 'N/A'}</span>
+                        <span class="panel-row__value" style="display:flex;align-items:center;gap:10px;">
+                            <span style="font-family:monospace;letter-spacing:1.5px;flex:1;">${pm.bank.accountNumber || 'N/A'}</span>
+                            <button class="copy-ref-btn copy-value-btn" data-copy="${pm.bank.accountNumber || ''}">Copy</button>
+                        </span>
                     </div>`;
             }
         }
@@ -459,13 +465,32 @@ document.addEventListener('DOMContentLoaded', async function() {
         window.location.href = 'confirm_id.html';
     });
 
-    copyBtn.addEventListener('click', function() {
-        const refText = document.getElementById('payment-reference').textContent;
-        navigator.clipboard.writeText(refText).then(() => {
-            const orig = this.textContent;
-            this.textContent = 'Copied!';
-            setTimeout(() => this.textContent = orig, 1500);
+    // Reusable copy handler
+    function handleCopy(btn, text) {
+        navigator.clipboard.writeText(text).then(() => {
+            const orig = btn.textContent;
+            btn.textContent = 'Copied!';
+            btn.style.background = 'var(--green)';
+            btn.style.color = 'white';
+            btn.style.borderColor = 'var(--green)';
+            setTimeout(() => {
+                btn.textContent = orig;
+                btn.style.background = '';
+                btn.style.color = '';
+                btn.style.borderColor = '';
+            }, 1500);
         }).catch(err => console.error('Failed to copy:', err));
+    }
+
+    // Copy reference button
+    copyBtn.addEventListener('click', function() {
+        handleCopy(this, document.getElementById('payment-reference').textContent);
+    });
+
+    // Copy buttons for MoMo numbers & bank account numbers (event delegation)
+    document.addEventListener('click', function(e) {
+        const btn = e.target.closest('.copy-value-btn');
+        if (btn && btn.dataset.copy) handleCopy(btn, btn.dataset.copy);
     });
 
     // --- Ticker Tape (Binance 24hr stats) ---

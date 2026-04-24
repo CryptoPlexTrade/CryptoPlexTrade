@@ -59,6 +59,16 @@
         .detail-item .value { background-color: var(--bg-white); padding: 10px; border-radius: 8px; font-weight: 500; border: 1px solid var(--border-light); }
         .detail-item .value.reference { font-family: 'Courier New', Courier, monospace; font-size: 1.1rem; color: var(--accent-red); letter-spacing: 2px; }
 
+        .copy-detail-btn {
+            display: inline-block; margin-left: 10px;
+            background: rgba(0,91,170,0.1); border: 1px solid rgba(0,91,170,0.2);
+            color: var(--primary-color); border-radius: 16px; padding: 4px 12px;
+            font-size: 0.73rem; font-weight: 700; cursor: pointer;
+            font-family: 'Poppins', sans-serif; transition: background 0.2s, color 0.2s;
+            vertical-align: middle;
+        }
+        .copy-detail-btn:hover { background: var(--primary-color); color: white; }
+
         #confirm-payment-btn { width: 100%; padding: 15px; font-size: 1.1rem; }
 
         #server-message { padding: 15px; border-radius: 8px; margin-bottom: 20px; font-weight: 500; display: none; }
@@ -151,11 +161,17 @@
                         </div>
                         <div class="detail-item">
                             <span class="label">Number:</span>
-                            <span class="value" id="pm-momo-number">Loading...</span>
+                            <span class="value" style="display:flex;align-items:center;">
+                                <span id="pm-momo-number" style="font-family:monospace;letter-spacing:1.5px;flex:1;">Loading...</span>
+                                <button class="copy-detail-btn" id="copy-momo-btn">Copy</button>
+                            </span>
                         </div>
                         <div class="detail-item">
                             <span class="label">Payment Reference (Required):</span>
-                            <span class="value reference" id="payment-reference"></span>
+                            <span class="value reference" style="display:flex;align-items:center;">
+                                <span id="payment-reference" style="flex:1;"></span>
+                                <button class="copy-detail-btn" id="copy-ref-btn">Copy</button>
+                            </span>
                         </div>
                     </div>
 
@@ -173,7 +189,10 @@
                         </div>
                         <div class="detail-item">
                             <span class="label">Account Number:</span>
-                            <span class="value" id="pm-bank-account-number">Loading...</span>
+                            <span class="value" style="display:flex;align-items:center;">
+                                <span id="pm-bank-account-number" style="font-family:monospace;letter-spacing:1.5px;flex:1;">Loading...</span>
+                                <button class="copy-detail-btn" id="copy-bank-btn">Copy</button>
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -230,6 +249,35 @@
                 console.error('Failed to load payment methods:', err);
             }
         });
+    </script>
+
+    <script>
+        // Copy-to-clipboard handler for payment details
+        function handleCopyBtn(btnId, valueId) {
+            const btn = document.getElementById(btnId);
+            if (!btn) return;
+            btn.addEventListener('click', function() {
+                const el = document.getElementById(valueId);
+                const text = el ? el.textContent : '';
+                if (!text || text === 'Loading...' || text === 'N/A') return;
+                navigator.clipboard.writeText(text).then(() => {
+                    const orig = this.textContent;
+                    this.textContent = 'Copied!';
+                    this.style.background = '#28a745';
+                    this.style.color = 'white';
+                    this.style.borderColor = '#28a745';
+                    setTimeout(() => {
+                        this.textContent = orig;
+                        this.style.background = '';
+                        this.style.color = '';
+                        this.style.borderColor = '';
+                    }, 1500);
+                }).catch(err => console.error('Copy failed:', err));
+            });
+        }
+        handleCopyBtn('copy-momo-btn', 'pm-momo-number');
+        handleCopyBtn('copy-ref-btn', 'payment-reference');
+        handleCopyBtn('copy-bank-btn', 'pm-bank-account-number');
     </script>
 
     <script src="/chat-widget.js"></script>
