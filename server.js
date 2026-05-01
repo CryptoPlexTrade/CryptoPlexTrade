@@ -104,7 +104,9 @@ app.use(async (req, res, next) => {
         const data = await maintenance.get();
         if (!data.active) return next();
         const p = req.path.toLowerCase();
-        if (p.startsWith('/api/') && !p.startsWith('/api/admin') && !p.startsWith('/api/maintenance') && !p.startsWith('/api/login') && !p.startsWith('/api/register')) {
+        // Allow auth-related endpoints even during maintenance so users can
+        // log in, register, reset passwords, and verify their email.
+        if (p.startsWith('/api/') && !p.startsWith('/api/admin') && !p.startsWith('/api/maintenance') && !p.startsWith('/api/login') && !p.startsWith('/api/register') && !p.startsWith('/api/forgot-password') && !p.startsWith('/api/reset-password') && !p.startsWith('/api/verify-email') && !p.startsWith('/api/resend-verification')) {
             return res.status(503).json({ message: data.message || 'Site is under maintenance.' });
         }
     } catch (_) {}
