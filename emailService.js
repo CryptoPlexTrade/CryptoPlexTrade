@@ -15,6 +15,8 @@ if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
       pass: process.env.SMTP_PASS,
     },
     tls: { rejectUnauthorized: true },
+    // Identify ourselves properly — aids deliverability scoring
+    name: 'cryptoplextrade.com',
   });
 
   transporter.verify((error, success) => {
@@ -33,7 +35,15 @@ if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
 const SENDER_NAME = 'CryptoPlexTrade';
 const getSender = () => `"${SENDER_NAME}" <${process.env.SMTP_USER}>`;
 const getReplyTo = () => process.env.ADMIN_EMAIL || process.env.SMTP_USER;
-const getAppDomain = () => process.env.APP_URL || 'cryptoplextrade.com';
+
+/**
+ * Returns the bare domain (no protocol) for use in Message-ID headers.
+ * APP_URL may include https:// which is invalid in an RFC 2822 Message-ID.
+ */
+const getAppDomain = () => {
+  const raw = process.env.APP_URL || 'cryptoplextrade.com';
+  return raw.replace(/^https?:\/\//i, '').replace(/\/+$/, '');
+};
 
 /**
  * Sends an email notification to the admin about a new order.
@@ -144,7 +154,7 @@ async function sendPasswordResetEmail(user, resetUrl) {
 
   const domain = getAppDomain();
   const messageId = `<${Date.now()}.reset@${domain}>`;
-  const subject = 'Your password reset link';
+  const subject = `${SENDER_NAME} — Password Reset Request`;
 
   // Plain-text — required and important for spam scoring
   const textBody = [
