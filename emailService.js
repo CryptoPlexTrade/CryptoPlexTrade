@@ -126,7 +126,6 @@ async function sendNewOrderNotification(orderDetails, orderId) {
     html: htmlBody,
     headers: {
       'Message-ID': `<${Date.now()}.order-${orderId}@${domain}>`,
-      'Precedence': 'bulk',
     },
   });
   logger.info(`Admin notification sent for new order #${orderId}`);
@@ -219,8 +218,6 @@ async function sendPasswordResetEmail(user, resetUrl) {
     html: htmlBody,
     headers: {
       'Message-ID': messageId,
-      'List-Unsubscribe': `<mailto:${process.env.ADMIN_EMAIL}?subject=unsubscribe>`,
-      'Precedence': 'bulk',
     },
   });
   logger.info(`Password reset email sent to ${user.email}`);
@@ -297,7 +294,6 @@ async function sendLiveChatNotification(guestName, sessionId) {
     html: htmlBody,
     headers: {
       'Message-ID': `<${Date.now()}.chat-${sessionId}@${domain}>`,
-      'Precedence': 'bulk',
     },
   });
   logger.info(`Admin notification sent for new chat session #${sessionId}`);
@@ -425,8 +421,6 @@ async function sendOrderCompletedEmail(order, userEmail) {
     html: htmlBody,
     headers: {
       'Message-ID': `<${Date.now()}.completed-${orderId}@${domain}>`,
-      'List-Unsubscribe': `<mailto:${process.env.ADMIN_EMAIL}?subject=unsubscribe>`,
-      'Precedence': 'bulk',
     },
   });
   logger.info(`Order completed email sent to ${userEmail} for order #${orderId}`);
@@ -502,7 +496,7 @@ async function sendVerificationEmail(email, otpCode) {
 </html>`;
 
   await transporter.sendMail({
-    from: `"${SENDER_NAME}" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
+    from: getSender(),
     replyTo: getReplyTo(),
     to: email,
     subject,
@@ -637,7 +631,6 @@ async function sendKycSubmissionAlert(user, idType) {
     html: htmlBody,
     headers: {
       'Message-ID': `<${Date.now()}.kyc-${user.email.replace('@', '.')}@${domain}>`,
-      'Precedence': 'bulk',
     },
   });
   logger.info(`KYC submission alert sent to admin for user: ${user.email}`);
@@ -717,7 +710,7 @@ async function sendKycApprovedEmail(user) {
   await transporter.sendMail({
     from: getSender(), replyTo: getReplyTo(), to: user.email, subject,
     text: textBody, html: htmlBody,
-    headers: { 'Message-ID': `<${Date.now()}.kyc-approved@${domain}>`, 'Precedence': 'bulk' },
+    headers: { 'Message-ID': `<${Date.now()}.kyc-approved@${domain}>` },
   });
   logger.info(`KYC approved email sent to ${user.email}`);
 }
@@ -809,7 +802,7 @@ async function sendKycRejectedEmail(user) {
   await transporter.sendMail({
     from: getSender(), replyTo: getReplyTo(), to: user.email, subject,
     text: textBody, html: htmlBody,
-    headers: { 'Message-ID': `<${Date.now()}.kyc-rejected@${domain}>`, 'Precedence': 'bulk' },
+    headers: { 'Message-ID': `<${Date.now()}.kyc-rejected@${domain}>` },
     });
     logger.info(`KYC rejected email sent to ${user.email}`);
 }
