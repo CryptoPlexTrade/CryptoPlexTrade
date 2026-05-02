@@ -1144,13 +1144,13 @@ th {
         flex-direction: column !important;
         height: auto !important;
     }
-    .chat-sidebar {
+    .sessions-panel {
         width: 100% !important;
         max-height: 40vh;
         border-right: none !important;
         border-bottom: 1px solid var(--border-light);
     }
-    .chat-main {
+    .message-panel {
         width: 100% !important;
         min-height: 50vh;
     }

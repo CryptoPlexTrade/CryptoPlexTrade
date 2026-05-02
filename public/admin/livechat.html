@@ -154,10 +154,92 @@
         }
         .btn-delete-session:hover { background: #e11d48; color: #fff; border-color: #e11d48; transform: translateY(-1px); }
 
+        /* ── Mobile: ≤ 900px ─────────────────────────── */
         @media (max-width: 900px) {
-            .chat-layout { grid-template-columns: 1fr; height: auto; }
-            .sessions-panel { height: 280px; }
-            .message-panel { min-height: 400px; }
+            .chat-layout {
+                grid-template-columns: 1fr;
+                height: calc(100dvh - 140px);
+                border-radius: 12px;
+            }
+
+            /* Sessions list — compact, scrollable */
+            .sessions-panel {
+                max-height: 220px;
+                min-height: 160px;
+                border-right: none;
+                border-bottom: 1px solid #e2e8f0;
+            }
+            .sessions-panel-header { padding: 12px 14px 10px; }
+            .sessions-panel-header h2 { font-size: .82rem; margin-bottom: 6px; }
+            .sessions-list { padding: 6px; }
+            .session-item { padding: 10px 12px; }
+            .session-name { font-size: .8rem; }
+            .session-preview { font-size: .72rem; }
+            .session-time { font-size: .64rem; }
+
+            /* Message panel — fill remaining height */
+            .message-panel {
+                min-height: 0;
+                flex: 1;
+                overflow: hidden;
+            }
+            .message-panel-header {
+                padding: 10px 14px;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            .msg-panel-name { font-size: .85rem; }
+            .msg-panel-sub  { font-size: .68rem; }
+            .btn-close-session {
+                padding: 6px 12px;
+                font-size: .72rem;
+            }
+            .btn-delete-session {
+                padding: 6px 8px;
+            }
+
+            /* Messages area */
+            #admin-messages { padding: 14px 12px; }
+            .admin-msg { max-width: 85%; font-size: .82rem; padding: 10px 14px; }
+
+            /* Reply area */
+            #admin-reply-area { padding: 10px 12px; gap: 8px; }
+            #admin-reply-input { font-size: .82rem; padding: 10px 12px; min-height: 40px; }
+            #admin-send-btn { padding: 10px 14px; font-size: .8rem; }
+
+            /* Empty state */
+            .empty-panel svg { width: 36px; height: 36px; }
+            .empty-panel p { font-size: .8rem; }
+        }
+
+        /* ── Small phones: ≤ 480px ────────────────────── */
+        @media (max-width: 480px) {
+            .chat-layout {
+                height: calc(100dvh - 120px);
+                border-radius: 10px;
+            }
+            .sessions-panel { max-height: 180px; min-height: 140px; }
+            .sessions-panel-header { padding: 10px 12px 8px; }
+            .filter-btn { font-size: .68rem; padding: 5px 0; }
+
+            .message-panel-header {
+                padding: 8px 10px;
+            }
+            .message-panel-header > div:last-child {
+                width: 100%;
+                justify-content: flex-end;
+            }
+            .msg-panel-name { font-size: .8rem; }
+            .btn-close-session { padding: 5px 10px; font-size: .7rem; }
+
+            #admin-messages { padding: 10px 8px; gap: 8px; }
+            .admin-msg { max-width: 90%; font-size: .78rem; padding: 9px 12px; border-radius: 14px; }
+            .admin-msg-meta { font-size: .6rem; }
+
+            #admin-reply-area { padding: 8px 10px; }
+            #admin-reply-input { font-size: .78rem; padding: 9px 10px; border-radius: 8px; }
+            #admin-send-btn { padding: 9px 12px; font-size: .76rem; border-radius: 8px; }
+            #admin-send-btn svg { width: 14px; height: 14px; }
         }
 
         /* ── Custom Confirmation Modal ────────────────── */
