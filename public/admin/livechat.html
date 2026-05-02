@@ -156,19 +156,7 @@
 
         /* ── Mobile: ≤ 900px ─────────────────────────── */
         @media (max-width: 900px) {
-            .chat-layout {
-                grid-template-columns: 1fr;
-                height: calc(100dvh - 140px);
-                border-radius: 12px;
-            }
-
-            /* Sessions list — compact, scrollable */
-            .sessions-panel {
-                max-height: 220px;
-                min-height: 160px;
-                border-right: none;
-                border-bottom: 1px solid #e2e8f0;
-            }
+            /* Sessions list — compact */
             .sessions-panel-header { padding: 12px 14px 10px; }
             .sessions-panel-header h2 { font-size: .82rem; margin-bottom: 6px; }
             .sessions-list { padding: 6px; }
@@ -177,10 +165,14 @@
             .session-preview { font-size: .72rem; }
             .session-time { font-size: .64rem; }
 
-            /* Message panel — fill remaining height */
+            /* Message panel — fill remaining grid row */
             .message-panel {
+                display: flex;
+                flex-direction: column;
+                overflow: hidden;
+            }
+            #chat-detail {
                 min-height: 0;
-                flex: 1;
                 overflow: hidden;
             }
             .message-panel-header {
@@ -198,8 +190,12 @@
                 padding: 6px 8px;
             }
 
-            /* Messages area */
-            #admin-messages { padding: 14px 12px; }
+            /* Messages area — must scroll within flex */
+            #admin-messages {
+                padding: 14px 12px;
+                min-height: 0;
+                flex: 1;
+            }
             .admin-msg { max-width: 85%; font-size: .82rem; padding: 10px 14px; }
 
             /* Reply area */
@@ -214,11 +210,6 @@
 
         /* ── Small phones: ≤ 480px ────────────────────── */
         @media (max-width: 480px) {
-            .chat-layout {
-                height: calc(100dvh - 120px);
-                border-radius: 10px;
-            }
-            .sessions-panel { max-height: 180px; min-height: 140px; }
             .sessions-panel-header { padding: 10px 12px 8px; }
             .filter-btn { font-size: .68rem; padding: 5px 0; }
 
@@ -346,7 +337,7 @@
                         <p>Select a conversation to start responding</p>
                     </div>
 
-                    <div id="chat-detail" style="display:none;flex:1;flex-direction:column;overflow:hidden;">
+                    <div id="chat-detail" style="display:none;flex:1;flex-direction:column;overflow:hidden;min-height:0;">
                         <div class="message-panel-header">
                             <div>
                                 <p class="msg-panel-name" id="detail-name">—</p>
