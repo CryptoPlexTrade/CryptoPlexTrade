@@ -154,30 +154,74 @@
         }
         .btn-delete-session:hover { background: #e11d48; color: #fff; border-color: #e11d48; transform: translateY(-1px); }
 
-        /* ── Mobile: ≤ 900px ─────────────────────────── */
+        /* ── Mobile back button in chat header ───────── */
+        .chat-back-btn {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            width: 36px; height: 36px;
+            border-radius: 10px;
+            border: 1.5px solid #e2e8f0;
+            background: #f8fafc;
+            cursor: pointer;
+            flex-shrink: 0;
+            margin-right: 10px;
+            transition: background 0.2s, border-color 0.2s;
+        }
+        .chat-back-btn:hover { background: #e0f2fe; border-color: var(--primary-color); }
+        .chat-back-btn svg { width: 18px; height: 18px; color: var(--text-primary); }
+
+        /* ── Mobile: ≤ 900px — TWO-SCREEN FLOW ────────── */
         @media (max-width: 900px) {
-            /* Sessions list — compact */
+            /* Show back button on mobile */
+            .chat-back-btn { display: flex; }
+
+            /* Full-height single-column layout */
+            .chat-layout {
+                grid-template-columns: 1fr;
+                height: calc(100dvh - 160px);
+                border-radius: 12px;
+            }
+
+            /* Screen 1: Sessions list — visible by default, full height */
+            .sessions-panel {
+                display: flex;
+                border-right: none;
+                min-height: 0;
+            }
             .sessions-panel-header { padding: 12px 14px 10px; }
             .sessions-panel-header h2 { font-size: .82rem; margin-bottom: 6px; }
-            .sessions-list { padding: 6px; }
+            .sessions-list { padding: 6px; flex: 1; overflow-y: auto; }
             .session-item { padding: 10px 12px; }
             .session-name { font-size: .8rem; }
             .session-preview { font-size: .72rem; }
             .session-time { font-size: .64rem; }
 
-            /* Message panel — fill remaining grid row */
+            /* Screen 2: Message panel — HIDDEN by default on mobile */
             .message-panel {
-                display: flex;
+                display: none;
                 flex-direction: column;
                 overflow: hidden;
+                min-height: 0;
             }
             #chat-detail {
                 min-height: 0;
                 overflow: hidden;
             }
+
+            /* When a chat is opened: hide sessions, show messages */
+            .chat-layout.mobile-chat-open .sessions-panel {
+                display: none !important;
+            }
+            .chat-layout.mobile-chat-open .message-panel {
+                display: flex !important;
+                flex: 1;
+            }
+
+            /* Chat header */
             .message-panel-header {
                 padding: 10px 14px;
-                flex-wrap: wrap;
+                flex-wrap: nowrap;
                 gap: 8px;
             }
             .msg-panel-name { font-size: .85rem; }
@@ -185,12 +229,13 @@
             .btn-close-session {
                 padding: 6px 12px;
                 font-size: .72rem;
+                white-space: nowrap;
             }
             .btn-delete-session {
                 padding: 6px 8px;
             }
 
-            /* Messages area — must scroll within flex */
+            /* Messages area */
             #admin-messages {
                 padding: 14px 12px;
                 min-height: 0;
@@ -203,23 +248,18 @@
             #admin-reply-input { font-size: .82rem; padding: 10px 12px; min-height: 40px; }
             #admin-send-btn { padding: 10px 14px; font-size: .8rem; }
 
-            /* Empty state */
-            .empty-panel svg { width: 36px; height: 36px; }
-            .empty-panel p { font-size: .8rem; }
+            /* Empty state — hidden on mobile since we show sessions instead */
+            .empty-panel { display: none; }
         }
 
         /* ── Small phones: ≤ 480px ────────────────────── */
         @media (max-width: 480px) {
+            .chat-layout { height: calc(100dvh - 130px); }
+
             .sessions-panel-header { padding: 10px 12px 8px; }
             .filter-btn { font-size: .68rem; padding: 5px 0; }
 
-            .message-panel-header {
-                padding: 8px 10px;
-            }
-            .message-panel-header > div:last-child {
-                width: 100%;
-                justify-content: flex-end;
-            }
+            .message-panel-header { padding: 8px 10px; }
             .msg-panel-name { font-size: .8rem; }
             .btn-close-session { padding: 5px 10px; font-size: .7rem; }
 
@@ -339,7 +379,10 @@
 
                     <div id="chat-detail" style="display:none;flex:1;flex-direction:column;overflow:hidden;min-height:0;">
                         <div class="message-panel-header">
-                            <div>
+                            <button class="chat-back-btn" id="chat-back-btn" aria-label="Back to conversations">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                            </button>
+                            <div style="flex:1;min-width:0;">
                                 <p class="msg-panel-name" id="detail-name">—</p>
                                 <p class="msg-panel-sub" id="detail-sub">—</p>
                             </div>
@@ -486,12 +529,33 @@
             } catch (_) {}
         }
 
+        // ── Mobile helpers ───────────────────────────────────────────
+        const chatLayout = document.querySelector('.chat-layout');
+        function isMobile() { return window.matchMedia('(max-width: 900px)').matches; }
+
+        function goBackToSessions() {
+            chatLayout.classList.remove('mobile-chat-open');
+            activeId = null;
+            chatDetail.style.display = 'none';
+            emptyPanel.style.display = '';
+            if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+            renderSessions();
+        }
+
+        // Back button in chat header
+        document.getElementById('chat-back-btn').addEventListener('click', goBackToSessions);
+
         // ── Open session ─────────────────────────────────────────────
         async function openSession(id) {
             activeId = id;
             renderSessions();
             emptyPanel.style.display = 'none';
             chatDetail.style.display = 'flex';
+
+            // On mobile: switch to chat screen
+            if (isMobile()) {
+                chatLayout.classList.add('mobile-chat-open');
+            }
 
             const sess = sessions.find(s => s.id === id);
             if (sess) {
@@ -596,6 +660,8 @@
             if (!confirmed) return;
             try {
                 await fetch(`/api/admin/chat/${activeId}`, { method: 'DELETE', credentials: 'include' });
+                // Return to sessions list (works on both mobile and desktop)
+                chatLayout.classList.remove('mobile-chat-open');
                 activeId = null;
                 chatDetail.style.display = 'none';
                 emptyPanel.style.display = '';

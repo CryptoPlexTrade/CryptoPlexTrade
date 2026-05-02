@@ -1142,22 +1142,13 @@ th {
     /* ── Livechat panel responsive ── */
     .chat-layout {
         grid-template-columns: 1fr !important;
-        grid-template-rows: auto 1fr !important;
-        height: calc(100dvh - 160px) !important;
-        overflow: hidden !important;
     }
     .sessions-panel {
         width: 100% !important;
-        max-height: 200px;
-        min-height: 0;
         border-right: none !important;
-        border-bottom: 1px solid var(--border-light);
-        overflow-y: auto;
     }
     .message-panel {
         width: 100% !important;
-        min-height: 0 !important;
-        overflow: hidden;
     }
 }
 
