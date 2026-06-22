@@ -192,19 +192,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 window.location.href = 'trade.html';
                 return;
             }
-            if (response.ok) {
-                const user = await response.json();
-                if (user.kyc_status === 'unverified' || user.kyc_status === 'rejected') {
-                    window.location.href = 'kyc.html';
-                    return;
-                } else if (user.kyc_status === 'pending') {
-                    // Show overlay — user cannot trade yet
-                    const ov = document.createElement('div');
-                    ov.style.cssText = 'position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(15,23,42,0.75);backdrop-filter:blur(6px);padding:20px;';
-                    ov.innerHTML = `<div style="background:#fff;border-radius:20px;padding:40px 36px;max-width:440px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,91,170,0.2);"><div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#fbbf24,#f59e0b);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:2rem;">⏳</div><h2 style="font-size:1.4rem;font-weight:700;color:#0f172a;margin-bottom:10px;">Verification Under Review</h2><p style="color:#64748b;font-size:0.95rem;line-height:1.7;margin-bottom:28px;">Your KYC documents are being reviewed.<br><strong style="color:#0f172a;">Trading unlocks once approved.</strong><br>Usually 1–24 hours.</p><a href="dashboard.html" style="display:inline-block;padding:13px 32px;background:linear-gradient(90deg,#005baa,#00a9e0);color:#fff;border-radius:12px;font-weight:700;text-decoration:none;">← Back to Dashboard</a></div>`;
-                    document.body.appendChild(ov);
-                }
-            }
         }).catch(() => window.location.href = 'login.html');
 
     // Logout

@@ -1,0 +1,13 @@
+#DATABASE CONFIGURATION
+DATABASE_URL=postgresql://postgres.cjgnbuljrfvundzjgrns:1c1kuFo2iwKapzaV@aws-0-eu-west-1.pooler.supabase.com:6543/postgres
+JWT_SECRET=a_very_secret_and_long_string_for_your_tokens
+
+# --- SMTP Email Configuration (for services like Gmail, SendGrid, etc.) ---
+ADMIN_EMAIL=Support@cryptoplextrade.com
+SMTP_USER=Support@cryptoplextrade.com
+SMTP_FROM=noreply@cryptoplextrade.com
+SMTP_PASS=ljvysewpzmqniwbd
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=465
+SMTP_SECURE=true
+APP_URL=cryptoplextrade.com

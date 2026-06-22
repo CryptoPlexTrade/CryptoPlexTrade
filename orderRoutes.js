@@ -28,8 +28,8 @@ router.post('/create', authenticateToken, async (req, res) => {
         const [users] = await db.query('SELECT email, kyc_status FROM users WHERE id = ?', [userId]);
         if (users.length === 0) return res.status(404).json({ message: 'User not found.' });
         const user = users[0];
-        if (user.kyc_status !== 'approved') {
-            return res.status(403).json({ message: 'Trading is disabled until your Identity Verification (KYC) is approved by an administrator.' });
+        if (user.kyc_status !== 'approved' && user.kyc_status !== 'pending' && parseFloat(usdAmount) > 500) {
+            return res.status(403).json({ message: 'Identity verification is required for trades above $500. Please complete KYC to continue.', kyc_required: true });
         }
         const userEmail = user.email;
 
@@ -126,8 +126,8 @@ router.post('/create-sell-order', authenticateToken, async (req, res) => {
         const [users] = await db.query('SELECT email, kyc_status FROM users WHERE id = ?', [userId]);
         if (users.length === 0) return res.status(404).json({ message: 'User not found.' });
         const user = users[0];
-        if (user.kyc_status !== 'approved') {
-            return res.status(403).json({ message: 'Trading is disabled until your Identity Verification (KYC) is approved by an administrator.' });
+        if (user.kyc_status !== 'approved' && user.kyc_status !== 'pending' && parseFloat(productAmount) > 500) {
+            return res.status(403).json({ message: 'Identity verification is required for trades above $500. Please complete KYC to continue.', kyc_required: true });
         }
         const userEmail = user.email;
 
