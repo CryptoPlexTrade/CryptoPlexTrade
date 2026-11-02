@@ -1,0 +1,565 @@
+{
+ "version": 1,
+ "at": "2026-11-02T22:19:11.967Z",
+ "seed": 342124618,
+ "redraws": 0,
+ "input": {
+  "brief": "",
+  "sector": "finance",
+  "tone": null,
+  "have": [],
+  "keep": [],
+  "avoid": [],
+  "sections": [
+   "showcase",
+   "features",
+   "stats",
+   "testimonial",
+   "faq",
+   "cta",
+   "footer"
+  ],
+  "direction": null
+ },
+ "imagery": "interface",
+ "allow": [],
+ "direction": {
+  "id": "borrowed-category",
+  "name": "Dressed as something else",
+  "sectors": [
+   "finance",
+   "saas",
+   "consumer-app",
+   "physical-product",
+   "health",
+   "dev-tool",
+   "ai-product",
+   "education",
+   "nonprofit",
+   "real-estate",
+   "other"
+  ],
+  "tones": [
+   "bold",
+   "playful",
+   "luxury"
+  ],
+  "needs": [],
+  "idea": "Art-direct the subject as if it belonged to a different, more vivid category. A money app is sold like a streetwear drop. An industrial roaster is presented like a design object. Drilling hardware gets the calm of a watch brand. A parcel-locker service becomes a fairground of stickers. Choose the borrowed category by asking what feeling the audience is missing from this kind of product (swagger, calm, glamour, play) and which category owns that feeling. Then take its manners completely: its type, its pacing, its way of photographing things. The contrast between dull subject and vivid dress is what people remember.",
+  "composition": "Depends on the borrowed category, so decide it explicitly and write it in your notes. Fashion drop: one shouted condensed headline across the full width, a single cropped image under it, then product facts as a blunt list. Watch or perfume: a centred object on a dark field, a small serif name, very few words, long vertical pauses. Poster or zine: flat colour blocks, heavy type, tilted cut-out images. Museum: one item per screen on a plinth-like band of colour with a short label beside it. Whichever you choose, the page structure stays simple (four to six sections) and every section uses the borrowed manners, including pricing and the footer.",
+  "typography": "The borrowed category's type, fully committed: condensed and loud, or refined and small. No halfway.",
+  "typeClasses": [
+   "condensed-heavy",
+   "serif-display",
+   "extended-heavy",
+   "heavy-black"
+  ],
+  "colour": "The borrowed category's palette, which will be unlike the subject's sector norm. That mismatch is intended.",
+  "paletteTags": [
+   "flat-loud",
+   "two-tone",
+   "dark-neutral",
+   "single-field"
+  ],
+  "imagery": "Photograph the subject the way the borrowed category would be photographed. With the dealt set, choose images for attitude, not literal relevance, and crop them hard.",
+  "sectionTags": [
+   "poster",
+   "type-led",
+   "photo-led",
+   "colour-field"
+  ],
+  "motion": "edge-marquee",
+  "richness": "Attitude. The page has a recognisable voice from another world, applied to a subject nobody expected it for.",
+  "pitfalls": "Name the borrowed category in one word before you start, or the result is merely loud. The content must still be clear: what it is, what it costs, how to get it. Avoid borrowing from 'tech startup', which is the default you are escaping.",
+  "seenIn": [
+   "opl-uglycash",
+   "aww-coffeetech-r",
+   "aww-sstr-friction-reduction",
+   "opl-locker-land",
+   "aww-moto-finance",
+   "aww-vero-new-york"
+  ],
+  "allow": []
+ },
+ "hero": {
+  "id": "flush-left-shout-seam-photo",
+  "name": "Flush-left shout, seam photograph",
+  "archetype": "type-poster",
+  "directions": [
+   "loud-flat-poster",
+   "borrowed-category"
+  ],
+  "needs": [],
+  "blueprint": "Borrowed from a street poster or zine. A saturated flat field covers the top 82% of the viewport; a second flat colour forms a band across the bottom 18%. The headline is two lines in an ultra-heavy face at clamp(80px, 12vw, 190px), flush left on a 20px margin, leading 0.84, reaching about 62% across the width; its first line starts 16% below the top. Right of centre one photograph is stuck on like a poster scrap: a 3:4 portrait 30% of the viewport wide (columns 8-11), clipped to an arch with clip-path or a large top border-radius, rotated 5 degrees, its top edge leaving the viewport and its lower edge straddling the seam so it sits on both colours. The photograph overlaps the last letters of the first line by about 4vw and lies above the type in the stacking order. On the bottom band, on one baseline: one supporting sentence at 20px on the left (max 40ch) and the single action, a chunky rectangle in the upper field's colour, at the right. The wordmark sits top-left at 20px; three text links top-right.",
+  "mobile": "The field takes the top 78% and the band the rest. The headline sets at 19vw on two lines flush to 16px margins, starting at 12% of the height. The arch photograph moves under the type: 58% of the width, pushed against the right edge and cropped by it, still tilted 5 degrees and straddling the seam. The sentence and the full-width action stack on the band.",
+  "headline": "A 2-4 word shout, at most 16 characters, lowercase or capitals throughout, one or two words per line.",
+  "motion": "shutter-image",
+  "seenIn": [
+   "aww-aardvark-book-club",
+   "opl-postaway",
+   "opl-the-sapphic-bar-index"
+  ]
+ },
+ "type": {
+  "id": "big-shoulders-public",
+  "name": "Big Shoulders / Public Sans",
+  "class": "condensed-heavy",
+  "display": {
+   "family": "Big Shoulders",
+   "source": "google",
+   "weights": [
+    800
+   ],
+   "italic": false,
+   "settings": "weight 800 · tracking -0.005em · leading 0.88 · uppercase",
+   "css": "<link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">\n<link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>\n<link href=\"https://fonts.googleapis.com/css2?family=Big+Shoulders:wght@800&family=Public+Sans:wght@400;600&display=swap\" rel=\"stylesheet\">"
+  },
+  "text": {
+   "family": "Public Sans",
+   "source": "google",
+   "weights": [
+    400,
+    600
+   ],
+   "italic": false,
+   "settings": "400 for body, 600 for emphasis · leading 1.5 · tracking 0",
+   "css": "<link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">\n<link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>\n<link href=\"https://fonts.googleapis.com/css2?family=Big+Shoulders:wght@800&family=Public+Sans:wght@400;600&display=swap\" rel=\"stylesheet\">"
+  },
+  "standsInFor": [
+   "Founders Grotesk Condensed",
+   "PP Neue York",
+   "Knockout"
+  ],
+  "note": "A tall American gothic taken from city signage, blunt and civic, over a plain public-service sans. Suits culture indexes, community projects, bars, sport clubs and local campaigns.",
+  "seenIn": [
+   "aww-mosbys-files",
+   "opl-the-sapphic-bar-index",
+   "opl-the-deep-end",
+   "aww-colonia-zacamil"
+  ],
+  "links": [
+   "https://fonts.googleapis.com/css2?family=Big+Shoulders:wght@800&family=Public+Sans:wght@400;600&display=swap"
+  ],
+  "scale": {
+   "step-small": "clamp(0.8125rem, 0.79rem + 0.1vw, 0.875rem)",
+   "step-body": "clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem)",
+   "step-lead": "clamp(1.25rem, 1.1rem + 0.7vw, 1.625rem)",
+   "step-head": "clamp(2.5rem, 1.2rem + 5vw, 5.5rem)"
+  }
+ },
+ "palette": {
+  "id": "plum-black-pink",
+  "name": "Plum-black and pink",
+  "tags": [
+   "mono-accent",
+   "dark-neutral"
+  ],
+  "bg": "#0d060b",
+  "surface": "#1b0e17",
+  "ink": "#ffffff",
+  "muted": "#9a8f97",
+  "accent": "#ff488b",
+  "accentInk": "#0d060b",
+  "fields": [
+   {
+    "bg": "#470c35",
+    "ink": "#ffffff"
+   },
+   {
+    "bg": "#ffffff",
+    "ink": "#101421"
+   }
+  ],
+  "note": "Near-black and plum at the top and bottom bracket a white middle with navy-black text. Hot pink is reserved for primary buttons, bars in charts and map markers; it never fills a section.",
+  "seenIn": [
+   "aww-cerebrium"
+  ]
+ },
+ "photos": {
+  "set": "water",
+  "title": "Water",
+  "note": "lakes, rivers, waterfalls and water surfaces",
+  "treatment": null,
+  "others": [
+   "fog-and-quiet",
+   "sky-and-space",
+   "architecture"
+  ],
+  "photos": [
+   {
+    "id": 1038,
+    "alt": "Small red boat on a wide expanse of dark blue rippling sea",
+    "tone": "dark",
+    "colours": [
+     "deep blue",
+     "slate",
+     "red"
+    ],
+    "mono": false,
+    "calm": "bottom",
+    "quality": 5,
+    "ratio": 0.67,
+    "by": "Marcelo Quinan",
+    "page": "https://unsplash.com/photos/upywS5QFwr8"
+   },
+   {
+    "id": 124,
+    "alt": "Small red boat floating on clear turquoise water, seen from above",
+    "tone": "mid",
+    "colours": [
+     "turquoise",
+     "teal",
+     "red"
+    ],
+    "mono": false,
+    "calm": "right",
+    "quality": 5,
+    "ratio": 1.5,
+    "by": "Anton Sulsky",
+    "page": "https://unsplash.com/photos/fj0tFloTPGQ"
+   },
+   {
+    "id": 469,
+    "alt": "Two people paddling a canoe across a misty green lake",
+    "tone": "mid",
+    "colours": [
+     "emerald green",
+     "pale grey",
+     "teal"
+    ],
+    "mono": false,
+    "calm": "bottom",
+    "quality": 5,
+    "ratio": 1.5,
+    "by": "Matthew Clark",
+    "page": "https://unsplash.com/photos/_IMinUHfUs0"
+   },
+   {
+    "id": 293,
+    "alt": "Silhouetted pier on a hazy blue lake below faint mountains",
+    "tone": "mid",
+    "colours": [
+     "pale blue",
+     "navy"
+    ],
+    "mono": false,
+    "calm": "left",
+    "quality": 5,
+    "ratio": 1.5,
+    "by": "Paul E. Harrer",
+    "page": "https://unsplash.com/photos/AJqHzUbc1io"
+   }
+  ]
+ },
+ "motion": {
+  "id": "shutter-image",
+  "name": "Shutter image",
+  "description": "The one hero or showcase image opens from an edge with a clip-path over about 1.1 seconds while the picture inside settles from 1.12 scale to rest. Use it once, on the image that matters most; later images simply are there. Recipe: 'Image shutter' in references/motion.md."
+ },
+ "sections": [
+  {
+   "id": "showcase-one-control-blown-up",
+   "role": "showcase",
+   "name": "One control, blown up",
+   "shape": "full-bleed",
+   "tags": [
+    "ui-led",
+    "poster",
+    "colour-field"
+   ],
+   "directions": [
+    "loud-flat-poster",
+    "colour-chapters",
+    "one-motif",
+    "borrowed-category",
+    "dark-room",
+    "product-performs"
+   ],
+   "needs": [],
+   "blueprint": "A flat saturated field, full-bleed and 92svh tall, holds one working control from the product: the toggle, slider, segmented switch or record button the whole product turns on. Build it at true proportions with every dimension in em, mark its root data-ui, then raise that root's font-size until the control stands about 46vh tall. Anchor it right of centre so the section's right and bottom edges crop about a fifth of it (overflow: hidden on the section). It keeps its real label and value, now at poster size, and it works: operating it swaps the field between two palette colours and changes one word of the heading. The heading, two to four words at clamp(28px, 2.6vw, 40px), sits top-left on the page margin with one sentence at 17px beneath it. The lower-left third of the field stays empty.",
+   "mobile": "The field is 86svh. Heading and sentence sit top-left at 26px and 16px. The control is enlarged to about 130vw wide and anchored bottom-left, so the right edge crops its far end while its thumb or active segment stays within reach. It still works and still swaps the field colour.",
+   "seenIn": [
+    "opl-textmode-overlay",
+    "opl-uni"
+   ]
+  },
+  {
+   "id": "features-capabilities-as-a-menu",
+   "role": "features",
+   "name": "Capabilities as a menu",
+   "shape": "table",
+   "tags": [
+    "object-led",
+    "type-led"
+   ],
+   "directions": [
+    "page-is-the-object",
+    "split-stage",
+    "borrowed-category",
+    "type-only-statement",
+    "quiet-instrument"
+   ],
+   "needs": [],
+   "blueprint": "The capabilities are set as a printed menu or price list. One paper-coloured sheet, 520–600px wide and taller than it is wide, sits on a contrasting flat ground, centred or starting at column 2; its top and bottom edges are cut into shallow scallops or a zigzag with clip-path, its sides straight. On it, centred at the top, the heading: two or three words at 44–56px, then 40px of space. Below, items in two or three groups; each group opens with its name at 20px bold. Each item is a row: the name at 19px on the left, a short value on the right (a price, a time, a quantity, 'included'), and between them a leader of round 4px dots (border-bottom: 4px dotted, sitting on the baseline). A description at 15px in the soft ink sits under the name, at most 34ch. 18px between items, 44px between groups.",
+   "mobile": "The sheet fills the width minus 12px margins and keeps its cut top and bottom edges. Names stay left and values right on one line with the dot leader between; descriptions wrap beneath at 15px. Group names drop to 18px. Padding inside the sheet is 20px.",
+   "seenIn": [
+    "opl-the-content-architecture",
+    "aww-pensatori-irrazionali"
+   ]
+  },
+  {
+   "id": "stats-total-and-its-receipt",
+   "role": "stats",
+   "name": "Total and its receipt",
+   "shape": "split",
+   "tags": [
+    "object-led",
+    "type-led"
+   ],
+   "directions": [
+    "page-is-the-object",
+    "product-performs",
+    "borrowed-category",
+    "type-only-statement"
+   ],
+   "needs": [],
+   "blueprint": "A total at giant size, and beside it the slip that adds up to it. Left, columns 1–6: at the top the heading, two to five words at 40–44px, with a two-line note at 16px; at the bottom-left, anchored to the section's lower edge, the total at clamp(160px, 18vw, 300px) with leading 0.8, and one caption line at 17px under it. The space between heading and total is left empty. Right, columns 8–11: a paper-coloured slip 380–440px wide on the section's contrasting ground, top-aligned with the heading, its bottom edge a zigzag made with clip-path. The slip lists eight to fourteen rows in the text face at 15–16px with tabular numerals, grouped under bold group names; each row has a description on the left, a right-aligned value, and a leader of round 4px dots between. The last row is inverted on a solid ink bar and repeats the total. The slip's values must truly sum to the figure.",
+   "mobile": "Heading and note come first. The total follows at 40vw, flush left, with its caption. The slip comes last at full width minus 16px margins with its zigzag edge, rows at 15px, and the inverted total row closing it.",
+   "seenIn": [
+    "opl-the-content-architecture"
+   ]
+  },
+  {
+   "id": "testimonial-lead-quote-corner-quotes",
+   "role": "testimonial",
+   "name": "Lead quote, corner quotes",
+   "shape": "statement",
+   "tags": [
+    "type-led",
+    "quiet"
+   ],
+   "directions": [
+    "dark-room",
+    "name-as-monument",
+    "borrowed-category",
+    "type-only-statement"
+   ],
+   "needs": [],
+   "blueprint": "A single field one viewport tall (min-height 100svh), usually the darkest tone of the palette. The lead quotation sits in the upper third: two lines at about 4vw in a light weight, centred, no wider than 60% of the viewport, with nothing near it. Two further short quotations are pushed into the bottom-left and bottom-right corners, each a block three columns wide set at 16px with leading 1.5, left-aligned, with the speaker's name and role on the two lines beneath in the softer ink. The bottom centre, about six columns wide, is deliberately empty. Use a three-row grid (auto 1fr auto) so the corner blocks hold a bottom margin of 32px while the lead quotation keeps its place at any height. There is no heading and there are no portraits; the contrast between one large voice and two small ones is the composition.",
+   "mobile": "The lead quotation moves to the top at 8vw over three or four lines, left-aligned, with 96px of empty field under it. The two small quotations then stack at 16px, the first full width, the second indented by a quarter of the screen so they do not read as a list.",
+   "seenIn": [
+    "aww-hilden-kaira"
+   ]
+  },
+  {
+   "id": "faq-alternating-tone-bands",
+   "role": "faq",
+   "name": "A band per question",
+   "shape": "band",
+   "tags": [
+    "colour-field",
+    "type-led"
+   ],
+   "directions": [
+    "colour-chapters",
+    "loud-flat-poster",
+    "borrowed-category",
+    "dense-tiles",
+    "editorial-report"
+   ],
+   "needs": [],
+   "blueprint": "Each question owns a full-bleed band, and the bands alternate between two flat tones (ground and one step away, or two palette colours with their assigned inks) and butt together with no gap. Inside every band the same grid applies: the question in columns 1–5 at 28–32px bold, top-aligned with 56px of padding above; the answer in columns 7–12 at 18px with leading 1.5, the same padding, and 56px below. Bands are as tall as their content, so their heights differ, which gives the stack its rhythm. Four to seven bands. The heading is the first band: two to four words at about 7vw on the accent colour, flush left, taller than the rest at about 40svh with the words anchored to its bottom-left. All answers are visible; there are no toggles.",
+   "mobile": "Bands stay full-bleed and alternate. Inside each, the question at 22px then the answer at 17px, with 32px padding top and bottom and 20px at the sides. The heading band is 30svh tall with its words at 13vw at the bottom-left.",
+   "seenIn": []
+  },
+  {
+   "id": "cta-giant-word-is-the-button",
+   "role": "cta",
+   "name": "One word is the button",
+   "shape": "band",
+   "tags": [
+    "poster",
+    "colour-field"
+   ],
+   "directions": [
+    "loud-flat-poster",
+    "colour-chapters",
+    "borrowed-category",
+    "name-as-monument",
+    "type-only-statement",
+    "pinned-poster",
+    "one-motif"
+   ],
+   "needs": [],
+   "blueprint": "The entire band is one link. A full-bleed field in the accent colour, about 60svh tall, contains a single verb of four to eight letters set at 24–30vw in the heaviest weight, tight tracking, sized with `clamp()` so it spans the content width on one line with its baseline 24px above the bottom edge. The `<a>` wraps the whole band; on hover and focus the field and the word swap colours instantly. In the top-left corner, at 20px, one sentence says what happens next; in the top-right, an arrow drawn as a simple inline SVG, 48px, points up and right. There is no other button anywhere in the section. In a page with a motif, the band's top corners take the motif's shape (a large radius, or a chamfer cut with `clip-path`). Keep the word honest: the action itself, not a slogan.",
+   "mobile": "The band is 46svh tall. The word is set at whatever size fills the width on one line; choose a shorter verb rather than going below 22vw. Sentence top-left at 17px across two lines, arrow top-right at 32px. The whole band stays tappable.",
+   "seenIn": [
+    "aww-lacoste-ace-breaker",
+    "aww-made-with-gsap-1"
+   ]
+  },
+  {
+   "id": "footer-contact-set-large",
+   "role": "footer",
+   "name": "Contact as the headline",
+   "shape": "statement",
+   "tags": [
+    "colour-field",
+    "type-led",
+    "poster"
+   ],
+   "directions": [
+    "colour-chapters",
+    "loud-flat-poster",
+    "type-only-statement",
+    "borrowed-category",
+    "sentence-as-layout",
+    "editorial-report",
+    "place-carries-it"
+   ],
+   "needs": [],
+   "blueprint": "A full-bleed field in one saturated palette colour, at least 90svh tall. Top row, 40px from the edge: two or three short notes at 15px in columns 1–7 (address, hours, a one-line description) and a back-to-top text link at the right margin. Then a tall empty gap. In the lower half, the way to get in touch is the display line: the telephone number or the email address itself, set at 8–9vw, flush left, hard against the margin, as one link. An email address may break once, before the @, giving two lines. Size it with `clamp()` so the longest line fills at least 80% of the width. Under it, one row of small text at 14px spread across three positions: links at the left, credits in the centre, city and year at the right. The wordmark appears only small, in the top row.",
+   "mobile": "Notes stack at the top at 15px. The contact line sits in the lower half at 12vw; a telephone number stays on one line, an email breaks before the @ and is sized so each half fits the width. The meta row becomes three stacked lines at 13px.",
+   "seenIn": [
+    "aww-era-residence",
+    "aww-coffeetech-r",
+    "opl-ohhmydesign",
+    "opl-mammut-studios",
+    "opl-belgrade-architecture"
+   ]
+  }
+ ],
+ "references": [
+  {
+   "id": "opl-uglycash",
+   "name": "UGLYCASH",
+   "url": "https://ugly.cash/",
+   "source": "One Page Love",
+   "kind": "finance",
+   "score": 7.4,
+   "idea": "A money app sold like streetwear: one shouted condensed headline over the phone, then sticker-covered 3D props where feature icons would normally go.",
+   "mood": [
+    "loud",
+    "irreverent",
+    "glossy",
+    "youthful"
+   ],
+   "archetype": "centred-statement-media-below",
+   "hero": "Near-white page. A floating light-grey nav bar only 35% of the viewport wide sits centred 20px from the top: condensed wordmark left, two social icons in the middle, an app button with a glowing magenta outline right. Directly beneath, a two-line uppercase headline in bold condensed grotesque at 11.4vw, centred, leading under 0.9, about 60% of the width, with a faint cyan and magenta fringe on the letter edges; it fills the band from 12% to 43% of the height. A single phone mockup 27% of the viewport wide rises immediately under the headline, centred, cut off by the bottom edge. Its magenta screen glow is the only colour.",
+   "type": "Helvetica Now Display Condensed Bold in capitals at 164px with -0.033em tracking and very tight leading; the same face in mixed case near 34px for section headings. Inter at 14px, semi-bold, for captions. Two faces and a roughly 12:1 jump.",
+   "colour": "#f7f7f7 #000000 #ffffff #ff00e6 #b6ff00 #00aeef — Off-white ground, white cards, black type. Neon magenta, lime and cyan appear only as whole-card fills, glows and stickers, never in text. Cool and synthetic overall.",
+   "imagery": "Phone mockups with real app screens, plus glossy 3D props (money bags, a holographic card, an eagle, a wet-floor sign, banknotes) covered in die-cut stickers, each centred in a rounded card; some cards have grainy neon gradients.",
+   "layout": "Content sits in a centred column about 60% of the viewport wide. Sections open with a left-aligned condensed heading, then rows of two or three rounded cards with captions placed outside and below. A horizontal carousel and a centred uppercase statement break the rhythm.",
+   "sections": [
+    {
+     "role": "features",
+     "description": "A left-aligned two-line condensed heading near 34px above a row of three equal cards with 8px gaps and small radius: one pale grey with a cropped balance readout and tilted stickers, one white with two 3D money bags, one solid cyan with a phone cropped at the bottom. Captions sit beneath each card rather than inside: a bold one-word title and two short 13px lines."
+    },
+    {
+     "role": "showcase",
+     "description": "Two near-square cards side by side, each half the column. Left: a grainy lime-to-lilac gradient with a white floating panel listing three rows, each with a flag, a label and a small pill button. Right: a white card with a black holographic payment card tilted about 25 degrees, stickers stuck to it. A later pair repeats the pattern with a solid magenta card holding a white icon-grid panel."
+    },
+    {
+     "role": "other",
+     "description": "Trust carousel: a horizontal row of tall cards, each showing one 3D object centred (a chrome eagle on white, a banknote on solid lime, a yellow wet-floor sign with hand-lettered warning). The title sits inside the first card and below the others. A tiny two-dot pager is centred underneath and the next card peeks in orange at the right edge of the column."
+    },
+    {
+     "role": "footer",
+     "description": "A white rounded panel the width of the column in which the wordmark is scaled to fill the panel edge to edge, about 55% of the viewport, in black ultra-condensed capitals. Beneath it, one row with a small parent-brand credit at left and two store badges at right, then legal small print in 11px at left and four right-aligned links."
+    }
+   ],
+   "steal": [
+    "Make the nav a short floating bar a third of the viewport wide so the headline can start almost at the top edge.",
+    "Replace feature icons with one photoreal 3D prop per card, each covered in die-cut stickers, and keep captions outside the card.",
+    "End with the wordmark scaled to exactly fill a white footer card, with all legal text beneath it at 11px."
+   ]
+  },
+  {
+   "id": "aww-coffeetech-r",
+   "name": "CoffeeTech®",
+   "url": "https://coffee-tech.com/",
+   "source": "Awwwards Site of the Day",
+   "kind": "physical-product",
+   "score": 7.1,
+   "idea": "Present an industrial roaster maker like a design brand: one enormous three-word statement on black, with the machine withheld until the first scroll, where it emerges from the dark.",
+   "mood": [
+    "confident",
+    "industrial",
+    "warm",
+    "restrained"
+   ],
+   "archetype": "type-poster",
+   "hero": "Near-black viewport with nothing but type. A centred three-line headline, one word per line, in Inter Medium at about 15vw with tight tracking; the first line starts a third of the way down and the last runs to within 35px of the bottom edge, its widest word spanning roughly 70% of the width. Cream letters; no subhead, no media, no hero button. Navigation is one quiet row: logo with a terracotta mark at left, four text links centred, then a filled terracotta 'Products' button with a grid icon, an outlined contact button and a language dropdown at right. The top third stays empty.",
+   "type": "Inter throughout at weight 500. Display lines at 216px with -0.07em tracking and leading near 0.95 against 14px body, a jump of about 15 times. Secondary headlines near 10vw, intro paragraph around 26px. Section labels are tiny and wrapped in square brackets.",
+   "colour": "#0d0e13 #e5e2dd #f3ece2 #c8603d #262629 — Blue-black and warm putty-grey sections alternate; cream type on dark, near-black on light. Terracotta appears only on the logo mark and the primary button.",
+   "imagery": "Studio shots of roasters: a black machine barely lit against black after the hero, then white and black machines as cut-outs on pale-grey tiles. One warm founder portrait with a signature overlapping its edge; macro bean photos in small-radius cards.",
+   "layout": "Outer margins of about 70px. A centred type poster on top, then an offset two-column intro, then a product grid pushed into the right two-thirds with its bracketed label alone in the left third. Oversized left-flush headlines open and close the lower page.",
+   "sections": [
+    {
+     "role": "intro",
+     "description": "Warm putty-grey band entered through a hairline. A portrait about 290px wide with 8px corners sits in the left third; a scrawled signature overlaps its bottom-right corner and spills onto the background. A seven-line paragraph at about 26px, medium weight, roughly 510px wide, begins at the horizontal midpoint, followed by a small underlined text link. No heading; the right quarter and the gap between the two elements stay empty."
+    },
+    {
+     "role": "showcase",
+     "description": "A headline at roughly 10vw is flush to the left edge and clipped by the right, like a slow marquee. Below, a tiny bracketed label sits alone in the left third; the right two-thirds hold a two-column grid of pale-grey tiles about 400px wide with a small radius, each with a centred machine cut-out, the model name beneath and a tiny outlined pill for its category. The grid closes with a 64px underlined 'see all' text link with an arrow."
+    },
+    {
+     "role": "footer",
+     "description": "Back to blue-black. A cream contact headline at about 10vw sits hard against the left edge, far larger than anything near it. Underneath, the terracotta logo mark is enlarged to about 140px at left; four narrow link columns in small grey text run from 28% to 85% of the width; a pill-shaped back-to-top button sits at far right, with a thin legal row at the bottom."
+    }
+   ],
+   "steal": [
+    "Let a three-word headline at about 15vw be the entire first viewport and withhold the product until the first scroll.",
+    "Photograph a dark product on a background matching the page colour so it appears to emerge from the page rather than sit in a box.",
+    "Overlap a handwritten signature onto the corner of a portrait so an about block feels signed rather than laid out."
+   ],
+   "media": "The fold is type only; one scroll later a full-bleed low-key photograph of the roaster on matching black covers 76% of the screen, so the object floats out of the dark as the second beat of the hero. Below: a portrait with a signature over its edge, product renders contained on tinted tiles in a 2x2 grid, three 4:5 macro ingredient cards with the label docked bottom-left, and a blog slider; 25 images, no video, about 12.5px corners on card media.",
+   "motion": "No entrance at all: the 400ms frame already matches the settled one. No smooth scroll, pins or sticky elements; a model scale-in keyframe over 1.2s cubic-bezier(.36,.18,0,.99) with a 1.5s glow grows the roaster into place, link underlines wipe in by clip-path over 2.5s, overlay panels slide in over 0.8s, and the most common duration is 0.3s."
+  },
+  {
+   "id": "opl-fynza",
+   "name": "Fynza",
+   "url": "https://fynza.com",
+   "source": "One Page Love",
+   "kind": "finance",
+   "score": 7.3,
+   "idea": "Bookings are drawn as avatar dots whose orange flow lines merge into a single vertical spine, which then runs down the page as the axis for the partner list, the cash-flow timeline and the step cards.",
+   "mood": [
+    "friendly",
+    "energetic",
+    "clear",
+    "warm"
+   ],
+   "archetype": "centred-statement-media-below",
+   "hero": "Warm grey ground with a fine white dot texture and a peach gradient bleeding down from the top edge. A floating white pill navbar 80% wide holds the logo left and a language switch plus outlined and orange pill buttons right. Centred stack: a white pill badge with overlapping partner-logo dots, a two-line extra-bold uppercase headline at 4.2vw in slate navy with two words in orange, two lines of grey 18px text, an orange pill button. Around the button five round avatar photos with small booking labels sit at staggered heights across the full width; thin orange curves, two dashed, flow down from each and converge at bottom centre.",
+   "type": "Golos Text only: weight 800 uppercase at 60px for every section headline with slight negative tracking, 18px regular grey body, about 24px semibold for card titles, tiny uppercase captions. A wide extended logo wordmark. Roughly four sizes; hierarchy relies on weight and colour.",
+   "colour": "#edecea #ffffff #f4bba8 #f2561d #3f4f6e #1a2e7a — Warm grey and white with peach gradients fading in at section tops and bottoms; orange carries buttons, flow lines and highlighted headline words; one deep royal-navy slab near the end.",
+   "imagery": "Round avatar photos, partner logo discs, sunny travel photographs inside rounded cards with white UI snippets floating on top, and illustrated vintage postage stamps tilted and scattered around the final call to action.",
+   "layout": "Centred container of about 1150px; every section opens with a small white pill label and a two-line uppercase headline. A single orange vertical line runs through the page centre linking hero, logo list, timeline and step cards. Sections alternate grey, peach fade and one navy slab.",
+   "sections": [
+    {
+     "role": "proof",
+     "description": "Directly under the hero the converged orange line becomes a vertical spine and partner brands hang off it in two columns: logo then name on the left, name then logo on the right. Rows are separated by dashed horizontal rules with small orange dots where they cross the spine. There is no heading, so it reads as a continuation of the hero diagram."
+    },
+    {
+     "role": "other",
+     "description": "Problem timeline on the centre spine: small rounded-square chips labelled by week sit on the line. Events alternate left and right, each joined to its chip by a dashed horizontal line ending in a small coloured amount tag (red for outflow, green for income), with a bold label and two lines of grey text. A red-tinted rounded note sits on the spine as the conclusion while the background fades to saturated peach."
+    },
+    {
+     "role": "how-it-works",
+     "description": "Three large white rounded cards stacked on the spine, each a two-column split that alternates sides: on one side an orange numbered disc, a three-line semibold title and a small grey paragraph; on the other a rounded travel photograph with a white UI card or a cluster of logo discs floating over it. The orange line passes behind the gaps between cards."
+    },
+    {
+     "role": "cta",
+     "description": "Dotted peach-to-white field with a centred two-line uppercase headline, one word in orange, and an orange pill button. Six illustrated vintage travel stamps and round stickers are scattered around it at slight rotations, three above and three below, some tucked under the navbar. A tiny two-line legal footer sits directly underneath, centred, with no separate footer band."
+    }
+   ],
+   "steal": [
+    "Turn the hero illustration's lines into a page-long spine: let the curves converge at the fold and continue as the axis for the next section's list and timeline.",
+    "Show the customer's own unit of value (a booking with name, party size and price) as small avatar chips instead of a dashboard screenshot.",
+    "End on a themed sticker scatter (illustrated stamps at varied tilt) around the last call to action rather than a plain coloured band."
+   ]
+  }
+ ],
+ "scenes": []
+}
