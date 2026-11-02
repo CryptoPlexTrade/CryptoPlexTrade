@@ -3,61 +3,205 @@
 <head>
     <meta charset="UTF-8">
     <link rel="icon" type="image/png" href="css/logo.png">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - CryptoPlexTrade</title>
-    <meta name="description" content="Your CryptoPlexTrade dashboard — overview of trades, portfolio, and market data.">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Customer Dashboard — CryptoPlexTrade</title>
+    <meta name="description" content="Access your live portfolio, trading statistics, recent transactions, and real-time market data on CryptoPlexTrade.">
+    
+    <!-- Design System Stylesheets -->
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="css/responsive.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        /* Dashboard-specific extras */
-        .chart-container { position: relative; height: 220px; }
 
-        /* Announcement Popup */
+    <style>
+        .chart-container {
+            position: relative;
+            height: 240px;
+            width: 100%;
+        }
+
+        /* Announcement Popup Modal */
         .ann-overlay {
-            position: fixed; inset: 0; background: rgba(15,23,42,.45);
-            backdrop-filter: blur(4px); z-index: 9999;
-            display: flex; align-items: center; justify-content: center;
-            opacity: 0; visibility: hidden; transition: opacity .3s, visibility .3s;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(6px);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.25s var(--ease-standard), visibility 0.25s var(--ease-standard);
         }
-        .ann-overlay.show { opacity: 1; visibility: visible; }
+        .ann-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
         .ann-popup {
-            background: #fff; border-radius: 20px; padding: 32px 28px 24px;
-            max-width: 460px; width: 92%; position: relative;
-            box-shadow: 0 24px 64px rgba(0,0,0,.18);
-            transform: translateY(20px) scale(.96); transition: transform .35s cubic-bezier(.4,0,.2,1);
-            border-top: 4px solid var(--primary-color, #005baa);
+            background: #ffffff;
+            border-radius: var(--radius-xl);
+            padding: 36px 32px 28px;
+            max-width: 480px;
+            width: 90%;
+            position: relative;
+            box-shadow: var(--shadow-lg);
+            transform: translateY(20px) scale(0.97);
+            transition: transform 0.3s var(--ease-decelerate);
+            border-top: 4px solid var(--primary-color);
         }
-        .ann-overlay.show .ann-popup { transform: translateY(0) scale(1); }
+        .ann-overlay.show .ann-popup {
+            transform: translateY(0) scale(1);
+        }
         .ann-popup-icon {
-            width: 50px; height: 50px; border-radius: 14px;
-            background: linear-gradient(135deg, #005baa, #00a9e0);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.5rem; margin-bottom: 16px;
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-md);
+            background: var(--bg-highlight);
+            border: 1px solid rgba(0, 91, 170, 0.2);
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 16px;
         }
         .ann-popup h3 {
-            font-size: 1.15rem; font-weight: 700; color: #1e293b;
-            margin-bottom: 10px; line-height: 1.3;
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+            margin-bottom: 10px;
+            line-height: 1.3;
         }
         .ann-popup p {
-            font-size: .92rem; color: #475569; line-height: 1.7;
-            margin-bottom: 20px; white-space: pre-line;
+            font-size: 0.92rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 24px;
+            white-space: pre-line;
         }
         .ann-close-btn {
-            position: absolute; top: 14px; right: 14px; width: 32px; height: 32px;
-            border-radius: 50%; border: none; background: #f1f5f9; cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.1rem; color: #64748b; transition: background .2s, color .2s;
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 1px solid var(--border-light);
+            background: var(--bg-light);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            transition: all var(--duration-fast);
         }
-        .ann-close-btn:hover { background: #e2e8f0; color: #1e293b; }
+        .ann-close-btn:hover {
+            background: var(--border-light);
+            color: var(--text-primary);
+        }
         .ann-dismiss-btn {
-            width: 100%; padding: 12px; border: none; border-radius: 12px;
-            background: linear-gradient(135deg, #005baa, #00a9e0);
-            color: #fff; font-weight: 600; font-size: .95rem; cursor: pointer;
-            transition: transform .15s, box-shadow .2s;
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: var(--radius-sm);
+            background: var(--primary-color);
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all var(--duration-fast);
         }
-        .ann-dismiss-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,91,170,.25); }
+        .ann-dismiss-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Sovereign Refinements for Dashboard */
+        .dash-quick-actions {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 28px;
+        }
+        .btn-action-tile {
+            flex: 1;
+            padding: 16px 20px;
+            background: #ffffff;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-decoration: none;
+            color: var(--text-primary);
+            box-shadow: var(--shadow-sm);
+            transition: all var(--duration-fast);
+        }
+        .btn-action-tile:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        .action-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+        .action-icon.buy {
+            background: #f0fdf4;
+            color: var(--accent-green);
+        }
+        .action-icon.sell {
+            background: #fef2f2;
+            color: var(--accent-red);
+        }
+        .action-info .title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            display: block;
+        }
+        .action-info .sub {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        .referral-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .referral-row input {
+            flex: 1;
+            padding: 10px 14px;
+            background: var(--bg-light);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            font-family: var(--font-mono);
+            font-size: 0.82rem;
+            color: var(--text-primary);
+            outline: none;
+        }
+        .copy-btn {
+            padding: 10px 18px;
+            background: var(--primary-color);
+            color: #ffffff;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all var(--duration-fast);
+            white-space: nowrap;
+        }
+        .copy-btn:hover {
+            background: var(--primary-dark);
+        }
     </style>
 </head>
 <body>
@@ -65,11 +209,11 @@
 <!-- Announcement Popup -->
 <div class="ann-overlay" id="ann-overlay">
     <div class="ann-popup">
-        <button class="ann-close-btn" id="ann-close-btn">&times;</button>
-        <div class="ann-popup-icon">📢</div>
-        <h3 id="ann-popup-title"></h3>
+        <button class="ann-close-btn" id="ann-close-btn" aria-label="Close notification">&times;</button>
+        <div class="ann-popup-icon">&#128227;</div>
+        <h3 id="ann-popup-title">Platform Notice</h3>
         <p id="ann-popup-message"></p>
-        <button class="ann-dismiss-btn" id="ann-dismiss-btn">Got it!</button>
+        <button class="ann-dismiss-btn" id="ann-dismiss-btn">Acknowledge Notice</button>
     </div>
 </div>
 
@@ -81,7 +225,7 @@
     <!-- ===== SIDEBAR ===== -->
     <aside class="sidebar" id="sidebar">
         <a href="dashboard.html" class="sidebar-brand">
-            <img src="css/logo.jpg" alt="Logo" class="sidebar-brand__orb" style="width: auto !important; height: 44px !important; max-height: 44px; border-radius: 16px !important; object-fit: contain !important; background: none !important; padding: 0 !important; box-shadow: none !important; overflow: visible !important;">
+            <img src="css/logo.jpg" alt="CryptoPlexTrade Logo" class="sidebar-brand__orb">
             <span class="sidebar-brand__name">CryptoPlexTrade</span>
         </a>
         <nav class="sidebar-nav">
@@ -92,19 +236,19 @@
                 </a></li>
                 <li><a href="trade.html">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M3 4.5h18v15H3v-15Zm6.75 10.5a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM12 15a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM15.75 15a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM9.75 9a.75.75 0 0 0-1.5 0v4.5a.75.75 0 0 0 1.5 0V9Zm3.75-3a.75.75 0 0 0-1.5 0v7.5a.75.75 0 0 0 1.5 0V6Zm2.25 1.5a.75.75 0 0 0-1.5 0v6a.75.75 0 0 0 1.5 0v-6Z"/></svg>
-                    Trade
+                    Trade Desk
                 </a></li>
                 <li><a href="transactions.html">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clip-rule="evenodd"/></svg>
-                    Transactions
+                    Ledger History
                 </a></li>
                 <li><a href="profile.html">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd"/></svg>
-                    Profile
+                    Account Profile
                 </a></li>
                 <li><a href="support.html">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm11.378-3.917c-.89-.777-2.366-.777-3.255 0a.75.75 0 0 1-1.06-1.06c2.298-2.013 5.824-2.013 8.122 0a.75.75 0 0 1-1.06 1.06ZM12 15.75a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" clip-rule="evenodd"/></svg>
-                    Support
+                    Help &amp; Support
                 </a></li>
             </ul>
         </nav>
@@ -128,13 +272,13 @@
                     <span class="notification-count" id="notification-count">0</span>
                     <div class="notifications-panel" id="notifications-panel">
                         <div class="notifications-header">
-                            <span>Notifications</span>
+                            <span>Alerts &amp; Notices</span>
                             <button id="mark-all-read-btn" disabled>Mark all read</button>
                         </div>
                         <ul class="notification-list" id="notification-list"></ul>
                     </div>
                 </div>
-                <a href="#" id="logout-btn" class="btn btn-danger btn-sm">Logout</a>
+                <a href="#" id="logout-btn" class="btn btn-danger btn-sm">Sign Out</a>
             </div>
         </header>
 
@@ -143,25 +287,43 @@
 
             <div id="auth-debug"></div>
 
+            <!-- Quick Trading Tiles -->
+            <div class="dash-quick-actions">
+                <a href="trade.html" class="btn-action-tile">
+                    <div class="action-icon buy">&plus;</div>
+                    <div class="action-info">
+                        <span class="title">Buy Cryptocurrency</span>
+                        <span class="sub">Instant settlement via verified rails</span>
+                    </div>
+                </a>
+                <a href="trade.html" class="btn-action-tile">
+                    <div class="action-icon sell">&minus;</div>
+                    <div class="action-info">
+                        <span class="title">Sell Cryptocurrency</span>
+                        <span class="sub">Fast fiat payout to your account</span>
+                    </div>
+                </a>
+            </div>
+
             <!-- KPI Cards -->
             <div class="kpi-grid">
                 <div class="kpi-card">
                     <div class="kpi-card__header">
-                        <span class="kpi-card__label">Total Transactions</span>
+                        <span class="kpi-card__label">Total Orders Executed</span>
                         <div class="kpi-card__icon kpi-card__icon--blue">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M4.848 2.771A49.144 49.144 0 0 1 12 2.25c2.43 0 4.817.178 7.152.52 1.978.292 3.348 2.024 3.348 3.97v6.02c0 1.946-1.37 3.678-3.348 3.97a48.901 48.901 0 0 1-3.476.383.75.75 0 0 0-.629.29l-2.378 3.17a.75.75 0 0 1-1.04 0l-2.378-3.17a.75.75 0 0 0-.63-.29 48.899 48.899 0 0 1-3.475-.384c-1.978-.29-3.348-2.022-3.348-3.97V6.741c0-1.947 1.37-3.68 3.348-3.97Z" clip-rule="evenodd"/></svg>
                         </div>
                     </div>
-                    <div class="kpi-card__value" id="total-transactions-value">—</div>
+                    <div class="kpi-card__value" id="total-transactions-value">&mdash;</div>
                 </div>
                 <div class="kpi-card">
                     <div class="kpi-card__header">
-                        <span class="kpi-card__label">Pending Orders</span>
+                        <span class="kpi-card__label">Pending Settlements</span>
                         <div class="kpi-card__icon kpi-card__icon--orange">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clip-rule="evenodd"/></svg>
                         </div>
                     </div>
-                    <div class="kpi-card__value" id="pending-orders-value">—</div>
+                    <div class="kpi-card__value" id="pending-orders-value">&mdash;</div>
                 </div>
             </div>
 
@@ -172,7 +334,7 @@
                     <!-- Chart card -->
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Transaction Overview</h3>
+                            <h3 class="card-title">Order Ratio &amp; Execution Breakdown</h3>
                         </div>
                         <div class="chart-container">
                             <canvas id="portfolioChart"></canvas>
@@ -183,21 +345,21 @@
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">Recent Transactions</h3>
-                            <a href="transactions.html" class="view-all">View All &rarr;</a>
+                            <a href="transactions.html" class="view-all">Full Ledger &rarr;</a>
                         </div>
                         <div class="table-wrap">
                             <table class="data-table data-table--cards">
                                 <thead>
                                     <tr>
                                         <th>Date</th>
-                                        <th>Type</th>
-                                        <th>Product</th>
-                                        <th>Amount</th>
+                                        <th>Direction</th>
+                                        <th>Asset</th>
+                                        <th>Settlement (GH₵)</th>
                                         <th>Status</th>
                                     </tr>
                                 </thead>
                                 <tbody id="transactions-tbody">
-                                    <tr><td colspan="5" style="text-align:center;color:var(--text-3);">Loading…</td></tr>
+                                    <tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:24px;">Syncing ledger records…</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -207,22 +369,22 @@
                 <!-- Right Aside -->
                 <aside class="dash-aside">
 
-                    <!-- Referral -->
+                    <!-- Referral Card -->
                     <div class="card">
-                        <div class="card-header" style="margin-bottom:12px;">
-                            <h3 class="card-title">Refer a Friend</h3>
+                        <div class="card-header" style="margin-bottom:10px;">
+                            <h3 class="card-title">Partner Referral Desk</h3>
                         </div>
-                        <p style="font-size:.83rem;color:var(--text-3);margin-bottom:14px;">Share your unique link and earn rewards!</p>
+                        <p style="font-size:0.83rem;color:var(--text-secondary);margin-bottom:14px;line-height:1.5;">Share your unique verified onboarding link with fellow traders:</p>
                         <div class="referral-row">
-                            <input type="text" id="referral-link" readonly placeholder="Loading…">
-                            <button id="copy-referral-btn" class="copy-btn">Copy</button>
+                            <input type="text" id="referral-link" readonly placeholder="Generating link…">
+                            <button id="copy-referral-btn" class="copy-btn">Copy Link</button>
                         </div>
                     </div>
 
                     <!-- Market Watch -->
                     <div class="card">
                         <div class="card-header" style="margin-bottom:14px;">
-                            <h3 class="card-title">Market Watch</h3>
+                            <h3 class="card-title">Institutional Watchlist</h3>
                         </div>
                         <ul class="market-list" id="market-watch-list">
                             <li class="market-item"><div class="market-item__asset"><div class="skeleton skeleton-avatar"></div><div class="skeleton skeleton-line" style="width:50px;margin-left:4px;"></div></div><div class="skeleton skeleton-line" style="width:70px;"></div></li>
@@ -234,7 +396,7 @@
                     <!-- News -->
                     <div class="card">
                         <div class="card-header" style="margin-bottom:14px;">
-                            <h3 class="card-title">Latest News</h3>
+                            <h3 class="card-title">Market Intel &amp; Bulletins</h3>
                         </div>
                         <ul class="news-list" id="news-list">
                             <li class="news-item"><div class="skeleton skeleton-line" style="margin-bottom:6px;"></div><div class="skeleton skeleton-line" style="width:40%;"></div></li>
@@ -286,16 +448,16 @@
             const debug = document.getElementById('auth-debug');
             if (!r.ok) {
                 if (r.status === 401 || r.status === 403) {
-                    debug.textContent = 'Session expired. Redirecting…';
-                    setTimeout(() => window.location.href = 'login.html', 1800);
+                    debug.textContent = 'Session terminated. Redirecting to authentication desk…';
+                    setTimeout(() => window.location.href = 'login.html', 1500);
                 } else {
-                    debug.textContent = `Error ${r.status}`;
+                    debug.textContent = `Status: ${r.status}`;
                 }
                 return;
             }
             const user = await r.json();
             if (user && user.name) {
-                document.getElementById('welcome-message').textContent = `Welcome back, ${user.name.split(' ')[0]}`;
+                document.getElementById('welcome-message').textContent = `Overview: ${user.name.split(' ')[0]}`;
                 const ref = document.getElementById('referral-link');
                 if (ref && user.referral_code && user.appUrl) {
                     ref.value = `${user.appUrl}/register.html?ref=${user.referral_code}`;
@@ -303,7 +465,7 @@
                 debug.textContent = '';
             }
         } catch (err) {
-            console.error('Error fetching user name:', err);
+            console.error('Error fetching user info:', err);
         }
     }
 
@@ -312,22 +474,35 @@
     const portfolioChart = new Chart(ctx, {
         type: 'doughnut',
         data: {
-            labels: ['Buy Orders', 'Sell Orders'],
+            labels: ['Buy Settlements', 'Sell Settlements'],
             datasets: [{
                 data: [0, 0],
-                backgroundColor: ['rgba(0,91,170,0.82)', 'rgba(220,53,69,0.72)'],
-                borderColor: ['#005baa', '#dc3545'],
-                borderWidth: 2,
-                hoverOffset: 8
+                backgroundColor: ['#005baa', '#00a9e0'],
+                borderColor: ['#ffffff', '#ffffff'],
+                borderWidth: 3,
+                hoverOffset: 6
             }]
         },
         options: {
-            responsive: true, maintainAspectRatio: false,
+            responsive: true,
+            maintainAspectRatio: false,
             plugins: {
-                legend: { position: 'right', labels: { padding: 16, font: { family: 'Poppins', size: 13 } } },
-                title: { display: false }
+                legend: {
+                    position: 'right',
+                    labels: {
+                        boxWidth: 12,
+                        padding: 18,
+                        font: { family: 'Inter', size: 12, weight: '600' }
+                    }
+                },
+                tooltip: {
+                    backgroundColor: '#1e293b',
+                    titleFont: { family: 'Inter', size: 12 },
+                    bodyFont: { family: 'Inter', size: 12 },
+                    cornerRadius: 6
+                }
             },
-            animation: { animateScale: true, animateRotate: true }
+            cutout: '72%'
         }
     });
 
@@ -342,29 +517,30 @@
             tbody.innerHTML = '';
             document.getElementById('total-transactions-value').textContent = txs.length;
             document.getElementById('pending-orders-value').textContent = txs.filter(t => t.status === 'pending_confirmation').length;
-            portfolioChart.data.datasets[0].data = [
-                txs.filter(t => t.order_type === 'buy').length,
-                txs.filter(t => t.order_type === 'sell').length
-            ];
+            
+            const buys = txs.filter(t => t.order_type === 'buy').length;
+            const sells = txs.filter(t => t.order_type === 'sell').length;
+            portfolioChart.data.datasets[0].data = [buys, sells];
             portfolioChart.update();
+
             if (txs.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-3);">No transactions yet.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:24px;">No transactions recorded in this account yet.</td></tr>';
                 return;
             }
-            txs.forEach(tx => {
+            txs.slice(0, 8).forEach(tx => {
                 const date = new Date(tx.created_at).toLocaleDateString();
                 const type = tx.order_type.charAt(0).toUpperCase() + tx.order_type.slice(1);
                 const status = tx.status.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
                 tbody.innerHTML += `<tr>
-                    <td data-label="Date">${date}</td>
-                    <td data-label="Type">${type}</td>
-                    <td data-label="Product"><strong>${tx.product}</strong></td>
-                    <td data-label="Amount">₵ ${parseFloat(tx.total_paid).toFixed(2)}</td>
+                    <td data-label="Date" style="font-family:var(--font-mono);font-size:0.82rem;">${date}</td>
+                    <td data-label="Direction"><strong style="color:${tx.order_type==='buy'?'var(--primary-color)':'var(--accent-red)'}">${type}</strong></td>
+                    <td data-label="Asset"><span style="font-family:var(--font-mono);font-weight:700;">${tx.product}</span></td>
+                    <td data-label="Settlement" style="font-family:var(--font-mono);font-weight:600;">GH₵ ${parseFloat(tx.total_paid).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
                     <td data-label="Status"><span class="status-badge status-${tx.status.toLowerCase()}">${status}</span></td>
                 </tr>`;
             });
         } catch (err) {
-            document.getElementById('transactions-tbody').innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--red);">Could not load transactions.</td></tr>';
+            document.getElementById('transactions-tbody').innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--accent-red);padding:24px;">Could not retrieve ledger records.</td></tr>';
         }
     }
 
@@ -382,21 +558,22 @@
                 const c = data.RAW[s]?.USD;
                 if (!c) return;
                 const dir = c.CHANGEPCT24HOUR >= 0 ? 'up' : 'down';
+                const sign = dir === 'up' ? '+' : '';
                 list.innerHTML += `<li class="market-item">
                     <div class="market-item__asset">
                         <img src="https://www.cryptocompare.com${c.IMAGEURL}" alt="${s}">
-                        <span>${s}</span>
+                        <span style="font-family:var(--font-mono);font-weight:700;">${s}</span>
                     </div>
-                    <span class="market-item__price">${c.PRICE.toLocaleString('en-US',{style:'currency',currency:'USD'})}</span>
-                    <span class="market-item__change ${dir}">${c.CHANGEPCT24HOUR.toFixed(2)}%</span>
+                    <span class="market-item__price" style="font-family:var(--font-mono);">${c.PRICE.toLocaleString('en-US',{style:'currency',currency:'USD'})}</span>
+                    <span class="market-item__change ${dir}" style="font-family:var(--font-mono);">${sign}${c.CHANGEPCT24HOUR.toFixed(2)}%</span>
                 </li>`;
             });
         } catch (e) {
-            list.innerHTML = '<li class="market-item" style="justify-content:center;color:var(--red);">Could not load market data.</li>';
+            list.innerHTML = '<li class="market-item" style="justify-content:center;color:var(--accent-red);font-size:0.85rem;">Live feed temporarily unavailable.</li>';
         }
     }
 
-    // --- News ---
+    // --- News Feed ---
     async function fetchNews() {
         const list = document.getElementById('news-list');
         if (!list) return;
@@ -407,21 +584,23 @@
             const articles = Array.isArray(data.Data) ? data.Data : [];
             list.innerHTML = '';
             if (articles.length === 0) {
-                list.innerHTML = '<li class="news-item" style="text-align:center;color:var(--text-3);">No news available.</li>';
+                list.innerHTML = '<li class="news-item" style="text-align:center;color:var(--text-muted);font-size:0.85rem;">No bulletins available.</li>';
                 return;
             }
-            articles.slice(0, 5).forEach(a => {
-                list.innerHTML += `<li class="news-item"><a href="${a.url}" target="_blank" rel="noopener noreferrer">${a.title}</a><div class="source">${a.source}</div></li>`;
+            articles.slice(0, 4).forEach(a => {
+                list.innerHTML += `<li class="news-item">
+                    <a href="${a.url}" target="_blank" rel="noopener noreferrer">${a.title}</a>
+                    <div class="source" style="font-size:0.75rem;color:var(--text-muted);margin-top:4px;">${a.source}</div>
+                </li>`;
             });
         } catch (e) {
-            list.innerHTML = '<li class="news-item" style="text-align:center;color:var(--red);">Could not load news.</li>';
+            list.innerHTML = '<li class="news-item" style="text-align:center;color:var(--text-muted);font-size:0.85rem;">News feed temporarily offline.</li>';
         }
     }
 
     // --- Ticker Tape ---
     const tickerTrack = document.querySelector('.ticker-tape__track');
     const coinSymbols = ['BTC','ETH','SOL','BNB','XRP','LTC','ADA','DOGE'];
-    let lastPrices = {};
 
     function updateTicker(data) {
         if (!tickerTrack) return;
@@ -436,7 +615,6 @@
                 <span class="price">${c.PRICE.toLocaleString('en-US',{style:'currency',currency:'USD',minimumFractionDigits:2})}</span>
                 <span class="change ${dir}">${sign}${c.CHANGEPCT24HOUR.toFixed(2)}% ${dir==='up'?'▲':'▼'}</span>
             </div>`;
-            lastPrices[s] = c.PRICE;
         });
         tickerTrack.innerHTML = html + html;
     }
@@ -449,7 +627,7 @@
         } catch (e) { console.error('Ticker error', e); }
     }
 
-    // --- Notifications ---
+    // --- Notifications Panel ---
     const notifBell    = document.getElementById('notification-bell');
     const notifPanel   = document.getElementById('notifications-panel');
     const notifList    = document.getElementById('notification-list');
@@ -466,7 +644,7 @@
             let unread = 0;
             notifList.innerHTML = '';
             if (allNotifs.length === 0) {
-                notifList.innerHTML = '<li class="notification-item">No new notifications.</li>';
+                notifList.innerHTML = '<li class="notification-item" style="font-size:0.85rem;color:var(--text-muted);padding:14px;">No unread alerts.</li>';
                 notifCount.style.display = 'none';
                 return;
             }
@@ -475,14 +653,21 @@
                 li.className = 'notification-item' + (read.includes(n.id) ? ' read' : '');
                 if (!read.includes(n.id)) unread++;
                 const a = document.createElement('a');
-                a.href = n.link; a.textContent = n.message;
+                a.href = n.link;
+                a.textContent = n.message;
                 li.appendChild(a);
                 notifList.appendChild(li);
             });
-            if (unread > 0) { notifCount.textContent = unread; notifCount.style.display = 'flex'; markAllBtn.disabled = false; }
-            else { notifCount.style.display = 'none'; markAllBtn.disabled = true; }
+            if (unread > 0) {
+                notifCount.textContent = unread;
+                notifCount.style.display = 'flex';
+                markAllBtn.disabled = false;
+            } else {
+                notifCount.style.display = 'none';
+                markAllBtn.disabled = true;
+            }
         } catch (e) {
-            notifList.innerHTML = '<li class="notification-item">Could not load notifications.</li>';
+            notifList.innerHTML = '<li class="notification-item" style="font-size:0.85rem;color:var(--text-muted);padding:14px;">Could not load alerts.</li>';
         }
     }
 
@@ -496,25 +681,29 @@
         fetchNotifications();
     });
 
-    // --- Referral Copy ---
+    // --- Referral Link Copy ---
     document.getElementById('copy-referral-btn').addEventListener('click', () => {
         const input = document.getElementById('referral-link');
         input.select();
         document.execCommand('copy');
         const btn = document.getElementById('copy-referral-btn');
         const orig = btn.textContent;
-        btn.textContent = 'Copied!';
-        setTimeout(() => btn.textContent = orig, 2000);
+        btn.textContent = '✓ Copied!';
+        btn.style.background = 'var(--accent-green)';
+        setTimeout(() => {
+            btn.textContent = orig;
+            btn.style.background = '';
+        }, 2000);
     });
 
-    // --- Init ---
+    // --- Initialization ---
     Promise.all([fetchWelcomeMessage(), fetchTransactions(), fetchMarketWatch(), fetchNews(), fetchLiveRates()])
         .catch(e => console.error(e));
     fetchNotifications();
     setInterval(fetchLiveRates, 60000);
     setInterval(fetchMarketWatch, 60000);
 
-    // --- Announcement Popup ---
+    // --- Announcement Popup check ---
     async function checkAnnouncement() {
         try {
             const r = await fetch('/api/announcement');
@@ -522,17 +711,14 @@
             const data = await r.json();
             if (!data.active || !data.title) return;
 
-            // Check if user already dismissed this version today
-            const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+            const today = new Date().toISOString().slice(0, 10);
             const dismissed = JSON.parse(localStorage.getItem('ann_dismissed') || '{}');
             if (dismissed.date === today && dismissed.updatedAt === data.updatedAt) return;
 
-            // Show the popup
             document.getElementById('ann-popup-title').textContent = data.title;
             document.getElementById('ann-popup-message').textContent = data.message;
             setTimeout(() => document.getElementById('ann-overlay').classList.add('show'), 600);
 
-            // Dismiss handlers
             function dismiss() {
                 const overlay = document.getElementById('ann-overlay');
                 overlay.classList.remove('show');
@@ -544,11 +730,10 @@
                 if (e.target === e.currentTarget) dismiss();
             });
         } catch (e) {
-            console.error('Announcement check failed:', e);
+            console.error('Announcement check error:', e);
         }
     }
     checkAnnouncement();
-
 })();
 </script>
 </body>

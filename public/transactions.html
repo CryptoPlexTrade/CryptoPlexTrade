@@ -3,35 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <link rel="icon" type="image/png" href="css/logo.png">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transactions - CryptoPlexTrade</title>
-    <meta name="description" content="View and filter all your CryptoPlexTrade transaction history.">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Transaction History &amp; Ledger — CryptoPlexTrade</title>
+    <meta name="description" content="View and audit your full order history, cryptographic transaction IDs, and settlement records on CryptoPlexTrade.">
+    
+    <!-- Design System Stylesheets -->
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="css/responsive.css">
+
     <style>
-        /* Keep Action column visible on smaller screens when table overflows */
-        .data-table th:last-child,
-        .data-table tbody td:last-child {
-            position: sticky;
-            right: 0;
-            background: #fff;
-            z-index: 2;
-            box-shadow: -2px 0 5px rgba(0,0,0,0.03);
+        .ledger-header {
+            margin-bottom: 24px;
         }
-        .data-table th:last-child {
-            background: #fafcff;
-            z-index: 3;
+
+        .ledger-header h1 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            color: var(--text-primary);
+            margin-bottom: 4px;
         }
-        .data-table tbody tr:hover td:last-child {
-            background: var(--primary-pale);
+
+        .ledger-header p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
         }
-        @media (max-width: 640px) {
-            .data-table th:last-child,
-            .data-table tbody td:last-child {
-                position: static;
-                box-shadow: none;
-            }
+
+        .kpi-stat-sub {
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 4px;
+        }
+
+        .btn-view {
+            padding: 6px 14px;
+            background: var(--bg-highlight);
+            color: var(--primary-color);
+            border: 1px solid rgba(0, 91, 170, 0.2);
+            border-radius: var(--radius-sm);
+            font-size: 0.82rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all var(--duration-fast);
+        }
+
+        .btn-view:hover {
+            background: var(--primary-color);
+            color: #ffffff;
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-light);
+            font-size: 0.9rem;
+        }
+
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+
+        .detail-item .label {
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .detail-item .value {
+            color: var(--text-primary);
+            font-weight: 700;
+            font-family: var(--font-mono);
+            word-break: break-all;
+            max-width: 60%;
+            text-align: right;
         }
     </style>
 </head>
@@ -44,7 +93,7 @@
     <!-- ===== SIDEBAR ===== -->
     <aside class="sidebar" id="sidebar">
         <a href="dashboard.html" class="sidebar-brand">
-            <img src="css/logo.jpg" alt="Logo" class="sidebar-brand__orb" style="width: auto !important; height: 44px !important; max-height: 44px; border-radius: 16px !important; object-fit: contain !important; background: none !important; padding: 0 !important; box-shadow: none !important; overflow: visible !important;">
+            <img src="css/logo.jpg" alt="Logo" class="sidebar-brand__orb">
             <span class="sidebar-brand__name">CryptoPlexTrade</span>
         </a>
         <nav class="sidebar-nav">
@@ -55,19 +104,19 @@
                 </a></li>
                 <li><a href="trade.html">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M3 4.5h18v15H3v-15Zm6.75 10.5a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM12 15a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM15.75 15a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM9.75 9a.75.75 0 0 0-1.5 0v4.5a.75.75 0 0 0 1.5 0V9Zm3.75-3a.75.75 0 0 0-1.5 0v7.5a.75.75 0 0 0 1.5 0V6Zm2.25 1.5a.75.75 0 0 0-1.5 0v6a.75.75 0 0 0 1.5 0v-6Z"/></svg>
-                    Trade
+                    Trade Desk
                 </a></li>
                 <li><a href="transactions.html" class="active">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clip-rule="evenodd"/></svg>
-                    Transactions
+                    Ledger History
                 </a></li>
                 <li><a href="profile.html">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd"/></svg>
-                    Profile
+                    Account Profile
                 </a></li>
                 <li><a href="support.html">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm11.378-3.917c-.89-.777-2.366-.777-3.255 0a.75.75 0 0 1-1.06-1.06c2.298-2.013 5.824-2.013 8.122 0a.75.75 0 0 1-1.06 1.06ZM12 15.75a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" clip-rule="evenodd"/></svg>
-                    Support
+                    Help &amp; Support
                 </a></li>
             </ul>
         </nav>
@@ -76,56 +125,59 @@
     <div class="main-wrap">
         <header class="topbar">
             <div class="topbar-left">
-                <button class="hamburger-btn" id="hamburger-btn" aria-label="Toggle sidebar">
+                <button class="hamburger-btn" id="hamburger-btn" aria-label="Toggle navigation">
                     <span></span><span></span><span></span>
                 </button>
-                <span class="topbar-title">Transactions</span>
+                <span class="topbar-title">Settlement Ledger</span>
             </div>
             <div class="topbar-right">
-                <a href="#" id="logout-btn" class="btn btn-danger btn-sm">Logout</a>
+                <a href="#" id="logout-btn" class="btn btn-danger btn-sm">Sign Out</a>
             </div>
         </header>
 
         <main class="page-content">
-            <div class="page-header">
-                <h1>Transaction History</h1>
-                <p>View and filter all your past orders.</p>
+            <div class="ledger-header">
+                <h1>Transaction History &amp; Settlements</h1>
+                <p>Complete immutable audit records of your cryptocurrency execution orders.</p>
             </div>
 
-            <!-- KPI Cards -->
-            <div class="kpi-grid" style="margin-bottom:20px;">
+            <!-- KPI Summary Strip -->
+            <div class="kpi-grid" style="margin-bottom: 24px;">
                 <div class="kpi-card">
                     <div class="kpi-card__header">
-                        <span class="kpi-card__label">Total Bought</span>
-                        <div class="kpi-card__icon kpi-card__icon--green">
+                        <span class="kpi-card__label">Aggregate Acquisitions (Bought)</span>
+                        <div class="kpi-card__icon kpi-card__icon--blue">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V9Z" clip-rule="evenodd" /></svg>
                         </div>
                     </div>
-                    <div class="kpi-card__value" id="kpi-total-bought">—</div>
+                    <div class="kpi-card__value" id="kpi-total-bought">&mdash;</div>
+                    <span class="kpi-stat-sub">Lifetime Settlement Volume</span>
                 </div>
                 <div class="kpi-card">
                     <div class="kpi-card__header">
-                        <span class="kpi-card__label">Total Sold</span>
+                        <span class="kpi-card__label">Aggregate Liquidations (Sold)</span>
                         <div class="kpi-card__icon kpi-card__icon--orange">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm3 10.5a.75.75 0 0 0 0-1.5H9a.75.75 0 0 0 0 1.5h6Z" clip-rule="evenodd" /></svg>
                         </div>
                     </div>
-                    <div class="kpi-card__value" id="kpi-total-sold">—</div>
+                    <div class="kpi-card__value" id="kpi-total-sold">&mdash;</div>
+                    <span class="kpi-stat-sub">Completed Payout Value</span>
                 </div>
             </div>
 
+            <!-- Filter Controls -->
             <div class="filter-bar">
                 <div class="filter-group">
-                    <label>Order Type</label>
+                    <label>Order Direction</label>
                     <div class="csd-wrapper" id="filter-type-csd" data-value="all">
                         <button type="button" class="csd-trigger">
-                            <span class="csd-label">All Types</span>
+                            <span class="csd-label">All Directions</span>
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                         </button>
                         <div class="csd-dropdown">
-                            <div class="csd-option csd-active" data-value="all">All Types</div>
-                            <div class="csd-option" data-value="buy">Buy</div>
-                            <div class="csd-option" data-value="sell">Sell</div>
+                            <div class="csd-option csd-active" data-value="all">All Directions</div>
+                            <div class="csd-option" data-value="buy">Buy Orders</div>
+                            <div class="csd-option" data-value="sell">Sell Orders</div>
                         </div>
                         <select id="filter-type" style="display:none">
                             <option value="all" selected>All Types</option>
@@ -135,7 +187,7 @@
                     </div>
                 </div>
                 <div class="filter-group">
-                    <label>Status</label>
+                    <label>Settlement Status</label>
                     <div class="csd-wrapper" id="filter-status-csd" data-value="all">
                         <button type="button" class="csd-trigger">
                             <span class="csd-label">All Statuses</span>
@@ -143,8 +195,8 @@
                         </button>
                         <div class="csd-dropdown">
                             <div class="csd-option csd-active" data-value="all">All Statuses</div>
-                            <div class="csd-option" data-value="completed"><span class="csd-dot" style="background:#16a34a"></span>Completed</div>
-                            <div class="csd-option" data-value="pending_confirmation"><span class="csd-dot" style="background:var(--primary)"></span>Pending Confirmation</div>
+                            <div class="csd-option" data-value="completed"><span class="csd-dot" style="background:var(--accent-green)"></span>Settled &bull; Completed</div>
+                            <div class="csd-option" data-value="pending_confirmation"><span class="csd-dot" style="background:var(--primary-color)"></span>Pending Verification</div>
                         </div>
                         <select id="filter-status" style="display:none">
                             <option value="all" selected>All Statuses</option>
@@ -155,23 +207,23 @@
                 </div>
             </div>
 
-            <!-- Table -->
+            <!-- Ledger Table -->
             <div class="card" style="padding:0;overflow:hidden;">
                 <div class="table-wrap">
                     <table class="data-table data-table--cards">
                         <thead>
                             <tr>
-                                <th>Date</th>
-                                <th>Type</th>
-                                <th>Product</th>
-                                <th>Amount (GH₵)</th>
-                                <th>Details</th>
-                                <th>Status</th>
-                                <th>Action</th>
+                                <th>Timestamp</th>
+                                <th>Direction</th>
+                                <th>Asset Pair</th>
+                                <th>Gross Settlement</th>
+                                <th>Destination / Routing</th>
+                                <th>State</th>
+                                <th>Audit</th>
                             </tr>
                         </thead>
                         <tbody id="transactions-tbody">
-                            <tr><td colspan="7" style="text-align:center;color:var(--text-3);padding:24px;">Loading…</td></tr>
+                            <tr><td colspan="7" style="text-align:center;color:var(--text-muted);padding:24px;">Synchronizing ledger entries…</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -184,8 +236,8 @@
 <div id="details-modal" class="modal-overlay">
     <div class="modal-content">
         <div class="modal-header">
-            <h2>Transaction Details</h2>
-            <button id="close-modal-btn" class="close-btn">&times;</button>
+            <h2>Order Audit Record</h2>
+            <button id="close-modal-btn" class="close-btn" aria-label="Close modal">&times;</button>
         </div>
         <div class="modal-body" id="modal-body-content"></div>
     </div>
@@ -197,17 +249,19 @@
 <script src="chat-widget.js"></script>
 <script>
 (function () {
-    // --- Sidebar ---
+    // --- Sidebar navigation ---
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('sidebar-overlay');
     document.getElementById('hamburger-btn').addEventListener('click', () => { sidebar.classList.add('open'); overlay.classList.add('open'); });
     overlay.addEventListener('click', () => { sidebar.classList.remove('open'); overlay.classList.remove('open'); });
 
-    // --- Logout ---
+    // --- Sign Out ---
     document.getElementById('logout-btn').addEventListener('click', async (e) => {
         e.preventDefault();
-        try { const r = await fetch('/api/logout', { method: 'POST' }); if (r.ok) window.location.href = 'login.html'; }
-        catch (err) { console.error(err); }
+        try { 
+            const r = await fetch('/api/logout', { method: 'POST' }); 
+            if (r.ok) window.location.href = 'login.html'; 
+        } catch (err) { console.error(err); }
     });
 
     let allTransactions = [];
@@ -215,11 +269,11 @@
     function updateKpis() {
         const bought = allTransactions.filter(t => t.order_type === 'buy');
         const sold   = allTransactions.filter(t => t.order_type === 'sell');
-        const fmtAmt = (arr) => '₵ ' + arr.reduce((s, t) => s + parseFloat(t.total_paid || 0), 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        const fmtAmt = (arr) => 'GH₵ ' + arr.reduce((s, t) => s + parseFloat(t.total_paid || 0), 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         document.getElementById('kpi-total-bought').textContent = fmtAmt(bought);
         document.getElementById('kpi-total-sold').textContent   = fmtAmt(sold);
     }
-    const tbody       = document.getElementById('transactions-tbody');
+    const tbody        = document.getElementById('transactions-tbody');
     const filterType   = document.getElementById('filter-type');
     const filterStatus = document.getElementById('filter-status');
     const modal        = document.getElementById('details-modal');
@@ -228,7 +282,7 @@
     function renderTransactions(txs) {
         tbody.innerHTML = '';
         if (txs.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--text-3);padding:24px;">No transactions match the current filters.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--text-muted);padding:32px;">No transactions match the selected filter criteria.</td></tr>';
             return;
         }
         txs.forEach(tx => {
@@ -238,21 +292,23 @@
             const statusCls = `status-${tx.status.toLowerCase()}`;
             let detailsCell = '';
             if (tx.order_type === 'buy') {
-                detailsCell = `<td data-label="Details" title="${tx.wallet_address}">${tx.wallet_address.substring(0,10)}…</td>`;
+                detailsCell = `<td data-label="Destination" style="font-family:var(--font-mono);font-size:0.8rem;" title="${tx.wallet_address}">${tx.wallet_address.substring(0,12)}…</td>`;
             } else {
                 try {
                     const p = JSON.parse(tx.wallet_address);
-                    detailsCell = `<td data-label="Details">Payout to ${p.method === 'momo' ? 'MoMo' : 'Bank'}</td>`;
-                } catch { detailsCell = '<td data-label="Details">—</td>'; }
+                    detailsCell = `<td data-label="Destination" style="font-size:0.85rem;">Payout &rarr; ${p.method === 'momo' ? 'Mobile Money' : 'Bank Clearing'}</td>`;
+                } catch { 
+                    detailsCell = '<td data-label="Destination" style="font-size:0.85rem;">&mdash;</td>'; 
+                }
             }
             tbody.innerHTML += `<tr>
-                <td data-label="Date">${date}</td>
-                <td data-label="Type">${type}</td>
-                <td data-label="Product"><strong>${tx.product}</strong></td>
-                <td data-label="Amount">₵ ${parseFloat(tx.total_paid).toFixed(2)}</td>
+                <td data-label="Timestamp" style="font-family:var(--font-mono);font-size:0.82rem;">${date}</td>
+                <td data-label="Direction"><strong style="color:${tx.order_type==='buy'?'var(--primary-color)':'var(--accent-red)'}">${type}</strong></td>
+                <td data-label="Asset Pair"><span style="font-family:var(--font-mono);font-weight:700;">${tx.product}</span></td>
+                <td data-label="Gross Settlement" style="font-family:var(--font-mono);font-weight:600;">GH₵ ${parseFloat(tx.total_paid).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
                 ${detailsCell}
-                <td data-label="Status"><span class="status-badge ${statusCls}">${status}</span></td>
-                <td data-label="Action"><button type="button" class="btn-view" data-tx-id="${tx.id}">View</button></td>
+                <td data-label="State"><span class="status-badge ${statusCls}">${status}</span></td>
+                <td data-label="Audit"><button type="button" class="btn-view" data-tx-id="${tx.id}">Inspect</button></td>
             </tr>`;
         });
 
@@ -261,7 +317,10 @@
                 e.preventDefault();
                 e.stopPropagation();
                 const tx = allTransactions.find(t => t.id === parseInt(this.dataset.txId, 10));
-                if (tx) { populateModal(tx); modal.classList.add('show'); }
+                if (tx) { 
+                    populateModal(tx); 
+                    modal.classList.add('show'); 
+                }
             });
         });
     }
@@ -275,42 +334,45 @@
             d.innerHTML = `<span class="label">${label}</span><span class="value ${cls}">${value}</span>`;
             return d;
         };
-        body.appendChild(row('Order ID', '#' + tx.id));
-        body.appendChild(row('Date', new Date(tx.created_at).toLocaleString()));
-        body.appendChild(row('Type', tx.order_type.charAt(0).toUpperCase() + tx.order_type.slice(1)));
-        body.appendChild(row('Product', tx.product));
-        body.appendChild(row('Amount (GH₵)', `₵ ${parseFloat(tx.total_paid).toFixed(2)}`));
-        body.appendChild(row('Status', tx.status.replace(/_/g,' ').replace(/\b\w/g,l=>l.toUpperCase()), `status-badge status-${tx.status.toLowerCase()}`));
+        body.appendChild(row('Protocol Order ID', '#' + tx.id));
+        body.appendChild(row('Settlement Timestamp', new Date(tx.created_at).toLocaleString()));
+        body.appendChild(row('Order Direction', tx.order_type.charAt(0).toUpperCase() + tx.order_type.slice(1)));
+        body.appendChild(row('Digital Asset', tx.product));
+        body.appendChild(row('Total Fiat Value', `GH₵ ${parseFloat(tx.total_paid).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`));
+        body.appendChild(row('Current State', tx.status.replace(/_/g,' ').replace(/\b\w/g,l=>l.toUpperCase()), `status-badge status-${tx.status.toLowerCase()}`));
+        
         if (tx.order_type === 'buy') {
-            body.appendChild(row('Wallet Address', tx.wallet_address));
-            body.appendChild(row('Transaction ID', tx.transaction_id || 'N/A'));
+            body.appendChild(row('Destination Wallet', tx.wallet_address));
+            body.appendChild(row('Blockchain TX Hash', tx.transaction_id || 'Pending Dispatch'));
         } else {
-            body.appendChild(row('Crypto Sent', `${tx.product_amount} ${tx.product}`));
-            body.appendChild(row('Your TXID', tx.transaction_id || 'N/A'));
+            body.appendChild(row('Cryptocurrency Liquidated', `${tx.product_amount} ${tx.product}`));
+            body.appendChild(row('Deposit TX Hash', tx.transaction_id || 'Verification In-Flight'));
             try {
                 const p = JSON.parse(tx.wallet_address);
                 if (p.method === 'momo') {
-                    body.appendChild(row('Payout Method', 'Mobile Money'));
-                    body.appendChild(row('MoMo Number', p.number));
-                    body.appendChild(row('MoMo Name', p.name));
+                    body.appendChild(row('Payout Rail', 'Mobile Money Clearing'));
+                    body.appendChild(row('Recipient Phone', p.number));
+                    body.appendChild(row('Account Title', p.name));
                 } else {
-                    body.appendChild(row('Payout Method', 'Bank Transfer'));
-                    body.appendChild(row('Bank Name', p.bankName));
-                    body.appendChild(row('Account Name', p.accountName));
+                    body.appendChild(row('Payout Rail', 'Bank Wire Transfer'));
+                    body.appendChild(row('Financial Institution', p.bankName));
+                    body.appendChild(row('Account Beneficiary', p.accountName));
                     body.appendChild(row('Account Number', p.accountNumber));
                 }
-            } catch { body.appendChild(row('Payout Info', 'Error parsing details')); }
+            } catch { 
+                body.appendChild(row('Payout Routing', 'Standard Fiat Clearing')); 
+            }
         }
     }
 
     function applyFilters() {
         let filtered = [...allTransactions];
-        if (filterType.value   !== 'all') filtered = filtered.filter(t => t.order_type === filterType.value);
+        if (filterType.value !== 'all') filtered = filtered.filter(t => t.order_type === filterType.value);
         if (filterStatus.value !== 'all') filtered = filtered.filter(t => t.status === filterStatus.value);
         renderTransactions(filtered);
     }
 
-    // --- Custom Status Dropdown Logic ---
+    // --- Custom Filter Dropdown Logic ---
     function closeAllDropdowns(except) {
         document.querySelectorAll('.csd-wrapper.csd-open').forEach(el => {
             if (el !== except) el.classList.remove('csd-open');
@@ -327,7 +389,7 @@
         const spaceAbove = rect.top;
 
         dropdown.style.left  = rect.left + 'px';
-        dropdown.style.width = Math.max(rect.width, 160) + 'px';
+        dropdown.style.width = Math.max(rect.width, 180) + 'px';
 
         if (spaceBelow >= Math.min(maxH, 120) + gap || spaceBelow >= spaceAbove) {
             dropdown.style.top    = (rect.bottom + gap) + 'px';
@@ -346,21 +408,25 @@
 
     document.querySelector('.filter-bar').addEventListener('click', function(e) {
         if (e.target.closest('.csd-trigger')) {
-            e.preventDefault(); e.stopPropagation();
+            e.preventDefault(); 
+            e.stopPropagation();
             const wrapper = e.target.closest('.csd-wrapper');
             const isOpen = wrapper.classList.contains('csd-open');
             closeAllDropdowns(null);
-            if (!isOpen) { positionCSD(wrapper); wrapper.classList.add('csd-open'); }
+            if (!isOpen) { 
+                positionCSD(wrapper); 
+                wrapper.classList.add('csd-open'); 
+            }
             return;
         }
 
         if (e.target.closest('.csd-option')) {
-            e.preventDefault(); e.stopPropagation();
+            e.preventDefault(); 
+            e.stopPropagation();
             const option = e.target.closest('.csd-option');
             const wrapper = option.closest('.csd-wrapper');
             const value = option.dataset.value;
 
-            // Update trigger label identically, but we need to keep dot if it exists
             const triggerLabel = wrapper.querySelector('.csd-label');
             const dotMatch = option.innerHTML.match(/<span[^>]*class="csd-dot"[^>]*><\/span>/);
             triggerLabel.innerHTML = (dotMatch ? dotMatch[0] : '') + option.textContent.trim();
@@ -382,7 +448,7 @@
 
     async function fetchAllTransactions() {
         try {
-            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--text-3);padding:24px;">Loading…</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--text-muted);padding:32px;">Loading ledger records…</td></tr>';
             const r = await fetch('/api/orders/history', { credentials: 'include' });
             if (r.status === 401 || r.status === 403) { window.location.href = 'login.html'; return; }
             if (!r.ok) throw new Error('Failed');
@@ -390,7 +456,7 @@
             updateKpis();
             renderTransactions(allTransactions);
         } catch (e) {
-            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--red);padding:24px;">Could not load transaction history.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--accent-red);padding:32px;">Unable to load transaction records.</td></tr>';
         }
     }
 

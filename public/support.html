@@ -3,12 +3,133 @@
 <head>
     <meta charset="UTF-8">
     <link rel="icon" type="image/png" href="css/logo.png">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Support - CryptoPlexTrade</title>
-    <meta name="description" content="View and manage your CryptoPlexTrade support tickets.">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Customer Support &amp; Inquiries — CryptoPlexTrade</title>
+    <meta name="description" content="View, open, and manage your institutional support requests and tickets on CryptoPlexTrade.">
+    
+    <!-- Design System Stylesheets -->
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="css/responsive.css">
+
+    <style>
+        .ticket-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 0;
+            margin: 0;
+        }
+
+        .ticket-item {
+            background: #ffffff;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow-sm);
+            cursor: pointer;
+            transition: all var(--duration-fast);
+        }
+
+        .ticket-item:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .ticket-info .subject {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .ticket-info .last-update {
+            font-size: 0.78rem;
+            font-family: var(--font-mono);
+            color: var(--text-muted);
+        }
+
+        .ticket-status {
+            padding: 6px 14px;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .status-open {
+            background: #eff6ff;
+            color: var(--primary-color);
+            border: 1px solid rgba(0, 91, 170, 0.2);
+        }
+
+        .status-closed {
+            background: #f1f5f9;
+            color: var(--text-muted);
+            border: 1px solid var(--border-light);
+        }
+
+        .status-in_progress, .status-pending {
+            background: #fffbeb;
+            color: #b45309;
+            border: 1px solid #fde68a;
+        }
+
+        .message-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            max-height: 440px;
+            overflow-y: auto;
+            padding: 8px 4px;
+        }
+
+        .message-item {
+            padding: 16px 18px;
+            border-radius: var(--radius-md);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .message-item.admin {
+            background: var(--bg-highlight);
+            border: 1px solid rgba(0, 91, 170, 0.15);
+            align-self: flex-start;
+            max-width: 85%;
+        }
+
+        .message-item.user {
+            background: #f8fafc;
+            border: 1px solid var(--border-light);
+            align-self: flex-end;
+            max-width: 85%;
+        }
+
+        .message-author {
+            font-weight: 700;
+            font-size: 0.8rem;
+            color: var(--primary-color);
+            margin-right: 12px;
+        }
+
+        .message-date {
+            font-size: 0.75rem;
+            font-family: var(--font-mono);
+            color: var(--text-muted);
+        }
+
+        .message-body {
+            margin-top: 8px;
+            color: var(--text-primary);
+            white-space: pre-wrap;
+        }
+    </style>
 </head>
 <body>
 
@@ -19,7 +140,7 @@
     <!-- ===== SIDEBAR ===== -->
     <aside class="sidebar" id="sidebar">
         <a href="dashboard.html" class="sidebar-brand">
-            <img src="css/logo.jpg" alt="Logo" class="sidebar-brand__orb" style="width: auto !important; height: 44px !important; max-height: 44px; border-radius: 16px !important; object-fit: contain !important; background: none !important; padding: 0 !important; box-shadow: none !important; overflow: visible !important;">
+            <img src="css/logo.jpg" alt="Logo" class="sidebar-brand__orb">
             <span class="sidebar-brand__name">CryptoPlexTrade</span>
         </a>
         <nav class="sidebar-nav">
@@ -30,19 +151,19 @@
                 </a></li>
                 <li><a href="trade.html">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M3 4.5h18v15H3v-15Zm6.75 10.5a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM12 15a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM15.75 15a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM9.75 9a.75.75 0 0 0-1.5 0v4.5a.75.75 0 0 0 1.5 0V9Zm3.75-3a.75.75 0 0 0-1.5 0v7.5a.75.75 0 0 0 1.5 0V6Zm2.25 1.5a.75.75 0 0 0-1.5 0v6a.75.75 0 0 0 1.5 0v-6Z"/></svg>
-                    Trade
+                    Trade Desk
                 </a></li>
                 <li><a href="transactions.html">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clip-rule="evenodd"/></svg>
-                    Transactions
+                    Ledger History
                 </a></li>
                 <li><a href="profile.html">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd"/></svg>
-                    Profile
+                    Account Profile
                 </a></li>
                 <li><a href="support.html" class="active">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm11.378-3.917c-.89-.777-2.366-.777-3.255 0a.75.75 0 0 1-1.06-1.06c2.298-2.013 5.824-2.013 8.122 0a.75.75 0 0 1-1.06 1.06ZM12 15.75a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" clip-rule="evenodd"/></svg>
-                    Support
+                    Help &amp; Support
                 </a></li>
             </ul>
         </nav>
@@ -51,30 +172,30 @@
     <div class="main-wrap">
         <header class="topbar">
             <div class="topbar-left">
-                <button class="hamburger-btn" id="hamburger-btn" aria-label="Toggle sidebar">
+                <button class="hamburger-btn" id="hamburger-btn" aria-label="Toggle navigation">
                     <span></span><span></span><span></span>
                 </button>
-                <span class="topbar-title">Support</span>
+                <span class="topbar-title">Support Tickets</span>
             </div>
             <div class="topbar-right">
-                <a href="#" id="logout-btn" class="btn btn-danger btn-sm">Logout</a>
+                <a href="#" id="logout-btn" class="btn btn-danger btn-sm">Sign Out</a>
             </div>
         </header>
 
         <main class="page-content">
-            <div class="page-header" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:28px;">
                 <div>
-                    <h1>Support Tickets</h1>
-                    <p>Review your open issues or raise a new one.</p>
+                    <h1 style="font-size:1.75rem; font-weight:800; letter-spacing:-0.03em; color:var(--text-primary); margin-bottom:4px;">Support Desk</h1>
+                    <p style="font-size:0.9rem; color:var(--text-secondary);">Direct operational communications with our clearing officers.</p>
                 </div>
-                <a href="create_ticket.html" class="btn btn-primary">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" style="width:16px;height:16px;"><path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z"/></svg>
-                    New Ticket
+                <a href="create_ticket.html" class="btn btn-primary" style="display:inline-flex;align-items:center;gap:8px;">
+                    <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z"/></svg>
+                    Open New Ticket
                 </a>
             </div>
 
             <ul class="ticket-list" id="ticket-list">
-                <li style="text-align:center;padding:24px;color:var(--text-3);">Loading tickets…</li>
+                <li style="text-align:center;padding:32px;color:var(--text-muted);background:#fff;border-radius:var(--radius-lg);border:1px solid var(--border-light);">Loading ticket records…</li>
             </ul>
         </main>
     </div>
@@ -82,10 +203,10 @@
 
 <!-- Ticket Details Modal -->
 <div id="details-modal" class="modal-overlay">
-    <div class="modal-content">
+    <div class="modal-content" style="max-width:640px;">
         <div class="modal-header">
-            <h2 id="modal-ticket-subject">Ticket Details</h2>
-            <button id="close-modal-btn" class="close-btn">&times;</button>
+            <h2 id="modal-ticket-subject">Ticket Conversation</h2>
+            <button id="close-modal-btn" class="close-btn" aria-label="Close modal">&times;</button>
         </div>
         <div class="modal-body" id="modal-body-content"></div>
     </div>
@@ -97,7 +218,7 @@
 <script src="chat-widget.js"></script>
 <script>
 (function () {
-    // --- Sidebar ---
+    // --- Sidebar navigation ---
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('sidebar-overlay');
     document.getElementById('hamburger-btn').addEventListener('click', () => { sidebar.classList.add('open'); overlay.classList.add('open'); });
@@ -110,14 +231,15 @@
     }
     const csrfToken = getCookie('csrf-token');
 
-    // --- Logout ---
+    // --- Sign Out ---
     document.getElementById('logout-btn').addEventListener('click', async (e) => {
         e.preventDefault();
-        try { const r = await fetch('/api/logout', { method: 'POST', headers: { 'X-CSRF-Token': csrfToken } }); if (r.ok) window.location.href = 'login.html'; }
-        catch (err) { console.error(err); }
+        try { 
+            const r = await fetch('/api/logout', { method: 'POST', headers: { 'X-CSRF-Token': csrfToken } }); 
+            if (r.ok) window.location.href = 'login.html'; 
+        } catch (err) { console.error(err); }
     });
 
-    // --- Ticket Logic (preserved exactly) ---
     const modal        = document.getElementById('details-modal');
     const closeModal   = document.getElementById('close-modal-btn');
     const modalSubject = document.getElementById('modal-ticket-subject');
@@ -126,15 +248,15 @@
 
     async function fetchTickets() {
         try {
-            ticketList.innerHTML = '<li style="text-align:center;padding:24px;color:var(--text-3);">Loading tickets…</li>';
+            ticketList.innerHTML = '<li style="text-align:center;padding:32px;color:var(--text-muted);background:#fff;border-radius:var(--radius-lg);border:1px solid var(--border-light);">Loading ticket records…</li>';
             const r = await fetch('/api/support/tickets', { credentials: 'include' });
             if (r.status === 401 || r.status === 403) { window.location.href = 'login.html'; return; }
-            if (!r.ok) throw new Error('Failed to fetch tickets.');
+            if (!r.ok) throw new Error('Could not retrieve tickets.');
             const tickets = await r.json();
 
             ticketList.innerHTML = '';
             if (tickets.length === 0) {
-                ticketList.innerHTML = '<li style="text-align:center;padding:24px;color:var(--text-3);">You have no support tickets yet.</li>';
+                ticketList.innerHTML = '<li style="text-align:center;padding:32px;color:var(--text-muted);background:#fff;border-radius:var(--radius-lg);border:1px solid var(--border-light);">No open tickets. If you need trade or settlement assistance, click "Open New Ticket" above.</li>';
                 return;
             }
 
@@ -150,7 +272,7 @@
                     <div class="ticket-status"></div>
                 `;
                 item.querySelector('.subject').textContent = ticket.subject;
-                item.querySelector('.last-update').textContent = `Last updated: ${new Date(ticket.updated_at).toLocaleString()}`;
+                item.querySelector('.last-update').textContent = `Last activity: ${new Date(ticket.updated_at).toLocaleString()}`;
                 const statusEl = item.querySelector('.ticket-status');
                 statusEl.className = `ticket-status status-${ticket.status}`;
                 statusEl.textContent = ticket.status.replace('_', ' ');
@@ -158,7 +280,7 @@
                 item.addEventListener('click', async () => {
                     try {
                         const dr = await fetch(`/api/support/tickets/${ticket.id}`, { credentials: 'include' });
-                        if (!dr.ok) throw new Error('Could not load ticket details.');
+                        if (!dr.ok) throw new Error('Could not load ticket messages.');
                         const detail = await dr.json();
                         modalSubject.textContent = `Ticket #${detail.ticket.id}: ${detail.ticket.subject}`;
                         modalBody.innerHTML = '';
@@ -167,7 +289,7 @@
                         detail.replies.forEach(reply => {
                             const div = document.createElement('div');
                             div.className = `message-item ${reply.is_admin ? 'admin' : 'user'}`;
-                            div.innerHTML = `<div><span class="message-author">${reply.is_admin ? 'Support Team' : 'You'}</span><span class="message-date">${new Date(reply.created_at).toLocaleString()}</span></div><div class="message-body"></div>`;
+                            div.innerHTML = `<div><span class="message-author">${reply.is_admin ? 'Compliance Support' : 'You'}</span><span class="message-date">${new Date(reply.created_at).toLocaleString()}</span></div><div class="message-body"></div>`;
                             div.querySelector('.message-body').textContent = reply.message;
                             msgList.appendChild(div);
                         });
@@ -182,7 +304,7 @@
             modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('show'); });
 
         } catch (e) {
-            ticketList.innerHTML = `<li style="text-align:center;padding:24px;color:var(--red);">${e.message}</li>`;
+            ticketList.innerHTML = `<li style="text-align:center;padding:24px;color:var(--accent-red);background:#fff;border-radius:var(--radius-lg);">${e.message}</li>`;
         }
     }
 

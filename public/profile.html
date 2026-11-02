@@ -3,12 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <link rel="icon" type="image/png" href="css/logo.png">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile - CryptoPlexTrade</title>
-    <meta name="description" content="Manage your CryptoPlexTrade profile and security settings.">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Account Profile &amp; Security — CryptoPlexTrade</title>
+    <meta name="description" content="Manage your profile information, password credentials, and security preferences on CryptoPlexTrade.">
+    
+    <!-- Design System Stylesheets -->
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="css/responsive.css">
+
+    <style>
+        .profile-grid-layout {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 28px;
+        }
+
+        .profile-section-card {
+            background: #ffffff;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-xl);
+            padding: 32px 32px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .profile-card-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+
+        .profile-card-title svg {
+            color: var(--primary-color);
+            width: 20px;
+            height: 20px;
+        }
+
+        .profile-card-sub {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+
+        .form-group-item {
+            margin-bottom: 20px;
+        }
+
+        .form-group-item label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+
+        .form-group-item input {
+            width: 100%;
+            padding: 12px 14px;
+            background: #f8fafc;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+            font-size: 0.92rem;
+            color: var(--text-primary);
+            outline: none;
+            transition: all var(--duration-fast);
+        }
+
+        .form-group-item input:focus {
+            background: #ffffff;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 91, 170, 0.12);
+        }
+
+        .form-group-item input:disabled {
+            background: #f1f5f9;
+            color: var(--text-muted);
+            cursor: not-allowed;
+        }
+
+        .btn-profile-submit {
+            padding: 12px 24px;
+            background: var(--primary-color);
+            color: #ffffff;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all var(--duration-fast);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-profile-submit:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .msg-banner {
+            border-radius: var(--radius-sm);
+            padding: 10px 14px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-top: 16px;
+            display: none;
+        }
+
+        .msg-banner.success {
+            background: #f0fdf4;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: var(--accent-green);
+        }
+
+        .msg-banner.error {
+            background: #fef2f2;
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            color: var(--accent-red);
+        }
+
+        @media (max-width: 900px) {
+            .profile-grid-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
 
@@ -19,7 +142,7 @@
     <!-- ===== SIDEBAR ===== -->
     <aside class="sidebar" id="sidebar">
         <a href="dashboard.html" class="sidebar-brand">
-            <img src="css/logo.jpg" alt="Logo" class="sidebar-brand__orb" style="width: auto !important; height: 44px !important; max-height: 44px; border-radius: 16px !important; object-fit: contain !important; background: none !important; padding: 0 !important; box-shadow: none !important; overflow: visible !important;">
+            <img src="css/logo.jpg" alt="Logo" class="sidebar-brand__orb">
             <span class="sidebar-brand__name">CryptoPlexTrade</span>
         </a>
         <nav class="sidebar-nav">
@@ -30,19 +153,19 @@
                 </a></li>
                 <li><a href="trade.html">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M3 4.5h18v15H3v-15Zm6.75 10.5a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM12 15a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM15.75 15a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM9.75 9a.75.75 0 0 0-1.5 0v4.5a.75.75 0 0 0 1.5 0V9Zm3.75-3a.75.75 0 0 0-1.5 0v7.5a.75.75 0 0 0 1.5 0V6Zm2.25 1.5a.75.75 0 0 0-1.5 0v6a.75.75 0 0 0 1.5 0v-6Z"/></svg>
-                    Trade
+                    Trade Desk
                 </a></li>
                 <li><a href="transactions.html">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clip-rule="evenodd"/></svg>
-                    Transactions
+                    Ledger History
                 </a></li>
                 <li><a href="profile.html" class="active">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd"/></svg>
-                    Profile
+                    Account Profile
                 </a></li>
                 <li><a href="support.html">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm11.378-3.917c-.89-.777-2.366-.777-3.255 0a.75.75 0 0 1-1.06-1.06c2.298-2.013 5.824-2.013 8.122 0a.75.75 0 0 1-1.06 1.06ZM12 15.75a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" clip-rule="evenodd"/></svg>
-                    Support
+                    Help &amp; Support
                 </a></li>
             </ul>
         </nav>
@@ -51,72 +174,72 @@
     <div class="main-wrap">
         <header class="topbar">
             <div class="topbar-left">
-                <button class="hamburger-btn" id="hamburger-btn" aria-label="Toggle sidebar">
+                <button class="hamburger-btn" id="hamburger-btn" aria-label="Toggle navigation">
                     <span></span><span></span><span></span>
                 </button>
-                <span class="topbar-title">My Profile</span>
+                <span class="topbar-title">Identity &amp; Security</span>
             </div>
             <div class="topbar-right">
-                <a href="#" id="logout-btn" class="btn btn-danger btn-sm">Logout</a>
+                <a href="#" id="logout-btn" class="btn btn-danger btn-sm">Sign Out</a>
             </div>
         </header>
 
         <main class="page-content">
-            <div class="page-header">
-                <h1>My Profile</h1>
-                <p>Manage your personal information and account security.</p>
+            <div style="margin-bottom: 24px;">
+                <h1 style="font-size:1.75rem; font-weight:800; letter-spacing:-0.03em; color:var(--text-primary); margin-bottom:4px;">Account Settings</h1>
+                <p style="font-size:0.9rem; color:var(--text-secondary);">Manage verified personal credentials and security authorization keys.</p>
             </div>
 
-            <div class="grid-2">
-                <!-- Profile Info Card -->
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" style="width:18px;height:18px;vertical-align:-3px;margin-right:6px;color:var(--primary);"><path d="M10 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM3.465 14.493a1.23 1.23 0 0 0 .41 1.412A9.957 9.957 0 0 0 10 18c2.31 0 4.438-.784 6.131-2.1.43-.333.604-.903.408-1.41a7.002 7.002 0 0 0-13.074.003Z"/></svg>
-                            Profile Information
-                        </h3>
+            <div class="profile-grid-layout">
+                <!-- Profile Information -->
+                <div class="profile-section-card">
+                    <div class="profile-card-title">
+                        <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM3.465 14.493a1.23 1.23 0 0 0 .41 1.412A9.957 9.957 0 0 0 10 18c2.31 0 4.438-.784 6.131-2.1.43-.333.604-.903.408-1.41a7.002 7.002 0 0 0-13.074.003Z"/></svg>
+                        Personal Verification Data
                     </div>
+                    <p class="profile-card-sub">Your registered legal identity records used for settlement compliance.</p>
+                    
                     <form id="profile-form">
-                        <div class="form-group">
-                            <label for="fullname">Full Name</label>
-                            <input type="text" id="fullname" name="fullname" required placeholder="Your full name">
+                        <div class="form-group-item">
+                            <label for="fullname">Full Legal Name</label>
+                            <input type="text" id="fullname" name="fullname" required placeholder="Legal full name">
                         </div>
-                        <div class="form-group">
-                            <label for="email">Email Address</label>
-                            <input type="email" id="email" name="email" disabled placeholder="Loading…">
+                        <div class="form-group-item">
+                            <label for="email">Account Email (Verified)</label>
+                            <input type="email" id="email" name="email" disabled placeholder="Syncing…">
                         </div>
-                        <div class="form-group">
-                            <label for="phone">Phone Number</label>
-                            <input type="tel" id="phone" name="phone" required placeholder="Your phone number">
+                        <div class="form-group-item">
+                            <label for="phone">Primary Phone Number</label>
+                            <input type="tel" id="phone" name="phone" required placeholder="Contact phone number">
                         </div>
-                        <button type="submit" class="btn btn-primary">Save Changes</button>
-                        <div id="profile-message" class="msg"></div>
+                        <button type="submit" class="btn-profile-submit">Save Information</button>
+                        <div id="profile-message" class="msg-banner"></div>
                     </form>
                 </div>
 
-                <!-- Change Password Card -->
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" style="width:18px;height:18px;vertical-align:-3px;margin-right:6px;color:var(--primary);"><path fill-rule="evenodd" d="M10 1a4.5 4.5 0 0 0-4.5 4.5V9H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2h-.5V5.5A4.5 4.5 0 0 0 10 1Zm3 8V5.5a3 3 0 1 0-6 0V9h6Z" clip-rule="evenodd"/></svg>
-                            Change Password
-                        </h3>
+                <!-- Change Password -->
+                <div class="profile-section-card">
+                    <div class="profile-card-title">
+                        <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 1a4.5 4.5 0 0 0-4.5 4.5V9H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2h-.5V5.5A4.5 4.5 0 0 0 10 1Zm3 8V5.5a3 3 0 1 0-6 0V9h6Z" clip-rule="evenodd"/></svg>
+                        Security Credentials
                     </div>
+                    <p class="profile-card-sub">Regularly update your passphrase to maintain account security.</p>
+
                     <form id="password-form">
-                        <div class="form-group">
+                        <div class="form-group-item">
                             <label for="current-password">Current Password</label>
-                            <input type="password" id="current-password" name="current-password" required placeholder="Enter current password">
+                            <input type="password" id="current-password" name="current-password" required placeholder="Enter current passphrase">
                         </div>
-                        <div class="form-group">
+                        <div class="form-group-item">
                             <label for="new-password">New Password</label>
-                            <input type="password" id="new-password" name="new-password" required placeholder="Enter new password">
+                            <input type="password" id="new-password" name="new-password" required placeholder="Enter new robust password">
                         </div>
-                        <div class="form-group">
+                        <div class="form-group-item">
                             <label for="confirm-password">Confirm New Password</label>
-                            <input type="password" id="confirm-password" name="confirm-password" required placeholder="Confirm new password">
+                            <input type="password" id="confirm-password" name="confirm-password" required placeholder="Re-enter new password">
                         </div>
-                        <button type="submit" class="btn btn-primary">Change Password</button>
-                        <div id="password-message" class="msg"></div>
+                        <button type="submit" class="btn-profile-submit">Update Password</button>
+                        <div id="password-message" class="msg-banner"></div>
                     </form>
                 </div>
             </div>
@@ -130,7 +253,7 @@
 <script src="chat-widget.js"></script>
 <script>
 (function () {
-    // --- Sidebar ---
+    // --- Sidebar navigation ---
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('sidebar-overlay');
     document.getElementById('hamburger-btn').addEventListener('click', () => { sidebar.classList.add('open'); overlay.classList.add('open'); });
@@ -143,11 +266,13 @@
     }
     const csrfToken = getCookie('csrf-token');
 
-    // --- Logout ---
+    // --- Sign Out ---
     document.getElementById('logout-btn').addEventListener('click', async (e) => {
         e.preventDefault();
-        try { const r = await fetch('/api/logout', { method: 'POST', headers: { 'X-CSRF-Token': csrfToken } }); if (r.ok) window.location.href = 'login.html'; }
-        catch (err) { console.error(err); }
+        try { 
+            const r = await fetch('/api/logout', { method: 'POST', headers: { 'X-CSRF-Token': csrfToken } }); 
+            if (r.ok) window.location.href = 'login.html'; 
+        } catch (err) { console.error(err); }
     });
 
     const fullnameInput   = document.getElementById('fullname');
@@ -160,7 +285,7 @@
 
     function showMsg(el, type, text) {
         el.textContent = text;
-        el.className = `msg ${type}`;
+        el.className = `msg-banner ${type}`;
         el.style.display = 'block';
         setTimeout(() => { el.style.display = 'none'; }, 4000);
     }
@@ -170,12 +295,14 @@
         try {
             const r = await fetch('/api/user/profile', { credentials: 'include' });
             if (r.status === 401 || r.status === 403) { window.location.href = 'login.html'; return; }
-            if (!r.ok) throw new Error('Failed to fetch profile.');
+            if (!r.ok) throw new Error('Failed to retrieve profile records.');
             const user = await r.json();
             fullnameInput.value = user.fullname;
             emailInput.value    = user.email;
             phoneInput.value    = user.phone;
-        } catch (e) { showMsg(profileMsg, 'error', e.message); }
+        } catch (e) { 
+            showMsg(profileMsg, 'error', e.message); 
+        }
     }
     fetchProfile();
 
@@ -186,12 +313,14 @@
             const r = await fetch('/api/user/profile', {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrfToken },
-                body: JSON.stringify({ fullname: fullnameInput.value, phone: phoneInput.value })
+                body: JSON.stringify({ fullname: fullnameInput.value.trim(), phone: phoneInput.value.trim() })
             });
             const res = await r.json();
             if (!r.ok) throw new Error(res.message);
-            showMsg(profileMsg, 'success', res.message);
-        } catch (e) { showMsg(profileMsg, 'error', e.message); }
+            showMsg(profileMsg, 'success', res.message || 'Profile successfully updated.');
+        } catch (e) { 
+            showMsg(profileMsg, 'error', e.message); 
+        }
     });
 
     // --- Change password ---
@@ -200,7 +329,14 @@
         const currentPassword = document.getElementById('current-password').value;
         const newPassword     = document.getElementById('new-password').value;
         const confirmPassword = document.getElementById('confirm-password').value;
-        if (newPassword !== confirmPassword) { showMsg(passwordMsg, 'error', 'New passwords do not match.'); return; }
+        if (newPassword.length < 8) { 
+            showMsg(passwordMsg, 'error', 'New password must contain at least 8 characters.'); 
+            return; 
+        }
+        if (newPassword !== confirmPassword) { 
+            showMsg(passwordMsg, 'error', 'Passwords do not match.'); 
+            return; 
+        }
         try {
             const r = await fetch('/api/user/change-password', {
                 method: 'PUT',
@@ -209,9 +345,11 @@
             });
             const res = await r.json();
             if (!r.ok) throw new Error(res.message);
-            showMsg(passwordMsg, 'success', res.message);
+            showMsg(passwordMsg, 'success', res.message || 'Password successfully updated.');
             passwordForm.reset();
-        } catch (e) { showMsg(passwordMsg, 'error', e.message); }
+        } catch (e) { 
+            showMsg(passwordMsg, 'error', e.message); 
+        }
     });
 })();
 </script>
