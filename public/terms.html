@@ -15,7 +15,8 @@
     <style>
         .legal-page-header {
             padding: 64px 0 40px;
-            background: linear-gradient(180deg, #ffffff 0%, var(--bg-highlight) 100%);
+            background: radial-gradient(circle at 50% 0%, #0c1f40 0%, #050d1e 60%, var(--dark-bg) 100%);
+            border-bottom: 1px solid var(--border-glass);
             border-bottom: 1px solid var(--border-light);
         }
         .legal-page-wrap {
@@ -30,8 +31,9 @@
         .legal-toc {
             position: sticky;
             top: 96px;
-            background: #ffffff;
-            border: 1px solid var(--border-light);
+            background: rgba(8, 19, 38, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-glass);
             border-radius: var(--radius-lg);
             padding: 24px 20px;
             box-shadow: var(--shadow-sm);
@@ -64,8 +66,9 @@
             padding-left: 16px;
         }
         .legal-content-card {
-            background: #ffffff;
-            border: 1px solid var(--border-light);
+            background: rgba(8, 19, 38, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-glass);
             border-radius: var(--radius-xl);
             padding: 48px 52px;
             box-shadow: var(--shadow-sm);

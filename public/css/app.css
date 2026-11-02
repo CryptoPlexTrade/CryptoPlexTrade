@@ -27,42 +27,51 @@
     --secondary-color:  var(--primary-light);
     --bg-highlight:     var(--primary-pale);
 
-    /* Neutral Surfaces */
-    --bg:               #f8fafc;  /* Clean Slate Ground */
-    --bg-light:         #f8fafc;
-    --bg-white:         #ffffff;  /* Pure Card Canvas Surface */
-    --surface-subtle:   #f1f5f9;  /* Recessed Table Header & Troughs */
+    /* Deep Midnight Titanium Surfaces (Matching index.html) */
+    --dark-bg:          #040914;  /* Deep Midnight Space */
+    --dark-surface:     #081326;  /* Elevated Titanium Surface */
+    --dark-card:        #0b1c38;  /* Recessed Card / Container Ground */
+    --bg:               #040914;  /* Clean Deep Midnight Ground */
+    --bg-dark:          #040914;
+    --bg-light:         #081326;
+    --bg-white:         #081326;  /* Primary Card Canvas Surface */
+    --surface-subtle:   #050c1b;  /* Recessed Table Header & Troughs */
+    --surface-card:     #081326;
+    --surface-input:    #0b1c38;
     
-    /* Precision Borders */
-    --border:           #e2e8f0;  /* Hairline Divider */
-    --border-light:     #e2e8f0;
-    --border-mid:       #cbd5e1;  /* Form Input & Container Boundary */
-    --border-medium:    #cbd5e1;
+    /* Precision Glass Borders */
+    --border:           rgba(0, 169, 224, 0.20);  /* Hairline Cyan Border */
+    --border-light:     rgba(255, 255, 255, 0.08); /* Secondary Hairline Divider */
+    --border-mid:       rgba(0, 169, 224, 0.32);  /* Form Input & Container Boundary */
+    --border-medium:    rgba(0, 169, 224, 0.32);
+    --border-glass:     rgba(0, 169, 224, 0.22);
 
-    /* Typographic Hierarchy */
-    --text-1:           #1e293b;  /* Slate 800 — Primary Titles & Values */
-    --text-primary:     #1e293b;
-    --text-2:           #475569;  /* Slate 600 — Body & Form Labels */
-    --text-body:        #475569;
-    --text-3:           #64748b;  /* Slate 500 — Captions & Timestamps */
-    --text-secondary:   #64748b;
+    /* Luminous Typographic Hierarchy */
+    --text-1:           #ffffff;  /* Pure Crisp White — Primary Titles & Financial Values */
+    --text-primary:     #ffffff;
+    --text-2:           #cbd5e1;  /* Slate 300 — Body & Form Labels */
+    --text-body:        #cbd5e1;
+    --text-3:           #94a3b8;  /* Slate 400 — Captions & Timestamps */
+    --text-secondary:   #94a3b8;
+    --text-muted:       #64748b;
 
     /* Financial Market State Colors */
-    --green:            #28a745;  /* Positive / Buy Orders */
-    --accent-green:     #28a745;
-    --red:              #dc3545;  /* Negative / Sell Orders */
-    --accent-red:       #dc3545;
-    --orange:           #f7931a;  /* Bitcoin Gold / Pending Alerts */
-    --accent-orange:    #f7931a;
+    --green:            #22c55e;  /* Positive / Buy Orders */
+    --accent-green:     #22c55e;
+    --red:              #ef4444;  /* Negative / Sell Orders */
+    --accent-red:       #ef4444;
+    --orange:           #f59e0b;  /* Gold / Pending Alerts */
+    --accent-orange:    #f59e0b;
 
-    /* High-Definition Restrained Shadows (Anti-Slop Elevation) */
-    --shadow-xs:        0 1px 2px 0 rgba(15, 23, 42, 0.04);
-    --shadow-sm:        0 1px 3px 0 rgba(15, 23, 42, 0.06), 0 1px 2px 0 rgba(15, 23, 42, 0.03);
-    --shadow-md:        0 4px 12px -2px rgba(0, 91, 170, 0.08), 0 2px 6px -1px rgba(15, 23, 42, 0.04);
-    --shadow-lg:        0 12px 28px -4px rgba(0, 91, 170, 0.12), 0 4px 10px -2px rgba(15, 23, 42, 0.05);
-    --shadow-subtle:    rgba(0, 0, 0, 0.04);
-    --shadow-medium:    rgba(0, 0, 0, 0.08);
-    --shadow-blue:      rgba(0, 91, 170, 0.20);
+    /* High-Definition Cyber Shadows & Ambient Glows */
+    --shadow-xs:        0 1px 2px 0 rgba(0, 0, 0, 0.3);
+    --shadow-sm:        0 2px 8px rgba(0, 0, 0, 0.4);
+    --shadow-md:        0 8px 24px rgba(0, 0, 0, 0.5), 0 0 16px rgba(0, 169, 224, 0.08);
+    --shadow-lg:        0 16px 40px rgba(0, 0, 0, 0.6), 0 0 24px rgba(0, 169, 224, 0.14);
+    --shadow-subtle:    rgba(0, 0, 0, 0.3);
+    --shadow-medium:    rgba(0, 0, 0, 0.5);
+    --shadow-blue:      rgba(0, 169, 224, 0.28);
+    --shadow-cyan:      0 0 24px rgba(0, 169, 224, 0.35);
 
     /* Layout Dimensions */
     --sidebar-width:    260px;
@@ -118,7 +127,7 @@ body {
 /* --- Sidebar --- */
 .sidebar {
     width: var(--sidebar-width);
-    background: var(--bg-white);
+    background: #050c1b;
     border-right: 1px solid var(--border);
     display: flex;
     flex-direction: column;
@@ -136,7 +145,7 @@ body {
     text-decoration: none;
     border-bottom: 1px solid var(--border);
     flex-shrink: 0;
-    background: var(--bg-white);
+    background: #050c1b;
 }
 
 .sidebar-brand__orb {
@@ -223,7 +232,8 @@ img.sidebar-brand__orb {
 /* --- Topbar --- */
 .topbar {
     height: var(--topbar-height);
-    background: var(--bg-white);
+    background: rgba(8, 19, 38, 0.95);
+    backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border);
     display: flex;
     align-items: center;
@@ -656,7 +666,7 @@ img.sidebar-brand__orb {
     top: calc(100% + 8px);
     right: 0;
     width: 330px;
-    background: white;
+    background: #081326;
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-lg);
     border: 1px solid var(--border);
@@ -672,7 +682,8 @@ img.sidebar-brand__orb {
     padding: 14px 18px;
     font-weight: 700;
     font-size: 0.875rem;
-    color: var(--text-1);
+    color: #ffffff;
+    background: #050c1b;
     border-bottom: 1px solid var(--border);
     display: flex;
     justify-content: space-between;
@@ -784,7 +795,7 @@ img.sidebar-brand__orb {
     top: 100%;
     left: 0;
     right: 0;
-    background: white;
+    background: #081326;
     border: 1px solid var(--primary);
     border-top: none;
     border-radius: 0 0 var(--radius-md) var(--radius-md);
@@ -857,8 +868,8 @@ img.sidebar-brand__orb {
     font-family: var(--font-sans);
 }
 .trade-tab.active {
-    background: white;
-    color: var(--primary-dark);
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    color: #ffffff;
     box-shadow: var(--shadow-xs);
 }
 
@@ -971,8 +982,8 @@ img.sidebar-brand__orb {
     border-radius: var(--radius-sm);
     font-family: var(--font-sans);
     font-size: 0.875rem;
-    color: var(--text-1);
-    background: white;
+    color: #ffffff;
+    background: var(--surface-input);
     outline: none;
     transition: all 0.15s;
 }
@@ -1013,7 +1024,7 @@ img.sidebar-brand__orb {
     justify-content: space-between;
     width: 100%;
     padding: 9px 12px;
-    background: white;
+    background: var(--surface-input);
     border: 1px solid var(--border-mid);
     border-radius: var(--radius-sm);
     font-family: var(--font-sans);
@@ -1039,7 +1050,7 @@ img.sidebar-brand__orb {
     min-width: 200px;
     max-height: 260px;
     overflow-y: auto;
-    background: white;
+    background: #081326;
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-lg);
@@ -1242,7 +1253,7 @@ img.sidebar-brand__orb {
 .modal-overlay.show { opacity: 1; visibility: visible; }
 
 .modal-content {
-    background: white;
+    background: #081326;
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-lg);
     border: 1px solid var(--border);
@@ -1263,7 +1274,7 @@ img.sidebar-brand__orb {
     border-bottom: 1px solid var(--border);
     position: sticky;
     top: 0;
-    background: white;
+    background: #050c1b;
     z-index: 1;
 }
 .modal-header h2 { font-size: 1.05rem; font-weight: 700; color: var(--text-1); }

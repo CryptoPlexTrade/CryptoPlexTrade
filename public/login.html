@@ -16,8 +16,8 @@
         body {
             min-height: 100vh;
             display: flex;
-            background: #ffffff;
-            color: var(--text-primary);
+            background: #040914;
+            color: #ffffff;
             overflow-x: hidden;
         }
 
@@ -30,7 +30,8 @@
         /* ── Left Hero Panel ── */
         .auth-left-pane {
             flex: 0 0 48%;
-            background: linear-gradient(135deg, var(--bg-highlight) 0%, #e2f0fc 60%, #d0e7fa 100%);
+            background: radial-gradient(circle at 0% 0%, #0c1f40 0%, #050d1e 60%, #040914 100%);
+            border-right: 1px solid rgba(0, 169, 224, 0.22);
             border-right: 1px solid var(--border-light);
             padding: 48px 56px;
             display: flex;
@@ -177,7 +178,7 @@
             flex-direction: column;
             justify-content: space-between;
             padding: 48px 64px;
-            background: #ffffff;
+            background: #040914;
             overflow-y: auto;
         }
 
@@ -279,8 +280,8 @@
         .auth-input {
             width: 100%;
             padding: 12px 14px 12px 42px;
-            background: #f8fafc;
-            border: 1px solid var(--border-light);
+            background: #0b1c38;
+            border: 1px solid rgba(0, 169, 224, 0.28);
             border-radius: var(--radius-sm);
             font-family: inherit;
             font-size: 0.92rem;
@@ -290,9 +291,10 @@
         }
 
         .auth-input:focus {
-            background: #ffffff;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(0, 91, 170, 0.12);
+            background: #0f244a;
+            color: #ffffff;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 14px rgba(0, 169, 224, 0.35);
         }
 
         .auth-pw-toggle {

@@ -14,7 +14,8 @@
     <style>
         .page-hero {
             padding: 60px 0 40px;
-            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+            background: radial-gradient(circle at 50% 0%, #0c1f40 0%, #050d1e 60%, var(--dark-bg) 100%);
+            border-bottom: 1px solid var(--border-glass);
             border-bottom: 1px solid var(--border);
             text-align: center;
         }
@@ -25,7 +26,9 @@
             margin: 40px 0 60px;
         }
         .help-card {
-            background: #ffffff;
+            background: rgba(8, 19, 38, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-glass);
             border: 1px solid var(--border);
             border-radius: var(--radius-lg);
             padding: 28px 24px;
@@ -157,7 +160,9 @@
             </div>
 
             <!-- Quick Help Details -->
-            <div style="background: #ffffff; border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 36px; box-shadow: var(--shadow-sm); max-width: 860px; margin: 0 auto;">
+            <div style="background: rgba(8, 19, 38, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-glass); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 36px; box-shadow: var(--shadow-sm); max-width: 860px; margin: 0 auto;">
                 <h2 style="font-size: 1.3rem; font-weight: 700; color: var(--text-1); margin-bottom: 20px;">
                     Common Operational Topics
                 </h2>
