@@ -153,6 +153,10 @@ img.logo {
     transition: color 0.15s ease;
 }
 
+.nav a.btn-primary, .header-nav a.btn-primary, a.btn-primary, .btn-primary {
+    color: #ffffff !important;
+}
+
 .nav a:hover, .header-nav a:hover {
     color: var(--primary-color);
 }

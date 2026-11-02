@@ -314,7 +314,7 @@
 
             async function fetchLiveRates() {
                 try {
-                    const apiUrl = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${coinSymbols.join(',')}&tsyms=${vsCurrency.toUpperCase()}`;
+                    const apiUrl = `/api/market-rates',')}&tsyms=${vsCurrency.toUpperCase()}`;
                     const response = await fetch(apiUrl);
                     if (!response.ok) throw new Error(`API status: ${response.status}`);
                     const data = await response.json();

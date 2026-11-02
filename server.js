@@ -14,6 +14,7 @@ const logger = require('./logger');
 const crypto = require('crypto');
 const db = require('./database');
 const { getRates } = require('./rates');
+const { getLiveMarketRates } = require('./marketRates');
 
 const app = express();
 const PORT = process.env.PORT || 5008;
@@ -54,8 +55,8 @@ app.use(helmet.contentSecurityPolicy({
         scriptSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net/npm/chart.js"], // 'unsafe-inline' is required for inline scripts in static HTML
         styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com"], // 'unsafe-inline' is required for inline styles
         fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com"],
-        imgSrc: ["'self'", "data:", "https://www.cryptocompare.com"],
-        connectSrc: ["'self'", "https://min-api.cryptocompare.com", "https://api.coingecko.com"],
+        imgSrc: ["'self'", "data:", "https://www.cryptocompare.com", "https://assets.coingecko.com"],
+        connectSrc: ["'self'", "https://min-api.cryptocompare.com", "https://api.coingecko.com", "https://api.binance.com"],
     }
 }));
 // Allow credentialed requests (cookies) from the frontend origin.
@@ -143,6 +144,17 @@ app.use('/api/admin/chat', chatAdmin);
 // A simple endpoint to simulate admin-controlled rates
 app.get('/api/rates', async (req, res) => {
     res.status(200).json(await getRates());
+});
+
+// Live market rates endpoint (Binance / CoinGecko feed for tickers & rates table)
+app.get('/api/market-rates', async (req, res) => {
+    try {
+        const data = await getLiveMarketRates();
+        res.status(200).json(data);
+    } catch (err) {
+        logger.error('Error in /api/market-rates:', err);
+        res.status(500).json({ error: 'Failed to fetch market rates' });
+    }
 });
 
 // Public endpoint to get active announcement (no auth needed)

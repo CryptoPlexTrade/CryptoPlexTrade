@@ -14,46 +14,211 @@
     <link rel="stylesheet" href="css/responsive.css">
 
     <style>
-        .page-hero {
-            padding: 60px 0 40px;
-            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
-            border-bottom: 1px solid var(--border);
+        /* ============================================================
+           DEEP MIDNIGHT TITANIUM CYBER-FINTECH THEME
+           ============================================================ */
+        :root {
+            --dark-bg: #040914;
+            --dark-surface: #081326;
+            --dark-card: #0b1c38;
+            --royal-blue: #005baa;
+            --deep-navy: #004a8a;
+            --electric-cyan: #00a9e0;
+            --ice-pale: #f0f7ff;
+            --border-glass: rgba(0, 169, 224, 0.22);
+            --border-glow: rgba(0, 169, 224, 0.45);
         }
+
+        body {
+            background-color: var(--dark-bg);
+            color: #cbd5e1;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            overflow-x: hidden;
+            padding-bottom: 52px !important;
+        }
+
+        /* --- HEADER NAVIGATION --- */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(4, 9, 20, 0.88);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-glass);
+            padding: 14px 0;
+        }
+
+        .header .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .logo-wrapper img.logo {
+            height: 42px;
+            width: auto;
+            object-fit: contain;
+            filter: drop-shadow(0 0 10px rgba(0, 169, 224, 0.35));
+        }
+
+        .logo-name {
+            font-size: 1.28rem;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -0.02em;
+        }
+        .logo-name span { color: var(--electric-cyan); }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            gap: 22px;
+        }
+
+        .nav a {
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .nav a:hover, .nav a.active {
+            color: #ffffff;
+        }
+
+        .nav a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--electric-cyan);
+            border-radius: 2px;
+            box-shadow: 0 0 8px var(--electric-cyan);
+        }
+
+        .nav-btn-login {
+            color: #f1f5f9 !important;
+            font-weight: 600 !important;
+            padding: 8px 18px;
+            border-radius: var(--radius-sm);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.04);
+            transition: all 0.2s !important;
+        }
+
+        .nav-btn-login:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.3);
+            color: #ffffff !important;
+        }
+
+        /* Highly visible Open Account CTA */
+        .nav-btn-signup, .nav a.nav-btn-signup {
+            color: #ffffff !important;
+            font-weight: 700 !important;
+            font-size: 0.88rem !important;
+            padding: 9px 22px !important;
+            border-radius: 8px !important;
+            background: linear-gradient(135deg, var(--royal-blue) 0%, var(--electric-cyan) 100%) !important;
+            box-shadow: 0 0 20px rgba(0, 169, 224, 0.4) !important;
+            border: none !important;
+            text-decoration: none !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            transition: all 0.25s ease !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+
+        .nav-btn-signup:hover, .nav a.nav-btn-signup:hover {
+            transform: translateY(-1px) !important;
+            box-shadow: 0 0 28px rgba(0, 200, 255, 0.6) !important;
+            color: #ffffff !important;
+        }
+
+        .mobile-header-cta {
+            display: none;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* --- PAGE HERO --- */
+        .page-hero {
+            position: relative;
+            padding: 65px 0 45px;
+            background: radial-gradient(circle at 50% 0%, #0c1f40 0%, #050d1e 60%, var(--dark-bg) 100%);
+            border-bottom: 1px solid var(--border-glass);
+            text-align: center;
+        }
+
+        .badge-live-pulse {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 14px;
+            border-radius: 20px;
+            background: rgba(0, 169, 224, 0.1);
+            border: 1px solid rgba(0, 169, 224, 0.3);
+            font-size: 0.76rem;
+            font-weight: 700;
+            color: var(--electric-cyan);
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            margin-bottom: 14px;
+        }
+
+        .badge-live-pulse .dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #22c55e;
+            box-shadow: 0 0 8px #22c55e;
+            animation: pulse-dot 2s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.85); }
+        }
+
+        .hero-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -0.03em;
+            margin-bottom: 12px;
+        }
+        .hero-title span { color: var(--electric-cyan); }
+
+        .hero-desc {
+            font-size: 1.05rem;
+            color: #94a3b8;
+            max-width: 660px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* --- TOOLBAR --- */
         .market-toolbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
             gap: 16px;
-            margin-bottom: 24px;
+            margin: 36px 0 24px;
             flex-wrap: wrap;
-        }
-        .market-search {
-            position: relative;
-            max-width: 320px;
-            width: 100%;
-        }
-        .market-search input {
-            width: 100%;
-            padding: 10px 14px 10px 38px;
-            border: 1px solid var(--border-mid);
-            border-radius: var(--radius-md);
-            font-size: 0.88rem;
-            outline: none;
-            background: #ffffff;
-            transition: all 0.15s ease;
-        }
-        .market-search input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(0, 91, 170, 0.12);
-        }
-        .market-search svg {
-            position: absolute;
-            left: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-3);
-            width: 16px;
-            height: 16px;
         }
 
         .category-pills {
@@ -62,90 +227,203 @@
             overflow-x: auto;
             padding-bottom: 4px;
         }
+
         .cat-pill {
-            padding: 6px 14px;
+            padding: 8px 18px;
             border-radius: var(--radius-pill);
-            background: var(--surface-subtle);
-            border: 1px solid var(--border);
-            font-size: 0.8rem;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.82rem;
             font-weight: 600;
-            color: var(--text-2);
+            color: #94a3b8;
             cursor: pointer;
-            transition: all 0.15s ease;
+            transition: all 0.2s ease;
             white-space: nowrap;
         }
+
         .cat-pill.active, .cat-pill:hover {
-            background: var(--primary);
+            background: linear-gradient(135deg, var(--royal-blue), var(--deep-navy));
             color: #ffffff;
-            border-color: var(--primary);
+            border-color: var(--electric-cyan);
+            box-shadow: 0 0 14px rgba(0, 169, 224, 0.3);
         }
 
-        .rates-table-wrap {
-            background: #ffffff;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-sm);
-            overflow: hidden;
-            margin-bottom: 60px;
+        .market-search {
+            position: relative;
+            max-width: 320px;
+            width: 100%;
         }
+
+        .market-search input {
+            width: 100%;
+            padding: 10px 14px 10px 40px;
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-md);
+            font-size: 0.88rem;
+            outline: none;
+            background: rgba(11, 28, 56, 0.6);
+            color: #ffffff;
+            transition: all 0.2s ease;
+        }
+
+        .market-search input:focus {
+            border-color: var(--electric-cyan);
+            box-shadow: 0 0 12px rgba(0, 169, 224, 0.35);
+            background: rgba(11, 28, 56, 0.95);
+        }
+
+        .market-search svg {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--electric-cyan);
+            width: 16px;
+            height: 16px;
+        }
+
+        /* --- RATES TABLE --- */
+        .rates-table-wrap {
+            background: rgba(8, 19, 38, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-lg);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+            margin-bottom: 70px;
+        }
+
         .rates-table-custom {
             width: 100%;
             border-collapse: collapse;
         }
+
         .rates-table-custom thead th {
-            padding: 14px 20px;
-            background: var(--surface-subtle);
-            color: var(--text-3);
+            padding: 16px 22px;
+            background: rgba(4, 9, 20, 0.8);
+            color: #94a3b8;
             font-size: 0.74rem;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
-            border-bottom: 1px solid var(--border);
+            letter-spacing: 0.06em;
+            border-bottom: 1px solid var(--border-glass);
             text-align: left;
         }
+
         .rates-table-custom tbody td {
-            padding: 16px 20px;
-            border-bottom: 1px solid var(--border);
-            color: var(--text-1);
-            font-size: 0.9rem;
+            padding: 18px 22px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: #e2e8f0;
+            font-size: 0.92rem;
             vertical-align: middle;
         }
-        .rates-table-custom tbody tr:last-child td { border-bottom: none; }
-        .rates-table-custom tbody tr:hover { background: var(--primary-pale); }
+
+        .rates-table-custom tbody tr {
+            transition: background 0.15s ease;
+        }
+
+        .rates-table-custom tbody tr:hover {
+            background: rgba(0, 169, 224, 0.06);
+        }
+
+        .rates-table-custom tbody tr:last-child td {
+            border-bottom: none;
+        }
 
         .currency-info {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
             font-weight: 600;
         }
-        .currency-info img, .currency-info svg {
+
+        .currency-avatar {
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
+            background: rgba(0, 169, 224, 0.12);
+            border: 1px solid rgba(0, 169, 224, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.82rem;
+            color: var(--electric-cyan);
             flex-shrink: 0;
         }
-        .currency-info .symbol {
-            font-size: 0.78rem;
-            color: var(--text-3);
-            margin-left: 4px;
-            font-weight: 500;
+
+        .currency-names {
+            display: flex;
+            flex-direction: column;
         }
-        .rate-green { color: #16a34a; font-weight: 600; }
-        .rate-red { color: var(--red); font-weight: 600; }
-        .btn-trade {
+
+        .currency-name {
+            font-weight: 600;
+            color: #ffffff;
+            font-size: 0.95rem;
+        }
+
+        .currency-symbol {
+            font-size: 0.76rem;
+            color: #94a3b8;
+            font-family: var(--font-mono);
+        }
+
+        .rate-green { color: #22c55e !important; font-weight: 600; font-family: var(--font-mono); }
+        .rate-red { color: #ef4444 !important; font-weight: 600; font-family: var(--font-mono); }
+
+        .tabular-nums {
+            font-family: var(--font-mono);
+            letter-spacing: -0.01em;
+        }
+
+        .rate-highlight {
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .rate-ghs-sub {
+            display: block;
+            font-size: 0.74rem;
+            color: #64748b;
+            font-family: var(--font-mono);
+            margin-top: 2px;
+        }
+
+        .btn-trade-action {
             display: inline-flex;
             align-items: center;
-            padding: 6px 16px;
-            border-radius: var(--radius-sm);
-            background: var(--primary);
-            color: #ffffff;
+            gap: 6px;
+            padding: 8px 18px;
+            border-radius: 6px;
+            background: linear-gradient(135deg, var(--royal-blue), var(--deep-navy));
+            color: #ffffff !important;
             font-size: 0.82rem;
             font-weight: 600;
             text-decoration: none;
-            transition: all 0.15s ease;
+            border: 1px solid rgba(0, 169, 224, 0.3);
+            transition: all 0.2s ease;
         }
-        .btn-trade:hover {
-            background: var(--primary-dark);
+
+        .btn-trade-action:hover {
+            background: linear-gradient(135deg, var(--deep-navy), var(--royal-blue));
+            box-shadow: 0 0 14px rgba(0, 169, 224, 0.4);
             transform: translateY(-1px);
+        }
+
+        /* --- FOOTER --- */
+        .footer {
+            background: #02050b;
+            border-top: 1px solid var(--border-glass);
+            padding: 60px 0 24px;
+        }
+
+        @media (max-width: 860px) {
+            .nav { display: none; }
+            .mobile-header-cta { display: flex; }
+            .hero-title { font-size: 2rem; }
+            .market-toolbar { flex-direction: column; align-items: stretch; }
+            .market-search { max-width: 100%; }
         }
     </style>
 </head>
@@ -156,43 +434,52 @@
         <div class="container">
             <a href="index.html" class="logo-wrapper">
                 <img src="css/logo.png" alt="CryptoPlexTrade Logo" class="logo">
-                <span class="logo-name">CryptoPlexTrade</span>
+                <span class="logo-name">CryptoPlex<span>Trade</span></span>
             </a>
             
             <nav class="nav" id="main-nav">
-                <a href="rates" style="color: var(--primary); font-weight: 600;">Live Markets</a>
+                <a href="rates" class="active">Live Markets</a>
                 <a href="why-us">Infrastructure</a>
                 <a href="faq.html">FAQ</a>
                 <a href="help.html">Help Desk</a>
                 <a href="contact.html">Contact</a>
-                <a href="login.html" style="font-weight: 600; color: var(--primary);">Sign In</a>
-                <a href="register.html" class="btn-primary">Open Account</a>
+                <a href="login.html" class="nav-btn-login">Sign In</a>
+                <a href="register.html" class="nav-btn-signup" id="header-btn-signup">Open Free Account</a>
             </nav>
+
+            <!-- Mobile CTA Header Buttons -->
+            <div class="mobile-header-cta">
+                <a href="login.html" class="nav-btn-login" style="padding:6px 14px; font-size:0.82rem;">Sign In</a>
+                <a href="register.html" class="nav-btn-signup" style="padding:6px 14px; font-size:0.82rem;">Open Account</a>
+            </div>
         </div>
     </header>
 
     <!-- ================== PAGE HERO ================== -->
     <div class="page-hero">
         <div class="container">
-            <h1 style="font-size: 2.2rem; font-weight: 800; color: var(--text-1); letter-spacing: -0.025em; margin-bottom: 8px;">
-                Cryptocurrency Market Directory
+            <div class="badge-live-pulse">
+                <span class="dot"></span> Real-Time Orderbook Telemetry
+            </div>
+            <h1 class="hero-title">
+                Cryptocurrency <span>Market Directory</span>
             </h1>
-            <p style="font-size: 1rem; color: var(--text-3); max-width: 620px;">
-                Verified live market index prices, 24-hour volume changes, and institutional buy/sell spreads updated in real-time.
+            <p class="hero-desc">
+                Verified live spot index prices, 24-hour liquidity movements, and platform buy/sell exchange rates updated every second.
             </p>
         </div>
     </div>
 
     <!-- ================== MAIN CONTENT ================== -->
-    <main style="padding: 40px 0 100px; background: var(--bg);">
+    <main style="padding: 20px 0 80px;">
         <div class="container">
             <!-- Market Toolbar -->
             <div class="market-toolbar">
-                <div class="category-pills">
-                    <button class="cat-pill active">All Digital Assets</button>
-                    <button class="cat-pill">Tier 1 Layer-1s</button>
-                    <button class="cat-pill">Stablecoins</button>
-                    <button class="cat-pill">High Velocity</button>
+                <div class="category-pills" id="category-filter">
+                    <button class="cat-pill active" data-cat="all">All Digital Assets</button>
+                    <button class="cat-pill" data-cat="layer1">Tier-1 Layer 1s</button>
+                    <button class="cat-pill" data-cat="stablecoin">Stablecoins</button>
+                    <button class="cat-pill" data-cat="velocity">High Velocity</button>
                 </div>
 
                 <div class="market-search">
@@ -206,12 +493,12 @@
 
             <!-- Rates Table Card -->
             <div class="rates-table-wrap">
-                <div class="table-wrap" style="border:none; border-radius:0;">
+                <div style="overflow-x: auto;">
                     <table class="rates-table-custom" id="main-rates-table">
                         <thead>
                             <tr>
                                 <th>Digital Asset</th>
-                                <th>Spot Index Price</th>
+                                <th>Spot Index Price (USD)</th>
                                 <th>24h Change</th>
                                 <th>Platform Buy Rate</th>
                                 <th>Platform Sell Rate</th>
@@ -221,8 +508,9 @@
                         <tbody id="rates-tbody">
                             <!-- Populated dynamically via JavaScript -->
                             <tr>
-                                <td colspan="6" style="text-align: center; padding: 40px; color: var(--text-3);">
-                                    Connecting to live market orderbook...
+                                <td colspan="6" style="text-align: center; padding: 45px; color: #94a3b8;">
+                                    <div style="display:inline-block; width:22px; height:22px; border:2px solid var(--electric-cyan); border-top-color:transparent; border-radius:50%; animation:spin 0.8s linear infinite; vertical-align:middle; margin-right:10px;"></div>
+                                    Synchronizing with live trading orderbook...
                                 </td>
                             </tr>
                         </tbody>
@@ -239,42 +527,42 @@
                 <div>
                     <a href="index.html" class="logo-wrapper" style="margin-bottom: 14px;">
                         <img src="css/logo.png" alt="CryptoPlexTrade Logo" class="logo">
-                        <span class="logo-name">CryptoPlexTrade</span>
+                        <span class="logo-name">CryptoPlex<span>Trade</span></span>
                     </a>
-                    <p style="font-size: 0.88rem; color: var(--text-3); line-height: 1.6; max-width: 320px;">
+                    <p style="font-size: 0.88rem; color: #94a3b8; line-height: 1.6; max-width: 320px;">
                         Sovereign digital asset trading platform providing instant retail and institutional exchange services worldwide.
                     </p>
                 </div>
 
                 <div>
-                    <h4 style="font-size: 0.82rem; font-weight: 700; color: var(--text-1); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 16px;">Trading Desk</h4>
+                    <h4 style="font-size: 0.82rem; font-weight: 700; color: #ffffff; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 16px;">Trading Desk</h4>
                     <ul style="list-style: none; display: flex; flex-direction: column; gap: 10px; font-size: 0.88rem;">
-                        <li><a href="trade.html" style="text-decoration: none; color: var(--text-2);">Instant Exchange</a></li>
-                        <li><a href="rates" style="text-decoration: none; color: var(--text-2);">Market Directory</a></li>
-                        <li><a href="why-us" style="text-decoration: none; color: var(--text-2);">Infrastructure</a></li>
+                        <li><a href="trade.html" style="text-decoration: none; color: #94a3b8;">Instant Exchange</a></li>
+                        <li><a href="rates" style="text-decoration: none; color: #94a3b8;">Market Directory</a></li>
+                        <li><a href="why-us" style="text-decoration: none; color: #94a3b8;">Infrastructure</a></li>
                     </ul>
                 </div>
 
                 <div>
-                    <h4 style="font-size: 0.82rem; font-weight: 700; color: var(--text-1); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 16px;">Support & Help</h4>
+                    <h4 style="font-size: 0.82rem; font-weight: 700; color: #ffffff; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 16px;">Support & Help</h4>
                     <ul style="list-style: none; display: flex; flex-direction: column; gap: 10px; font-size: 0.88rem;">
-                        <li><a href="faq.html" style="text-decoration: none; color: var(--text-2);">Frequently Asked Questions</a></li>
-                        <li><a href="help.html" style="text-decoration: none; color: var(--text-2);">Help Centre</a></li>
-                        <li><a href="contact.html" style="text-decoration: none; color: var(--text-2);">Contact Us</a></li>
+                        <li><a href="faq.html" style="text-decoration: none; color: #94a3b8;">Frequently Asked Questions</a></li>
+                        <li><a href="help.html" style="text-decoration: none; color: #94a3b8;">Help Centre</a></li>
+                        <li><a href="contact.html" style="text-decoration: none; color: #94a3b8;">Contact Us</a></li>
                     </ul>
                 </div>
 
                 <div>
-                    <h4 style="font-size: 0.82rem; font-weight: 700; color: var(--text-1); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 16px;">Regulatory & Legal</h4>
+                    <h4 style="font-size: 0.82rem; font-weight: 700; color: #ffffff; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 16px;">Regulatory & Legal</h4>
                     <ul style="list-style: none; display: flex; flex-direction: column; gap: 10px; font-size: 0.88rem;">
-                        <li><a href="terms.html" style="text-decoration: none; color: var(--text-2);">Terms of Service</a></li>
-                        <li><a href="privacy.html" style="text-decoration: none; color: var(--text-2);">Privacy Policy</a></li>
-                        <li><a href="aml.html" style="text-decoration: none; color: var(--text-2);">AML / KYC Policy</a></li>
+                        <li><a href="terms.html" style="text-decoration: none; color: #94a3b8;">Terms of Service</a></li>
+                        <li><a href="privacy.html" style="text-decoration: none; color: #94a3b8;">Privacy Policy</a></li>
+                        <li><a href="aml.html" style="text-decoration: none; color: #94a3b8;">AML / KYC Policy</a></li>
                     </ul>
                 </div>
             </div>
 
-            <div style="border-top: 1px solid var(--border); padding-top: 24px; text-align: center; font-size: 0.82rem; color: var(--text-3);">
+            <div style="border-top: 1px solid var(--border-glass); padding-top: 24px; text-align: center; font-size: 0.82rem; color: #64748b;">
                 &copy; 2026 CryptoPlexTrade. All rights reserved.
             </div>
         </div>
@@ -282,126 +570,221 @@
 
     <!-- ================== TICKER TAPE ================== -->
     <div class="ticker-tape">
-        <div class="ticker-tape__track">
-            <!-- Dynamically injected -->
+        <div class="ticker-tape__track" id="ticker-track">
+            <!-- Dynamically populated via ticker.js / inline handler -->
         </div>
     </div>
 
-    <!-- ================== SCRIPT INTEGRATION ================== -->
+    <!-- Spin Keyframe -->
+    <style>
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+    </style>
+
+    <!-- Unified Ticker Script -->
+    <script src="ticker.js"></script>
+
+    <!-- Rates Engine Script -->
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const tickerTrack = document.querySelector('.ticker-tape__track');
-            const coinSymbols = ['BTC', 'ETH', 'SOL', 'BNB', 'XRP', 'LTC', 'ADA', 'DOGE'];
-            const vsCurrency = 'usd';
-            let lastPrices = {};
-            let rawDataCache = null;
+        document.addEventListener('DOMContentLoaded', async function () {
+            const tableBody = document.getElementById('rates-tbody');
+            const searchInput = document.getElementById('asset-search-input');
+            const categoryPills = document.querySelectorAll('#category-filter .cat-pill');
 
-            function updateRatesTable(data) {
-                const tableBody = document.getElementById('rates-tbody');
+            // Asset Directory Metadata
+            const ASSET_CATALOG = [
+                { symbol: 'BTC', name: 'Bitcoin', category: 'layer1', avatar: '₿', defaultUsd: 76850.50, defaultChange: -1.55, ghsBuyRate: 13.05, ghsSellRate: 12.95 },
+                { symbol: 'ETH', name: 'Ethereum', category: 'layer1', avatar: 'Ξ', defaultUsd: 2254.20, defaultChange: -0.62, ghsBuyRate: 10.05, ghsSellRate: 9.95 },
+                { symbol: 'USDT', name: 'Tether USD', category: 'stablecoin', avatar: '₮', defaultUsd: 1.00, defaultChange: 0.01, ghsBuyRate: 12.05, ghsSellRate: 11.95 },
+                { symbol: 'SOL', name: 'Solana', category: 'layer1', avatar: '◎', defaultUsd: 91.85, defaultChange: -2.45, ghsBuyRate: 12.50, ghsSellRate: 12.35 },
+                { symbol: 'BNB', name: 'BNB Chain', category: 'layer1', avatar: '🔶', defaultUsd: 698.50, defaultChange: -1.48, ghsBuyRate: 12.80, ghsSellRate: 12.65 },
+                { symbol: 'XRP', name: 'XRP Ledger', category: 'velocity', avatar: '✕', defaultUsd: 1.25, defaultChange: 0.12, ghsBuyRate: 12.00, ghsSellRate: 11.85 },
+                { symbol: 'LTC', name: 'Litecoin', category: 'velocity', avatar: 'Ł', defaultUsd: 53.75, defaultChange: -3.20, ghsBuyRate: 11.80, ghsSellRate: 11.60 },
+                { symbol: 'ADA', name: 'Cardano', category: 'layer1', avatar: '₳', defaultUsd: 0.188, defaultChange: -1.95, ghsBuyRate: 11.90, ghsSellRate: 11.70 },
+                { symbol: 'DOGE', name: 'Dogecoin', category: 'velocity', avatar: 'Ð', defaultUsd: 0.074, defaultChange: -1.45, ghsBuyRate: 11.50, ghsSellRate: 11.30 }
+            ];
+
+            let activeCategory = 'all';
+            let marketData = {};
+            let platformRates = {};
+
+            // Fetch Platform GHS Rates from /api/rates
+            async function fetchPlatformRates() {
+                try {
+                    const res = await fetch('/api/rates');
+                    if (res.ok) {
+                        platformRates = await res.json();
+                    }
+                } catch (e) {
+                    console.warn('Using default platform exchange spreads');
+                }
+            }
+
+            // Fetch Market USD Spot Prices from /api/market-rates
+            async function fetchMarketPrices() {
+                try {
+                    const res = await fetch('/api/market-rates');
+                    if (res.ok) {
+                        const data = await res.json();
+                        if (data && data.RAW) {
+                            marketData = data.RAW;
+                            renderTable();
+                            return;
+                        }
+                    }
+                    throw new Error('Fallback required');
+                } catch (e) {
+                    // Try Binance directly as client backup
+                    try {
+                        const symbolsParam = encodeURIComponent('["BTCUSDT","ETHUSDT","SOLUSDT","BNBUSDT","XRPUSDT","LTCUSDT","ADAUSDT","DOGEUSDT"]');
+                        const bRes = await fetch(`https://api.binance.com/api/v3/ticker/24hr?symbols=${symbolsParam}`);
+                        if (bRes.ok) {
+                            const bData = await bRes.json();
+                            bData.forEach(item => {
+                                const s = item.symbol.replace('USDT', '');
+                                marketData[s] = {
+                                    USD: {
+                                        PRICE: parseFloat(item.lastPrice),
+                                        CHANGEPCT24HOUR: parseFloat(item.priceChangePercent)
+                                    }
+                                };
+                            });
+                            marketData['USDT'] = { USD: { PRICE: 1.00, CHANGEPCT24HOUR: 0.01 } };
+                            renderTable();
+                            return;
+                        }
+                    } catch (e2) {}
+                    
+                    // Offline defaults
+                    renderTable();
+                }
+            }
+
+            function renderTable() {
                 if (!tableBody) return;
+                const searchTerm = (searchInput ? searchInput.value : '').toLowerCase().trim();
 
-                let tableHTML = '';
-                coinSymbols.forEach(symbol => {
-                    const coinData = data.RAW[symbol]?.[vsCurrency.toUpperCase()];
-                    if (!coinData) return;
+                let html = '';
+                let matchCount = 0;
 
-                    const price = coinData.PRICE;
-                    const change = coinData.CHANGEPCT24HOUR;
+                ASSET_CATALOG.forEach(asset => {
+                    // Category filter
+                    if (activeCategory !== 'all' && asset.category !== activeCategory) {
+                        return;
+                    }
+
+                    // Search filter
+                    if (searchTerm) {
+                        const matchesSym = asset.symbol.toLowerCase().includes(searchTerm);
+                        const matchesName = asset.name.toLowerCase().includes(searchTerm);
+                        if (!matchesSym && !matchesName) return;
+                    }
+
+                    matchCount++;
+
+                    // Extract price & change
+                    let price = asset.defaultUsd;
+                    let change = asset.defaultChange;
+
+                    if (marketData[asset.symbol] && marketData[asset.symbol].USD) {
+                        price = marketData[asset.symbol].USD.PRICE;
+                        change = marketData[asset.symbol].USD.CHANGEPCT24HOUR || 0;
+                    }
+
+                    // Format USD price
+                    const formattedUsd = price < 1 
+                        ? `$${price.toFixed(4)}` 
+                        : price < 10 
+                        ? `$${price.toFixed(3)}` 
+                        : `$${price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+                    // Format Change
                     const changeClass = change >= 0 ? 'rate-green' : 'rate-red';
-                    const sign = change >= 0 ? '+' : '';
-                    const buyPrice = price * 0.995;
-                    const sellPrice = price * 1.005;
+                    const changeSign = change >= 0 ? '+' : '';
+                    const changeArrow = change >= 0 ? '▲' : '▼';
 
-                    tableHTML += `
-                        <tr data-symbol="${symbol}">
+                    // GHS Rate Spreads from platform rates or defaults
+                    let ghsBuy = asset.ghsBuyRate;
+                    let ghsSell = asset.ghsSellRate;
+                    if (platformRates[asset.symbol]) {
+                        ghsBuy = platformRates[asset.symbol].buy || ghsBuy;
+                        ghsSell = platformRates[asset.symbol].sell || ghsSell;
+                    } else if (platformRates['USDT_TRC20'] && asset.symbol === 'USDT') {
+                        ghsBuy = platformRates['USDT_TRC20'].buy || ghsBuy;
+                        ghsSell = platformRates['USDT_TRC20'].sell || ghsSell;
+                    }
+
+                    // Total local currency value per unit
+                    const buyTotalGhs = (price * ghsBuy).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                    const sellTotalGhs = (price * ghsSell).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+                    html += `
+                        <tr data-symbol="${asset.symbol}" data-category="${asset.category}">
                             <td>
                                 <div class="currency-info">
-                                    <img src="https://www.cryptocompare.com${coinData.IMAGEURL}" alt="${symbol}" width="28" height="28">
-                                    <div>${symbol} <span class="symbol">${coinData.FROMSYMBOL}</span></div>
+                                    <div class="currency-avatar">${asset.avatar}</div>
+                                    <div class="currency-names">
+                                        <span class="currency-name">${asset.name}</span>
+                                        <span class="currency-symbol">${asset.symbol} &bull; ${asset.category.toUpperCase()}</span>
+                                    </div>
                                 </div>
                             </td>
-                            <td class="tabular-nums font-semibold">${price.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</td>
-                            <td class="${changeClass} tabular-nums">${sign}${change.toFixed(2)}%</td>
-                            <td class="tabular-nums">${buyPrice.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</td>
-                            <td class="tabular-nums">${sellPrice.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</td>
+                            <td>
+                                <span class="rate-highlight tabular-nums">${formattedUsd}</span>
+                            </td>
+                            <td>
+                                <span class="${changeClass}">${changeSign}${change.toFixed(2)}% ${changeArrow}</span>
+                            </td>
+                            <td>
+                                <span class="rate-highlight tabular-nums">₵${ghsBuy.toFixed(2)} / $</span>
+                                <span class="rate-ghs-sub">≈ ₵${buyTotalGhs} / unit</span>
+                            </td>
+                            <td>
+                                <span class="rate-highlight tabular-nums">₵${ghsSell.toFixed(2)} / $</span>
+                                <span class="rate-ghs-sub">≈ ₵${sellTotalGhs} / unit</span>
+                            </td>
                             <td style="text-align: right;">
-                                <a href="trade.html?asset=${symbol}" class="btn-trade">Trade</a>
+                                <a href="trade.html?asset=${asset.symbol}" class="btn-trade-action">
+                                    Trade ${asset.symbol} &rarr;
+                                </a>
                             </td>
                         </tr>
                     `;
                 });
 
-                tableBody.innerHTML = tableHTML;
-            }
-
-            function updateTicker(data) {
-                if (!tickerTrack) return;
-                let itemsHTML = '';
-                coinSymbols.forEach(symbol => {
-                    const coinData = data.RAW[symbol]?.[vsCurrency.toUpperCase()];
-                    if (!coinData) return;
-
-                    const price = coinData.PRICE;
-                    const change = coinData.CHANGEPCT24HOUR;
-                    const dir = change >= 0 ? 'up' : 'down';
-                    const sign = dir === 'up' ? '+' : '';
-                    const arrow = dir === 'up' ? '▲' : '▼';
-                    const pair = `${symbol}/USD`;
-
-                    itemsHTML += `
-                        <div class="ticker-tape__item" data-pair="${symbol}">
-                            <span class="pair">${pair}</span>
-                            <span class="price">${price.toLocaleString('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2 })}</span>
-                            <span class="change ${dir}">${sign}${change.toFixed(2)}% ${arrow}</span>
-                        </div>
+                if (matchCount === 0) {
+                    html = `
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 40px; color: #94a3b8;">
+                                No digital assets match "${searchTerm}".
+                            </td>
+                        </tr>
                     `;
-
-                    const priceEl = tickerTrack.querySelector(`[data-pair="${symbol}"] .price`);
-                    if (priceEl && lastPrices[symbol] && lastPrices[symbol] !== price) {
-                        const flashClass = price > lastPrices[symbol] ? 'flash-up' : 'flash-down';
-                        priceEl.classList.remove('flash-up', 'flash-down');
-                        void priceEl.offsetWidth;
-                        priceEl.classList.add(flashClass);
-                    }
-                    lastPrices[symbol] = price;
-                });
-                tickerTrack.innerHTML = itemsHTML + itemsHTML;
-            }
-
-            // Search filter
-            const searchInput = document.getElementById('asset-search-input');
-            if (searchInput) {
-                searchInput.addEventListener('input', function(e) {
-                    const term = e.target.value.toLowerCase().trim();
-                    const rows = document.querySelectorAll('#rates-tbody tr');
-                    rows.forEach(row => {
-                        const sym = (row.getAttribute('data-symbol') || '').toLowerCase();
-                        const text = row.textContent.toLowerCase();
-                        if (sym.includes(term) || text.includes(term)) {
-                            row.style.display = '';
-                        } else {
-                            row.style.display = 'none';
-                        }
-                    });
-                });
-            }
-
-            async function fetchLiveRates() {
-                try {
-                    const apiUrl = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${coinSymbols.join(',')}&tsyms=${vsCurrency.toUpperCase()}`;
-                    const response = await fetch(apiUrl);
-                    if (!response.ok) throw new Error(`API status: ${response.status}`);
-                    const data = await response.json();
-                    rawDataCache = data;
-                    updateTicker(data);
-                    updateRatesTable(data);
-                } catch (error) {
-                    console.error("Rates fetch error:", error);
                 }
+
+                tableBody.innerHTML = html;
             }
 
-            fetchLiveRates();
-            setInterval(fetchLiveRates, 45000);
+            // Category Filter Click Handlers
+            categoryPills.forEach(pill => {
+                pill.addEventListener('click', function () {
+                    categoryPills.forEach(p => p.classList.remove('active'));
+                    this.classList.add('active');
+                    activeCategory = this.dataset.cat;
+                    renderTable();
+                });
+            });
+
+            // Instant Search Input Handler
+            if (searchInput) {
+                searchInput.addEventListener('input', renderTable);
+            }
+
+            // Initial load
+            await fetchPlatformRates();
+            await fetchMarketPrices();
+
+            // Auto-refresh rates every 15 seconds
+            setInterval(fetchMarketPrices, 15000);
         });
     </script>
     <script src="/chat-widget.js"></script>

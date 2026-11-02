@@ -609,7 +609,7 @@
         const syms = ['BTC','ETH','SOL','BNB','XRP','LTC','ADA','DOGE'];
         async function loadTicker() {
             try {
-                const r = await fetch(`https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${syms.join(',')}&tsyms=USD`);
+                const r = await fetch(`/api/market-rates',')}&tsyms=USD`);
                 const d = await r.json();
                 let html = '';
                 syms.forEach(s => {

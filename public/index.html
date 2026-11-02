@@ -1750,12 +1750,57 @@
             }
             fetchAdminRates();
 
-            async function fetchLiveMarketRates() {
-                try {
-                    const res = await fetch(`https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${coinSymbols.join(',')}&tsyms=USD`);
-                    if (!res.ok) throw new Error();
-                    const data = await res.json();
+            const COIN_ICONS = {
+                'BTC': { avatar: '₿', bg: 'rgba(247, 147, 26, 0.2)', color: '#f7931a' },
+                'ETH': { avatar: 'Ξ', bg: 'rgba(98, 126, 234, 0.2)', color: '#627eea' },
+                'SOL': { avatar: '◎', bg: 'rgba(20, 241, 149, 0.2)', color: '#14f195' },
+                'XRP': { avatar: '✕', bg: 'rgba(0, 169, 224, 0.2)', color: '#00a9e0' },
+                'LTC': { avatar: 'Ł', bg: 'rgba(52, 91, 158, 0.2)', color: '#345d9d' }
+            };
 
+            async function fetchLiveMarketRates() {
+                let data = null;
+                try {
+                    const res = await fetch('/api/market-rates');
+                    if (res.ok) {
+                        data = await res.json();
+                    }
+                } catch (e1) {
+                    try {
+                        const symbolsParam = encodeURIComponent('["BTCUSDT","ETHUSDT","SOLUSDT","XRPUSDT","LTCUSDT"]');
+                        const bRes = await fetch(`https://api.binance.com/api/v3/ticker/24hr?symbols=${symbolsParam}`);
+                        if (bRes.ok) {
+                            const bData = await bRes.json();
+                            const raw = {};
+                            bData.forEach(item => {
+                                const s = item.symbol.replace('USDT', '');
+                                raw[s] = {
+                                    USD: {
+                                        PRICE: parseFloat(item.lastPrice),
+                                        CHANGEPCT24HOUR: parseFloat(item.priceChangePercent),
+                                        FROMSYMBOL: s
+                                    }
+                                };
+                            });
+                            data = { RAW: raw };
+                        }
+                    } catch (e2) {}
+                }
+
+                // Fallback default data if offline
+                if (!data || !data.RAW) {
+                    data = {
+                        RAW: {
+                            BTC: { USD: { PRICE: 76850.50, CHANGEPCT24HOUR: -1.55, FROMSYMBOL: 'BTC' } },
+                            ETH: { USD: { PRICE: 2254.20, CHANGEPCT24HOUR: -0.62, FROMSYMBOL: 'ETH' } },
+                            SOL: { USD: { PRICE: 91.85, CHANGEPCT24HOUR: -2.45, FROMSYMBOL: 'SOL' } },
+                            XRP: { USD: { PRICE: 1.25, CHANGEPCT24HOUR: 0.12, FROMSYMBOL: 'XRP' } },
+                            LTC: { USD: { PRICE: 53.75, CHANGEPCT24HOUR: -3.20, FROMSYMBOL: 'LTC' } }
+                        }
+                    };
+                }
+
+                try {
                     // Render Ticker
                     let tickerHtml = '';
                     coinSymbols.forEach(sym => {
@@ -1763,15 +1808,16 @@
                         if (!c) return;
                         const dir = c.CHANGEPCT24HOUR >= 0 ? 'up' : 'down';
                         const sign = dir === 'up' ? '+' : '';
+                        const formattedPrice = c.PRICE < 1 ? `$${c.PRICE.toFixed(4)}` : `$${c.PRICE.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
                         tickerHtml += `
                             <div class="ticker-tape__item">
                                 <span class="pair">${sym}/USD</span>
-                                <span class="price">${c.PRICE.toLocaleString('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2 })}</span>
+                                <span class="price">${formattedPrice}</span>
                                 <span class="change ${dir}">${sign}${c.CHANGEPCT24HOUR.toFixed(2)}% ${dir==='up'?'▲':'▼'}</span>
                             </div>
                         `;
                     });
-                    if (tickerTrack) tickerTrack.innerHTML = tickerHtml + tickerHtml;
+                    if (tickerTrack) tickerTrack.innerHTML = tickerHtml + tickerHtml + tickerHtml;
 
                     // Render Markets Table
                     const displayCoins = ['BTC', 'ETH', 'SOL', 'XRP', 'LTC'];
@@ -1783,15 +1829,18 @@
                         const sign = c.CHANGEPCT24HOUR >= 0 ? '+' : '';
                         const ghsBuy = (c.PRICE * adminGhsRate).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                         const ghsSell = (c.PRICE * (adminGhsRate * 0.98)).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                        const meta = COIN_ICONS[sym] || { avatar: '🪙', bg: 'rgba(255,255,255,0.1)', color: '#fff' };
 
                         tableHtml += `
                             <tr>
                                 <td>
                                     <div class="coin-meta-wrap">
-                                        <img src="https://www.cryptocompare.com${c.IMAGEURL}" alt="${sym}">
+                                        <div style="width:36px;height:36px;border-radius:50%;background:${meta.bg};color:${meta.color};display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.95rem;border:1px solid rgba(255,255,255,0.1);flex-shrink:0;">
+                                            ${meta.avatar}
+                                        </div>
                                         <div>
                                             <div class="coin-name">${sym}</div>
-                                            <div class="coin-sym">${c.FROMSYMBOL} / USD</div>
+                                            <div class="coin-sym">${sym} / USD</div>
                                         </div>
                                     </div>
                                 </td>
@@ -1800,7 +1849,7 @@
                                 <td style="font-family:var(--font-mono);font-weight:700;color:#10b981;">₵ ${ghsBuy}</td>
                                 <td style="font-family:var(--font-mono);font-weight:700;color:#38bdf8;">₵ ${ghsSell}</td>
                                 <td style="text-align: right;">
-                                    <a href="trade.html?asset=${sym}" class="btn-market-trade">Trade ${sym}</a>
+                                    <a href="trade.html?asset=${sym}" class="btn-market-trade">Trade ${sym} &rarr;</a>
                                 </td>
                             </tr>
                         `;
@@ -1813,7 +1862,7 @@
             }
 
             fetchLiveMarketRates();
-            setInterval(fetchLiveMarketRates, 45000);
+            setInterval(fetchLiveMarketRates, 15000);
 
             // --- 4. INTERACTIVE HERO TRADE TERMINAL ENGINE ---
             let currentTradeMode = 'buy'; // 'buy' or 'sell'

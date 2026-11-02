@@ -269,7 +269,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         async function fetchLiveRates() {
             try {
-                const r = await fetch(`https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${coinSymbols.join(',')}&tsyms=USD`);
+                const r = await fetch(`/api/market-rates',')}&tsyms=USD`);
                 if (!r.ok) throw new Error();
                 const data = await r.json();
                 let html = '';

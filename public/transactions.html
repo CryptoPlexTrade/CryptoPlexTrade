@@ -472,7 +472,7 @@
     const coins = ['BTC','ETH','SOL','BNB','XRP','LTC','ADA','DOGE'];
     async function fetchTicker() {
         try {
-            const r = await fetch(`https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${coins.join(',')}&tsyms=USD`);
+            const r = await fetch(`/api/market-rates',')}&tsyms=USD`);
             if (!r.ok) throw new Error();
             const data = await r.json();
             let html = '';
