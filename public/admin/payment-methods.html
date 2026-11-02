@@ -5,6 +5,9 @@
     <link rel="icon" type="image/png" href="../css/logo.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payment Methods - Admin</title>
+        <link rel=preconnect href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="admin.css">
     <style>
         .pm-section { margin-bottom: 28px; }
@@ -35,14 +38,14 @@
         }
         .pm-field input, .pm-field select {
             width: 100%; padding: 10px 13px; border: 1.5px solid #e2e8f0; border-radius: 9px;
-            font-family: 'Poppins', sans-serif; font-size: .88rem; color: #1e293b;
+            font-family: var(--font-sans); font-size: .88rem; color: #1e293b;
             background: #fafcff; outline: none; transition: border-color .2s, box-shadow .2s;
             box-sizing: border-box;
         }
         .pm-field input:focus, .pm-field select:focus {
             border-color: #005baa; background: #fff; box-shadow: 0 0 0 3px rgba(0,91,170,.09);
         }
-        .pm-field input.wallet-input { font-family: 'Courier New', monospace; font-size: .8rem; }
+        .pm-field input.wallet-input { font-family: var(--font-mono); font-size: .8rem; }
 
         /* MoMo entry row */
         .momo-entry {
@@ -61,7 +64,7 @@
         .btn-add-momo {
             display: inline-flex; align-items: center; gap: 6px;
             background: none; border: 1.5px dashed #94a3b8; border-radius: 9px;
-            padding: 9px 18px; color: #64748b; font-family: 'Poppins', sans-serif;
+            padding: 9px 18px; color: #64748b; font-family: var(--font-sans);
             font-size: .82rem; font-weight: 600; cursor: pointer; transition: all .2s;
         }
         .btn-add-momo:hover { border-color: #005baa; color: #005baa; background: rgba(0,91,170,.04); }
@@ -78,7 +81,7 @@
         .pm-actions { display: flex; gap: 12px; justify-content: flex-end; margin-top: 8px; }
         .btn-save {
             background: linear-gradient(90deg, #005baa, #00a9e0); color: #fff;
-            padding: 11px 28px; border: none; border-radius: 9px; font-family: 'Poppins', sans-serif;
+            padding: 11px 28px; border: none; border-radius: 9px; font-family: var(--font-sans);
             font-size: .88rem; font-weight: 600; cursor: pointer;
             transition: transform .2s, box-shadow .2s;
         }
@@ -120,7 +123,7 @@
             <button class="sidebar-close-btn" id="sidebar-close-btn" aria-label="Close menu">&times;</button>
             <div class="sidebar-header">
                 <a href="index.html" class="logo-wrapper">
-                    <img src="../css/logo.jpg" alt="Logo" class="logo" style="width: auto !important; height: 44px !important; max-height: 44px; border-radius: 16px !important; object-fit: contain !important; background: none !important; box-shadow: none !important; overflow: visible !important;">
+                    <img src="../css/logo.png" alt="Logo" class="logo" style="width: auto !important; height: 38px !important; max-height: 38px; border-radius: 8px !important; object-fit: contain !important; background: none !important; box-shadow: none !important; overflow: visible !important;">
                     <span class="logo-name">Admin Portal</span>
                 </a>
             </div>

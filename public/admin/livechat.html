@@ -5,6 +5,9 @@
     <link rel="icon" type="image/png" href="../css/logo.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Live Chat - Admin</title>
+        <link rel=preconnect href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="admin.css">
     <style>
         .chat-layout {
@@ -38,7 +41,7 @@
         }
         .filter-btn {
             flex: 1; padding: 6px 0; border: 1.5px solid #e2e8f0; border-radius: 8px;
-            background: #fff; font-family: 'Poppins',sans-serif; font-size: .72rem; font-weight: 600;
+            background: #fff; font-family: var(--font-sans); font-size: .72rem; font-weight: 600;
             color: #64748b; cursor: pointer; transition: all .2s;
         }
         .filter-btn.active { background: var(--primary-color); border-color: var(--primary-color); color: #fff; }
@@ -85,7 +88,7 @@
         .msg-panel-sub  { font-size: .74rem; color: #64748b; margin-top: 1px; }
         .btn-close-session {
             padding: 7px 16px; background: #fef2f2; border: 1px solid #fecaca;
-            border-radius: 8px; color: #dc3545; font-family:'Poppins',sans-serif;
+            border-radius: 8px; color: #dc3545; font-family:var(--font-sans);
             font-size: .78rem; font-weight: 600; cursor: pointer; transition: all .2s;
         }
         .btn-close-session:hover { background: #dc3545; color: #fff; }
@@ -131,7 +134,7 @@
         }
         #admin-reply-input {
             flex: 1; border: 1.5px solid #e2e8f0; border-radius: 10px;
-            padding: 11px 14px; font-family:'Poppins',sans-serif; font-size: .86rem;
+            padding: 11px 14px; font-family:var(--font-sans); font-size: .86rem;
             outline: none; resize: none; max-height: 120px; min-height: 44px;
             transition: border-color .2s; background: #fafcff; color: #1e293b; line-height: 1.4;
         }
@@ -139,7 +142,7 @@
         #admin-reply-input:disabled { background: #f8fafc; color: #94a3b8; cursor: not-allowed; }
         #admin-send-btn {
             padding: 11px 20px; background: var(--primary-color); color: #fff; border: none;
-            border-radius: 10px; font-family:'Poppins',sans-serif; font-weight: 600;
+            border-radius: 10px; font-family:var(--font-sans); font-weight: 600;
             font-size: .86rem; cursor: pointer; transition: background .2s, transform .15s;
             flex-shrink: 0; display: flex; align-items: center; gap: 7px;
         }
@@ -185,7 +188,7 @@
         .cpt-conf-card p { font-size: 0.95rem; color: #64748b; line-height: 1.6; margin: 0 0 28px; }
         .cpt-conf-actions { display: flex; gap: 12px; }
         .cpt-conf-btn {
-            flex: 1; padding: 12px; border-radius: 14px; font-family: 'Poppins', sans-serif;
+            flex: 1; padding: 12px; border-radius: 14px; font-family: var(--font-sans);
             font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s;
             border: none;
         }
@@ -210,7 +213,7 @@
             <button class="sidebar-close-btn" id="sidebar-close-btn" aria-label="Close menu">&times;</button>
             <div class="sidebar-header">
                 <a href="index.html" class="logo-wrapper">
-                    <img src="../css/logo.jpg" alt="Logo" class="logo" style="width:auto!important;height:44px!important;max-height:44px;border-radius:16px!important;object-fit:contain!important;background:none!important;box-shadow:none!important;">
+                    <img src="../css/logo.png" alt="Logo" class="logo" style="width: auto !important; height: 38px !important; max-height: 38px; border-radius: 8px !important; object-fit: contain !important; background: none !important; box-shadow: none !important; overflow: visible !important;">
                     <span class="logo-name">Admin Portal</span>
                 </a>
             </div>

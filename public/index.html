@@ -5,1048 +5,1905 @@
     <meta charset="UTF-8">
     <link rel="icon" type="image/png" href="css/logo.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>CryptoPlexTrade — Institutional-Grade Cryptocurrency Exchange</title>
-    <meta name="description" content="Trade Bitcoin, Ethereum, USDT and leading digital assets with institutional liquidity, zero hidden spreads, and instant settlement.">
+    <title>CryptoPlexTrade — Premium Cryptocurrency Exchange & Instant MoMo Settlement</title>
+    <meta name="description" content="Trade Bitcoin, Ethereum, and USDT with instant Ghana Cedi (GHS) Mobile Money and Bank settlement, deep order book liquidity, and zero hidden slippage.">
     
-    <!-- Design System Stylesheets -->
+    <!-- Design System Typography & Core Stylesheets -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="css/app.css">
     <link rel="stylesheet" href="css/responsive.css">
 
     <style>
-        /* Sovereign Hybrid Homepage Custom Styling */
-        .home-hero {
-            position: relative;
-            padding: 80px 0 90px;
-            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
-            border-bottom: 1px solid var(--border);
-            overflow: hidden;
+        /* ============================================================
+           PREMIUM CYBER-FINTECH FLAGSHIP STYLING ($10,000 ARCHITECTURE)
+           Palette: #040914 (Dark Void), #005baa (Royal Cobalt), 
+                    #004a8a (Deep Navy), #00a9e0 (Electric Cyan), #f0f7ff (Ice)
+           ============================================================ */
+
+        :root {
+            --dark-bg: #040914;
+            --dark-surface: #081326;
+            --dark-card: rgba(10, 24, 48, 0.75);
+            --dark-card-hover: rgba(14, 34, 68, 0.9);
+            --electric-cyan: #00c8ff;
+            --cyan-glow: rgba(0, 200, 255, 0.35);
+            --royal-blue: #005baa;
+            --deep-navy: #004a8a;
+            --cyber-border: rgba(0, 169, 224, 0.22);
+            --cyber-border-bright: rgba(0, 200, 255, 0.5);
+            --bull-green: #10b981;
+            --bear-red: #f43f5e;
+            --gold-accent: #f59e0b;
         }
 
-        .home-hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100%;
-            max-width: 1300px;
-            height: 100%;
-            background-image: 
-                radial-gradient(circle at 15% 20%, rgba(0, 91, 170, 0.05) 0%, transparent 40%),
-                radial-gradient(circle at 85% 30%, rgba(0, 169, 224, 0.06) 0%, transparent 45%);
-            pointer-events: none;
+        body {
+            background-color: var(--dark-bg);
+            color: #cbd5e1;
+            overflow-x: hidden;
+            padding-bottom: 52px !important;
         }
 
-        .hero-grid {
-            display: grid;
-            grid-template-columns: 1.15fr 0.85fr;
-            gap: 48px;
-            align-items: center;
-            position: relative;
-            z-index: 2;
-        }
-
-        .hero-badge-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 14px;
-            background: var(--primary-pale);
-            border: 1px solid rgba(0, 91, 170, 0.15);
-            border-radius: var(--radius-pill);
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--primary);
-            margin-bottom: 20px;
-        }
-
-        .hero-badge-pill .pulse-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #16a34a;
-            box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.2);
-            animation: pulse-green 2s infinite;
-        }
-
-        @keyframes pulse-green {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.15); opacity: 0.7; }
-        }
-
-        .hero-title {
-            font-size: clamp(2.3rem, 1.8rem + 2.2vw, 3.6rem);
-            font-weight: 800;
-            line-height: 1.12;
-            letter-spacing: -0.03em;
-            color: var(--text-1);
-            margin-bottom: 20px;
-        }
-
-        .hero-title span.accent-text {
-            color: var(--primary);
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .hero-desc {
-            font-size: 1.1rem;
-            line-height: 1.6;
-            color: var(--text-2);
-            margin-bottom: 32px;
-            max-width: 540px;
-        }
-
-        .hero-actions {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            flex-wrap: wrap;
-        }
-
-        /* Instant Conversion Desk Card */
-        .converter-card {
-            background: #ffffff;
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            box-shadow: 0 16px 36px -6px rgba(0, 91, 170, 0.12), 0 4px 12px -2px rgba(15, 23, 42, 0.04);
-            padding: 28px;
-            position: relative;
-        }
-
-        .converter-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 14px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .converter-title {
-            font-size: 1.05rem;
-            font-weight: 700;
-            color: var(--text-1);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .converter-rate-badge {
-            font-size: 0.78rem;
-            font-weight: 600;
-            color: #15803d;
-            background: rgba(40, 167, 69, 0.1);
-            padding: 4px 8px;
-            border-radius: var(--radius-sm);
-        }
-
-        .converter-field {
-            margin-bottom: 16px;
-        }
-
-        .converter-label {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.78rem;
-            font-weight: 600;
-            color: var(--text-3);
-            margin-bottom: 6px;
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-        }
-
-        .converter-input-wrap {
-            display: flex;
-            border: 1px solid var(--border-mid);
-            border-radius: var(--radius-md);
-            overflow: hidden;
-            background: #ffffff;
-            transition: all 0.15s ease;
-        }
-
-        .converter-input-wrap:focus-within {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(0, 91, 170, 0.12);
-        }
-
-        .converter-input-wrap input {
-            flex: 1;
-            padding: 12px 16px;
-            border: none;
-            outline: none;
-            font-size: 1.15rem;
-            font-weight: 600;
-            font-family: var(--font-sans);
-            color: var(--text-1);
-            background: transparent;
-        }
-
-        .converter-input-wrap select {
-            padding: 12px 16px;
-            border: none;
-            border-left: 1px solid var(--border);
-            background: var(--surface-subtle);
-            font-weight: 700;
-            font-size: 0.9rem;
-            color: var(--text-1);
-            outline: none;
-            cursor: pointer;
-        }
-
-        .converter-fee-breakdown {
-            margin: 18px 0;
-            padding: 12px 14px;
-            background: var(--surface-subtle);
-            border-radius: var(--radius-md);
-            font-size: 0.82rem;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .converter-fee-row {
-            display: flex;
-            justify-content: space-between;
-            color: var(--text-2);
-        }
-        .converter-fee-row span:last-child {
-            font-weight: 600;
-            color: var(--text-1);
-        }
-
-        /* Key Metrics Banner */
-        .metrics-strip {
-            background: #ffffff;
-            border-bottom: 1px solid var(--border);
-            padding: 24px 0;
-        }
-
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 24px;
-        }
-
-        .metric-cell {
-            padding: 0 16px;
-            border-right: 1px solid var(--border);
-        }
-        .metric-cell:last-child {
-            border-right: none;
-        }
-
-        .metric-value {
-            font-size: 1.7rem;
-            font-weight: 800;
-            color: var(--text-1);
-            letter-spacing: -0.02em;
-            margin-bottom: 4px;
-        }
-        .metric-label {
-            font-size: 0.82rem;
-            font-weight: 500;
-            color: var(--text-3);
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-        }
-
-        /* Live Rates Section */
-        .rates-section {
-            padding: 80px 0;
-            background: var(--bg);
-        }
-
-        .section-header-centered {
-            text-align: center;
-            max-width: 640px;
-            margin: 0 auto 48px;
-        }
-
-        .section-tag {
-            font-size: 0.78rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: var(--primary);
-            margin-bottom: 8px;
-        }
-
-        .section-title {
-            font-size: 2.2rem;
-            font-weight: 700;
-            letter-spacing: -0.025em;
-            color: var(--text-1);
-            margin-bottom: 12px;
-        }
-
-        .section-subtitle {
-            font-size: 1rem;
-            color: var(--text-3);
-            line-height: 1.5;
-        }
-
-        .rates-card {
-            background: #ffffff;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-sm);
-            overflow: hidden;
-        }
-
-        .rates-table-custom {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .rates-table-custom thead th {
-            padding: 14px 20px;
-            background: var(--surface-subtle);
-            color: var(--text-3);
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            border-bottom: 1px solid var(--border);
-            text-align: left;
-        }
-
-        .rates-table-custom tbody td {
-            padding: 16px 20px;
-            border-bottom: 1px solid var(--border);
-            color: var(--text-1);
-            font-size: 0.9rem;
-            vertical-align: middle;
-        }
-        .rates-table-custom tbody tr:last-child td {
-            border-bottom: none;
-        }
-        .rates-table-custom tbody tr:hover {
-            background: var(--primary-pale);
-        }
-
-        .currency-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-weight: 600;
-        }
-        .currency-info img, .currency-info svg {
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
-        .currency-info .symbol {
-            font-size: 0.78rem;
-            color: var(--text-3);
-            margin-left: 4px;
-            font-weight: 500;
-        }
-
-        .rate-green { color: #16a34a; font-weight: 600; }
-        .rate-red { color: var(--red); font-weight: 600; }
-
-        .btn-trade {
-            display: inline-flex;
-            align-items: center;
-            padding: 6px 16px;
-            border-radius: var(--radius-sm);
-            background: var(--primary);
-            color: #ffffff;
-            font-size: 0.82rem;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.15s ease;
-        }
-        .btn-trade:hover {
-            background: var(--primary-dark);
-            transform: translateY(-1px);
-        }
-
-        /* Institutional Safeguards Grid */
-        .features-section {
-            padding: 80px 0;
-            background: #ffffff;
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 32px;
-        }
-
-        .feature-card {
-            padding: 32px 28px;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            background: #ffffff;
-            transition: all 0.2s ease;
-        }
-        .feature-card:hover {
-            border-color: var(--border-mid);
-            box-shadow: var(--shadow-md);
-            transform: translateY(-2px);
-        }
-
-        .feature-icon-wrap {
-            width: 48px;
-            height: 48px;
-            border-radius: var(--radius-md);
-            background: var(--primary-pale);
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-        .feature-icon-wrap svg {
-            width: 24px;
-            height: 24px;
-        }
-
-        .feature-card h3 {
-            font-size: 1.15rem;
-            font-weight: 700;
-            color: var(--text-1);
-            margin-bottom: 10px;
-        }
-
-        .feature-card p {
-            font-size: 0.9rem;
-            color: var(--text-2);
-            line-height: 1.6;
-        }
-
-        /* 3-Step Flow */
-        .steps-section {
-            padding: 80px 0;
-            background: var(--bg);
-        }
-
-        .steps-row {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 28px;
-        }
-
-        .step-block {
-            background: #ffffff;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            padding: 32px 24px;
-            position: relative;
-        }
-
-        .step-num-pill {
-            font-size: 0.72rem;
-            font-weight: 800;
-            color: var(--primary);
-            background: var(--primary-pale);
-            padding: 4px 10px;
-            border-radius: var(--radius-pill);
-            display: inline-block;
-            margin-bottom: 16px;
-            letter-spacing: 0.05em;
-        }
-
-        .step-block h3 {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--text-1);
-            margin-bottom: 10px;
-        }
-
-        .step-block p {
-            font-size: 0.9rem;
-            color: var(--text-2);
-            line-height: 1.55;
-        }
-
-        /* Institutional CTA Banner */
-        .cta-banner {
-            padding: 70px 0;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: #ffffff;
-            text-align: center;
-        }
-
-        .cta-banner h2 {
-            font-size: 2.3rem;
-            font-weight: 800;
-            letter-spacing: -0.025em;
-            margin-bottom: 14px;
-        }
-
-        .cta-banner p {
-            font-size: 1.05rem;
-            opacity: 0.9;
-            max-width: 580px;
-            margin: 0 auto 28px;
-            line-height: 1.6;
-        }
-
-        .btn-cta-white {
-            background: #ffffff;
-            color: var(--primary-dark);
-            font-weight: 700;
-            padding: 13px 32px;
-            border-radius: var(--radius-md);
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.15s ease;
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
-        }
-        .btn-cta-white:hover {
-            background: var(--primary-pale);
-            transform: translateY(-1px);
-        }
-
-        /* Clean Preloader Overlay */
-        .preloader-overlay {
+        /* --- CINEMATIC PRELOADER SPLASH SCREEN --- */
+        #cpt-preloader {
             position: fixed;
             inset: 0;
-            background: #ffffff;
-            z-index: 9999;
+            background: #030712;
+            z-index: 100000;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
+            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.6s;
         }
-        .preloader-hidden {
+
+        #cpt-preloader.loaded {
             opacity: 0;
             visibility: hidden;
             pointer-events: none;
         }
-        .progress-ring__circle {
-            stroke: var(--primary);
-            transition: stroke-dashoffset 0.1s;
-            transform: rotate(-90deg);
-            transform-origin: 50% 50%;
-        }
-        .preloader-label {
-            margin-top: 18px;
-            font-size: 0.88rem;
-            font-weight: 600;
-            color: var(--text-2);
+
+        .preloader-ambient {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 91, 170, 0.28) 0%, rgba(0, 169, 224, 0.1) 40%, transparent 70%);
+            animation: pulse-preloader-ambient 3s ease-in-out infinite alternate;
+            filter: blur(40px);
+            pointer-events: none;
         }
 
-        @media (max-width: 960px) {
-            .hero-grid { grid-template-columns: 1fr; gap: 40px; }
-            .features-grid { grid-template-columns: 1fr; }
-            .steps-row { grid-template-columns: 1fr; }
-            .metrics-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
-            .metric-cell { border-right: none; }
+        @keyframes pulse-preloader-ambient {
+            0% { transform: scale(0.85); opacity: 0.6; }
+            100% { transform: scale(1.15); opacity: 1; }
+        }
+
+        .preloader-core {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 420px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .preloader-radar {
+            position: relative;
+            width: 96px;
+            height: 96px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .preloader-radar::before, .preloader-radar::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            border-top-color: var(--electric-cyan);
+            border-bottom-color: var(--royal-blue);
+            animation: radar-spin 1.8s linear infinite;
+        }
+
+        .preloader-radar::after {
+            inset: 8px;
+            border-top-color: transparent;
+            border-bottom-color: transparent;
+            border-left-color: #38bdf8;
+            border-right-color: #0284c7;
+            animation: radar-spin-reverse 1.2s linear infinite;
+        }
+
+        @keyframes radar-spin {
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes radar-spin-reverse {
+            100% { transform: rotate(-360deg); }
+        }
+
+        .preloader-logo-orb {
+            width: 54px;
+            height: 54px;
+            border-radius: 12px;
+            background: #08142b;
+            border: 1px solid var(--electric-cyan);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 25px var(--cyan-glow);
+            z-index: 3;
+        }
+
+        .preloader-logo-orb img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+        }
+
+        .preloader-brand-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -0.02em;
+            margin-bottom: 6px;
+        }
+
+        .preloader-brand-title span {
+            color: var(--electric-cyan);
+        }
+
+        .preloader-track-wrap {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 9999px;
+            overflow: hidden;
+            margin: 18px 0 12px;
+            position: relative;
+        }
+
+        .preloader-track-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--royal-blue), var(--electric-cyan));
+            border-radius: 9999px;
+            box-shadow: 0 0 12px var(--electric-cyan);
+            transition: width 0.15s ease-out;
+        }
+
+        .preloader-status-stream {
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            color: #94a3b8;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            min-height: 18px;
+        }
+
+        /* --- GLOBAL NAVIGATION OVERRIDE (MIDNIGHT SAPPHIRE) --- */
+        header.header {
+            background: rgba(4, 9, 20, 0.88);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--cyber-border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s;
+        }
+
+        .header .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1320px;
+            padding: 14px 24px;
+        }
+
+        .logo-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .logo-wrapper img.logo {
+            width: auto;
+            height: 38px;
+            border-radius: 8px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 10px rgba(0, 169, 224, 0.35));
+        }
+
+        .logo-wrapper .logo-name {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -0.02em;
+        }
+
+        .logo-wrapper .logo-name span {
+            color: var(--electric-cyan);
+        }
+
+        nav.nav {
+            display: flex;
+            align-items: center;
+            gap: 26px;
+        }
+
+        nav.nav a {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: color 0.2s, transform 0.2s;
+            position: relative;
+        }
+
+        nav.nav a:hover {
+            color: #ffffff;
+        }
+
+        nav.nav a.active {
+            color: var(--electric-cyan);
+            font-weight: 600;
+        }
+
+        nav.nav a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--electric-cyan);
+            border-radius: 2px;
+            box-shadow: 0 0 8px var(--electric-cyan);
+        }
+
+        .nav-btn-login {
+            color: #f1f5f9 !important;
+            font-weight: 600 !important;
+            padding: 8px 18px;
+            border-radius: var(--radius-sm);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.04);
+            transition: all 0.2s !important;
+        }
+
+        .nav-btn-login:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.3);
+            color: #ffffff !important;
+        }
+
+        .nav-btn-signup {
+            color: #ffffff !important;
+            font-weight: 700 !important;
+            padding: 9px 20px;
+            border-radius: var(--radius-sm);
+            background: linear-gradient(135deg, var(--royal-blue), var(--electric-cyan));
+            box-shadow: 0 0 20px rgba(0, 169, 224, 0.35);
+            transition: all 0.25s !important;
+            border: none;
+        }
+
+        .nav-btn-signup:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 0 28px rgba(0, 200, 255, 0.55);
+        }
+
+        /* --- HERO SECTION WITH INTERACTIVE 3D PARTICLES & GLOW --- */
+        .cyber-hero {
+            position: relative;
+            padding: 90px 0 110px;
+            background: radial-gradient(circle at 50% 0%, #0c1c38 0%, #050c1b 50%, var(--dark-bg) 100%);
+            overflow: hidden;
+            border-bottom: 1px solid var(--cyber-border);
+        }
+
+        /* Floating background ambient glow spheres */
+        .ambient-sphere {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            pointer-events: none;
+            opacity: 0.45;
+        }
+        .sphere-1 {
+            top: -100px;
+            left: 10%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, #005baa 0%, transparent 70%);
+            animation: float-sphere 12s ease-in-out infinite alternate;
+        }
+        .sphere-2 {
+            top: 20%;
+            right: 5%;
+            width: 450px;
+            height: 450px;
+            background: radial-gradient(circle, #00a9e0 0%, transparent 70%);
+            animation: float-sphere-rev 10s ease-in-out infinite alternate;
+        }
+
+        @keyframes float-sphere {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(60px, 40px) scale(1.15); }
+        }
+        @keyframes float-sphere-rev {
+            0% { transform: translate(0, 0) scale(1.1); }
+            100% { transform: translate(-50px, 30px) scale(0.9); }
+        }
+
+        .cyber-hero-grid {
+            display: grid;
+            grid-template-columns: 1.15fr 0.9fr;
+            gap: 54px;
+            align-items: center;
+            position: relative;
+            z-index: 5;
+            max-width: 1320px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Hero Text Content */
+        .hero-badge-live {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 7px 16px;
+            background: rgba(0, 169, 224, 0.1);
+            border: 1px solid rgba(0, 169, 224, 0.3);
+            border-radius: 9999px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--electric-cyan);
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+            box-shadow: 0 0 20px rgba(0, 169, 224, 0.15);
+        }
+
+        .hero-badge-live .live-pulse {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--bull-green);
+            box-shadow: 0 0 10px var(--bull-green);
+            animation: live-blink 1.6s ease-in-out infinite;
+        }
+
+        @keyframes live-blink {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(1.3); }
+        }
+
+        .hero-headline {
+            font-size: clamp(2.4rem, 2rem + 2.5vw, 4rem);
+            font-weight: 900;
+            line-height: 1.1;
+            letter-spacing: -0.035em;
+            color: #ffffff;
+            margin-bottom: 22px;
+        }
+
+        .hero-headline .gradient-text {
+            background: linear-gradient(135deg, #ffffff 10%, #7dd3fc 60%, var(--electric-cyan) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+
+        .hero-subhead {
+            font-size: 1.12rem;
+            line-height: 1.65;
+            color: #94a3b8;
+            margin-bottom: 34px;
+            max-width: 580px;
+        }
+
+        .hero-cta-group {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 44px;
+        }
+
+        .btn-hero-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 34px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #005baa 0%, #0099db 50%, #00d4ff 100%);
+            color: #ffffff;
+            font-size: 1rem;
+            font-weight: 700;
+            text-decoration: none;
+            box-shadow: 0 10px 30px rgba(0, 169, 224, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-hero-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 16px 40px rgba(0, 200, 255, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+            color: #ffffff;
+        }
+
+        .btn-hero-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 28px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #f1f5f9;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            transition: all 0.2s ease;
+        }
+
+        .btn-hero-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--electric-cyan);
+            color: #ffffff;
+            transform: translateY(-1px);
+        }
+
+        /* Hero Institutional Trust Bar */
+        .hero-trust-matrix {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            padding-top: 26px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            max-width: 560px;
+        }
+
+        .trust-stat-val {
+            font-family: var(--font-mono);
+            font-size: 1.45rem;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -0.02em;
+            margin-bottom: 2px;
+        }
+
+        .trust-stat-val span {
+            color: var(--electric-cyan);
+        }
+
+        .trust-stat-lbl {
+            font-size: 0.75rem;
+            color: #64748b;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+        }
+
+        /* --- RIGHT HERO: INTERACTIVE INSTANT TRADE TERMINAL CARD --- */
+        .hero-terminal-wrap {
+            position: relative;
+        }
+
+        /* Floating 3D Coin Badges in the background of terminal */
+        .floating-badge {
+            position: absolute;
+            background: rgba(10, 24, 48, 0.85);
+            border: 1px solid var(--cyber-border);
+            padding: 8px 14px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 91, 170, 0.2);
+            backdrop-filter: blur(16px);
+            z-index: 6;
+            pointer-events: none;
+        }
+
+        .floating-badge.btc {
+            top: -24px;
+            left: -20px;
+            animation: float-btc 6s ease-in-out infinite;
+        }
+
+        .floating-badge.usdt {
+            bottom: -22px;
+            right: -15px;
+            animation: float-usdt 7s ease-in-out infinite;
+        }
+
+        @keyframes float-btc {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-12px) rotate(2deg); }
+        }
+
+        @keyframes float-usdt {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(14px) rotate(-2deg); }
+        }
+
+        .terminal-glass-card {
+            background: rgba(9, 21, 44, 0.85);
+            border: 1px solid var(--cyber-border-bright);
+            border-radius: 24px;
+            padding: 32px;
+            box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.7), 0 0 40px rgba(0, 91, 170, 0.3);
+            backdrop-filter: blur(28px);
+            position: relative;
+            z-index: 4;
+        }
+
+        .terminal-glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 20%;
+            right: 20%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--electric-cyan), transparent);
+        }
+
+        /* Buy / Sell Tab Switch */
+        .terminal-tab-nav {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            background: rgba(4, 9, 20, 0.6);
+            padding: 4px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .tab-switch-btn {
+            padding: 10px;
+            border: none;
+            background: transparent;
+            color: #94a3b8;
+            font-size: 0.9rem;
+            font-weight: 700;
+            border-radius: 9px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .tab-switch-btn.active.buy {
+            background: var(--royal-blue);
+            color: #ffffff;
+            box-shadow: 0 4px 14px rgba(0, 91, 170, 0.4);
+        }
+
+        .tab-switch-btn.active.sell {
+            background: #b91c1c;
+            color: #ffffff;
+            box-shadow: 0 4px 14px rgba(220, 38, 38, 0.4);
+        }
+
+        .terminal-input-group {
+            margin-bottom: 18px;
+        }
+
+        .terminal-label-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.76rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #94a3b8;
+            margin-bottom: 8px;
+            letter-spacing: 0.04em;
+        }
+
+        .terminal-input-box {
+            display: flex;
+            align-items: center;
+            background: #040914;
+            border: 1.5px solid rgba(0, 169, 224, 0.25);
+            border-radius: 12px;
+            padding: 4px 14px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .terminal-input-box:focus-within {
+            border-color: var(--electric-cyan);
+            box-shadow: 0 0 0 3px rgba(0, 200, 255, 0.15);
+        }
+
+        .terminal-input-box input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #ffffff;
+            font-family: var(--font-mono);
+            font-size: 1.3rem;
+            font-weight: 700;
+            padding: 10px 0;
+            min-width: 0;
+        }
+
+        .terminal-currency-pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 8px;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 0.88rem;
+        }
+
+        .terminal-currency-select {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 8px;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 0.88rem;
+            padding: 8px 10px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .terminal-currency-select option {
+            background: #081326;
+            color: #ffffff;
+        }
+
+        .terminal-rate-pill {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 14px;
+            background: rgba(0, 91, 170, 0.12);
+            border: 1px solid rgba(0, 169, 224, 0.2);
+            border-radius: 10px;
+            margin-bottom: 22px;
+            font-size: 0.82rem;
+            font-family: var(--font-mono);
+            color: #7dd3fc;
+        }
+
+        .terminal-rate-pill .lock-timer {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #38bdf8;
+            font-size: 0.76rem;
+        }
+
+        .btn-terminal-submit {
+            width: 100%;
+            padding: 16px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--royal-blue) 0%, #0099db 100%);
+            color: #ffffff;
+            border: none;
+            font-size: 1rem;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(0, 91, 170, 0.45);
+            transition: all 0.22s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-terminal-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 34px rgba(0, 169, 224, 0.55);
+            background: linear-gradient(135deg, #0066bd 0%, var(--electric-cyan) 100%);
+        }
+
+        /* --- REAL-TIME EXECUTION STREAM TICKER --- */
+        .live-trades-stream {
+            background: #030712;
+            border-top: 1px solid rgba(0, 169, 224, 0.15);
+            border-bottom: 1px solid rgba(0, 169, 224, 0.15);
+            padding: 12px 0;
+            overflow: hidden;
+            white-space: nowrap;
+            position: relative;
+        }
+
+        .live-trades-track {
+            display: inline-flex;
+            gap: 36px;
+            animation: scroll-trades 45s linear infinite;
+        }
+
+        @keyframes scroll-trades {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .trade-stream-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+
+        .trade-stream-item .trade-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--bull-green);
+            box-shadow: 0 0 6px var(--bull-green);
+        }
+
+        .trade-stream-item .trade-crypto {
+            font-family: var(--font-mono);
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .trade-stream-item .trade-ghs {
+            font-family: var(--font-mono);
+            color: var(--electric-cyan);
+            font-weight: 600;
+        }
+
+        .trade-stream-item .trade-time {
+            font-size: 0.72rem;
+            color: #64748b;
+        }
+
+        /* --- LIVE MARKETS MATRIX SECTION --- */
+        .markets-section {
+            padding: 90px 0;
+            background: var(--dark-bg);
+            position: relative;
+        }
+
+        .section-header-dark {
+            text-align: center;
+            max-width: 680px;
+            margin: 0 auto 50px;
+        }
+
+        .section-tag-cyber {
+            font-size: 0.76rem;
+            font-weight: 800;
+            color: var(--electric-cyan);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+
+        .section-title-dark {
+            font-size: clamp(2rem, 1.8rem + 1.2vw, 2.8rem);
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -0.025em;
+            margin-bottom: 14px;
+        }
+
+        .section-desc-dark {
+            font-size: 1.05rem;
+            color: #94a3b8;
+            line-height: 1.6;
+        }
+
+        .markets-table-card {
+            background: var(--dark-card);
+            border: 1px solid var(--cyber-border);
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+            backdrop-filter: blur(20px);
+            max-width: 1320px;
+            margin: 0 auto;
+        }
+
+        .cyber-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        .cyber-table th {
+            padding: 18px 24px;
+            font-size: 0.74rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #64748b;
+            background: rgba(4, 9, 20, 0.7);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .cyber-table td {
+            padding: 20px 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.92rem;
+            color: #f1f5f9;
+            transition: background 0.15s;
+        }
+
+        .cyber-table tbody tr:hover td {
+            background: rgba(0, 169, 224, 0.05);
+        }
+
+        .coin-meta-wrap {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .coin-meta-wrap img {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2px;
+        }
+
+        .coin-name {
+            font-weight: 700;
+            color: #ffffff;
+            font-size: 1rem;
+        }
+
+        .coin-sym {
+            font-size: 0.78rem;
+            color: #64748b;
+            font-family: var(--font-mono);
+            font-weight: 600;
+        }
+
+        .rate-positive {
+            color: var(--bull-green);
+            font-family: var(--font-mono);
+            font-weight: 700;
+        }
+
+        .rate-negative {
+            color: var(--bear-red);
+            font-family: var(--font-mono);
+            font-weight: 700;
+        }
+
+        .btn-market-trade {
+            padding: 8px 20px;
+            border-radius: 8px;
+            background: rgba(0, 169, 224, 0.12);
+            color: var(--electric-cyan);
+            border: 1px solid rgba(0, 169, 224, 0.35);
+            font-weight: 700;
+            font-size: 0.82rem;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            display: inline-block;
+        }
+
+        .btn-market-trade:hover {
+            background: var(--royal-blue);
+            border-color: var(--royal-blue);
+            color: #ffffff;
+            box-shadow: 0 0 14px rgba(0, 91, 170, 0.5);
+            transform: translateY(-1px);
+        }
+
+        /* --- WHY CRYPTOPLEX ADVANTAGE CARDS --- */
+        .advantage-section {
+            padding: 100px 0;
+            background: radial-gradient(circle at 50% 50%, #08152e 0%, var(--dark-bg) 80%);
+            border-top: 1px solid var(--cyber-border);
+            border-bottom: 1px solid var(--cyber-border);
+        }
+
+        .advantage-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            max-width: 1320px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .advantage-card {
+            background: var(--dark-card);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 32px 26px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .advantage-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--cyber-border-bright);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(0, 169, 224, 0.15);
+            background: var(--dark-card-hover);
+        }
+
+        .advantage-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--royal-blue), var(--electric-cyan));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .advantage-card:hover::before {
+            opacity: 1;
+        }
+
+        .advantage-icon-box {
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            background: rgba(0, 91, 170, 0.18);
+            border: 1px solid rgba(0, 169, 224, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--electric-cyan);
+            margin-bottom: 22px;
+        }
+
+        .advantage-icon-box svg {
+            width: 28px;
+            height: 28px;
+        }
+
+        .advantage-card h3 {
+            font-size: 1.18rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 12px;
+            letter-spacing: -0.01em;
+        }
+
+        .advantage-card p {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            line-height: 1.6;
+        }
+
+        /* --- 3-STEP SETTLEMENT TIMELINE --- */
+        .timeline-section {
+            padding: 100px 0;
+            background: var(--dark-bg);
+        }
+
+        .timeline-steps-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+            max-width: 1320px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+        }
+
+        .timeline-step-card {
+            background: rgba(10, 24, 48, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 36px 30px;
+            position: relative;
+            backdrop-filter: blur(16px);
+        }
+
+        .step-index-badge {
+            display: inline-block;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            font-weight: 800;
+            color: var(--electric-cyan);
+            background: rgba(0, 169, 224, 0.12);
+            padding: 4px 12px;
+            border-radius: 9999px;
+            margin-bottom: 18px;
+            border: 1px solid rgba(0, 169, 224, 0.25);
+        }
+
+        .timeline-step-card h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 12px;
+        }
+
+        .timeline-step-card p {
+            font-size: 0.92rem;
+            color: #94a3b8;
+            line-height: 1.6;
+        }
+
+        /* --- ACCORDION FAQ SECTION --- */
+        .faq-section {
+            padding: 100px 0;
+            background: radial-gradient(circle at 50% 0%, #0a1730 0%, var(--dark-bg) 70%);
+            border-top: 1px solid var(--cyber-border);
+        }
+
+        .faq-container {
+            max-width: 840px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .faq-accordion-item {
+            background: var(--dark-card);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            margin-bottom: 14px;
+            overflow: hidden;
+            transition: border-color 0.2s;
+        }
+
+        .faq-accordion-item:hover {
+            border-color: rgba(0, 169, 224, 0.3);
+        }
+
+        .faq-trigger {
+            width: 100%;
+            padding: 22px 26px;
+            background: transparent;
+            border: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #ffffff;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: left;
+        }
+
+        .faq-trigger svg {
+            width: 20px;
+            height: 20px;
+            color: var(--electric-cyan);
+            transition: transform 0.25s ease;
+            flex-shrink: 0;
+        }
+
+        .faq-accordion-item.open .faq-trigger svg {
+            transform: rotate(180deg);
+        }
+
+        .faq-content {
+            padding: 0 26px 22px;
+            font-size: 0.94rem;
+            color: #94a3b8;
+            line-height: 1.65;
+            display: none;
+        }
+
+        .faq-accordion-item.open .faq-content {
+            display: block;
+        }
+
+        /* --- HIGH-CONVERTING CTA BANNER --- */
+        .cyber-cta-banner {
+            padding: 90px 24px;
+            max-width: 1320px;
+            margin: 0 auto 60px;
+        }
+
+        .cta-inner-card {
+            background: linear-gradient(135deg, #071738 0%, #0a2559 50%, #005baa 100%);
+            border: 1px solid var(--cyber-border-bright);
+            border-radius: 28px;
+            padding: 60px 48px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6), 0 0 50px rgba(0, 91, 170, 0.3);
+        }
+
+        .cta-inner-card h2 {
+            font-size: clamp(2rem, 1.8rem + 1.5vw, 3.2rem);
+            font-weight: 900;
+            color: #ffffff;
+            margin-bottom: 16px;
+            letter-spacing: -0.03em;
+        }
+
+        .cta-inner-card p {
+            font-size: 1.15rem;
+            color: #bfdbfe;
+            max-width: 640px;
+            margin: 0 auto 36px;
+            line-height: 1.6;
+        }
+
+        /* --- FOOTER: CLEAN INSTITUTIONAL SPECIFICATION --- */
+        footer.footer {
+            background: #020610;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 70px 0 30px;
+        }
+
+        .footer .container {
+            max-width: 1320px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .footer-cols-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 48px;
+        }
+
+        .footer-col h4 {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 20px;
+        }
+
+        .footer-col ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .footer-col ul a {
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.15s;
+        }
+
+        .footer-col ul a:hover {
+            color: var(--electric-cyan);
+        }
+
+        .footer-contact-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #94a3b8;
+            font-size: 0.9rem;
+            margin-top: 12px;
+        }
+
+        .footer-contact-item a {
+            color: #f1f5f9;
+            text-decoration: none;
+            font-family: var(--font-mono);
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .footer-contact-item a:hover {
+            color: var(--electric-cyan);
+        }
+
+        .footer-bottom-strip {
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            padding-top: 28px;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #64748b;
+        }
+
+        /* --- RESPONSIVE POLISH --- */
+        @media (max-width: 1024px) {
+            .cyber-hero-grid { grid-template-columns: 1fr; gap: 48px; }
+            .advantage-grid { grid-template-columns: 1fr 1fr; }
+            .footer-cols-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+        }
+
+        @media (max-width: 768px) {
+            nav.nav { display: none; }
+            .mobile-header-cta { display: flex !important; gap: 8px; }
+            .timeline-steps-grid { grid-template-columns: 1fr; }
+            .advantage-grid { grid-template-columns: 1fr; }
+            .footer-cols-grid { grid-template-columns: 1fr; }
+            .hero-trust-matrix { grid-template-columns: 1fr 1fr 1fr; }
+            .cta-inner-card { padding: 40px 24px; }
+        }
+
+        @media (max-width: 480px) {
+            .hero-trust-matrix { grid-template-columns: 1fr; gap: 16px; }
+            .hero-cta-group { flex-direction: column; width: 100%; }
+            .btn-hero-primary, .btn-hero-secondary { width: 100%; justify-content: center; }
+            .floating-badge { display: none; }
         }
     </style>
 </head>
 
-<body class="preloader-active">
-    <!-- Preloader Ring -->
-    <div id="preloader" class="preloader-overlay" aria-hidden="true">
-        <div id="preloader-particles" style="display:none;"></div>
-        <svg class="progress-ring" width="80" height="80">
-            <circle class="progress-ring__circle" stroke-width="3" fill="transparent" r="36" cx="40" cy="40"
-                stroke-dasharray="226 226" stroke-dashoffset="226" />
-        </svg>
-        <div class="preloader-label" id="preloader-status">Initializing secure environment...</div>
+<body>
+
+    <!-- ================== CINEMATIC PRELOADER SPLASH SCREEN ================== -->
+    <div id="cpt-preloader" aria-hidden="true">
+        <div class="preloader-ambient"></div>
+        <div class="preloader-core">
+            <div class="preloader-radar">
+                <div class="preloader-logo-orb">
+                    <img src="css/logo.png" alt="CryptoPlexTrade Emblem">
+                </div>
+            </div>
+            <div class="preloader-brand-title">CRYPTOPLEX<span>TRADE</span></div>
+            <div class="preloader-track-wrap">
+                <div class="preloader-track-fill" id="preloader-fill"></div>
+            </div>
+            <div class="preloader-status-stream" id="preloader-stream">INITIALIZING PROTOCOL ENCLAVE...</div>
+        </div>
     </div>
 
-    <!-- ================== SOVEREIGN NAVIGATION HEADER ================== -->
+    <!-- ================== FLAGSHIP NAVIGATION HEADER ================== -->
     <header class="header">
         <div class="container">
             <a href="index.html" class="logo-wrapper">
                 <img src="css/logo.png" alt="CryptoPlexTrade Logo" class="logo">
-                <span class="logo-name">CryptoPlexTrade</span>
+                <span class="logo-name">CryptoPlex<span>Trade</span></span>
             </a>
             
-            <!-- Desktop Nav -->
+            <!-- Desktop Navigation -->
             <nav class="nav" id="main-nav">
-                <a href="rates">Live Markets</a>
+                <a href="rates" class="active">Live Markets</a>
                 <a href="why-us">Infrastructure</a>
                 <a href="faq.html">FAQ</a>
                 <a href="help.html">Help Desk</a>
                 <a href="contact.html">Contact</a>
-                <a href="login.html" style="font-weight: 600; color: var(--primary);">Sign In</a>
-                <a href="register.html" class="btn-primary">Open Account</a>
+                <a href="login.html" class="nav-btn-login">Sign In</a>
+                <a href="register.html" class="nav-btn-signup">Open Free Account</a>
             </nav>
 
             <!-- Mobile CTA Header Buttons -->
             <div class="mobile-header-cta" style="display:none;">
-                <a href="login.html" class="btn-outline" style="padding:6px 12px; font-size:0.8rem;">Login</a>
-                <a href="register.html" class="btn-primary" style="padding:6px 12px; font-size:0.8rem;">Sign Up</a>
+                <a href="login.html" class="nav-btn-login" style="padding:6px 12px; font-size:0.8rem;">Login</a>
+                <a href="register.html" class="nav-btn-signup" style="padding:6px 12px; font-size:0.8rem;">Sign Up</a>
             </div>
         </div>
     </header>
 
-    <!-- ================== HERO & CONVERTER DESK ================== -->
-    <main class="home-hero">
-        <div class="container">
-            <div class="hero-grid">
-                <!-- Left: Financial Narrative -->
-                <div class="hero-text-wrap">
-                    <div class="hero-badge-pill">
-                        <span class="pulse-dot"></span>
-                        <span>Institutional-Grade Liquidity &nbsp;·&nbsp; Zero Slippage Spreads</span>
+    <!-- ================== CYBER HERO & INSTANT TRADE TERMINAL ================== -->
+    <main class="cyber-hero">
+        <div class="ambient-sphere sphere-1"></div>
+        <div class="ambient-sphere sphere-2"></div>
+
+        <div class="cyber-hero-grid">
+            <!-- Left: Hero Headline & Institutional Proof -->
+            <div class="hero-left-content">
+                <div class="hero-badge-live">
+                    <span class="live-pulse"></span>
+                    <span>Direct Ghana Cedi (GHS) MoMo &amp; Multichain Settlement Active</span>
+                </div>
+
+                <h1 class="hero-headline">
+                    Sovereign Speed.<br>
+                    <span class="gradient-text">Instant MoMo Liquidity.</span>
+                </h1>
+
+                <p class="hero-subhead">
+                    Trade Bitcoin, Ethereum, and USDT directly with MTN Mobile Money, Telecel Cash, and Bank Transfer. Zero hidden spreads, non-custodial direct delivery, and settlement in minutes.
+                </p>
+
+                <div class="hero-cta-group">
+                    <a href="trade.html" class="btn-hero-primary">
+                        Launch Instant Exchange
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </a>
+                    <a href="#markets" class="btn-hero-secondary">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+                        Live Order Book
+                    </a>
+                </div>
+
+                <!-- Trust Stats -->
+                <div class="hero-trust-matrix">
+                    <div class="trust-stat-item">
+                        <div class="trust-stat-val">₵280M<span>+</span></div>
+                        <div class="trust-stat-lbl">Settled Volume</div>
                     </div>
+                    <div class="trust-stat-item">
+                        <div class="trust-stat-val">&lt; 3<span>min</span></div>
+                        <div class="trust-stat-lbl">Average Payout</div>
+                    </div>
+                    <div class="trust-stat-item">
+                        <div class="trust-stat-val">99.99<span>%</span></div>
+                        <div class="trust-stat-lbl">Execution SLA</div>
+                    </div>
+                </div>
+            </div>
 
-                    <h1 class="hero-title">
-                        Sovereign Speed.<br>
-                        <span class="accent-text">Instant Settlement.</span>
-                    </h1>
-
-                    <p class="hero-desc">
-                        Direct fiat-to-cryptocurrency exchange for Bitcoin, Ethereum, USDT, and tier-one digital assets. Bank-grade cold custody, transparent fee schedules, and execution in minutes.
-                    </p>
-
-                    <div class="hero-actions">
-                        <a href="register.html" class="btn-primary" style="padding: 14px 28px; font-size: 0.95rem;">
-                            Get Started Instantly
-                        </a>
-                        <a href="rates" class="btn-outline" style="padding: 13px 24px; font-size: 0.95rem;">
-                            View Live Order Book
-                        </a>
+            <!-- Right: Interactive Live Trade Terminal Card -->
+            <div class="hero-terminal-wrap">
+                <!-- Floating animated decorative token cards -->
+                <div class="floating-badge btc">
+                    <img src="https://assets.coingecko.com/coins/images/1/small/bitcoin.png" alt="BTC" width="24" height="24">
+                    <div>
+                        <div style="font-size:0.75rem;font-weight:700;color:#fff;">BTC/GHS</div>
+                        <div style="font-size:0.68rem;color:#10b981;font-family:var(--font-mono);">+3.42% ▲</div>
                     </div>
                 </div>
 
-                <!-- Right: Instant Market Conversion Desk -->
-                <div class="hero-card-wrap">
-                    <div class="converter-card">
-                        <div class="converter-header">
-                            <div class="converter-title">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
-                                    <polyline points="17 6 23 6 23 12"></polyline>
-                                </svg>
-                                <span>Instant Market Trade</span>
-                            </div>
-                            <span class="converter-rate-badge">● Live Spreads Active</span>
-                        </div>
-
-                        <div class="converter-field">
-                            <div class="converter-label">
-                                <span>You Pay (Estimated)</span>
-                                <span>Currency</span>
-                            </div>
-                            <div class="converter-input-wrap">
-                                <input type="number" id="quick-fiat-amount" value="500" min="20" step="10">
-                                <select id="quick-fiat-currency">
-                                    <option value="USD" selected>USD ($)</option>
-                                    <option value="EUR">EUR (€)</option>
-                                    <option value="GBP">GBP (£)</option>
-                                    <option value="CAD">CAD ($)</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="converter-field">
-                            <div class="converter-label">
-                                <span>You Receive</span>
-                                <span>Asset</span>
-                            </div>
-                            <div class="converter-input-wrap">
-                                <input type="text" id="quick-crypto-amount" value="Calculating..." readonly>
-                                <select id="quick-crypto-asset">
-                                    <option value="BTC" selected>Bitcoin (BTC)</option>
-                                    <option value="ETH">Ethereum (ETH)</option>
-                                    <option value="USDT">Tether (USDT)</option>
-                                    <option value="SOL">Solana (SOL)</option>
-                                    <option value="LTC">Litecoin (LTC)</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="converter-fee-breakdown">
-                            <div class="converter-fee-row">
-                                <span>Exchange Execution Rate:</span>
-                                <span id="quick-display-rate">Loading live feed...</span>
-                            </div>
-                            <div class="converter-fee-row">
-                                <span>Network Miner Charge:</span>
-                                <span>Included in Spread</span>
-                            </div>
-                            <div class="converter-fee-row">
-                                <span>Settlement Time:</span>
-                                <span>Instant / ~5-15 Minutes</span>
-                            </div>
-                        </div>
-
-                        <a href="trade.html" class="btn btn-primary btn-full" style="padding: 13px; font-size: 0.95rem;">
-                            Proceed to Secure Checkout →
-                        </a>
+                <div class="floating-badge usdt">
+                    <img src="https://assets.coingecko.com/coins/images/325/small/Tether.png" alt="USDT" width="24" height="24">
+                    <div>
+                        <div style="font-size:0.75rem;font-weight:700;color:#fff;">USDT/GHS</div>
+                        <div style="font-size:0.68rem;color:#38bdf8;font-family:var(--font-mono);">Instant MoMo</div>
                     </div>
+                </div>
+
+                <div class="terminal-glass-card">
+                    <!-- Buy / Sell Toggle Tabs -->
+                    <div class="terminal-tab-nav">
+                        <button type="button" class="tab-switch-btn active buy" id="tab-buy-mode">Buy Crypto</button>
+                        <button type="button" class="tab-switch-btn" id="tab-sell-mode">Sell Crypto</button>
+                    </div>
+
+                    <!-- Input 1: Fiat / GHS -->
+                    <div class="terminal-input-group">
+                        <div class="terminal-label-row">
+                            <span id="label-pay-mode">You Pay</span>
+                            <span>Payment Rail: Mobile Money / Bank</span>
+                        </div>
+                        <div class="terminal-input-box">
+                            <input type="number" id="terminal-pay-amount" value="1500" min="50" step="50">
+                            <div class="terminal-currency-pill">
+                                <span>🇬🇭 GHS (₵)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Input 2: Crypto Asset Output -->
+                    <div class="terminal-input-group">
+                        <div class="terminal-label-row">
+                            <span id="label-receive-mode">You Receive (Estimated)</span>
+                            <span>Direct External Wallet</span>
+                        </div>
+                        <div class="terminal-input-box">
+                            <input type="text" id="terminal-receive-amount" value="0.001045" readonly>
+                            <select id="terminal-crypto-select" class="terminal-currency-select">
+                                <option value="BTC" selected>BTC (Bitcoin)</option>
+                                <option value="USDT_TRC20">USDT (TRC-20)</option>
+                                <option value="USDT_ERC20">USDT (ERC-20)</option>
+                                <option value="ETH">ETH (Ethereum)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Rate Breakdown Banner -->
+                    <div class="terminal-rate-pill">
+                        <div>
+                            <span>Rate: </span>
+                            <strong id="terminal-live-rate" style="color:#ffffff;">1 USD = ₵15.85</strong>
+                        </div>
+                        <div class="lock-timer">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                            <span>Live rate</span>
+                        </div>
+                    </div>
+
+                    <!-- Execution Action Button -->
+                    <button type="button" class="btn-terminal-submit" id="btn-execute-quick-trade">
+                        <span>Continue to Settlement</span>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </button>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- ================== METRICS STRIP ================== -->
-    <section class="metrics-strip">
+    <!-- ================== REAL-TIME EXECUTION STREAM TICKER ================== -->
+    <div class="live-trades-stream">
+        <div class="live-trades-track" id="trades-stream-track">
+            <!-- Simulated streaming trades for velocity & realism -->
+            <div class="trade-stream-item"><span class="trade-dot"></span> <span class="trade-crypto">0.052 BTC</span> bought via MTN MoMo <span class="trade-ghs">(₵49,800)</span> <span class="trade-time">• 4s ago</span></div>
+            <div class="trade-stream-item"><span class="trade-dot"></span> <span class="trade-crypto">1,500 USDT</span> sold to Telecel Cash <span class="trade-ghs">(₵23,850)</span> <span class="trade-time">• 12s ago</span></div>
+            <div class="trade-stream-item"><span class="trade-dot"></span> <span class="trade-crypto">0.85 ETH</span> bought via Bank Wire <span class="trade-ghs">(₵35,700)</span> <span class="trade-time">• 22s ago</span></div>
+            <div class="trade-stream-item"><span class="trade-dot"></span> <span class="trade-crypto">3,200 USDT</span> bought via AT Money <span class="trade-ghs">(₵50,880)</span> <span class="trade-time">• 38s ago</span></div>
+            <div class="trade-stream-item"><span class="trade-dot"></span> <span class="trade-crypto">0.12 BTC</span> sold to Stanbic Account <span class="trade-ghs">(₵114,600)</span> <span class="trade-time">• 54s ago</span></div>
+            <!-- Duplicated for continuous loop -->
+            <div class="trade-stream-item"><span class="trade-dot"></span> <span class="trade-crypto">0.052 BTC</span> bought via MTN MoMo <span class="trade-ghs">(₵49,800)</span> <span class="trade-time">• 4s ago</span></div>
+            <div class="trade-stream-item"><span class="trade-dot"></span> <span class="trade-crypto">1,500 USDT</span> sold to Telecel Cash <span class="trade-ghs">(₵23,850)</span> <span class="trade-time">• 12s ago</span></div>
+            <div class="trade-stream-item"><span class="trade-dot"></span> <span class="trade-crypto">0.85 ETH</span> bought via Bank Wire <span class="trade-ghs">(₵35,700)</span> <span class="trade-time">• 22s ago</span></div>
+            <div class="trade-stream-item"><span class="trade-dot"></span> <span class="trade-crypto">3,200 USDT</span> bought via AT Money <span class="trade-ghs">(₵50,880)</span> <span class="trade-time">• 38s ago</span></div>
+            <div class="trade-stream-item"><span class="trade-dot"></span> <span class="trade-crypto">0.12 BTC</span> sold to Stanbic Account <span class="trade-ghs">(₵114,600)</span> <span class="trade-time">• 54s ago</span></div>
+        </div>
+    </div>
+
+    <!-- ================== LIVE MARKETS MATRIX SECTION ================== -->
+    <section class="markets-section" id="markets">
         <div class="container">
-            <div class="metrics-grid">
-                <div class="metric-cell">
-                    <div class="metric-value">99.98%</div>
-                    <div class="metric-label">System Engine Uptime</div>
+            <div class="section-header-dark">
+                <span class="section-tag-cyber">Live Liquidity Feed</span>
+                <h2 class="section-title-dark">Institutional Market Rates</h2>
+                <p class="section-desc-dark">Real-time cryptographic rate indices verified with tier-one global market depth and transparent local settlement pricing.</p>
+            </div>
+
+            <div class="markets-table-card">
+                <table class="cyber-table">
+                    <thead>
+                        <tr>
+                            <th>Digital Asset</th>
+                            <th>Global Spot (USD)</th>
+                            <th>24h Change</th>
+                            <th>Platform Buy Rate</th>
+                            <th>Platform Sell Rate</th>
+                            <th style="text-align: right;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rates-tbody">
+                        <tr>
+                            <td colspan="6" style="text-align: center; color: #64748b; padding: 40px;">
+                                Syncing global market feed...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================== WHY CRYPTOPLEX ADVANTAGE CARDS ================== -->
+    <section class="advantage-section">
+        <div class="container">
+            <div class="section-header-dark">
+                <span class="section-tag-cyber">Institutional Infrastructure</span>
+                <h2 class="section-title-dark">Why Professional Traders Choose Us</h2>
+                <p class="section-desc-dark">Engineered to eliminate exchange delays, slippage gouging, and non-responsive support desks.</p>
+            </div>
+
+            <div class="advantage-grid">
+                <div class="advantage-card">
+                    <div class="advantage-icon-box">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+                    </div>
+                    <h3>Instant MoMo Rails</h3>
+                    <p>Direct integration with MTN Mobile Money, Telecel Cash, and all major Ghanaian commercial banks for near-instant fiat release.</p>
                 </div>
-                <div class="metric-cell">
-                    <div class="metric-value">&lt; 10 Mins</div>
-                    <div class="metric-label">Average Order Settlement</div>
+
+                <div class="advantage-card">
+                    <div class="advantage-icon-box">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    </div>
+                    <h3>Cold Vault Custody</h3>
+                    <p>98% of all cryptographic reserves are stored in multisig institutional cold storage with zero internet exposure.</p>
                 </div>
-                <div class="metric-cell">
-                    <div class="metric-value">100%</div>
-                    <div class="metric-label">Cold Storage Reserve</div>
+
+                <div class="advantage-card">
+                    <div class="advantage-icon-box">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/><path d="m14.83 14.83 4.24 4.24"/><path d="m9.17 14.83-4.24 4.24"/></svg>
+                    </div>
+                    <h3>Non-Custodial Delivery</h3>
+                    <p>Cryptocurrency purchases are broadcast directly to your private self-hosted or hardware wallet address with on-chain verification.</p>
                 </div>
-                <div class="metric-cell">
-                    <div class="metric-value">24/7/365</div>
-                    <div class="metric-label">Human Support Desk</div>
+
+                <div class="advantage-card">
+                    <div class="advantage-icon-box">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    </div>
+                    <h3>Dedicated Human Desk</h3>
+                    <p>Every transaction is monitored by active OTC operators. Direct telephone and live chat support whenever you need assistance.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- ================== LIVE RATES SECTION ================== -->
-    <section class="rates-section" id="rates">
+    <!-- ================== 3-STEP SETTLEMENT TIMELINE ================== -->
+    <section class="timeline-section">
         <div class="container">
-            <div class="section-header-centered">
-                <div class="section-tag">Market Directory</div>
-                <h2 class="section-title">Live Spot Exchange Rates</h2>
-                <p class="section-subtitle">Real-time cryptographic prices updated directly from verified institutional market indices.</p>
+            <div class="section-header-dark">
+                <span class="section-tag-cyber">Streamlined Workflow</span>
+                <h2 class="section-title-dark">How It Works in 3 Simple Steps</h2>
+                <p class="section-desc-dark">From registration to confirmed delivery in your wallet or MoMo account.</p>
             </div>
 
-            <div class="rates-card">
-                <div class="table-wrap" style="border:none; border-radius:0;">
-                    <table class="rates-table-custom">
-                        <thead>
-                            <tr>
-                                <th>Digital Asset</th>
-                                <th>Spot Index Price</th>
-                                <th>24h Movement</th>
-                                <th>Institutional Buy</th>
-                                <th>Institutional Sell</th>
-                                <th style="text-align: right;">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="rates-tbody">
-                            <!-- Populated dynamically via fetchLiveRates() -->
-                            <tr>
-                                <td colspan="6" style="text-align: center; padding: 32px; color: var(--text-3);">
-                                    Connecting to live market orderbook...
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ================== INSTITUTIONAL SAFEGUARDS ================== -->
-    <section class="features-section" id="why-us">
-        <div class="container">
-            <div class="section-header-centered">
-                <div class="section-tag">Security Architecture</div>
-                <h2 class="section-title">Engineered for Capital Protection</h2>
-                <p class="section-subtitle">A zero-compromise security posture protecting your capital, identity, and cryptographic transfers.</p>
-            </div>
-
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon-wrap">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                        </svg>
-                    </div>
-                    <h3>Multi-Sig Cold Custody</h3>
-                    <p>Over 98% of customer cryptocurrency reserves are kept offline in air-gapped, geographically dispersed cold vaults requiring multiple hardware approvals.</p>
-                </div>
-
-                <div class="feature-card">
-                    <div class="feature-icon-wrap">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
-                        </svg>
-                    </div>
-                    <h3>Deterministic Order Routing</h3>
-                    <p>Instant algorithmic matching with verified rate spreads, eliminating slippage and safeguarding against order book front-running.</p>
-                </div>
-
-                <div class="feature-card">
-                    <div class="feature-icon-wrap">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                        </svg>
-                    </div>
-                    <h3>Automated KYC & AML Protocol</h3>
-                    <p>Transparent regulatory compliance adhering strictly to FATF guidelines, preventing illicit flows while keeping legitimate verification under 5 minutes.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ================== 3-STEP WORKFLOW ================== -->
-    <section class="steps-section">
-        <div class="container">
-            <div class="section-header-centered">
-                <div class="section-tag">Onboarding Flow</div>
-                <h2 class="section-title">Trade in Three Precise Steps</h2>
-                <p class="section-subtitle">Frictionless access to tier-one cryptocurrency markets.</p>
-            </div>
-
-            <div class="steps-row">
-                <div class="step-block">
-                    <span class="step-num-pill">Step 01</span>
+            <div class="timeline-steps-grid">
+                <div class="timeline-step-card">
+                    <span class="step-index-badge">STEP 01</span>
                     <h3>Register Account</h3>
-                    <p>Create your personal or corporate account in under two minutes with multi-factor authentication.</p>
+                    <p>Create your verified trading profile in 60 seconds with simple mobile and email authentication.</p>
                 </div>
 
-                <div class="step-block">
-                    <span class="step-num-pill">Step 02</span>
-                    <h3>Confirm Order Details</h3>
-                    <p>Select your asset, lock in your transparent rate spread, and choose from supported verified payment rails.</p>
+                <div class="timeline-step-card">
+                    <span class="step-index-badge">STEP 02</span>
+                    <h3>Lock Rate &amp; Transfer</h3>
+                    <p>Choose Buy or Sell, select your asset, and complete payment via Mobile Money or your preferred bank app.</p>
                 </div>
 
-                <div class="step-block">
-                    <span class="step-num-pill">Step 03</span>
-                    <h3>Settlement to Wallet</h3>
-                    <p>Funds and cryptographic transfers are settled directly to your external address or bank account.</p>
+                <div class="timeline-step-card">
+                    <span class="step-index-badge">STEP 03</span>
+                    <h3>Instant Settlement</h3>
+                    <p>Crypto is dispatched straight to your wallet or GHS funds land in your Mobile Money wallet within minutes.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- ================== CTA BANNER ================== -->
-    <section class="cta-banner">
+    <!-- ================== INTERACTIVE FAQ SECTION ================== -->
+    <section class="faq-section">
         <div class="container">
-            <h2>Ready to Trade with Institutional Precision?</h2>
-            <p>Join thousands of active traders enjoying immediate settlement, transparent rates, and dedicated human support.</p>
-            <a href="register.html" class="btn-cta-white">
+            <div class="section-header-dark">
+                <span class="section-tag-cyber">Common Inquiries</span>
+                <h2 class="section-title-dark">Frequently Asked Questions</h2>
+                <p class="section-desc-dark">Transparent answers to help you execute your trades with confidence.</p>
+            </div>
+
+            <div class="faq-container">
+                <div class="faq-accordion-item open">
+                    <button type="button" class="faq-trigger">
+                        <span>How fast is Mobile Money payout settlement?</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </button>
+                    <div class="faq-content">
+                        Most Mobile Money (MTN MoMo, Telecel Cash, AT Money) transactions are completed within 1 to 5 minutes after transaction verification. Bank transfers typically settle within the same business hour.
+                    </div>
+                </div>
+
+                <div class="faq-accordion-item">
+                    <button type="button" class="faq-trigger">
+                        <span>Which cryptocurrencies are supported on CryptoPlexTrade?</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </button>
+                    <div class="faq-content">
+                        We actively support Bitcoin (BTC), Ethereum (ETH), USDT on TRON (TRC-20), and USDT on Ethereum (ERC-20), with additional layer-1 assets continuously integrated based on liquidity.
+                    </div>
+                </div>
+
+                <div class="faq-accordion-item">
+                    <button type="button" class="faq-trigger">
+                        <span>Are there hidden exchange fees or withdrawal penalties?</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </button>
+                    <div class="faq-content">
+                        Zero hidden fees. The exact exchange rate and miner network fee displayed on your order summary is the exact total you pay or receive. What you see is what you get.
+                    </div>
+                </div>
+
+                <div class="faq-accordion-item">
+                    <button type="button" class="faq-trigger">
+                        <span>What should I do if I need urgent help with a transfer?</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </button>
+                    <div class="faq-content">
+                        You can call our direct telephone desk at <strong style="color:#ffffff;">0246556706</strong>, email us at <strong style="color:#ffffff;">Supportteam@cryptoplextrades.com</strong>, or open a live chat session directly through the chat widget on the bottom right of your screen.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================== HIGH-IMPACT CTA BANNER ================== -->
+    <div class="cyber-cta-banner">
+        <div class="cta-inner-card">
+            <h2>Ready to Trade with Sovereign Precision?</h2>
+            <p>Join thousands of smart individuals and businesses in Ghana and Africa trading digital assets with zero friction.</p>
+            <a href="register.html" class="btn-hero-primary" style="display:inline-flex; padding: 18px 40px; font-size: 1.05rem;">
                 Create Free Trading Account
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </a>
         </div>
-    </section>
+    </div>
 
-    <!-- ================== INSTITUTIONAL FOOTER ================== -->
+    <!-- ================== CLEAN COMPLIANT FOOTER ================== -->
     <footer class="footer">
         <div class="container">
-            <div class="grid-3" style="grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 32px; margin-bottom: 40px;">
-                <div>
-                    <a href="index.html" class="logo-wrapper" style="margin-bottom: 14px;">
+            <div class="footer-cols-grid">
+                <div class="footer-col">
+                    <a href="index.html" class="logo-wrapper" style="margin-bottom: 16px;">
                         <img src="css/logo.png" alt="CryptoPlexTrade Logo" class="logo">
-                        <span class="logo-name">CryptoPlexTrade</span>
+                        <span class="logo-name">CryptoPlex<span>Trade</span></span>
                     </a>
-                    <p style="font-size: 0.88rem; color: var(--text-3); line-height: 1.6; max-width: 320px;">
-                        Sovereign digital asset trading platform providing instant retail and institutional exchange services worldwide.
+                    <p style="font-size: 0.88rem; color: #94a3b8; line-height: 1.6; max-width: 320px; margin-bottom: 16px;">
+                        Sovereign digital asset gateway providing instant Mobile Money and banking cryptocurrency exchange services.
                     </p>
+                    <div class="footer-contact-item">
+                        <span>📞 Phone:</span>
+                        <a href="tel:0246556706">0246556706</a>
+                    </div>
+                    <div class="footer-contact-item">
+                        <span>✉️ Email:</span>
+                        <a href="mailto:Supportteam@cryptoplextrades.com">Supportteam@cryptoplextrades.com</a>
+                    </div>
                 </div>
 
-                <div>
-                    <h4 style="font-size: 0.82rem; font-weight: 700; color: var(--text-1); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 16px;">Trading Desk</h4>
-                    <ul style="list-style: none; display: flex; flex-direction: column; gap: 10px; font-size: 0.88rem;">
-                        <li><a href="trade.html" style="text-decoration: none; color: var(--text-2);">Instant Exchange</a></li>
-                        <li><a href="rates" style="text-decoration: none; color: var(--text-2);">Market Directory</a></li>
-                        <li><a href="why-us" style="text-decoration: none; color: var(--text-2);">Infrastructure</a></li>
+                <div class="footer-col">
+                    <h4>Trading Desk</h4>
+                    <ul>
+                        <li><a href="trade.html">Instant Exchange</a></li>
+                        <li><a href="rates">Market Rates</a></li>
+                        <li><a href="why-us">Infrastructure</a></li>
                     </ul>
                 </div>
 
-                <div>
-                    <h4 style="font-size: 0.82rem; font-weight: 700; color: var(--text-1); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 16px;">Support & Help</h4>
-                    <ul style="list-style: none; display: flex; flex-direction: column; gap: 10px; font-size: 0.88rem;">
-                        <li><a href="faq.html" style="text-decoration: none; color: var(--text-2);">Frequently Asked Questions</a></li>
-                        <li><a href="help.html" style="text-decoration: none; color: var(--text-2);">Help Centre</a></li>
-                        <li><a href="contact.html" style="text-decoration: none; color: var(--text-2);">Contact Us</a></li>
+                <div class="footer-col">
+                    <h4>Support &amp; Help</h4>
+                    <ul>
+                        <li><a href="faq.html">FAQ</a></li>
+                        <li><a href="help.html">Help Desk</a></li>
+                        <li><a href="contact.html">Contact Us</a></li>
                     </ul>
                 </div>
 
-                <div>
-                    <h4 style="font-size: 0.82rem; font-weight: 700; color: var(--text-1); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 16px;">Regulatory & Legal</h4>
-                    <ul style="list-style: none; display: flex; flex-direction: column; gap: 10px; font-size: 0.88rem;">
-                        <li><a href="terms.html" style="text-decoration: none; color: var(--text-2);">Terms of Service</a></li>
-                        <li><a href="privacy.html" style="text-decoration: none; color: var(--text-2);">Privacy Policy</a></li>
-                        <li><a href="aml.html" style="text-decoration: none; color: var(--text-2);">AML / KYC Policy</a></li>
+                <div class="footer-col">
+                    <h4>Legal &amp; Governance</h4>
+                    <ul>
+                        <li><a href="terms.html">Terms of Service</a></li>
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                        <li><a href="aml.html">AML / KYC Policy</a></li>
                     </ul>
                 </div>
             </div>
 
-            <div style="border-top: 1px solid var(--border); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; font-size: 0.82rem; color: var(--text-3);">
-                <div>&copy; 2026 CryptoPlexTrade. All rights reserved. Cryptographic investments are subject to market risks.</div>
-                <div style="display: flex; gap: 16px;">
-                    <span>System Status: <strong style="color:#16a34a;">Operational</strong></span>
-                    <span>SSL/TLS 256-bit Encrypted</span>
-                </div>
+            <div class="footer-bottom-strip">
+                &copy; 2026 CryptoPlexTrade. All rights reserved.
             </div>
         </div>
     </footer>
 
-    <!-- ================== TICKER TAPE ================== -->
+    <!-- ================== PERSISTENT TICKER TAPE ================== -->
     <div class="ticker-tape">
         <div class="ticker-tape__track">
-            <!-- Items dynamically injected via JavaScript -->
+            <!-- Dynamically injected live rate ticker -->
         </div>
     </div>
 
-    <!-- ================== JAVASCRIPT FEEDS & PRELOADER ================== -->
+    <!-- ================== MOTION UI & API ENGINE SCRIPTS ================== -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const tickerTrack = document.querySelector('.ticker-tape__track');
-            const coinSymbols = ['BTC', 'ETH', 'SOL', 'BNB', 'XRP', 'LTC', 'ADA', 'DOGE'];
-            const vsCurrency = 'usd';
-            let lastPrices = {};
-            let latestMarketData = null;
+            // --- 1. CINEMATIC PRELOADER SPLASH SCREEN ---
+            const preloader = document.getElementById('cpt-preloader');
+            const preloaderFill = document.getElementById('preloader-fill');
+            const preloaderStream = document.getElementById('preloader-stream');
 
-            function updateRatesTable(data) {
-                const tableBody = document.getElementById('rates-tbody');
-                if (!tableBody) return;
+            const statusStages = [
+                { pct: 25, text: "VERIFYING CRYPTOGRAPHIC ENCLAVE..." },
+                { pct: 55, text: "CONNECTING GHS DIRECT LIQUIDITY GATEWAY..." },
+                { pct: 85, text: "CALIBRATING BITCOIN & USDT ORDER BOOKS..." },
+                { pct: 100, text: "CRYPTOPLEX ENGINE ONLINE" }
+            ];
 
-                let tableHTML = '';
-                const assetsToShow = ['BTC', 'ETH', 'SOL', 'LTC', 'XRP'];
-
-                assetsToShow.forEach(symbol => {
-                    const coinData = data.RAW[symbol]?.[vsCurrency.toUpperCase()];
-                    if (!coinData) return;
-
-                    const price = coinData.PRICE;
-                    const change = coinData.CHANGEPCT24HOUR;
-                    const changeClass = change >= 0 ? 'rate-green' : 'rate-red';
-                    const sign = change >= 0 ? '+' : '';
-                    const buyPrice = price * 0.995;
-                    const sellPrice = price * 1.005;
-
-                    tableHTML += `
-                        <tr>
-                            <td>
-                                <div class="currency-info">
-                                    <img src="https://www.cryptocompare.com${coinData.IMAGEURL}" alt="${symbol}" width="28" height="28">
-                                    <div>${symbol} <span class="symbol">${coinData.FROMSYMBOL}</span></div>
-                                </div>
-                            </td>
-                            <td class="tabular-nums font-semibold">${price.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</td>
-                            <td class="${changeClass} tabular-nums">${sign}${change.toFixed(2)}%</td>
-                            <td class="tabular-nums">${buyPrice.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</td>
-                            <td class="tabular-nums">${sellPrice.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</td>
-                            <td style="text-align: right;">
-                                <a href="trade.html?asset=${symbol}" class="btn-trade">Trade</a>
-                            </td>
-                        </tr>
-                    `;
-                });
-
-                tableBody.innerHTML = tableHTML;
-            }
-
-            function updateTicker(data) {
-                if (!tickerTrack) return;
-                let itemsHTML = '';
-                coinSymbols.forEach(symbol => {
-                    const coinData = data.RAW[symbol]?.[vsCurrency.toUpperCase()];
-                    if (!coinData) return;
-
-                    const price = coinData.PRICE;
-                    const change = coinData.CHANGEPCT24HOUR;
-                    const dir = change >= 0 ? 'up' : 'down';
-                    const sign = dir === 'up' ? '+' : '';
-                    const arrow = dir === 'up' ? '▲' : '▼';
-                    const pair = `${symbol}/USD`;
-
-                    itemsHTML += `
-                        <div class="ticker-tape__item" data-pair="${symbol}">
-                            <span class="pair">${pair}</span>
-                            <span class="price">${price.toLocaleString('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2 })}</span>
-                            <span class="change ${dir}">${sign}${change.toFixed(2)}% ${arrow}</span>
-                        </div>
-                    `;
-
-                    const priceEl = tickerTrack.querySelector(`[data-pair="${symbol}"] .price`);
-                    if (priceEl && lastPrices[symbol] && lastPrices[symbol] !== price) {
-                        const flashClass = price > lastPrices[symbol] ? 'flash-up' : 'flash-down';
-                        priceEl.classList.remove('flash-up', 'flash-down');
-                        void priceEl.offsetWidth;
-                        priceEl.classList.add(flashClass);
-                    }
-                    lastPrices[symbol] = price;
-                });
-                tickerTrack.innerHTML = itemsHTML + itemsHTML;
-            }
-
-            // Quick Converter Desk Calculation
-            function calculateQuickConversion() {
-                if (!latestMarketData) return;
-                const fiatInput = document.getElementById('quick-fiat-amount');
-                const cryptoOutput = document.getElementById('quick-crypto-amount');
-                const assetSelect = document.getElementById('quick-crypto-asset');
-                const displayRate = document.getElementById('quick-display-rate');
-
-                if (!fiatInput || !cryptoOutput || !assetSelect || !displayRate) return;
-
-                const fiatVal = parseFloat(fiatInput.value) || 0;
-                const selectedAsset = assetSelect.value;
-                const coinData = latestMarketData.RAW[selectedAsset]?.[vsCurrency.toUpperCase()];
-
-                if (coinData && coinData.PRICE > 0) {
-                    const rate = coinData.PRICE;
-                    const cryptoVal = fiatVal / rate;
-                    cryptoOutput.value = cryptoVal.toFixed(6) + ' ' + selectedAsset;
-                    displayRate.textContent = `1 ${selectedAsset} = $${rate.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            let stageIdx = 0;
+            const preloaderInterval = setInterval(() => {
+                if (stageIdx < statusStages.length) {
+                    const st = statusStages[stageIdx];
+                    preloaderFill.style.width = st.pct + '%';
+                    preloaderStream.textContent = st.text;
+                    stageIdx++;
+                } else {
+                    clearInterval(preloaderInterval);
+                    setTimeout(() => {
+                        preloader.classList.add('loaded');
+                    }, 400);
                 }
-            }
+            }, 180);
 
-            const fiatInput = document.getElementById('quick-fiat-amount');
-            const assetSelect = document.getElementById('quick-crypto-asset');
-            if (fiatInput) fiatInput.addEventListener('input', calculateQuickConversion);
-            if (assetSelect) assetSelect.addEventListener('change', calculateQuickConversion);
-
-            async function fetchLiveRates() {
-                try {
-                    const apiUrl = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${coinSymbols.join(',')}&tsyms=${vsCurrency.toUpperCase()}`;
-                    const response = await fetch(apiUrl);
-                    if (!response.ok) throw new Error(`API status: ${response.status}`);
-                    const data = await response.json();
-                    latestMarketData = data;
-                    updateTicker(data);
-                    updateRatesTable(data);
-                    calculateQuickConversion();
-                } catch (error) {
-                    console.error("Live rates fetch error:", error);
+            // Safety timeout: ensure preloader never hangs
+            setTimeout(() => {
+                if (preloader && !preloader.classList.contains('loaded')) {
+                    preloader.classList.add('loaded');
                 }
-            }
+            }, 2500);
 
-            fetchLiveRates();
-            setInterval(fetchLiveRates, 45000);
-        });
-
-        // Preloader Logic
-        (function() {
-            const status = document.getElementById('preloader-status');
-            const circle = document.querySelector('.progress-ring__circle');
-            if (!status || !circle) return;
-
-            let progress = 0;
-            const circumference = 2 * Math.PI * 36;
-            const progressInterval = setInterval(() => {
-                progress += Math.random() * 8 + 5;
-                if (progress > 100) progress = 100;
-                const offset = circumference - (progress / 100) * circumference;
-                circle.style.strokeDashoffset = offset;
-                if (progress === 100) clearInterval(progressInterval);
-            }, 80);
-
-            window.addEventListener('load', function () {
-                status.textContent = "Ready to Trade";
-                var preloader = document.getElementById('preloader');
-                document.body.classList.remove('preloader-active');
-                setTimeout(function () {
-                    if (preloader) preloader.classList.add('preloader-hidden');
-                    setTimeout(function () {
-                        if (preloader && preloader.parentNode) preloader.parentNode.removeChild(preloader);
-                    }, 600);
-                }, 600);
+            // --- 2. FAQ ACCORDION INTERACTION ---
+            const faqItems = document.querySelectorAll('.faq-accordion-item');
+            faqItems.forEach(item => {
+                const trigger = item.querySelector('.faq-trigger');
+                trigger.addEventListener('click', () => {
+                    const isOpen = item.classList.contains('open');
+                    faqItems.forEach(i => i.classList.remove('open'));
+                    if (!isOpen) item.classList.add('open');
+                });
             });
-        })();
+
+            // --- 3. LIVE MARKET DATA & TICKER ENGINE ---
+            const tickerTrack = document.querySelector('.ticker-tape__track');
+            const ratesTbody = document.getElementById('rates-tbody');
+            const coinSymbols = ['BTC', 'ETH', 'SOL', 'BNB', 'XRP', 'LTC', 'ADA', 'DOGE'];
+            let currentExchangeRates = {
+                BTC: 68500,
+                ETH: 3500,
+                USDT_TRC20: 1,
+                USDT_ERC20: 1
+            };
+            let adminGhsRate = 15.85;
+
+            // Fetch admin rates from backend
+            async function fetchAdminRates() {
+                try {
+                    const res = await fetch('/api/rates');
+                    if (res.ok) {
+                        const data = await res.json();
+                        if (data.rates) {
+                            if (data.rates.btc) currentExchangeRates.BTC = data.rates.btc.buyRate || currentExchangeRates.BTC;
+                            if (data.rates.eth) currentExchangeRates.ETH = data.rates.eth.buyRate || currentExchangeRates.ETH;
+                        }
+                    }
+                } catch (e) {
+                    console.log('Using default rates engine');
+                }
+            }
+            fetchAdminRates();
+
+            async function fetchLiveMarketRates() {
+                try {
+                    const res = await fetch(`https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${coinSymbols.join(',')}&tsyms=USD`);
+                    if (!res.ok) throw new Error();
+                    const data = await res.json();
+
+                    // Render Ticker
+                    let tickerHtml = '';
+                    coinSymbols.forEach(sym => {
+                        const c = data.RAW[sym]?.USD;
+                        if (!c) return;
+                        const dir = c.CHANGEPCT24HOUR >= 0 ? 'up' : 'down';
+                        const sign = dir === 'up' ? '+' : '';
+                        tickerHtml += `
+                            <div class="ticker-tape__item">
+                                <span class="pair">${sym}/USD</span>
+                                <span class="price">${c.PRICE.toLocaleString('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2 })}</span>
+                                <span class="change ${dir}">${sign}${c.CHANGEPCT24HOUR.toFixed(2)}% ${dir==='up'?'▲':'▼'}</span>
+                            </div>
+                        `;
+                    });
+                    if (tickerTrack) tickerTrack.innerHTML = tickerHtml + tickerHtml;
+
+                    // Render Markets Table
+                    const displayCoins = ['BTC', 'ETH', 'SOL', 'XRP', 'LTC'];
+                    let tableHtml = '';
+                    displayCoins.forEach(sym => {
+                        const c = data.RAW[sym]?.USD;
+                        if (!c) return;
+                        const dir = c.CHANGEPCT24HOUR >= 0 ? 'rate-positive' : 'rate-negative';
+                        const sign = c.CHANGEPCT24HOUR >= 0 ? '+' : '';
+                        const ghsBuy = (c.PRICE * adminGhsRate).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                        const ghsSell = (c.PRICE * (adminGhsRate * 0.98)).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+                        tableHtml += `
+                            <tr>
+                                <td>
+                                    <div class="coin-meta-wrap">
+                                        <img src="https://www.cryptocompare.com${c.IMAGEURL}" alt="${sym}">
+                                        <div>
+                                            <div class="coin-name">${sym}</div>
+                                            <div class="coin-sym">${c.FROMSYMBOL} / USD</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="font-family:var(--font-mono);font-weight:700;">$${c.PRICE.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                                <td class="${dir}">${sign}${c.CHANGEPCT24HOUR.toFixed(2)}%</td>
+                                <td style="font-family:var(--font-mono);font-weight:700;color:#10b981;">₵ ${ghsBuy}</td>
+                                <td style="font-family:var(--font-mono);font-weight:700;color:#38bdf8;">₵ ${ghsSell}</td>
+                                <td style="text-align: right;">
+                                    <a href="trade.html?asset=${sym}" class="btn-market-trade">Trade ${sym}</a>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                    if (ratesTbody) ratesTbody.innerHTML = tableHtml;
+
+                } catch (e) {
+                    console.error('Market feed error', e);
+                }
+            }
+
+            fetchLiveMarketRates();
+            setInterval(fetchLiveMarketRates, 45000);
+
+            // --- 4. INTERACTIVE HERO TRADE TERMINAL ENGINE ---
+            let currentTradeMode = 'buy'; // 'buy' or 'sell'
+            const tabBuy = document.getElementById('tab-buy-mode');
+            const tabSell = document.getElementById('tab-sell-mode');
+            const payInput = document.getElementById('terminal-pay-amount');
+            const receiveInput = document.getElementById('terminal-receive-amount');
+            const cryptoSelect = document.getElementById('terminal-crypto-select');
+            const rateDisplay = document.getElementById('terminal-live-rate');
+            const labelPay = document.getElementById('label-pay-mode');
+            const labelReceive = document.getElementById('label-receive-mode');
+            const executeBtn = document.getElementById('btn-execute-quick-trade');
+
+            function updateTerminalCalculation() {
+                const payVal = parseFloat(payInput.value) || 0;
+                const selectedCrypto = cryptoSelect.value;
+                const usdAmount = payVal / adminGhsRate;
+                
+                let coinPriceUsd = 68000;
+                if (selectedCrypto === 'BTC') coinPriceUsd = 68000;
+                else if (selectedCrypto === 'ETH') coinPriceUsd = 3500;
+                else if (selectedCrypto.startsWith('USDT')) coinPriceUsd = 1.0;
+
+                const receiveQty = usdAmount / coinPriceUsd;
+
+                if (currentTradeMode === 'buy') {
+                    receiveInput.value = receiveQty > 0 ? (selectedCrypto.startsWith('USDT') ? receiveQty.toFixed(2) : receiveQty.toFixed(6)) : '0.00';
+                    rateDisplay.textContent = `1 ${selectedCrypto} ≈ $${coinPriceUsd.toLocaleString()} (₵${(coinPriceUsd * adminGhsRate).toLocaleString()})`;
+                } else {
+                    receiveInput.value = receiveQty > 0 ? (selectedCrypto.startsWith('USDT') ? receiveQty.toFixed(2) : receiveQty.toFixed(6)) : '0.00';
+                    rateDisplay.textContent = `1 ${selectedCrypto} ≈ $${coinPriceUsd.toLocaleString()} (₵${(coinPriceUsd * adminGhsRate * 0.98).toLocaleString()})`;
+                }
+            }
+
+            tabBuy.addEventListener('click', () => {
+                currentTradeMode = 'buy';
+                tabBuy.classList.add('active', 'buy');
+                tabSell.classList.remove('active', 'sell');
+                labelPay.textContent = "You Pay";
+                labelReceive.textContent = "You Receive (Estimated)";
+                executeBtn.innerHTML = `<span>Continue to Buy Settlement</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+                updateTerminalCalculation();
+            });
+
+            tabSell.addEventListener('click', () => {
+                currentTradeMode = 'sell';
+                tabSell.classList.add('active', 'sell');
+                tabBuy.classList.remove('active', 'buy');
+                labelPay.textContent = "You Send Crypto Value";
+                labelReceive.textContent = "You Receive Payout";
+                executeBtn.innerHTML = `<span>Continue to Sell Settlement</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+                updateTerminalCalculation();
+            });
+
+            payInput.addEventListener('input', updateTerminalCalculation);
+            cryptoSelect.addEventListener('change', updateTerminalCalculation);
+            updateTerminalCalculation();
+
+            // Execute Quick Trade
+            executeBtn.addEventListener('click', () => {
+                const payVal = parseFloat(payInput.value) || 0;
+                const selectedCrypto = cryptoSelect.value;
+                const receiveVal = receiveInput.value;
+
+                if (currentTradeMode === 'buy') {
+                    const buyOrderDetails = {
+                        product: selectedCrypto,
+                        usdAmount: (payVal / adminGhsRate).toFixed(2),
+                        productAmount: receiveVal,
+                        ghsAmount: payVal.toFixed(2),
+                        feeGhs: '15.00',
+                        totalPay: (payVal + 15).toFixed(2),
+                        minerFeeValue: '15',
+                        walletAddress: '',
+                        rate: adminGhsRate.toString()
+                    };
+                    localStorage.setItem('buyOrderDetails', JSON.stringify(buyOrderDetails));
+                    window.location.href = 'trade.html?action=buy&product=' + selectedCrypto;
+                } else {
+                    const sellOrderDetails = {
+                        product: selectedCrypto,
+                        productAmount: receiveVal,
+                        ghsToReceive: payVal.toFixed(2),
+                        rate: adminGhsRate.toString()
+                    };
+                    localStorage.setItem('sellOrderDetails', JSON.stringify(sellOrderDetails));
+                    window.location.href = 'trade.html?action=sell&product=' + selectedCrypto;
+                }
+            });
+        });
     </script>
     <script src="/chat-widget.js"></script>
 </body>

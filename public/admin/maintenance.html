@@ -5,6 +5,9 @@
     <link rel="icon" type="image/png" href="../css/logo.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Maintenance Mode - Admin</title>
+        <link rel=preconnect href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="admin.css">
     <style>
         .maint-card { max-width: 700px; }
@@ -32,7 +35,7 @@
 
         .maint-card textarea {
             width: 100%; min-height: 100px; padding: 14px; border: 1px solid var(--border-medium);
-            border-radius: 10px; font-family: 'Poppins', sans-serif; font-size: .95rem;
+            border-radius: 10px; font-family: var(--font-sans); font-size: .95rem;
             resize: vertical; transition: border-color .2s;
         }
         .maint-card textarea:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(0,91,170,.12); }
@@ -79,7 +82,7 @@
             <button class="sidebar-close-btn" id="sidebar-close-btn" aria-label="Close menu">&times;</button>
             <div class="sidebar-header">
                 <a href="index.html" class="logo-wrapper">
-                    <img src="../css/logo.jpg" alt="Logo" class="logo" style="width: auto !important; height: 44px !important; max-height: 44px; border-radius: 16px !important; object-fit: contain !important; background: none !important; box-shadow: none !important; overflow: visible !important;">
+                    <img src="../css/logo.png" alt="Logo" class="logo" style="width: auto !important; height: 38px !important; max-height: 38px; border-radius: 8px !important; object-fit: contain !important; background: none !important; box-shadow: none !important; overflow: visible !important;">
                     <span class="logo-name">Admin Portal</span>
                 </a>
             </div>

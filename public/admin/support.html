@@ -5,6 +5,9 @@
     <link rel="icon" type="image/png" href="../css/logo.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Support - Admin</title>
+        <link rel=preconnect href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="admin.css">
     <style>
         /* Modal Styles */
@@ -28,7 +31,7 @@
         .message-item.user { background-color: #f0f7ff; border-left: 3px solid #005baa; }
         .message-item.admin { background-color: #f8f9fa; border-left: 3px solid #64748b; }
         .reply-form h3 { margin-top: 0; margin-bottom: 15px; color: #1e293b; }
-        .reply-form textarea { width: 100%; padding: 12px 15px; border: 1px solid var(--border-medium); border-radius: 8px; font-size: 1rem; box-sizing: border-box; font-family: 'Poppins', sans-serif; min-height: 100px; resize: vertical; }
+        .reply-form textarea { width: 100%; padding: 12px 15px; border: 1px solid var(--border-medium); border-radius: 8px; font-size: 1rem; box-sizing: border-box; font-family: var(--font-sans); min-height: 100px; resize: vertical; }
         .reply-form .btn-primary { margin-top: 10px; }
         .message { padding: 15px; border-radius: 8px; margin-top: 20px; font-weight: 500; display: none; }
         .message.error { background-color: #fbe9e7; color: #dc3545; }
@@ -52,7 +55,7 @@
             <button class="sidebar-close-btn" id="sidebar-close-btn" aria-label="Close menu">&times;</button>
             <div class="sidebar-header">
                 <a href="index.html" class="logo-wrapper">
-                    <img src="../css/logo.jpg" alt="Logo" class="logo" style="width: auto !important; height: 44px !important; max-height: 44px; border-radius: 16px !important; object-fit: contain !important; background: none !important; box-shadow: none !important; overflow: visible !important;">
+                    <img src="../css/logo.png" alt="Logo" class="logo" style="width: auto !important; height: 38px !important; max-height: 38px; border-radius: 8px !important; object-fit: contain !important; background: none !important; box-shadow: none !important; overflow: visible !important;">
                     <span class="logo-name">Admin Portal</span>
                 </a>
             </div>
@@ -187,11 +190,11 @@
                 tickets.forEach(ticket => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                        <td data-label="Ticket ID">${ticket.id}</td>
-                        <td data-label="User Email">${ticket.email}</td>
-                        <td data-label="Subject">${ticket.subject}</td>
+                        <td data-label="Ticket ID" style="font-family:var(--font-mono);font-size:0.8rem;color:var(--text-secondary);">${ticket.id}</td>
+                        <td data-label="User Email" style="font-weight:500;">${ticket.email}</td>
+                        <td data-label="Subject" style="font-weight:600;color:var(--text-primary);">${ticket.subject}</td>
                         <td data-label="Status"><span class="status-badge status-${ticket.status}">${ticket.status}</span></td>
-                        <td data-label="Last Updated">${new Date(ticket.updated_at).toLocaleString()}</td>
+                        <td data-label="Last Updated" style="font-size:0.8rem;color:var(--text-secondary);">${new Date(ticket.updated_at).toLocaleString()}</td>
                         <td data-label="Action"><button class="action-btn" data-ticket-id="${ticket.id}">View</button></td>
                     `;
                     tbody.appendChild(row);
