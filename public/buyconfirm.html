@@ -5,79 +5,87 @@
     <link rel="icon" type="image/png" href="css/logo.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Confirm Payment - CryptoPlexTrade</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/app.css">
     <style>
-        /* --- Main Content --- */
-        .main-content { flex-grow: 1; padding: 60px 0; }
+        body { overflow-y: auto; background: var(--bg); font-family: var(--font-sans); color: var(--text-1); }
+        .main-content { flex-grow: 1; padding: 48px 0 100px; }
         .confirmation-wrapper {
-            background: rgba(255, 255, 255, 0.6);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 40px 50px; 
-            border-radius: 20px; 
-            box-shadow: 0 15px 35px var(--shadow-medium);
-            animation: fade-in-up 0.8s ease-out;
+            background: var(--bg-white);
+            border: 1px solid var(--border);
+            padding: 36px 40px; 
+            border-radius: var(--radius-lg); 
+            box-shadow: var(--shadow-sm);
+            max-width: 640px;
+            margin: 0 auto;
         }
-        .confirmation-wrapper h1 { font-size: 2.5rem; color: var(--text-primary); margin-top: 0; margin-bottom: 30px; text-align: center; }
+        .confirmation-wrapper h1 { font-size: 1.5rem; font-weight: 700; color: var(--text-1); margin-top: 0; margin-bottom: 24px; text-align: center; letter-spacing: -0.02em; }
         
         /* Stepper */
-        .stepper { display: flex; justify-content: space-between; margin-bottom: 40px; position: relative; }
-        .stepper::before { content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 2px; background: var(--border-medium); transform: translateY(-50%); z-index: 1; }
+        .stepper { display: flex; justify-content: space-between; margin-bottom: 32px; position: relative; }
+        .stepper::before { content: ''; position: absolute; top: 18px; left: 15%; right: 15%; height: 2px; background: var(--border); z-index: 1; }
         .step { display: flex; flex-direction: column; align-items: center; z-index: 2; }
-        .step-number { width: 30px; height: 30px; border-radius: 50%; background: var(--border-medium); color: var(--bg-white); display: flex; align-items: center; justify-content: center; font-weight: 600; margin-bottom: 10px; transition: all 0.4s ease; }
-        .step-title { font-size: 0.9rem; font-weight: 500; color: var(--text-secondary); }
-        .step.active .step-number { background: var(--primary-color); transform: scale(1.2); }
-        .step.active .step-title { color: var(--primary-dark); }
+        .step-number { width: 36px; height: 36px; border-radius: 50%; background: var(--bg-white); border: 2px solid var(--border-mid); color: var(--text-3); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.8rem; margin-bottom: 8px; transition: all 0.2s ease; }
+        .step-title { font-size: 0.75rem; font-weight: 600; color: var(--text-3); }
+        .step.active .step-number { background: var(--primary); border-color: var(--primary); color: white; box-shadow: 0 0 0 4px rgba(0, 91, 170, 0.14); }
+        .step.active .step-title { color: var(--primary); font-weight: 700; }
 
         .confirmation-section {
-            margin-bottom: 40px;
-            padding: 25px;
-            background: rgba(255, 255, 255, 0.7);
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            margin-bottom: 28px;
+            padding: 22px 24px;
+            background: var(--bg-subtle);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
         }
-        .confirmation-section h2 { font-size: 1.5rem; color: var(--text-primary); margin-top: 0; margin-bottom: 20px; border-bottom: 2px solid var(--border-light); padding-bottom: 10px; }
+        .confirmation-section h2 { font-size: 1.05rem; font-weight: 700; color: var(--text-1); margin-top: 0; margin-bottom: 16px; border-bottom: 1px solid var(--border); padding-bottom: 8px; letter-spacing: -0.01em; }
         
         /* Order Summary */
-        .summary-item { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border-light); }
+        .summary-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 0.88rem; }
         .summary-item:last-child { border-bottom: none; }
-        .summary-item .label { color: var(--text-secondary); font-weight: 500; }
-        .summary-item .value { color: var(--text-primary); font-weight: 600; }
-        .summary-item .value.total { font-size: 1.2rem; color: var(--primary-dark); }
-        .summary-item .wallet { word-break: break-all; font-size: 0.9rem; }
+        .summary-item .label { color: var(--text-3); font-weight: 500; }
+        .summary-item .value { color: var(--text-1); font-weight: 600; font-feature-settings: 'tnum'; }
+        .summary-item .value.total { font-size: 1.15rem; color: var(--primary); font-family: var(--font-mono); font-weight: 700; }
+        .summary-item .wallet { word-break: break-all; font-size: 0.82rem; font-family: var(--font-mono); }
 
         /* Form Groups */
-        .form-group { position: relative; margin-bottom: 20px; }
-        .form-group label { display: block; font-weight: 600; color: var(--text-primary); margin-bottom: 8px; }
-        .form-group input, .form-group select { width: 100%; padding: 12px 15px; border: 1px solid var(--border-medium); border-radius: 8px; font-size: 1rem; box-sizing: border-box; transition: border-color 0.3s ease, box-shadow 0.3s ease; background-color: var(--bg-white); }
-        .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px var(--shadow-blue); }
+        .form-group { position: relative; margin-bottom: 18px; }
+        .form-group label { display: block; font-weight: 700; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-2); margin-bottom: 6px; }
+        .form-group input, .form-group select { width: 100%; padding: 12px 14px; border: 1px solid var(--border-mid); border-radius: var(--radius-sm); font-size: 0.9rem; font-family: var(--font-sans); box-sizing: border-box; transition: border-color 0.15s, box-shadow 0.15s; background-color: var(--bg-white); color: var(--text-1); }
+        .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0, 91, 170, 0.12); }
         
         /* Payment Details Display */
-        .payment-details-display { margin-top: 20px; background-color: var(--bg-highlight); padding: 20px; border-radius: 8px; border-left: 4px solid var(--primary-color); }
-        .detail-item { margin-bottom: 15px; }
-        .detail-item .label { font-weight: 600; color: var(--text-primary); display: block; margin-bottom: 5px; }
-        .detail-item .value { background-color: var(--bg-white); padding: 10px; border-radius: 8px; font-weight: 500; border: 1px solid var(--border-light); }
-        .detail-item .value.reference { font-family: 'Courier New', Courier, monospace; font-size: 1.1rem; color: var(--accent-red); letter-spacing: 2px; }
+        .payment-details-display { margin-top: 18px; background-color: var(--primary-pale); padding: 18px; border-radius: var(--radius-sm); border: 1px solid rgba(0, 91, 170, 0.2); }
+        .payment-details-display h3 { font-size: 0.95rem; font-weight: 700; color: var(--primary-dark); margin: 0 0 6px; }
+        .payment-details-display p { font-size: 0.8rem; color: var(--text-2); margin: 0 0 14px; }
+        .detail-item { margin-bottom: 12px; }
+        .detail-item .label { font-weight: 600; font-size: 0.78rem; color: var(--text-3); display: block; margin-bottom: 4px; }
+        .detail-item .value { background-color: var(--bg-white); padding: 10px 14px; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.88rem; border: 1px solid var(--border); color: var(--text-1); }
+        .detail-item .value.reference { font-family: var(--font-mono); font-size: 1.05rem; color: var(--primary); letter-spacing: 2px; }
 
-        #confirm-payment-btn { width: 100%; padding: 15px; font-size: 1.1rem; }
+        #confirm-payment-btn { width: 100%; }
 
-        #server-message { padding: 15px; border-radius: 8px; margin-bottom: 20px; font-weight: 500; display: none; }
-        #server-message.success { background-color: #e9f5ec; color: #28a745; }
-        #server-message.error { background-color: #fbe9e7; color: #dc3545; }
+        #server-message { padding: 14px 18px; border-radius: var(--radius-sm); margin-bottom: 20px; font-weight: 500; display: none; font-size: 0.85rem; }
+        #server-message.success { background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
+        #server-message.error { background-color: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
 
+        @media (max-width: 640px) {
+            .confirmation-wrapper { padding: 24px 18px; }
+            .confirmation-section { padding: 16px; }
+        }
     </style>
-<link rel="stylesheet" href="css/responsive.css">
 </head>
-<body class="animated-background">
-    <header class="header" style="background: transparent;">
-        <div class="container">
-            <a href="dashboard.html" class="logo-wrapper">
-                <img src="css/logo.jpg" alt="Logo" class="logo" style="width: auto !important; height: 44px !important; max-height: 44px; border-radius: 16px !important; object-fit: contain !important; background: none !important; box-shadow: none !important; overflow: visible !important;">
-                <span class="logo-name">CryptoPlexTrade</span>
+<body>
+    <header class="header" style="background: var(--bg-white); border-bottom: 1px solid var(--border);">
+        <div class="container" style="max-width: 1200px; display: flex; justify-content: space-between; align-items: center; padding: 12px 20px;">
+            <a href="dashboard.html" class="logo-wrapper" style="display: flex; align-items: center; gap: 10px; text-decoration: none;">
+                <img src="css/logo.png" alt="Logo" class="logo" style="width: auto; height: 38px; border-radius: 8px; object-fit: contain;">
+                <span class="logo-name" style="font-size: 0.95rem; font-weight: 700; color: var(--text-1);">CryptoPlexTrade</span>
             </a>
-            <nav class="nav">
-                <a href="dashboard.html">Dashboard</a>
-                <a href="#" id="logout-btn">Logout</a>
+            <nav class="nav" style="display: flex; gap: 10px; align-items: center;">
+                <a href="dashboard.html" class="btn btn-ghost btn-sm">Dashboard</a>
+                <a href="#" id="logout-btn" class="btn btn-danger btn-sm">Logout</a>
             </nav>
         </div>
     </header>
@@ -185,7 +193,7 @@
                             <label for="transaction-id">Enter Your Payment Transaction ID</label>
                             <input type="text" id="transaction-id" name="transaction-id" required>
                         </div>
-                        <button type="submit" id="confirm-payment-btn" class="btn-primary">I Have Paid, Confirm Now</button>
+                        <button type="submit" id="confirm-payment-btn" class="btn btn-primary btn-lg">I Have Paid, Confirm Now</button>
                     </form>
                 </div>
             </div>

@@ -7,134 +7,138 @@
     <title>Payout Details - CryptoPlexTrade</title>
     <meta name="description" content="Enter your payout details to complete your crypto sell order on CryptoPlexTrade.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/app.css">
     <style>
-        body { overflow-y: auto; }
+        body { overflow-y: auto; background: var(--bg); font-family: var(--font-sans); color: var(--text-1); }
         .os-wrap { min-height: 100vh; background: var(--bg); display: flex; flex-direction: column; }
 
         /* Topbar */
         .os-topbar {
             background: var(--bg-white); border-bottom: 1px solid var(--border);
-            padding: 0 32px; height: 62px;
+            padding: 0 32px; height: 64px;
             display: flex; align-items: center; justify-content: space-between;
             flex-shrink: 0; position: sticky; top: 0; z-index: 100;
         }
         .os-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-        .os-brand__orb { text-decoration: none; }
-        img.os-brand__orb { width: auto; height: 44px; border-radius: 16px; object-fit: contain; background: none !important; box-shadow: none !important; }
-        .os-brand__name { font-size: 0.9rem; font-weight: 700; color: var(--text-1); }
-        .os-topbar-right { display: flex; gap: 12px; align-items: center; }
+        img.os-brand__orb { width: auto; height: 38px; border-radius: 8px; object-fit: contain; }
+        .os-brand__name { font-size: 0.95rem; font-weight: 700; color: var(--text-1); letter-spacing: -0.01em; }
+        .os-topbar-right { display: flex; gap: 10px; align-items: center; }
 
         .os-main {
             flex: 1; display: flex; align-items: flex-start;
-            justify-content: center; padding: 40px 20px 100px;
+            justify-content: center; padding: 48px 20px 100px;
         }
         .os-container { width: 100%; max-width: 560px; }
 
         /* Steps */
-        .steps { display: flex; align-items: flex-start; margin-bottom: 32px; }
+        .steps { display: flex; align-items: flex-start; margin-bottom: 28px; position: relative; }
         .step-item { flex: 1; display: flex; flex-direction: column; align-items: center; position: relative; }
         .step-item:not(:last-child)::after {
             content: ''; position: absolute; top: 18px; left: 50%;
             width: 100%; height: 2px; background: var(--green); z-index: 0;
         }
         .step-num {
-            width: 36px; height: 44px; border-radius: 50%;
-            border: 2px solid var(--border-mid); background: white;
+            width: 36px; height: 36px; border-radius: 50%;
+            border: 2px solid var(--green); background: var(--green);
             display: flex; align-items: center; justify-content: center;
-            font-size: 0.8rem; font-weight: 700; color: var(--text-3);
-            position: relative; z-index: 1; transition: all 0.25s;
+            font-size: 0.8rem; font-weight: 700; color: white;
+            position: relative; z-index: 1; transition: all 0.2s;
         }
         .step-item.active .step-num {
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            border-color: transparent; color: white;
-            box-shadow: 0 0 0 4px rgba(0,91,170,0.15);
+            background: var(--primary);
+            border-color: var(--primary); color: white;
+            box-shadow: 0 0 0 4px rgba(0,91,170,0.14);
         }
         .step-item.done .step-num {
-            background: var(--green); border-color: transparent; color: white;
+            background: var(--green); border-color: var(--green); color: white;
         }
         .step-label {
-            font-size: 0.72rem; font-weight: 600; color: var(--text-3);
+            font-size: 0.75rem; font-weight: 600; color: var(--text-3);
             margin-top: 8px; text-align: center; white-space: nowrap;
         }
-        .step-item.active .step-label { color: var(--primary-dark); }
-        .step-item.done .step-label { color: var(--green); }
+        .step-item.active .step-label { color: var(--primary); font-weight: 700; }
+        .step-item.done .step-label { color: var(--text-2); }
 
         /* Main card */
         .summary-card {
             background: var(--bg-white); border: 1px solid var(--border);
-            border-radius: 16px; box-shadow: var(--shadow-md); overflow: hidden;
+            border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); overflow: hidden;
         }
 
         .summary-card__header {
-            padding: 22px 28px 18px; border-bottom: 1px solid var(--border);
+            padding: 24px 28px 20px; border-bottom: 1px solid var(--border);
             display: flex; align-items: center; gap: 14px;
-            background: linear-gradient(135deg, #f0fff4 0%, white 100%);
+            background: var(--bg-subtle);
         }
         .summary-card__icon {
-            width: 50px; height: 50px; border-radius: 14px;
-            background: linear-gradient(135deg, #16a34a, #22c55e);
+            width: 44px; height: 44px; border-radius: var(--radius);
+            background: #ecfdf5; border: 1px solid #a7f3d0;
             display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+            color: var(--green);
         }
-        .summary-card__icon svg { width: 24px; height: 24px; color: white; }
-        .summary-card__titles h2 { font-size: 1.1rem; font-weight: 800; color: var(--text-1); margin: 0 0 2px; }
+        .summary-card__icon svg { width: 22px; height: 22px; }
+        .summary-card__titles h2 { font-size: 1.15rem; font-weight: 700; color: var(--text-1); margin: 0 0 2px; letter-spacing: -0.01em; }
         .summary-card__titles p { font-size: 0.8rem; color: var(--text-3); margin: 0; }
 
         /* Section label */
-        .payout-section { padding: 22px 28px; border-bottom: 1px solid var(--border); }
+        .payout-section { padding: 24px 28px 18px; border-bottom: 1px solid var(--border); }
         .payout-section-title {
-            font-size: 0.78rem; font-weight: 700; color: var(--text-3);
-            text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 14px;
+            font-size: 0.75rem; font-weight: 700; color: var(--text-3);
+            text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 14px;
         }
 
         /* Payout method cards */
         .payout-options {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 0;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 0;
         }
         .payout-option-card {
-            background: var(--bg-white); border: 2px solid var(--border);
-            border-radius: 12px; padding: 18px 14px;
+            background: var(--bg-white); border: 1.5px solid var(--border);
+            border-radius: var(--radius-md); padding: 18px 14px;
             text-align: center; cursor: pointer;
-            transition: all 0.2s; display: flex; flex-direction: column;
-            align-items: center; gap: 8px;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column;
+            align-items: center; gap: 10px;
         }
-        .payout-option-card:hover { border-color: var(--border-mid); box-shadow: var(--shadow-md); transform: translateY(-2px); }
+        .payout-option-card:hover { border-color: var(--primary-light); box-shadow: var(--shadow-sm); transform: translateY(-1px); }
         .payout-option-card.selected {
             border-color: var(--primary); background: var(--primary-pale);
-            box-shadow: 0 0 0 3px rgba(0,91,170,0.12); transform: translateY(-2px);
+            box-shadow: 0 0 0 3px rgba(0,91,170,0.12); transform: translateY(-1px);
         }
         .poc-icon {
-            width: 44px; height: 44px; border-radius: 11px;
-            background: var(--primary-pale);
+            width: 44px; height: 44px; border-radius: var(--radius);
+            background: var(--bg-subtle);
+            border: 1px solid var(--border);
             display: flex; align-items: center; justify-content: center;
-            transition: background 0.2s;
+            transition: all 0.2s;
         }
         .payout-option-card.selected .poc-icon {
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            background: var(--primary);
+            border-color: var(--primary);
         }
-        .poc-icon svg { width: 22px; height: 22px; color: var(--primary); }
+        .poc-icon svg { width: 22px; height: 22px; color: var(--text-2); }
         .payout-option-card.selected .poc-icon svg { color: white; }
-        .poc-label { font-size: 0.84rem; font-weight: 700; color: var(--text-1); }
+        .poc-label { font-size: 0.88rem; font-weight: 700; color: var(--text-1); letter-spacing: -0.01em; }
 
         /* Payout form */
         .payout-form-section {
-            padding: 22px 28px; border-bottom: 1px solid var(--border);
-            animation: form-in 0.28s ease;
+            padding: 24px 28px; border-bottom: 1px solid var(--border);
+            animation: form-in 0.2s ease;
         }
-        @keyframes form-in { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes form-in { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
 
-        .form-row { margin-bottom: 16px; }
+        .form-row { margin-bottom: 18px; }
         .form-row:last-child { margin-bottom: 0; }
         .form-row label {
-            display: block; font-size: 0.8rem; font-weight: 700;
-            color: var(--text-2); margin-bottom: 6px;
+            display: block; font-size: 0.78rem; font-weight: 700;
+            color: var(--text-2); text-transform: uppercase;
+            letter-spacing: 0.04em; margin-bottom: 6px;
         }
         .form-row input {
-            width: 100%; padding: 10px 13px; box-sizing: border-box;
-            border: 1.5px solid var(--border-mid); border-radius: 9px;
-            font-size: 0.875rem; font-family: 'Poppins', sans-serif; color: var(--text-1);
-            background: white; transition: border-color 0.2s, box-shadow 0.2s;
+            width: 100%; padding: 12px 14px; box-sizing: border-box;
+            border: 1px solid var(--border-mid); border-radius: var(--radius-sm);
+            font-size: 0.9rem; font-family: var(--font-sans); color: var(--text-1);
+            background: white; transition: border-color 0.15s, box-shadow 0.15s;
         }
         .form-row input:focus {
             outline: none; border-color: var(--primary);
@@ -144,20 +148,23 @@
 
         /* Server message */
         #server-message {
-            margin: 0 28px 20px; padding: 13px 16px; border-radius: 10px;
-            font-size: 0.83rem; font-weight: 600; display: none;
+            margin: 0 28px 20px; padding: 14px 18px; border-radius: var(--radius-sm);
+            font-size: 0.85rem; font-weight: 600; display: none;
         }
-        #server-message.success { background: #f0fff4; color: #15803d; border: 1px solid #bbf7d0; }
-        #server-message.error { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+        #server-message.success { background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
+        #server-message.error { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
 
-        .os-cta { padding: 22px 28px; background: white; }
+        .os-cta { padding: 24px 28px; background: white; }
 
         @media (max-width: 540px) {
             .os-topbar { padding: 0 16px; }
             .os-brand__name { display: none; }
             .summary-card__header, .payout-section, .payout-form-section, .os-cta { padding-left: 18px; padding-right: 18px; }
             #server-message { margin-left: 18px; margin-right: 18px; }
-            .step-label { font-size: 0.65rem; }
+            .step-label { font-size: 0.68rem; }
+        }
+    </style>
+</head>
         }
     </style>
 </head>

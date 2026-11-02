@@ -7,33 +7,33 @@
     <title>Send Crypto - CryptoPlexTrade</title>
     <meta name="description" content="Send your cryptocurrency to complete your sell order on CryptoPlexTrade.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/app.css">
     <style>
-        body { overflow-y: auto; }
+        body { overflow-y: auto; background: var(--bg); font-family: var(--font-sans); color: var(--text-1); }
         .os-wrap { min-height: 100vh; background: var(--bg); display: flex; flex-direction: column; }
 
         /* Topbar */
         .os-topbar {
             background: var(--bg-white); border-bottom: 1px solid var(--border);
-            padding: 0 32px; height: 62px;
+            padding: 0 32px; height: 64px;
             display: flex; align-items: center; justify-content: space-between;
             flex-shrink: 0; position: sticky; top: 0; z-index: 100;
         }
         .os-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-        .os-brand__orb { text-decoration: none; }
-        img.os-brand__orb { width: auto; height: 44px; border-radius: 16px; object-fit: contain; background: none !important; box-shadow: none !important; }
-        .os-brand__name { font-size: 0.9rem; font-weight: 700; color: var(--text-1); }
-        .os-topbar-right { display: flex; gap: 12px; align-items: center; }
+        img.os-brand__orb { width: auto; height: 38px; border-radius: 8px; object-fit: contain; }
+        .os-brand__name { font-size: 0.95rem; font-weight: 700; color: var(--text-1); letter-spacing: -0.01em; }
+        .os-topbar-right { display: flex; gap: 10px; align-items: center; }
 
         .os-main {
             flex: 1; display: flex; align-items: flex-start;
-            justify-content: center; padding: 40px 20px 100px;
+            justify-content: center; padding: 48px 20px 100px;
         }
         .os-container { width: 100%; max-width: 560px; }
 
         /* Steps */
-        .steps { display: flex; align-items: flex-start; margin-bottom: 32px; }
+        .steps { display: flex; align-items: flex-start; margin-bottom: 28px; position: relative; }
         .step-item { flex: 1; display: flex; flex-direction: column; align-items: center; position: relative; }
         .step-item:not(:last-child)::after {
             content: ''; position: absolute; top: 18px; left: 50%;
@@ -41,107 +41,110 @@
         }
         .step-item.done:not(:last-child)::after { background: var(--green); }
         .step-num {
-            width: 36px; height: 44px; border-radius: 50%;
-            border: 2px solid var(--border-mid); background: white;
+            width: 36px; height: 36px; border-radius: 50%;
+            border: 2px solid var(--border-mid); background: var(--bg-white);
             display: flex; align-items: center; justify-content: center;
             font-size: 0.8rem; font-weight: 700; color: var(--text-3);
-            position: relative; z-index: 1; transition: all 0.25s;
+            position: relative; z-index: 1; transition: all 0.2s;
         }
         .step-item.active .step-num {
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            border-color: transparent; color: white;
-            box-shadow: 0 0 0 4px rgba(0,91,170,0.15);
+            background: var(--primary);
+            border-color: var(--primary); color: white;
+            box-shadow: 0 0 0 4px rgba(0,91,170,0.14);
         }
         .step-item.done .step-num {
-            background: var(--green); border-color: transparent; color: white;
+            background: var(--green); border-color: var(--green); color: white;
         }
         .step-label {
-            font-size: 0.72rem; font-weight: 600; color: var(--text-3);
+            font-size: 0.75rem; font-weight: 600; color: var(--text-3);
             margin-top: 8px; text-align: center; white-space: nowrap;
         }
-        .step-item.active .step-label { color: var(--primary-dark); }
-        .step-item.done .step-label { color: var(--green); }
+        .step-item.active .step-label { color: var(--primary); font-weight: 700; }
+        .step-item.done .step-label { color: var(--text-2); }
 
         /* Main card */
         .summary-card {
             background: var(--bg-white); border: 1px solid var(--border);
-            border-radius: 16px; box-shadow: var(--shadow-md); overflow: hidden;
+            border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); overflow: hidden;
         }
         .summary-card__header {
-            padding: 22px 28px 18px; border-bottom: 1px solid var(--border);
+            padding: 24px 28px 20px; border-bottom: 1px solid var(--border);
             display: flex; align-items: center; gap: 14px;
-            background: linear-gradient(135deg, #f0f7ff 0%, white 100%);
+            background: var(--bg-subtle);
         }
         .summary-card__icon {
-            width: 50px; height: 50px; border-radius: 14px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            width: 44px; height: 44px; border-radius: var(--radius);
+            background: var(--primary-pale); border: 1px solid rgba(0,91,170,0.15);
             display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+            color: var(--primary);
         }
-        .summary-card__icon svg { width: 24px; height: 24px; color: white; }
-        .summary-card__titles h2 { font-size: 1.1rem; font-weight: 800; color: var(--text-1); margin: 0 0 2px; }
+        .summary-card__icon svg { width: 22px; height: 22px; }
+        .summary-card__titles h2 { font-size: 1.15rem; font-weight: 700; color: var(--text-1); margin: 0 0 2px; letter-spacing: -0.01em; }
         .summary-card__titles p { font-size: 0.8rem; color: var(--text-3); margin: 0; }
 
         /* Address box */
         .address-section { padding: 24px 28px; border-bottom: 1px solid var(--border); }
         .address-label {
-            font-size: 0.78rem; font-weight: 600; color: var(--text-3);
+            font-size: 0.78rem; font-weight: 700; color: var(--text-2);
+            text-transform: uppercase; letter-spacing: 0.04em;
             margin-bottom: 10px;
         }
         .address-box {
             background: var(--primary-pale);
-            border: 1.5px dashed rgba(0,91,170,0.35);
-            border-radius: 12px; padding: 16px 18px;
+            border: 1px dashed rgba(0, 91, 170, 0.4);
+            border-radius: var(--radius-md); padding: 16px 18px;
             display: flex; align-items: center; justify-content: space-between;
             gap: 12px;
         }
         .address-code {
-            font-family: 'Courier New', monospace;
-            font-size: 0.82rem; font-weight: 700;
+            font-family: var(--font-mono);
+            font-size: 0.85rem; font-weight: 600;
             color: var(--primary-dark); word-break: break-all; flex: 1;
         }
         .copy-addr-btn {
             background: var(--primary); color: white;
-            border: none; border-radius: 8px; padding: 7px 14px;
-            font-size: 0.73rem; font-weight: 700; cursor: pointer;
-            font-family: 'Poppins', sans-serif;
+            border: none; border-radius: var(--radius-sm); padding: 7px 14px;
+            font-size: 0.75rem; font-weight: 600; cursor: pointer;
+            font-family: var(--font-sans);
             white-space: nowrap; flex-shrink: 0;
-            transition: opacity 0.2s;
+            transition: all 0.15s;
         }
-        .copy-addr-btn:hover { opacity: 0.85; }
+        .copy-addr-btn:hover { background: var(--primary-dark); }
         .address-warning {
-            display: flex; align-items: flex-start; gap: 8px;
-            margin-top: 10px; padding: 10px 14px;
-            background: #fff7ed; border: 1px solid #fed7aa;
-            border-radius: 8px; font-size: 0.76rem; color: #9a3412; font-weight: 500;
+            display: flex; align-items: flex-start; gap: 10px;
+            margin-top: 14px; padding: 12px 14px;
+            background: #fffbeb; border: 1px solid #fef3c7;
+            border-radius: var(--radius-sm); font-size: 0.78rem; color: #b45309; font-weight: 500;
+            line-height: 1.45;
         }
-        .address-warning svg { width: 14px; height: 14px; flex-shrink: 0; margin-top: 1px; }
+        .address-warning svg { width: 16px; height: 16px; flex-shrink: 0; margin-top: 2px; color: #d97706; }
 
         /* TXID form */
-        .txid-section { padding: 22px 28px; border-bottom: 1px solid var(--border); }
+        .txid-section { padding: 24px 28px; border-bottom: 1px solid var(--border); }
         .txid-section label {
             display: block; font-size: 0.82rem; font-weight: 700;
-            color: var(--text-1); margin-bottom: 8px;
+            color: var(--text-1); margin-bottom: 8px; letter-spacing: -0.01em;
         }
         .txid-section input {
-            width: 100%; padding: 11px 14px; box-sizing: border-box;
-            border: 1.5px solid var(--border-mid); border-radius: 10px;
-            font-size: 0.875rem; font-family: 'Poppins', sans-serif; color: var(--text-1);
-            background: white; transition: border-color 0.2s, box-shadow 0.2s;
+            width: 100%; padding: 12px 14px; box-sizing: border-box;
+            border: 1px solid var(--border-mid); border-radius: var(--radius-sm);
+            font-size: 0.88rem; font-family: var(--font-mono); color: var(--text-1);
+            background: white; transition: border-color 0.15s, box-shadow 0.15s;
         }
         .txid-section input:focus {
             outline: none; border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(0,91,170,0.12);
+            box-shadow: 0 0 0 3px rgba(0, 91, 170, 0.12);
         }
-        .txid-section input::placeholder { color: var(--text-3); }
+        .txid-section input::placeholder { color: var(--text-3); font-family: var(--font-sans); }
 
-        .os-cta { padding: 22px 28px; background: white; }
+        .os-cta { padding: 24px 28px; background: white; }
 
         @media (max-width: 540px) {
             .os-topbar { padding: 0 16px; }
             .os-brand__name { display: none; }
             .summary-card__header, .address-section, .txid-section, .os-cta { padding-left: 18px; padding-right: 18px; }
-            .step-label { font-size: 0.65rem; }
-            .address-code { font-size: 0.72rem; }
+            .step-label { font-size: 0.68rem; }
+            .address-code { font-size: 0.76rem; }
         }
     </style>
 </head>

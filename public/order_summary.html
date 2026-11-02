@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <link rel="icon" type="image/png" href="css/logo.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verify Order - CryptoPlexTrade</title>
+    <title>Verify Buy Order - CryptoPlexTrade</title>
     <meta name="description" content="Review and verify your crypto buy order before proceeding to payment.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/app.css">
     <style>
-        /* ── Order Summary Page ─────────────────────────── */
-        body { overflow-y: auto; }
+        body { overflow-y: auto; background: var(--bg); font-family: var(--font-sans); color: var(--text-1); }
 
         .os-wrap {
             min-height: 100vh;
@@ -25,7 +25,7 @@
             background: var(--bg-white);
             border-bottom: 1px solid var(--border);
             padding: 0 32px;
-            height: 62px;
+            height: 64px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -38,12 +38,11 @@
             display: flex; align-items: center; gap: 10px;
             text-decoration: none;
         }
-        .os-brand__orb { text-decoration: none; }
-        img.os-brand__orb { width: auto; height: 44px; border-radius: 16px; object-fit: contain; background: none !important; box-shadow: none !important; }
+        img.os-brand__orb { width: auto; height: 38px; border-radius: 8px; object-fit: contain; }
         .os-brand__name {
-            font-size: 0.9rem; font-weight: 700; color: var(--text-1);
+            font-size: 0.95rem; font-weight: 700; color: var(--text-1); letter-spacing: -0.01em;
         }
-        .os-topbar-right { display: flex; gap: 12px; align-items: center; }
+        .os-topbar-right { display: flex; gap: 10px; align-items: center; }
 
         /* Page body */
         .os-main {
@@ -51,7 +50,7 @@
             display: flex;
             align-items: flex-start;
             justify-content: center;
-            padding: 40px 20px 100px;
+            padding: 48px 20px 100px;
         }
         .os-container {
             width: 100%;
@@ -63,7 +62,7 @@
             display: flex;
             align-items: flex-start;
             gap: 0;
-            margin-bottom: 32px;
+            margin-bottom: 28px;
             position: relative;
         }
         .step-item {
@@ -73,7 +72,6 @@
             align-items: center;
             position: relative;
         }
-        /* Connector line between steps */
         .step-item:not(:last-child)::after {
             content: '';
             position: absolute;
@@ -84,138 +82,140 @@
             background: var(--border);
             z-index: 0;
         }
-        .step-item.done:not(:last-child)::after,
+        .step-item.done:not(:last-child)::after {
+            background: var(--green);
+        }
         .step-item.active:not(:last-child)::after {
-            background: var(--primary);
+            background: var(--border);
         }
 
         .step-num {
-            width: 36px; height: 44px;
+            width: 36px; height: 36px;
             border-radius: 50%;
             border: 2px solid var(--border-mid);
-            background: white;
+            background: var(--bg-white);
             display: flex; align-items: center; justify-content: center;
             font-size: 0.8rem; font-weight: 700;
             color: var(--text-3);
             position: relative; z-index: 1;
-            transition: all 0.25s;
+            transition: all 0.2s ease;
         }
         .step-item.active .step-num {
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            border-color: transparent;
-            color: white;
-            box-shadow: 0 0 0 4px rgba(0,91,170,0.15);
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #ffffff;
+            box-shadow: 0 0 0 4px rgba(0, 91, 170, 0.14);
         }
         .step-item.done .step-num {
-            background: var(--primary);
-            border-color: transparent;
-            color: white;
+            background: var(--green);
+            border-color: var(--green);
+            color: #ffffff;
         }
         .step-label {
-            font-size: 0.72rem; font-weight: 600;
+            font-size: 0.75rem; font-weight: 600;
             color: var(--text-3);
             margin-top: 8px;
             text-align: center;
             white-space: nowrap;
         }
-        .step-item.active .step-label { color: var(--primary-dark); }
+        .step-item.active .step-label { color: var(--primary); font-weight: 700; }
+        .step-item.done .step-label { color: var(--text-2); }
 
         /* ── Summary Card ───────────────────────────────── */
         .summary-card {
             background: var(--bg-white);
             border: 1px solid var(--border);
-            border-radius: 16px;
-            box-shadow: var(--shadow-md);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
             overflow: hidden;
         }
 
         .summary-card__header {
-            padding: 22px 28px 18px;
+            padding: 24px 28px 20px;
             border-bottom: 1px solid var(--border);
             display: flex; align-items: center; gap: 14px;
-            background: linear-gradient(135deg, #f0f7ff 0%, white 100%);
+            background: var(--bg-subtle);
         }
 
         .summary-card__icon {
-            width: 50px; height: 50px;
-            border-radius: 14px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            width: 44px; height: 44px;
+            border-radius: var(--radius);
+            background: var(--primary-pale);
+            border: 1px solid rgba(0, 91, 170, 0.15);
+            color: var(--primary);
             display: flex; align-items: center; justify-content: center;
             flex-shrink: 0;
         }
-        .summary-card__icon svg { width: 24px; height: 24px; color: white; }
+        .summary-card__icon svg { width: 22px; height: 22px; }
 
         .summary-card__titles h2 {
-            font-size: 1.1rem; font-weight: 800;
+            font-size: 1.15rem; font-weight: 700;
             color: var(--text-1); margin: 0 0 2px;
+            letter-spacing: -0.01em;
         }
         .summary-card__titles p {
             font-size: 0.8rem; color: var(--text-3); margin: 0;
         }
 
         /* Summary rows */
-        .summary-rows { padding: 6px 0; }
+        .summary-rows { padding: 4px 0; }
 
         .summary-row {
             display: flex; justify-content: space-between; align-items: center;
             padding: 14px 28px;
             border-bottom: 1px solid var(--border);
-            opacity: 0; transform: translateX(-12px);
-            animation: row-in 0.4s ease forwards;
         }
         .summary-row:last-child { border-bottom: none; }
-        .summary-row:nth-child(1) { animation-delay: 0.05s; }
-        .summary-row:nth-child(2) { animation-delay: 0.12s; }
-        .summary-row:nth-child(3) { animation-delay: 0.19s; }
-        .summary-row:nth-child(4) { animation-delay: 0.26s; }
-        .summary-row:nth-child(5) { animation-delay: 0.33s; }
-        @keyframes row-in { to { opacity: 1; transform: translateX(0); } }
 
         .summary-row__label {
-            font-size: 0.825rem; font-weight: 600;
+            font-size: 0.82rem; font-weight: 600;
             color: var(--text-3);
         }
         .summary-row__value {
-            font-size: 0.9rem; font-weight: 700;
+            font-size: 0.9rem; font-weight: 600;
             color: var(--text-1);
             text-align: right;
-            max-width: 55%;
+            max-width: 58%;
             word-break: break-all;
+            font-feature-settings: 'tnum';
         }
         .summary-row--total {
             background: var(--primary-pale);
+            border-top: 1px solid rgba(0, 91, 170, 0.15);
+            border-bottom: 1px solid rgba(0, 91, 170, 0.15);
         }
         .summary-row--total .summary-row__label {
             font-size: 0.875rem; font-weight: 700; color: var(--primary-dark);
         }
         .summary-row--total .summary-row__value {
-            font-size: 1.25rem; color: var(--primary);
+            font-size: 1.25rem; font-weight: 700; color: var(--primary);
+            font-family: var(--font-mono);
         }
 
         /* CTA */
         .os-cta {
-            padding: 22px 28px;
+            padding: 24px 28px;
             border-top: 1px solid var(--border);
-            background: white;
+            background: var(--bg-white);
         }
 
         /* Security badges */
         .security-strip {
-            display: flex; gap: 18px; justify-content: center;
-            margin-top: 22px; flex-wrap: wrap;
+            display: flex; gap: 20px; justify-content: center;
+            margin-top: 20px; flex-wrap: wrap;
         }
         .security-item {
-            display: flex; align-items: center; gap: 5px;
+            display: flex; align-items: center; gap: 6px;
             font-size: 0.72rem; color: var(--text-3); font-weight: 500;
         }
-        .security-item svg { width: 13px; height: 13px; color: var(--green); }
+        .security-item svg { width: 14px; height: 14px; color: var(--green); }
 
         /* mobile */
         @media (max-width: 540px) {
             .os-topbar { padding: 0 16px; }
             .os-brand__name { display: none; }
             .summary-card__header, .summary-row, .os-cta { padding-left: 18px; padding-right: 18px; }
-            .step-label { font-size: 0.65rem; }
+            .step-label { font-size: 0.68rem; }
         }
     </style>
 </head>
@@ -269,19 +269,19 @@
                 <div class="summary-rows">
                     <div class="summary-row">
                         <span class="summary-row__label">You are buying</span>
-                        <span class="summary-row__value" id="summary-product-amount">—</span>
+                        <span class="summary-row__value" id="summary-product-amount" style="font-family:var(--font-mono);font-weight:700;color:var(--primary);">—</span>
                     </div>
                     <div class="summary-row">
                         <span class="summary-row__label">Product Value</span>
-                        <span class="summary-row__value" id="summary-usd">—</span>
+                        <span class="summary-row__value" id="summary-usd" style="font-family:var(--font-mono);">—</span>
                     </div>
                     <div class="summary-row">
                         <span class="summary-row__label">Miner Fee</span>
-                        <span class="summary-row__value" id="summary-fee">—</span>
+                        <span class="summary-row__value" id="summary-fee" style="font-family:var(--font-mono);">—</span>
                     </div>
                     <div class="summary-row">
                         <span class="summary-row__label">Receiving Wallet</span>
-                        <span class="summary-row__value" id="summary-wallet" style="font-size:0.78rem;font-family:monospace;">—</span>
+                        <span class="summary-row__value" id="summary-wallet" style="font-size:0.78rem;font-family:var(--font-mono);word-break:break-all;color:var(--text-2);">—</span>
                     </div>
                     <div class="summary-row summary-row--total">
                         <span class="summary-row__label">Total to Pay</span>
