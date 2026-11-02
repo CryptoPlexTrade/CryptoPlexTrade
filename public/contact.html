@@ -1,275 +1,329 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <link rel="icon" type="image/png" href="css/logo.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Us - CryptoPlexTrade</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Contact Desk — CryptoPlexTrade</title>
+    
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="css/responsive.css">
+
     <style>
-        /* Hero Banner */
-        .hero-banner{text-align:center;padding:40px 20px 28px;}
-        .hero-banner h1{font-size:2.2rem;font-weight:800;color:#0f172a;margin-bottom:10px;}
-        .hero-banner h1 span{background:linear-gradient(90deg,#005baa,#00a9e0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-        .hero-banner p{font-size:.95rem;color:#94a3b8;max-width:480px;margin:0 auto;}
-
-        /* Main content */
-        .content-wrap{max-width:1100px;margin:0 auto;width:100%;padding:0 24px 60px;display:grid;grid-template-columns:1.4fr 1fr;gap:28px;align-items:start;}
-
-        /* Info column */
-        .info-col{display:flex;flex-direction:column;gap:16px;}
-        .info-card{background:rgba(255,255,255,.82);backdrop-filter:blur(16px);border:1px solid rgba(0,91,170,.1);border-radius:18px;padding:24px;box-shadow:0 4px 20px rgba(0,91,170,.08);}
-        .info-card-icon{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#005baa,#00a9e0);display:flex;align-items:center;justify-content:center;margin-bottom:14px;box-shadow:0 4px 12px rgba(0,91,170,.14);}
-        .info-card-icon svg{width:22px;height:22px;color:#fff;}
-        .info-card h3{font-size:.95rem;font-weight:700;color:#0f172a;margin-bottom:4px;}
-        .info-card p,.info-card a{font-size:.85rem;color:#94a3b8;text-decoration:none;line-height:1.6;}
-        .info-card a:hover{color:#005baa;}
-        .hours-grid{display:flex;flex-direction:column;gap:6px;margin-top:8px;}
-        .hours-row{display:flex;justify-content:space-between;font-size:.82rem;color:#334155;}
-        .hours-row span:last-child{font-weight:600;color:#005baa;}
-
-        /* Form column */
-        .form-col{background:rgba(255,255,255,.88);backdrop-filter:blur(20px);border:1px solid rgba(0,91,170,.1);border-radius:22px;padding:36px 38px;box-shadow:0 8px 32px rgba(0,91,170,.1);animation:card-in .6s cubic-bezier(.34,1.4,.64,1) both;}
-        @keyframes card-in{from{opacity:0;transform:translateY(20px) scale(.97);}to{opacity:1;transform:translateY(0) scale(1);}}
-        .form-col h2{font-size:1.5rem;font-weight:700;color:#0f172a;margin-bottom:4px;}
-        .form-col .form-sub{font-size:.85rem;color:#94a3b8;margin-bottom:24px;}
-
-        .field{margin-bottom:16px;}
-        .field label{display:block;font-size:.78rem;font-weight:600;color:#334155;margin-bottom:6px;letter-spacing:.3px;}
-        .field-wrap{position:relative;}
-        .field-icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:#94a3b8;display:flex;pointer-events:none;}
-        .field-icon svg{width:16px;height:16px;}
-        .field-wrap input,.field-wrap textarea,.field-wrap select{width:100%;padding:12px 16px 12px 40px;background:#fafcff;border:1.5px solid #dde9f7;border-radius:10px;font-family:'Poppins',sans-serif;font-size:.9rem;color:#0f172a;outline:none;transition:border-color .2s,box-shadow .2s;}
-        .field-wrap textarea{padding-top:12px;height:120px;resize:vertical;}
-        .field-wrap.no-icon input,.field-wrap.no-icon textarea{padding-left:16px;}
-        .field-wrap input::placeholder,.field-wrap textarea::placeholder{color:#94a3b8;}
-        .field-wrap input:focus,.field-wrap textarea:focus{border-color:#005baa;background:#fff;box-shadow:0 0 0 3px rgba(0,91,170,.1);}
-
-        .btn-send{width:100%;padding:14px;border:none;border-radius:10px;font-family:'Poppins',sans-serif;font-size:1rem;font-weight:700;color:#fff;background:linear-gradient(90deg,#005baa,#00a9e0);background-size:200% 100%;cursor:pointer;box-shadow:0 6px 20px rgba(0,91,170,.14);transition:background-position .35s,transform .2s,box-shadow .2s;margin-top:6px;}
-        .btn-send:hover{background-position:100% 0;transform:translateY(-2px);box-shadow:0 10px 28px rgba(0,91,170,.28);}
-
-        /* Toast */
-        #toast{visibility:hidden;min-width:300px;background:linear-gradient(90deg,#005baa,#00a9e0);color:#fff;text-align:center;border-radius:12px;padding:16px 24px;position:fixed;z-index:1000;left:50%;bottom:90px;transform:translateX(-50%);opacity:0;transition:opacity .5s,bottom .5s;box-shadow:0 8px 24px rgba(0,91,170,.3);font-weight:500;font-size:.9rem;}
-        #toast.show{visibility:visible;opacity:1;bottom:110px;}
-
-        /* ── Container ─────────────────────────────────────── */
-        :root {
-            --blue-main: #005baa;
-            --blue-light: #00a9e0;
-            --text-dark: #0f172a;
-            --text-mid: #334155;
-            --shadow-b: rgba(0,91,170,0.12);
+        .page-hero {
+            padding: 60px 0 36px;
+            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+            border-bottom: 1px solid var(--border);
+            text-align: center;
         }
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
-        
-        /* ── Header ─────────────────────────────────────────── */
-        .header {
-            position: sticky; top: 0; z-index: 200;
-            padding: 18px 0;
-            background: rgba(255,255,255,0.82);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            border-bottom: 1px solid rgba(0,91,170,0.1);
-        }
-        .header .container {
-            display: flex; align-items: center; justify-content: space-between;
-        }
-        .logo-wrapper { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-        .logo {
-            width: 42px; height: 42px; border-radius: 50%;
-            background: linear-gradient(45deg, var(--blue-main), var(--blue-light));
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1rem; font-weight: 700; color: #fff;
-            box-shadow: 0 2px 8px var(--shadow-b);
-            transition: transform .3s;
-        }
-        .logo:hover { transform: scale(1.08); }
-        .logo-name { font-size: 1.1rem; font-weight: 700; color: var(--text-dark); }
-
-        .nav { display: flex; align-items: center; gap: 8px; }
-        .nav a {
-            color: var(--text-mid); text-decoration: none;
-            margin-left: 22px; font-weight: 500; font-size: .9rem;
-            transition: color .2s;
-        }
-        .nav a:hover { color: var(--blue-main); }
-
-        .btn-primary {
-            background: linear-gradient(45deg, var(--blue-main), var(--blue-light));
-            background-size: 200% 200%;
-            color: white; padding: 9px 22px; border-radius: 50px;
-            text-decoration: none; font-weight: 600; font-size: .9rem;
-            transition: transform .25s, box-shadow .25s;
-            animation: gradient-animation 8s ease infinite;
-        }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px var(--shadow-b); }
-        @keyframes gradient-animation {
-            0%   { background-position: 0% 50%; }
-            50%  { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        .contact-layout {
+            display: grid;
+            grid-template-columns: 1.3fr 1fr;
+            gap: 36px;
+            align-items: start;
+            margin-top: 40px;
+            margin-bottom: 80px;
         }
 
-        /* Mobile CTA */
-        .mobile-header-cta { display: none; gap: 8px; align-items: center; }
-        .mobile-login-btn {
-            padding: 7px 14px;
-            border: 2px solid var(--blue-main);
-            border-radius: 50px;
-            color: var(--blue-main);
+        .form-card {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 36px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .info-col {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .info-card {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+        }
+        .info-card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-sm);
+            background: var(--primary-pale);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 14px;
+        }
+        .info-card-icon svg { width: 20px; height: 20px; }
+        .info-card h3 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-1);
+            margin-bottom: 6px;
+        }
+        .info-card p, .info-card a {
+            font-size: 0.88rem;
+            color: var(--text-2);
             text-decoration: none;
-            font-size: .8rem; font-weight: 700;
-            white-space: nowrap;
-            transition: background .2s, color .2s;
+            line-height: 1.5;
         }
-        .mobile-login-btn:hover { background: var(--blue-main); color: #fff; }
-        .mobile-signup-btn { padding: 7px 14px !important; font-size: .8rem !important; white-space: nowrap; border: none; }
+        .info-card a:hover { color: var(--primary); }
+
+        .hours-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 10px;
+            font-size: 0.85rem;
+        }
+        .hours-row {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-2);
+        }
+        .hours-row span:last-child {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        #toast {
+            position: fixed;
+            bottom: 60px;
+            right: 24px;
+            background: #15803d;
+            color: #ffffff;
+            padding: 14px 20px;
+            border-radius: var(--radius-md);
+            font-size: 0.88rem;
+            font-weight: 600;
+            box-shadow: var(--shadow-lg);
+            z-index: 9999;
+            display: none;
+        }
+        #toast.show { display: block; }
 
         @media (max-width: 900px) {
-            .nav { display: none !important; }
-            .mobile-header-cta { display: flex; margin-left: auto; }
-            .logo-name { font-size: .95rem; }
+            .contact-layout { grid-template-columns: 1fr; }
         }
-
-        @media(max-width:800px){.content-wrap{grid-template-columns:1fr;}.hero-banner h1{font-size:1.9rem;}}
     </style>
-    <link rel="stylesheet" href="css/responsive.css">
 </head>
-<body style="background:#f8fafc;">
 
-<header class="header">
-    <div class="container">
-        <a href="index.html" class="logo-wrapper">
-            <img src="css/logo.jpg" alt="Logo" class="logo" style="width: auto !important; height: 44px !important; max-height: 44px; border-radius: 16px !important; object-fit: contain !important; background: none !important; box-shadow: none !important; overflow: visible !important;">
-            <span class="logo-name">CryptoPlexTrade</span>
-        </a>
-        <nav class="nav">
-            <a href="rates">Rates</a>
-            <a href="why-us">Features</a>
-            <a href="help.html">Help</a>
-            <a href="login.html">Login</a>
-            <a href="register.html" class="btn-primary">Sign Up</a>
-        </nav>
-        <div class="mobile-header-cta">
-            <a href="login.html" class="mobile-login-btn">Login</a>
-            <a href="register.html" class="btn-primary mobile-signup-btn">Sign Up</a>
+<body>
+    <!-- ================== HEADER ================== -->
+    <header class="header">
+        <div class="container">
+            <a href="index.html" class="logo-wrapper">
+                <img src="css/logo.png" alt="CryptoPlexTrade Logo" class="logo">
+                <span class="logo-name">CryptoPlexTrade</span>
+            </a>
+            
+            <nav class="nav" id="main-nav">
+                <a href="rates">Live Markets</a>
+                <a href="why-us">Infrastructure</a>
+                <a href="faq.html">FAQ</a>
+                <a href="help.html">Help Desk</a>
+                <a href="contact.html" style="color: var(--primary); font-weight: 600;">Contact</a>
+                <a href="login.html" style="font-weight: 600; color: var(--primary);">Sign In</a>
+                <a href="register.html" class="btn-primary">Open Account</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ================== PAGE HERO ================== -->
+    <div class="page-hero">
+        <div class="container">
+            <h1 style="font-size: 2.3rem; font-weight: 800; color: var(--text-1); letter-spacing: -0.025em; margin-bottom: 8px;">
+                Contact Operations & Support Desk
+            </h1>
+            <p style="font-size: 1rem; color: var(--text-3); max-width: 520px; margin: 0 auto;">
+                Have questions regarding order routing, institutional onboarding, or payment reconciliation? Reach out directly.
+            </p>
         </div>
     </div>
-</header>
 
+    <!-- ================== MAIN CONTENT ================== -->
+    <main style="background: var(--bg);">
+        <div class="container">
+            <div class="contact-layout">
+                <!-- Contact Form Column -->
+                <div class="form-card">
+                    <h2 style="font-size: 1.3rem; font-weight: 700; color: var(--text-1); margin-bottom: 6px;">
+                        Transmit Secure Inquiry
+                    </h2>
+                    <p style="font-size: 0.88rem; color: var(--text-3); margin-bottom: 24px;">
+                        Our financial support operations desk responds within 24 hours.
+                    </p>
 
-<div class="hero-banner">
-    <h1>Get in <span>Touch</span></h1>
-    <p>We're here to help around the clock. Reach out and our team will respond within 24 hours.</p>
-</div>
+                    <form id="contact-form" method="GET" action="contact.html" novalidate>
+                        <div class="form-group">
+                            <label for="fullname">Full Legal Name</label>
+                            <input type="text" id="fullname" name="fullname" placeholder="e.g. John Doe" required>
+                        </div>
 
-<div class="content-wrap">
-    <!-- Contact form (LEFT) -->
-    <div class="form-col">
-        <h2>Send a Message</h2>
-        <p class="form-sub">Fill out the form and we'll get back to you within 24 hours.</p>
-        <form id="contact-form" method="GET" action="contact.html" novalidate>
-            <div class="field">
-                <label for="fullname">Full Name</label>
-                <div class="field-wrap">
-                    <span class="field-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd"/></svg></span>
-                    <input type="text" id="fullname" name="fullname" placeholder="Your full name" required>
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" placeholder="you@domain.com" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="subject">Inquiry Classification / Subject</label>
+                            <input type="text" id="subject" name="subject" placeholder="e.g. Wire Confirmation, High-Volume OTC" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="message">Detailed Message</label>
+                            <textarea id="message" name="message" placeholder="Provide relevant details or transaction IDs..." required></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-full" style="padding: 13px; font-size: 0.95rem;">
+                            Transmit Inquiry →
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Info Cards Column -->
+                <div class="info-col">
+                    <div class="info-card">
+                        <div class="info-card-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                <polyline points="22,6 12,13 2,6"></polyline>
+                            </svg>
+                        </div>
+                        <h3>Email Communication</h3>
+                        <a href="mailto:support@cryptoplextrade.com">support@cryptoplextrade.com</a>
+                    </div>
+
+                    <div class="info-card">
+                        <div class="info-card-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                            </svg>
+                        </div>
+                        <h3>Direct Telephone Desk</h3>
+                        <p>+233 12 345 6789</p>
+                    </div>
+
+                    <div class="info-card">
+                        <div class="info-card-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                        </div>
+                        <h3>Trading Desk Hours</h3>
+                        <div class="hours-grid">
+                            <div class="hours-row"><span>Monday – Friday</span><span>08:00 – 20:00 UTC</span></div>
+                            <div class="hours-row"><span>Saturday</span><span>10:00 – 18:00 UTC</span></div>
+                            <div class="hours-row"><span>Emergency Escalations</span><span>24/7 Monitored</span></div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="field">
-                <label for="email">Email Address</label>
-                <div class="field-wrap">
-                    <span class="field-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M1.5 8.67v8.58a3 3 0 0 0 3 3h15a3 3 0 0 0 3-3V8.67l-8.928 5.493a3 3 0 0 1-3.144 0L1.5 8.67Z"/><path d="M22.5 6.908V6.75a3 3 0 0 0-3-3h-15a3 3 0 0 0-3 3v.158l9.714 5.978a1.5 1.5 0 0 0 1.572 0L22.5 6.908Z"/></svg></span>
-                    <input type="email" id="email" name="email" placeholder="you@example.com" required>
+        </div>
+    </main>
+
+    <div id="toast">✓ Message transmitted successfully! Our operations desk will follow up shortly.</div>
+
+    <!-- ================== FOOTER ================== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="grid-3" style="grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 32px; margin-bottom: 40px;">
+                <div>
+                    <a href="index.html" class="logo-wrapper" style="margin-bottom: 14px;">
+                        <img src="css/logo.png" alt="CryptoPlexTrade Logo" class="logo">
+                        <span class="logo-name">CryptoPlexTrade</span>
+                    </a>
+                    <p style="font-size: 0.88rem; color: var(--text-3); line-height: 1.6; max-width: 320px;">
+                        Sovereign digital asset trading platform providing instant retail and institutional exchange services worldwide.
+                    </p>
+                </div>
+
+                <div>
+                    <h4 style="font-size: 0.82rem; font-weight: 700; color: var(--text-1); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 16px;">Trading Desk</h4>
+                    <ul style="list-style: none; display: flex; flex-direction: column; gap: 10px; font-size: 0.88rem;">
+                        <li><a href="trade.html" style="text-decoration: none; color: var(--text-2);">Instant Exchange</a></li>
+                        <li><a href="rates" style="text-decoration: none; color: var(--text-2);">Market Directory</a></li>
+                        <li><a href="why-us" style="text-decoration: none; color: var(--text-2);">Infrastructure</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 style="font-size: 0.82rem; font-weight: 700; color: var(--text-1); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 16px;">Support & Help</h4>
+                    <ul style="list-style: none; display: flex; flex-direction: column; gap: 10px; font-size: 0.88rem;">
+                        <li><a href="faq.html" style="text-decoration: none; color: var(--text-2);">Frequently Asked Questions</a></li>
+                        <li><a href="help.html" style="text-decoration: none; color: var(--text-2);">Help Centre</a></li>
+                        <li><a href="contact.html" style="text-decoration: none; color: var(--text-2);">Contact Us</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 style="font-size: 0.82rem; font-weight: 700; color: var(--text-1); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 16px;">Regulatory & Legal</h4>
+                    <ul style="list-style: none; display: flex; flex-direction: column; gap: 10px; font-size: 0.88rem;">
+                        <li><a href="terms.html" style="text-decoration: none; color: var(--text-2);">Terms of Service</a></li>
+                        <li><a href="privacy.html" style="text-decoration: none; color: var(--text-2);">Privacy Policy</a></li>
+                        <li><a href="aml.html" style="text-decoration: none; color: var(--text-2);">AML / KYC Policy</a></li>
+                    </ul>
                 </div>
             </div>
-            <div class="field">
-                <label for="subject">Subject</label>
-                <div class="field-wrap">
-                    <span class="field-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 0 1 .67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 1 1-.67-1.34l.04-.022ZM12 9a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" clip-rule="evenodd"/></svg></span>
-                    <input type="text" id="subject" name="subject" placeholder="What is your query about?" required>
+
+            <div style="border-top: 1px solid var(--border); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; font-size: 0.82rem; color: var(--text-3);">
+                <div>&copy; 2026 CryptoPlexTrade. All rights reserved. Cryptographic investments are subject to market risks.</div>
+                <div style="display: flex; gap: 16px;">
+                    <span>System Status: <strong style="color:#16a34a;">Operational</strong></span>
+                    <span>SSL/TLS 256-bit Encrypted</span>
                 </div>
             </div>
-            <div class="field">
-                <label for="message">Your Message</label>
-                <div class="field-wrap no-icon">
-                    <textarea id="message" name="message" placeholder="Tell us how we can help you..." required></textarea>
-                </div>
-            </div>
-            <button type="submit" class="btn-send">Send Message →</button>
-        </form>
+        </div>
+    </footer>
+
+    <!-- ================== TICKER TAPE ================== -->
+    <div class="ticker-tape">
+        <div class="ticker-tape__track" id="ticker-track"></div>
     </div>
 
-    <!-- Info cards (RIGHT) -->
-    <div class="info-col">
-        <div class="info-card">
-            <div class="info-card-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M1.5 8.67v8.58a3 3 0 0 0 3 3h15a3 3 0 0 0 3-3V8.67l-8.928 5.493a3 3 0 0 1-3.144 0L1.5 8.67Z"/><path d="M22.5 6.908V6.75a3 3 0 0 0-3-3h-15a3 3 0 0 0-3 3v.158l9.714 5.978a1.5 1.5 0 0 0 1.572 0L22.5 6.908Z"/></svg>
-            </div>
-            <h3>Email Support</h3>
-            <a href="mailto:support@cryptoplextrade.com">support@cryptoplextrade.com</a>
-        </div>
-        <div class="info-card">
-            <div class="info-card-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M1.5 4.5a3 3 0 0 1 3-3h1.372c.86 0 1.61.586 1.819 1.42l1.105 4.423a1.875 1.875 0 0 1-.694 1.955l-1.293.97c-.135.101-.164.249-.126.352a11.285 11.285 0 0 0 6.697 6.697c.103.038.25.009.352-.126l.97-1.293a1.875 1.875 0 0 1 1.955-.694l4.423 1.105c.834.209 1.42.959 1.42 1.82V19.5a3 3 0 0 1-3 3h-2.25C8.552 22.5 1.5 15.448 1.5 6.75V4.5Z" clip-rule="evenodd"/></svg>
-            </div>
-            <h3>Phone</h3>
-            <p>+233 12 345 6789</p>
-        </div>
-        <div class="info-card">
-            <div class="info-card-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clip-rule="evenodd"/></svg>
-            </div>
-            <h3>Support Hours</h3>
-            <div class="hours-grid">
-                <div class="hours-row"><span>Monday – Friday</span><span>8am – 8pm</span></div>
-                <div class="hours-row"><span>Saturday</span><span>10am – 6pm</span></div>
-                <div class="hours-row"><span>Sunday</span><span>Closed</span></div>
-            </div>
-        </div>
-        <div class="info-card">
-            <div class="info-card-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm11.378-3.917c-.89-.777-2.366-.777-3.255 0a.75.75 0 0 1-1.06-1.06c2.298-2.013 5.824-2.013 8.122 0a.75.75 0 0 1-1.06 1.06ZM12 15.75a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" clip-rule="evenodd"/></svg>
-            </div>
-            <h3>Need Help Fast?</h3>
-            <p>Browse our <a href="faq.html">FAQ</a> or <a href="help.html">Help Centre</a> for instant answers to common questions.</p>
-        </div>
-    </div>
-</div>
+    <script src="inactivity-timer.js"></script>
+    <script>
+        (function() {
+            const params = new URLSearchParams(window.location.search);
+            if (params.has('fullname') && params.has('email') && params.has('message')) {
+                const toast = document.getElementById('toast');
+                if (toast) {
+                    toast.classList.add('show');
+                    setTimeout(() => toast.classList.remove('show'), 5000);
+                }
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
 
-<div id="toast">✓ Your message has been sent! An agent will get in touch shortly.</div>
-
-<footer style="text-align:center;padding:16px;font-size:.76rem;color:#94a3b8;">&copy; 2026 CryptoPlexTrade &middot; <a href="privacy.html" style="color:inherit;text-decoration:none;">Privacy</a> &middot; <a href="terms.html" style="color:inherit;text-decoration:none;">Terms</a></footer>
-
-<div class="ticker-tape"><div class="ticker-tape__track" id="ticker-track"></div></div>
-
-<script src="inactivity-timer.js"></script>
-<script>
-(function() {
-
-    // Toast on return from form submit
-    const params = new URLSearchParams(window.location.search);
-    if (params.has('fullname') && params.has('email') && params.has('message')) {
-        const toast = document.getElementById('toast');
-        toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 5000);
-        window.history.replaceState({}, document.title, window.location.pathname);
-    }
-
-    // Ticker
-    (async () => {
-        const track = document.getElementById('ticker-track');
-        const syms = ['BTC','ETH','SOL','BNB','XRP','LTC','ADA','DOGE'];
-        try {
-            const r = await fetch(`https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${syms.join(',')}&tsyms=USD`);
-            const d = await r.json(); let html = '';
-            syms.forEach(s => { const c=d.RAW?.[s]?.USD; if(!c) return; const dir=c.CHANGEPCT24HOUR>=0?'up':'down'; html+=`<div class="ticker-tape__item"><span class="pair">${s}/USD</span><span class="price">${c.PRICE.toLocaleString('en-US',{style:'currency',currency:'USD'})}</span><span class="change ${dir}">${dir==='up'?'+':''}${c.CHANGEPCT24HOUR.toFixed(2)}% ${dir==='up'?'▲':'▼'}</span></div>`; });
-            track.innerHTML = html + html;
-        } catch(e) {}
-    })();
-})();
-</script>
+            // Ticker feed
+            (async () => {
+                const track = document.getElementById('ticker-track');
+                const syms = ['BTC','ETH','SOL','BNB','XRP','LTC','ADA','DOGE'];
+                try {
+                    const r = await fetch(`https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${syms.join(',')}&tsyms=USD`);
+                    const d = await r.json();
+                    let html = '';
+                    syms.forEach(s => {
+                        const c = d.RAW?.[s]?.USD;
+                        if (!c) return;
+                        const dir = c.CHANGEPCT24HOUR >= 0 ? 'up' : 'down';
+                        html += `
+                            <div class="ticker-tape__item">
+                                <span class="pair">${s}/USD</span>
+                                <span class="price">${c.PRICE.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span>
+                                <span class="change ${dir}">${dir === 'up' ? '+' : ''}${c.CHANGEPCT24HOUR.toFixed(2)}% ${dir === 'up' ? '▲' : '▼'}</span>
+                            </div>
+                        `;
+                    });
+                    track.innerHTML = html + html;
+                } catch(e) {}
+            })();
+        })();
+    </script>
     <script src="/chat-widget.js"></script>
 </body>
 </html>

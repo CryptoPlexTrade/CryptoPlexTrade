@@ -3,144 +3,349 @@
 <head>
     <meta charset="UTF-8">
     <link rel="icon" type="image/png" href="css/logo.png">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AML Policy - CryptoPlexTrade</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>AML & KYC Compliance Policy — CryptoPlexTrade</title>
+    <meta name="description" content="Review CryptoPlexTrade's Anti-Money Laundering (AML), Counter-Terrorist Financing (CFT), and Customer Due Diligence (CDD) compliance architecture.">
+    
+    <!-- Design System Stylesheets -->
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="css/responsive.css">
+
     <style>
-        .page-wrap{max-width:1000px;margin:0 auto;width:100%;padding:28px 24px 80px;display:grid;grid-template-columns:220px 1fr;gap:28px;align-items:start;}
-        .side-nav{position:sticky;top:90px;background:rgba(255,255,255,.8);backdrop-filter:blur(12px);border:1px solid rgba(0,91,170,.1);border-radius:16px;padding:20px;box-shadow:0 4px 16px rgba(0,91,170,0.1);}
-        .side-nav h4{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--primary-color);margin-bottom:12px;}
-        .side-nav a{display:block;font-size:.82rem;color:#334155;text-decoration:none;padding:6px 8px;border-radius:8px;transition:all .2s;margin-bottom:2px;}
-        .side-nav a:hover{background:#e8f4fe;color:var(--primary-color);}
-        .doc-card{background:rgba(255,255,255,.88);backdrop-filter:blur(16px);border:1px solid rgba(0,91,170,.1);border-radius:22px;padding:44px 48px;box-shadow:0 8px 28px rgba(0,91,170,0.1);}
-        .doc-pretag{display:inline-flex;align-items:center;gap:6px;background:#e8f4fe;color:var(--primary-color);border-radius:50px;padding:4px 14px;font-size:.72rem;font-weight:700;letter-spacing:.4px;margin-bottom:16px;}
-        .doc-card h1{font-size:2rem;font-weight:800;color:#0f172a;margin-bottom:6px;}
-        .doc-card .last-updated{font-size:.82rem;color:#94a3b8;font-style:italic;margin-bottom:32px;padding-bottom:24px;border-bottom:1px solid #dde9f7;}
-        .doc-card h2{font-size:1.1rem;font-weight:700;color:#0f172a;margin-top:36px;margin-bottom:12px;padding-left:14px;border-left:3px solid var(--primary-color);}
-        .doc-card p{font-size:.9rem;color:#334155;line-height:1.85;margin-bottom:12px;}
-        .doc-card ul{padding-left:20px;margin-bottom:12px;}
-        .doc-card li{font-size:.9rem;color:#334155;line-height:1.85;margin-bottom:6px;}
-        .doc-card a{color:var(--primary-color);font-weight:500;text-decoration:none;}
-        .doc-card a:hover{text-decoration:underline;}
-        @media(max-width:760px){.page-wrap{grid-template-columns:1fr;}.side-nav{position:static;display:flex;flex-wrap:wrap;gap:8px;}.doc-card{padding:28px 24px;}}
+        .legal-page-header {
+            padding: 64px 0 40px;
+            background: linear-gradient(180deg, #ffffff 0%, var(--bg-highlight) 100%);
+            border-bottom: 1px solid var(--border-light);
+        }
+        .legal-page-wrap {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 48px 24px 100px;
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 36px;
+            align-items: start;
+        }
+        .legal-toc {
+            position: sticky;
+            top: 96px;
+            background: #ffffff;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: 24px 20px;
+            box-shadow: var(--shadow-sm);
+        }
+        .legal-toc__label {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--primary-color);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .legal-toc a {
+            display: block;
+            font-size: 0.84rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
+            transition: all var(--duration-fast) var(--ease-standard);
+            margin-bottom: 3px;
+            font-weight: 500;
+        }
+        .legal-toc a:hover {
+            background: var(--bg-highlight);
+            color: var(--primary-color);
+            padding-left: 16px;
+        }
+        .legal-content-card {
+            background: #ffffff;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-xl);
+            padding: 48px 52px;
+            box-shadow: var(--shadow-sm);
+        }
+        .legal-meta-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg-highlight);
+            color: var(--primary-color);
+            border-radius: 9999px;
+            padding: 4px 14px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border: 1px solid rgba(0, 91, 170, 0.15);
+            margin-bottom: 20px;
+        }
+        .legal-content-card h1 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            letter-spacing: -0.03em;
+            margin-bottom: 12px;
+        }
+        .legal-effective-date {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            padding-bottom: 24px;
+            margin-bottom: 32px;
+            border-bottom: 1px solid var(--border-light);
+        }
+        .legal-content-card h2 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-top: 40px;
+            margin-bottom: 16px;
+            padding-left: 14px;
+            border-left: 3px solid var(--primary-color);
+            scroll-margin-top: 110px;
+        }
+        .legal-content-card p {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.85;
+            margin-bottom: 16px;
+        }
+        .legal-content-card ul {
+            padding-left: 24px;
+            margin-bottom: 20px;
+        }
+        .legal-content-card li {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 8px;
+        }
+        .legal-content-card a {
+            color: var(--primary-color);
+            font-weight: 600;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+        .legal-callout-box {
+            background: var(--bg-highlight);
+            border: 1px solid rgba(0, 91, 170, 0.2);
+            border-radius: var(--radius-md);
+            padding: 20px 24px;
+            margin: 28px 0;
+            font-size: 0.9rem;
+            color: var(--primary-dark);
+            line-height: 1.7;
+        }
+
+        @media (max-width: 960px) {
+            .legal-page-wrap {
+                grid-template-columns: 1fr;
+                padding: 32px 16px 80px;
+                gap: 24px;
+            }
+            .legal-toc {
+                position: static;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 6px;
+                padding: 16px;
+            }
+            .legal-toc__label {
+                width: 100%;
+                margin-bottom: 8px;
+            }
+            .legal-toc a {
+                margin-bottom: 0;
+                padding: 6px 12px;
+                font-size: 0.8rem;
+                background: var(--bg-light);
+            }
+            .legal-content-card {
+                padding: 32px 24px;
+            }
+            .legal-content-card h1 {
+                font-size: 1.75rem;
+            }
+        }
     </style>
 </head>
 <body>
 
-<div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <!-- ================== SITE HEADER ================== -->
+    <header class="header">
+        <div class="container header-container">
+            <a href="index.html" class="logo-wrapper">
+                <img src="css/logo.jpg" alt="CryptoPlexTrade Logo" class="brand-logo">
+                <span class="logo-name">CryptoPlexTrade</span>
+            </a>
+            <nav class="nav">
+                <a href="rates">Rates</a>
+                <a href="why-us">Features</a>
+                <a href="faq">FAQ</a>
+                <a href="help.html">Help</a>
+                <a href="login.html" class="nav-link-login">Sign In</a>
+                <a href="register.html" class="btn-primary">Get Started</a>
+            </nav>
+            <div class="mobile-header-cta">
+                <a href="login.html" class="mobile-login-btn">Sign In</a>
+                <a href="register.html" class="btn-primary mobile-signup-btn">Get Started</a>
+            </div>
+        </div>
+    </header>
 
-<div class="app-shell">
+    <!-- ================== PAGE HERO ================== -->
+    <section class="legal-page-header">
+        <div class="container">
+            <div class="legal-meta-badge">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                    <path fill-rule="evenodd" d="M12.516 2.17a.75.75 0 0 0-1.032 0 11.209 11.209 0 0 1-7.877 3.08.75.75 0 0 0-.722.515A12.74 12.74 0 0 0 2.25 9.75c0 5.942 4.064 10.933 9.563 12.348a.749.749 0 0 0 .374 0c5.499-1.415 9.563-6.406 9.563-12.348 0-1.39-.223-2.73-.635-3.985a.75.75 0 0 0-.722-.516l-.143.001c-2.996 0-5.717-1.17-7.734-3.08Zm3.094 8.016a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd"/>
+                </svg>
+                Statutory Compliance & AML Framework
+            </div>
+            <h1 style="font-size: 2.5rem; font-weight: 800; letter-spacing: -0.03em; color: var(--text-primary); margin-bottom: 12px;">Anti-Money Laundering (AML) Policy</h1>
+            <p style="color: var(--text-secondary); max-width: 720px; font-size: 1.05rem; line-height: 1.6;">
+                Our rigorous standards for customer identity verification, continuous transaction monitoring, sanctions screening, and regulatory transparency.
+            </p>
+        </div>
+    </section>
 
-    <!-- ===== SIDEBAR ===== -->
-    <aside class="sidebar" id="sidebar">
-        <a href="dashboard.html" class="sidebar-brand">
-            <img src="css/logo.jpg" alt="Logo" class="sidebar-brand__orb" style="width: auto !important; height: 44px !important; max-height: 44px; border-radius: 16px !important; object-fit: contain !important; background: none !important; padding: 0 !important; box-shadow: none !important; overflow: visible !important;">
-            <span class="sidebar-brand__name">CryptoPlexTrade</span>
-        </a>
-        <nav class="sidebar-nav">
+    <!-- ================== CONTENT LAYOUT ================== -->
+    <div class="legal-page-wrap">
+
+        <!-- Table of Contents -->
+        <aside>
+            <nav class="legal-toc" aria-label="Table of Contents">
+                <div class="legal-toc__label">
+                    <span>Policy Sections</span>
+                </div>
+                <a href="#cdd">1. Customer Due Diligence (CDD)</a>
+                <a href="#monitoring">2. Transaction Monitoring</a>
+                <a href="#reporting">3. Regulatory Reporting</a>
+                <a href="#prohibited">4. Prohibited Jurisdictions & Acts</a>
+                <a href="#compliance-officer">5. Compliance Governance</a>
+            </nav>
+        </aside>
+
+        <!-- Main Document Body -->
+        <main class="legal-content-card">
+            <h1>Anti-Money Laundering Policy</h1>
+            <p class="legal-effective-date">EFFECTIVE REVISION: April 10, 2026 &bull; PROTOCOL ID: CPT-AML-2026</p>
+
+            <p>CryptoPlexTrade is strictly committed to preventing the use of its digital asset exchange infrastructure for money laundering, terrorist financing, sanction evasion, and illicit financial activities. This policy outlines our operational mechanisms to maintain complete alignment with international financial guidelines and Financial Action Task Force (FATF) standards.</p>
+
+            <div class="legal-callout-box">
+                <strong>Zero Tolerance Policy:</strong> CryptoPlexTrade maintains zero tolerance for criminal exploitation of digital asset markets. We actively block sanctioned addresses, freeze illicit flows, and cooperate with law enforcement agencies worldwide.
+            </div>
+
+            <h2 id="cdd">1. Customer Due Diligence (CDD)</h2>
+            <p>We execute multi-tiered Customer Due Diligence (CDD) and Know Your Customer (KYC) verifications before granting transactional capabilities:</p>
             <ul>
-                <li><a href="dashboard.html">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11.47 3.841a.75.75 0 0 1 1.06 0l8.69 8.69a.75.75 0 1 0 1.06-1.061l-8.689-8.69a2.25 2.25 0 0 0-3.182 0l-8.69 8.69a.75.75 0 1 0 1.061 1.06l8.69-8.689Z"/><path d="m12 5.432 8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 0 1-.75-.75v-4.5a.75.75 0 0 0-.75-.75h-3a.75.75 0 0 0-.75.75V21a.75.75 0 0 1-.75.75H5.625a1.875 1.875 0 0 1-1.875-1.875v-6.198a2.29 2.29 0 0 0 .091-.086L12 5.432Z"/></svg>
-                    Dashboard
-                </a></li>
-                <li><a href="trade.html">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M3 4.5h18v15H3v-15Zm6.75 10.5a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM12 15a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM15.75 15a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM9.75 9a.75.75 0 0 0-1.5 0v4.5a.75.75 0 0 0 1.5 0V9Zm3.75-3a.75.75 0 0 0-1.5 0v7.5a.75.75 0 0 0 1.5 0V6Zm2.25 1.5a.75.75 0 0 0-1.5 0v6a.75.75 0 0 0 1.5 0v-6Z"/></svg>
-                    Trade
-                </a></li>
-                <li><a href="transactions.html">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clip-rule="evenodd"/></svg>
-                    Transactions
-                </a></li>
-                <li><a href="profile.html">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd"/></svg>
-                    Profile
-                </a></li>
-                <li><a href="support.html">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm11.378-3.917c-.89-.777-2.366-.777-3.255 0a.75.75 0 0 1-1.06-1.06c2.298-2.013 5.824-2.013 8.122 0a.75.75 0 0 1-1.06 1.06ZM12 15.75a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" clip-rule="evenodd"/></svg>
-                    Support
-                </a></li>
+                <li><strong>Identity Verification:</strong> Collection and automated algorithmic verification of government-issued passports, national identity cards, or driver licenses.</li>
+                <li><strong>Proof of Address:</strong> Verification of official utility bills, bank statements, or municipal notices issued within the last 90 days.</li>
+                <li><strong>Sanctions & PEP Screening:</strong> Automated screening against global sanctions rosters, including OFAC, UN, EU, and UK sanctions registers, as well as Politically Exposed Persons (PEP) databases.</li>
+                <li><strong>Enhanced Due Diligence (EDD):</strong> High-volume trading participants and institutional entities are subject to mandatory source-of-wealth and source-of-funds verification.</li>
             </ul>
-        </nav>
-    </aside>
 
-    <div class="main-wrap">
-        <header class="topbar">
-            <div class="topbar-left">
-                <button class="hamburger-btn" id="hamburger-btn" aria-label="Toggle sidebar">
-                    <span></span><span></span><span></span>
-                </button>
-                <span class="topbar-title">AML Policy</span>
-            </div>
-            <div class="topbar-right">
-                <a href="#" id="logout-btn" class="btn btn-danger btn-sm">Logout</a>
-            </div>
-        </header>
+            <h2 id="monitoring">2. Transaction Monitoring</h2>
+            <p>Our risk engineering infrastructure operates 24/7 automated transaction monitoring across all blockchain networks and fiat settlement channels:</p>
+            <ul>
+                <li>Real-time heuristics detecting structuring, smurfing, and sudden anomalous volume spikes.</li>
+                <li>Blockchain analytics identifying transaction hops originating from high-risk mixers, darknet marketplaces, or sanctioned wallet clusters.</li>
+                <li>Automated risk scoring triggering immediate compliance review and account restrictions when thresholds are breached.</li>
+            </ul>
 
-        <main class="page-content">
+            <h2 id="reporting">3. Regulatory Reporting</h2>
+            <p>CryptoPlexTrade complies with statutory obligations to submit Suspicious Activity Reports (SARs) and Currency Transaction Reports (CTRs) to appropriate Financial Intelligence Units (FIUs) and designated regulatory authorities. Under statutory "tipping-off" prohibitions, our staff is legally barred from disclosing that a suspicious activity report has been lodged.</p>
 
-<div class="page-wrap">
-    <nav class="side-nav">
-        <h4>Sections</h4>
-        <a href="#cdd">1. Customer Due Diligence</a>
-        <a href="#monitoring">2. Transaction Monitoring</a>
-        <a href="#reporting">3. Reporting</a>
-        <a href="#prohibited">4. Prohibited Activities</a>
-    </nav>
+            <h2 id="prohibited">4. Prohibited Jurisdictions & Acts</h2>
+            <p>Users are strictly prohibited from utilizing CryptoPlexTrade services for any illicit purpose, including:</p>
+            <ul>
+                <li>Transacting on behalf of individuals or entities subject to international sanctions regimes.</li>
+                <li>Employing obfuscation tools, mixers, privacy chains, or tumbler contracts to conceal origin of funds.</li>
+                <li>Operating accounts using fictitious, synthetic, or stolen identity credentials.</li>
+                <li>Accessing services from embargoed countries or sanctioned geographic territories.</li>
+            </ul>
 
-    <div class="doc-card">
-        <div class="doc-pretag">🛡️ Compliance Document</div>
-        <h1>Anti-Money Laundering (AML) Policy</h1>
-        <p class="last-updated">Last Updated: May 21, 2024</p>
+            <h2 id="compliance-officer">5. Compliance Governance</h2>
+            <p>CryptoPlexTrade designates a qualified Chief Compliance Officer (CCO) responsible for overseeing adherence to this AML program, managing internal audits, and training operational staff. For compliance audits or regulatory inquiries, contact <a href="mailto:support@cryptoplextrade.com">support@cryptoplextrade.com</a>.</p>
+        </main>
 
-        <p>CryptoPlexTrade is committed to preventing the use of its services for money laundering, terrorist financing, and other illicit activities. This policy outlines our commitment to complying with all applicable laws and regulations.</p>
-
-        <h2 id="cdd">1. Customer Due Diligence (CDD)</h2>
-        <p>We perform Customer Due Diligence to verify the identity of our users. This may include collecting personal information such as your full name, address, and a government-issued ID. We reserve the right to request additional information to verify your identity.</p>
-
-        <h2 id="monitoring">2. Transaction Monitoring</h2>
-        <p>We monitor transactions for suspicious activity. This includes, but is not limited to, unusually large transactions, unusual patterns of transactions, and transactions with individuals or entities in high-risk jurisdictions. We may freeze or suspend transactions that we deem suspicious.</p>
-
-        <h2 id="reporting">3. Reporting</h2>
-        <p>We are obligated to report suspicious activities to the relevant authorities as required by law. We will cooperate fully with law enforcement agencies and regulatory bodies in any investigation related to illicit activities.</p>
-
-        <h2 id="prohibited">4. Prohibited Activities</h2>
-        <p>Users are strictly prohibited from using our services for any illegal purpose. We will terminate the accounts of any users found to be engaging in such activities and will report them to the appropriate authorities.</p>
     </div>
-</div>
 
-        </main><!-- /page-content -->
-    </div><!-- /main-wrap -->
-</div><!-- /app-shell -->
+    <!-- ================== FOOTER ================== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <a href="index.html" class="footer-logo">CryptoPlexTrade</a>
+                    <p>Institutional-grade digital asset exchange engineered for seamless speed, absolute custody assurance, and transparent sovereign settlement.</p>
+                </div>
+                <div class="footer-column">
+                    <h4>Market & Trading</h4>
+                    <ul>
+                        <li><a href="rates">Live Market Directory</a></li>
+                        <li><a href="why-us">Security & Infrastructure</a></li>
+                        <li><a href="trade.html">Trading Terminal</a></li>
+                        <li><a href="dashboard.html">Client Dashboard</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Legal & Compliance</h4>
+                    <ul>
+                        <li><a href="terms.html">Terms of Service</a></li>
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                        <li><a href="aml.html">AML & KYC Compliance</a></li>
+                        <li><a href="help.html">Client Help Centre</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Institutional Desk</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">Operating 24/7/365 with automated clearing and real-time support assistance.</p>
+                    <div class="social-icons">
+                        <a href="#" title="X / Twitter" aria-label="X">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                        </a>
+                        <a href="#" title="Telegram" aria-label="Telegram">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="m9.417 15.181-.397 5.584c.568 0 .814-.244 1.109-.537l2.663-2.545 5.518 4.041c1.012.564 1.725.267 1.998-.931L23.62 5.215c.275-1.138-.431-1.649-1.227-1.292L2.433 9.24c-1.105.427-1.101 1.03-.2 1.31l4.735 1.498 11.357-7.15c.565-.349 1.085-.159.633.231Z"/></svg>
+                        </a>
+                        <a href="mailto:support@cryptoplextrade.com" title="Email" aria-label="Email Support">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M1.5 8.67v8.58a3 3 0 0 0 3 3h15a3 3 0 0 0 3-3V8.67l-8.928 5.493a3 3 0 0 1-3.144 0L1.5 8.67Z"/><path d="M22.5 6.908V6.75a3 3 0 0 0-3-3h-15a3 3 0 0 0-3 3v.158l9.714 5.978a1.5 1.5 0 0 0 1.572 0L22.5 6.908Z"/></svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 CryptoPlexTrade Global Exchange. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
 
-<!-- Ticker Tape -->
-<div class="ticker-tape"><div class="ticker-tape__track" id="ticker-track"></div></div>
+    <!-- ================== TICKER TAPE ================== -->
+    <div class="ticker-tape">
+        <div class="ticker-tape__track" id="ticker-track"></div>
+    </div>
 
-<script src="inactivity-timer.js"></script>
-<script>
-(function() {
-    // Sidebar toggle
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('sidebar-overlay');
-    const hamburger = document.getElementById('hamburger-btn');
-    if (hamburger) hamburger.addEventListener('click', () => { sidebar.classList.add('open'); overlay.classList.add('open'); });
-    if (overlay) overlay.addEventListener('click', () => { sidebar.classList.remove('open'); overlay.classList.remove('open'); });
-
-    // Logout
-    function getCookie(name) { const v = `; ${document.cookie}`, p = v.split(`; ${name}=`); if (p.length === 2) return p.pop().split(';').shift(); }
-    document.getElementById('logout-btn').addEventListener('click', async (e) => {
-        e.preventDefault();
+    <script>
+    (async () => {
+        const track = document.getElementById('ticker-track');
+        const syms = ['BTC','ETH','SOL','BNB','XRP','LTC','ADA','DOGE'];
         try {
-            const r = await fetch('/api/logout', { method: 'POST', headers: { 'X-CSRF-Token': getCookie('csrf-token') } });
-            if (r.ok) window.location.href = 'login.html';
-        } catch (err) { console.error(err); }
-    });
-
-    // Ticker
-    (async()=>{const track=document.getElementById('ticker-track');const syms=['BTC','ETH','SOL','BNB','XRP','LTC','ADA','DOGE'];try{const r=await fetch(`https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${syms.join(',')}&tsyms=USD`);const d=await r.json();let html='';syms.forEach(s=>{const c=d.RAW?.[s]?.USD;if(!c)return;const dir=c.CHANGEPCT24HOUR>=0?'up':'down';html+=`<div class="ticker-tape__item"><span class="pair">${s}/USD</span><span class="price">${c.PRICE.toLocaleString('en-US',{style:'currency',currency:'USD'})}</span><span class="change ${dir}">${dir==='up'?'+':''}${c.CHANGEPCT24HOUR.toFixed(2)}% ${dir==='up'?'▲':'▼'}</span></div>`;});track.innerHTML=html+html;}catch(e){}})();
-})();
-</script>
+            const r = await fetch(`https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${syms.join(',')}&tsyms=USD`);
+            const d = await r.json();
+            let html = '';
+            syms.forEach(s => {
+                const c = d.RAW?.[s]?.USD; if (!c) return;
+                const dir = c.CHANGEPCT24HOUR >= 0 ? 'up' : 'down';
+                html += `<div class="ticker-tape__item"><span class="pair">${s}/USD</span><span class="price">${c.PRICE.toLocaleString('en-US',{style:'currency',currency:'USD'})}</span><span class="change ${dir}">${dir==='up'?'+':''}${c.CHANGEPCT24HOUR.toFixed(2)}% ${dir==='up'?'▲':'▼'}</span></div>`;
+            });
+            track.innerHTML = html + html;
+        } catch(e) {}
+    })();
+    </script>
     <script src="/chat-widget.js"></script>
 </body>
 </html>
