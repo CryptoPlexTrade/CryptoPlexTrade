@@ -8,6 +8,7 @@
     <meta name="description" content="Manage your profile information, password credentials, and security preferences on CryptoPlexTrade.">
     
     <!-- Design System Stylesheets -->
+    <link rel="stylesheet" href="css/tokens.css">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="css/app.css">
     <link rel="stylesheet" href="css/responsive.css">
@@ -15,6 +16,7 @@
     <!-- Immediate Client Auth Guard -->
     <script>
     (async function() {
+        if (window.location.protocol === 'file:' || window.location.search.includes('preview=1')) return;
         try {
             const r = await fetch('/api/user/me', { credentials: 'include' });
             if (!r.ok) {
@@ -30,15 +32,21 @@
         .profile-grid-layout {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 28px;
+            gap: 24px;
         }
 
         .profile-section-card {
-            background: #081326;
-            border: 1px solid rgba(0, 169, 224, 0.22);
-            border-radius: var(--radius-xl);
+            background: var(--bg-white, #ffffff);
+            border: 1px solid var(--border-subtle, #e2e8f0);
+            border-radius: var(--radius-2xl, 20px);
             padding: 32px 32px;
-            box-shadow: var(--shadow-sm);
+            box-shadow: 0 4px 20px rgba(11, 45, 90, 0.05);
+            transition: all 0.2s ease;
+        }
+
+        .profile-section-card:hover {
+            box-shadow: 0 8px 28px rgba(11, 45, 90, 0.08);
+            border-color: var(--border-medium, #cbd5e1);
         }
 
         .profile-card-title {
@@ -47,20 +55,21 @@
             gap: 10px;
             font-size: 1.15rem;
             font-weight: 800;
-            color: var(--text-primary);
+            color: var(--text-1, #0a192f);
             margin-bottom: 6px;
         }
 
         .profile-card-title svg {
-            color: var(--primary-color);
+            color: var(--primary, #0052cc);
             width: 20px;
             height: 20px;
         }
 
         .profile-card-sub {
             font-size: 0.85rem;
-            color: var(--text-secondary);
+            color: var(--text-2, #475569);
             margin-bottom: 24px;
+            line-height: 1.5;
         }
 
         .form-group-item {
@@ -69,63 +78,71 @@
 
         .form-group-item label {
             display: block;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 6px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--text-1, #0a192f);
+            margin-bottom: 8px;
         }
 
         .form-group-item input {
             width: 100%;
-            padding: 12px 14px;
-            background: #050c1b;
-            border: 1px solid rgba(0, 169, 224, 0.20);
-            border-radius: var(--radius-sm);
+            padding: 13px 16px;
+            background: #ffffff;
+            border: 1.5px solid var(--border-medium, #cbd5e1);
+            border-radius: var(--radius-md, 10px);
             font-family: inherit;
             font-size: 0.92rem;
-            color: var(--text-primary);
+            color: var(--text-1, #0a192f);
             outline: none;
-            transition: all var(--duration-fast);
+            transition: all var(--duration-fast, 0.15s);
+            box-sizing: border-box;
         }
 
         .form-group-item input:focus {
-            background: #0f244a;
-            color: #ffffff;
-            border-color: var(--primary-light);
-            box-shadow: 0 0 14px rgba(0, 169, 224, 0.35);
+            background: #ffffff;
+            color: var(--text-1, #0a192f);
+            border-color: var(--primary, #0052cc);
+            box-shadow: 0 0 0 3px rgba(0, 82, 204, 0.15);
         }
 
         .form-group-item input:disabled {
-            background: #f1f5f9;
-            color: var(--text-muted);
+            background: #f8fafc;
+            border-color: #e2e8f0;
+            color: #64748b;
             cursor: not-allowed;
         }
 
         .btn-profile-submit {
-            padding: 12px 28px;
-            background: #ffffff;
-            color: #080b11;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 13px 30px;
+            background: linear-gradient(135deg, var(--primary, #0052cc) 0%, #0077c8 100%);
+            color: #ffffff;
             border: none;
             border-radius: 9999px;
             font-family: inherit;
             font-size: 0.92rem;
             font-weight: 700;
             cursor: pointer;
-            transition: all var(--duration-fast);
-            box-shadow: 0 4px 16px rgba(255, 255, 255, 0.2);
+            transition: all var(--duration-fast, 0.15s);
+            box-shadow: 0 4px 14px rgba(0, 82, 204, 0.25);
         }
 
         .btn-profile-submit:hover {
-            background: #f1f5f9;
             transform: translateY(-1px);
-            box-shadow: 0 6px 20px rgba(255, 255, 255, 0.32);
+            box-shadow: 0 6px 20px rgba(0, 82, 204, 0.35);
+        }
+
+        .btn-profile-submit:active {
+            transform: translateY(0);
         }
 
         .msg-banner {
-            border-radius: var(--radius-sm);
-            padding: 10px 14px;
-            font-size: 0.85rem;
-            font-weight: 500;
+            border-radius: var(--radius-md, 10px);
+            padding: 12px 16px;
+            font-size: 0.88rem;
+            font-weight: 600;
             margin-top: 16px;
             display: none;
         }
@@ -133,18 +150,22 @@
         .msg-banner.success {
             background: #f0fdf4;
             border: 1px solid rgba(34, 197, 94, 0.3);
-            color: var(--accent-green);
+            color: #15803d;
         }
 
         .msg-banner.error {
             background: #fef2f2;
             border: 1px solid rgba(220, 38, 38, 0.3);
-            color: var(--accent-red);
+            color: #b91c1c;
         }
 
         @media (max-width: 900px) {
             .profile-grid-layout {
                 grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            .profile-section-card {
+                padding: 24px 20px;
             }
         }
     </style>
@@ -253,6 +274,32 @@
             </div>
         </main>
 </div>
+
+<!-- ================== MOBILE BOTTOM TAB BAR ================== -->
+<nav class="portal-tabbar" aria-label="Mobile Navigation">
+    <a href="dashboard.html" class="portal-tabbar-item">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11.47 3.841a.75.75 0 0 1 1.06 0l8.69 8.69a.75.75 0 1 0 1.06-1.061l-8.689-8.69a2.25 2.25 0 0 0-3.182 0l-8.69 8.69a.75.75 0 1 0 1.061 1.06l8.69-8.689Z"/><path d="m12 5.432 8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 0 1-.75-.75v-4.5a.75.75 0 0 0-.75-.75h-3a.75.75 0 0 0-.75.75V21a.75.75 0 0 1-.75.75H5.625a1.875 1.875 0 0 1-1.875-1.875v-6.198a2.29 2.29 0 0 0 .091-.086L12 5.432Z"/></svg>
+        <span>Dashboard</span>
+    </a>
+    <a href="transactions.html" class="portal-tabbar-item">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clip-rule="evenodd"/></svg>
+        <span>Ledger</span>
+    </a>
+    <a href="trade.html" class="portal-tabbar-item portal-tabbar-center" aria-label="Trade Desk">
+        <div class="tabbar-center-circle">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M15.97 2.47a.75.75 0 0 1 1.06 0l4.5 4.5a.75.75 0 0 1 0 1.06l-4.5 4.5a.75.75 0 1 1-1.06-1.06l3.22-3.22H7.5a.75.75 0 0 1 0-1.5h11.69l-3.22-3.22a.75.75 0 0 1 0-1.06Zm-7.94 9a.75.75 0 0 1 0 1.06l-3.22 3.22H16.5a.75.75 0 0 1 0 1.5H4.81l3.22 3.22a.75.75 0 1 1-1.06 1.06l-4.5-4.5a.75.75 0 0 1 0-1.06l4.5-4.5a.75.75 0 0 1 1.06 0Z" clip-rule="evenodd"/></svg>
+        </div>
+        <span>Trade</span>
+    </a>
+    <a href="profile.html" class="portal-tabbar-item active" aria-current="page">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd"/></svg>
+        <span>Profile</span>
+    </a>
+    <a href="support.html" class="portal-tabbar-item">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M4.804 21.644A6.707 6.707 0 0 0 6 21.75a6.721 6.721 0 0 0 3.583-1.029c.774.182 1.584.279 2.417.279 5.322 0 9.75-3.97 9.75-9 0-5.03-4.428-9-9.75-9s-9.75 3.97-9.75 9c0 2.409 1.025 4.587 2.674 6.192.232.226.277.428.254.543a3.73 3.73 0 0 1-.814 1.686.75.75 0 0 0 .44 1.223Z" clip-rule="evenodd"/></svg>
+        <span>Support</span>
+    </a>
+</nav>
 
 <div class="ticker-tape"></div>
 

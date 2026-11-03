@@ -532,11 +532,14 @@
             displayedMessageIds.add(msg.id);
             // If this is a real message from customer, remove its corresponding optimistic (temp) version
             if (msg.sender === 'customer') {
+                // Keep its position in the thread (so it doesn't jump below the bot reply)
                 const temps = messagesEl.querySelectorAll('[data-temp-id]');
                 for (const t of temps) {
-                    // Match by content (since we don't have a correlation ID)
-                    if (t.innerText.includes(msg.message)) {
-                        t.remove();
+                    const body = t.firstChild ? t.firstChild.textContent : '';
+                    if (body === msg.message || body.trim() === String(msg.message).trim()) {
+                        t.removeAttribute('data-temp-id');
+                        t.setAttribute('data-id', msg.id);
+                        return;
                     }
                 }
             }

@@ -8,6 +8,7 @@
     <meta name="description" content="Institutional digital currency execution desk. Buy and sell BTC, ETH, USDT at live rates with transparent settlement fees.">
     
     <!-- Design System Stylesheets -->
+    <link rel="stylesheet" href="css/tokens.css">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="css/app.css">
     <link rel="stylesheet" href="css/responsive.css">
@@ -15,6 +16,7 @@
     <!-- Immediate Client Auth Guard -->
     <script>
     (async function() {
+        if (window.location.protocol === 'file:' || window.location.search.includes('preview=1')) return;
         try {
             const r = await fetch('/api/user/me', { credentials: 'include' });
             if (!r.ok) {
@@ -56,16 +58,17 @@
 
         .terminal-mode-switch {
             display: inline-flex;
-            background: #0b101c;
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 9999px;
+            background: var(--blue-050);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-pill);
             padding: 4px;
             gap: 4px;
+            box-shadow: inset 0 1px 2px rgba(11, 45, 90, 0.03);
         }
 
         .terminal-mode-btn {
             padding: 8px 24px;
-            border-radius: 9999px;
+            border-radius: var(--radius-pill);
             border: none;
             background: transparent;
             font-family: inherit;
@@ -77,20 +80,20 @@
         }
 
         .terminal-mode-btn.active.buy-active {
-            background: #ffffff !important;
-            color: #080b11 !important;
-            box-shadow: 0 4px 14px rgba(255, 255, 255, 0.2);
+            background: linear-gradient(135deg, var(--primary) 0%, #0077c8 100%) !important;
+            color: #ffffff !important;
+            box-shadow: 0 4px 14px rgba(0, 91, 170, 0.28);
         }
 
         .terminal-mode-btn.active.sell-active {
-            background: #ffffff !important;
-            color: #080b11 !important;
-            box-shadow: 0 4px 14px rgba(255, 255, 255, 0.2);
+            background: linear-gradient(135deg, #e5484d 0%, #c22731 100%) !important;
+            color: #ffffff !important;
+            box-shadow: 0 4px 14px rgba(229, 72, 77, 0.28);
         }
 
         .terminal-card {
-            background: #081326;
-            border: 1px solid rgba(0, 169, 224, 0.22);
+            background: #ffffff;
+            border: 1.5px solid var(--border);
             border-radius: var(--radius-xl);
             padding: 36px 36px 32px;
             box-shadow: var(--shadow-md);
@@ -100,8 +103,8 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: var(--bg-highlight);
-            border: 1px solid rgba(0, 91, 170, 0.15);
+            background: var(--blue-050);
+            border: 1px solid var(--blue-200);
             border-radius: var(--radius-md);
             padding: 14px 20px;
             margin-bottom: 28px;
@@ -156,8 +159,8 @@
         .terminal-field-label {
             display: flex;
             justify-content: space-between;
-            font-size: 0.8rem;
-            font-weight: 600;
+            font-size: 0.82rem;
+            font-weight: 700;
             color: var(--text-primary);
         }
 
@@ -174,26 +177,27 @@
 
         .terminal-input {
             width: 100%;
-            padding: 13px 48px 13px 16px;
-            background: #050c1b;
-            border: 1px solid rgba(0, 169, 224, 0.20);
+            padding: 13px 52px 13px 16px;
+            background: #ffffff;
+            border: 1.5px solid var(--border-medium);
             border-radius: var(--radius-sm);
             font-family: var(--font-mono);
             font-size: 1rem;
+            font-weight: 600;
             color: var(--text-primary);
             outline: none;
             transition: all var(--duration-fast);
         }
 
         .terminal-input:focus {
-            background: #0f244a;
-            color: #ffffff;
-            border-color: var(--primary-light);
-            box-shadow: 0 0 14px rgba(0, 169, 224, 0.35);
+            background: #ffffff;
+            color: var(--text-primary);
+            border-color: var(--primary);
+            box-shadow: var(--ring);
         }
 
         .terminal-input[readonly] {
-            background: #f1f5f9;
+            background: var(--bg-subtle);
             color: var(--text-secondary);
             cursor: default;
         }
@@ -204,13 +208,17 @@
             font-size: 0.82rem;
             font-weight: 700;
             font-family: var(--font-mono);
-            color: var(--text-muted);
+            color: var(--primary);
+            background: var(--blue-050);
+            padding: 3px 8px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
             pointer-events: none;
         }
 
         .terminal-breakdown-box {
-            background: #050c1b;
-            border: 1px solid rgba(0, 169, 224, 0.20);
+            background: var(--blue-050);
+            border: 1px solid var(--blue-200);
             border-radius: var(--radius-md);
             padding: 18px 20px;
             display: flex;
@@ -227,15 +235,15 @@
 
         .breakdown-row.total {
             padding-top: 12px;
-            border-top: 1px solid var(--border-light);
-            font-size: 1rem;
+            border-top: 1px solid var(--border-medium);
+            font-size: 1.05rem;
             font-weight: 800;
             color: var(--text-primary);
         }
 
         .breakdown-row .val {
             font-family: var(--font-mono);
-            font-weight: 600;
+            font-weight: 700;
             color: var(--text-primary);
         }
 
@@ -272,15 +280,15 @@
         .terminal-execute-btn {
             width: 100%;
             padding: 16px;
-            background: #ffffff;
-            color: #080b11;
+            background: linear-gradient(135deg, var(--primary) 0%, #0077c8 100%);
+            color: #ffffff;
             border: none;
-            border-radius: 9999px;
+            border-radius: var(--radius-pill);
             font-family: inherit;
             font-size: 1.05rem;
             font-weight: 800;
             cursor: pointer;
-            box-shadow: 0 4px 18px rgba(255, 255, 255, 0.22);
+            box-shadow: 0 4px 18px rgba(0, 91, 170, 0.28);
             transition: all var(--duration-fast);
             display: flex;
             align-items: center;
@@ -289,13 +297,106 @@
         }
 
         .terminal-execute-btn:hover {
-            background: #f1f5f9;
-            box-shadow: 0 8px 24px rgba(255, 255, 255, 0.35);
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+            box-shadow: 0 8px 24px rgba(0, 91, 170, 0.38);
             transform: translateY(-1px);
         }
 
         .terminal-execute-btn:active {
             transform: translateY(0);
+        }
+
+        /* Custom Asset Dropdown (White Clarity Surface) */
+        .asset-select-wrap {
+            position: relative;
+            width: 100%;
+        }
+        .asset-select-trigger {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 14px;
+            background: #ffffff;
+            border: 1.5px solid var(--border-medium);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all var(--duration-fast);
+        }
+        .asset-select-trigger:focus,
+        .asset-select-trigger:hover {
+            border-color: var(--primary);
+        }
+        .asset-select-current {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .asset-select-name {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .dropdown-arrow {
+            width: 18px;
+            height: 18px;
+            color: var(--text-muted);
+            transition: transform 0.2s ease;
+        }
+        .asset-select-trigger[aria-expanded="true"] .dropdown-arrow {
+            transform: rotate(180deg);
+        }
+        .asset-select-dropdown {
+            position: absolute;
+            top: calc(100% + 6px);
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            list-style: none;
+            padding: 6px;
+            margin: 0;
+            z-index: 50;
+            display: none;
+        }
+        .asset-select-dropdown.open {
+            display: block;
+        }
+        .asset-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: background var(--duration-fast);
+        }
+        .asset-option:hover {
+            background: var(--blue-050);
+        }
+        .asset-option.selected {
+            background: var(--blue-100);
+        }
+        .asset-option__info {
+            display: flex;
+            flex-direction: column;
+        }
+        .asset-option__name {
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: var(--text-1);
+        }
+        .asset-option__ticker {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+        .asset-select-native {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+            width: 0;
+            height: 0;
         }
     </style>
     <script src="theme.js"></script>
@@ -316,21 +417,21 @@
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11.47 3.841a.75.75 0 0 1 1.06 0l8.69 8.69a.75.75 0 1 0 1.06-1.061l-8.689-8.69a2.25 2.25 0 0 0-3.182 0l-8.69 8.69a.75.75 0 1 0 1.061 1.06l8.69-8.689Z"/><path d="m12 5.432 8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 0 1-.75-.75v-4.5a.75.75 0 0 0-.75-.75h-3a.75.75 0 0 0-.75.75V21a.75.75 0 0 1-.75.75H5.625a1.875 1.875 0 0 1-1.875-1.875v-6.198a2.29 2.29 0 0 0 .091-.086L12 5.432Z"/></svg>
                 <span>Dashboard</span>
             </a>
-            <a href="trade.html" class="portal-pill-item active">
+            <a href="trade.html" class="portal-pill-item active" aria-current="page">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M3 4.5h18v15H3v-15Zm6.75 10.5a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM12 15a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM15.75 15a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM9.75 9a.75.75 0 0 0-1.5 0v4.5a.75.75 0 0 0 1.5 0V9Zm3.75-3a.75.75 0 0 0-1.5 0v7.5a.75.75 0 0 0 1.5 0V6Zm2.25 1.5a.75.75 0 0 0-1.5 0v6a.75.75 0 0 0 1.5 0v-6Z"/></svg>
-                <span>Trade</span>
+                <span>Trade Desk</span>
             </a>
             <a href="transactions.html" class="portal-pill-item">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clip-rule="evenodd"/></svg>
-                <span>Transactions</span>
+                <span>Ledger History</span>
             </a>
             <a href="profile.html" class="portal-pill-item">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd"/></svg>
-                <span>Profile</span>
+                <span>Account Profile</span>
             </a>
             <a href="support.html" class="portal-pill-item">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm11.378-3.917c-.89-.777-2.366-.777-3.255 0a.75.75 0 0 1-1.06-1.06c2.298-2.013 5.824-2.013 8.122 0a.75.75 0 0 1-1.06 1.06ZM12 15.75a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" clip-rule="evenodd"/></svg>
-                <span>Support</span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M4.804 21.644A6.707 6.707 0 0 0 6 21.75a6.721 6.721 0 0 0 3.583-1.029c.774.182 1.584.279 2.417.279 5.322 0 9.75-3.97 9.75-9 0-5.03-4.428-9-9.75-9s-9.75 3.97-9.75 9c0 2.409 1.025 4.587 2.674 6.192.232.226.277.428.254.543a3.73 3.73 0 0 1-.814 1.686.75.75 0 0 0 .44 1.223Z" clip-rule="evenodd"/></svg>
+                <span>Help &amp; Support</span>
             </a>
         </nav>
 
@@ -503,6 +604,32 @@
             </div>
         </main>
 </div>
+
+<!-- ================== MOBILE BOTTOM TAB BAR ================== -->
+<nav class="portal-tabbar" aria-label="Mobile Navigation">
+    <a href="dashboard.html" class="portal-tabbar-item">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11.47 3.841a.75.75 0 0 1 1.06 0l8.69 8.69a.75.75 0 1 0 1.06-1.061l-8.689-8.69a2.25 2.25 0 0 0-3.182 0l-8.69 8.69a.75.75 0 1 0 1.061 1.06l8.69-8.689Z"/><path d="m12 5.432 8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 0 1-.75-.75v-4.5a.75.75 0 0 0-.75-.75h-3a.75.75 0 0 0-.75.75V21a.75.75 0 0 1-.75.75H5.625a1.875 1.875 0 0 1-1.875-1.875v-6.198a2.29 2.29 0 0 0 .091-.086L12 5.432Z"/></svg>
+        <span>Dashboard</span>
+    </a>
+    <a href="transactions.html" class="portal-tabbar-item">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clip-rule="evenodd"/></svg>
+        <span>Ledger</span>
+    </a>
+    <a href="trade.html" class="portal-tabbar-item portal-tabbar-center active" aria-label="Trade Desk" aria-current="page">
+        <div class="tabbar-center-circle">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M15.97 2.47a.75.75 0 0 1 1.06 0l4.5 4.5a.75.75 0 0 1 0 1.06l-4.5 4.5a.75.75 0 1 1-1.06-1.06l3.22-3.22H7.5a.75.75 0 0 1 0-1.5h11.69l-3.22-3.22a.75.75 0 0 1 0-1.06Zm-7.94 9a.75.75 0 0 1 0 1.06l-3.22 3.22H16.5a.75.75 0 0 1 0 1.5H4.81l3.22 3.22a.75.75 0 1 1-1.06 1.06l-4.5-4.5a.75.75 0 0 1 0-1.06l4.5-4.5a.75.75 0 0 1 1.06 0Z" clip-rule="evenodd"/></svg>
+        </div>
+        <span>Trade</span>
+    </a>
+    <a href="profile.html" class="portal-tabbar-item">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd"/></svg>
+        <span>Profile</span>
+    </a>
+    <a href="support.html" class="portal-tabbar-item">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M4.804 21.644A6.707 6.707 0 0 0 6 21.75a6.721 6.721 0 0 0 3.583-1.029c.774.182 1.584.279 2.417.279 5.322 0 9.75-3.97 9.75-9 0-5.03-4.428-9-9.75-9s-9.75 3.97-9.75 9c0 2.409 1.025 4.587 2.674 6.192.232.226.277.428.254.543a3.73 3.73 0 0 1-.814 1.686.75.75 0 0 0 .44 1.223Z" clip-rule="evenodd"/></svg>
+        <span>Support</span>
+    </a>
+</nav>
 
 <div class="ticker-tape"><div class="ticker-tape__track"></div></div>
 

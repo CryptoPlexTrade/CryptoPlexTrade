@@ -8,6 +8,7 @@
     <meta name="description" content="Access your live portfolio, trading statistics, recent transactions, and real-time market data on CryptoPlexTrade.">
     
     <!-- Design System Stylesheets -->
+    <link rel="stylesheet" href="css/tokens.css">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="css/app.css">
     <link rel="stylesheet" href="css/responsive.css">
@@ -20,12 +21,12 @@
             width: 100%;
         }
 
-        /* Announcement Popup Modal */
+        /* Announcement Popup Modal (Pure White with Blue Accent) */
         .ann-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(6px);
+            background: rgba(10, 25, 44, 0.45);
+            backdrop-filter: blur(8px);
             z-index: 9999;
             display: flex;
             align-items: center;
@@ -39,14 +40,14 @@
             visibility: visible;
         }
         .ann-popup {
-            background: #081326;
-            border: 1px solid rgba(0, 169, 224, 0.35);
+            background: #ffffff;
+            border: 1.5px solid var(--border);
             border-radius: var(--radius-xl);
             padding: 36px 32px 28px;
             max-width: 480px;
             width: 90%;
             position: relative;
-            box-shadow: var(--shadow-lg);
+            box-shadow: var(--shadow-xl);
             transform: translateY(20px) scale(0.97);
             transition: transform 0.3s var(--ease-decelerate);
             border-top: 4px solid var(--primary-color);
@@ -58,8 +59,8 @@
             width: 48px;
             height: 48px;
             border-radius: var(--radius-md);
-            background: var(--bg-highlight);
-            border: 1px solid rgba(0, 91, 170, 0.2);
+            background: var(--blue-050);
+            border: 1px solid var(--blue-200);
             color: var(--primary-color);
             display: flex;
             align-items: center;
@@ -89,8 +90,8 @@
             width: 32px;
             height: 32px;
             border-radius: 50%;
-            border: 1px solid var(--border-light);
-            background: var(--bg-light);
+            border: 1px solid var(--border);
+            background: var(--blue-050);
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -100,76 +101,82 @@
             transition: all var(--duration-fast);
         }
         .ann-close-btn:hover {
-            background: var(--border-light);
+            background: var(--border);
             color: var(--text-primary);
         }
         .ann-dismiss-btn {
             width: 100%;
-            padding: 12px;
+            padding: 13px;
             border: none;
-            border-radius: var(--radius-sm);
-            background: var(--primary-color);
+            border-radius: var(--radius-pill);
+            background: linear-gradient(135deg, var(--primary) 0%, #0077c8 100%);
             color: #ffffff;
             font-weight: 700;
             font-size: 0.95rem;
             cursor: pointer;
+            box-shadow: 0 4px 14px rgba(0, 91, 170, 0.25);
             transition: all var(--duration-fast);
         }
         .ann-dismiss-btn:hover {
-            background: var(--primary-dark);
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
         }
 
-        /* Sovereign Refinements for Dashboard */
+        /* Quick Trading Tiles */
         .dash-quick-actions {
             display: flex;
-            gap: 12px;
-            margin-bottom: 28px;
+            gap: 16px;
+            margin-bottom: 24px;
         }
         .btn-action-tile {
             flex: 1;
-            padding: 16px 20px;
-            background: #081326;
-            border: 1px solid rgba(0, 169, 224, 0.22);
+            padding: 18px 22px;
+            background: #ffffff;
+            border: 1.5px solid var(--border);
             border-radius: var(--radius-lg);
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 16px;
             text-decoration: none;
             color: var(--text-primary);
             box-shadow: var(--shadow-sm);
             transition: all var(--duration-fast);
         }
         .btn-action-tile:hover {
-            border-color: var(--primary-color);
+            border-color: var(--primary);
             transform: translateY(-2px);
             box-shadow: var(--shadow-md);
         }
         .action-icon {
-            width: 42px;
-            height: 42px;
-            border-radius: var(--radius-md);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.25rem;
+            font-size: 1.35rem;
+            font-weight: 700;
             flex-shrink: 0;
         }
         .action-icon.buy {
-            background: #f0fdf4;
-            color: var(--accent-green);
+            background: var(--green-bg);
+            color: var(--green-strong);
+            border: 1px solid var(--green-border);
         }
         .action-icon.sell {
-            background: #fef2f2;
-            color: var(--accent-red);
+            background: var(--red-bg);
+            color: var(--red-strong);
+            border: 1px solid var(--red-border);
         }
         .action-info .title {
-            font-size: 0.95rem;
-            font-weight: 700;
+            font-size: 0.98rem;
+            font-weight: 800;
             display: block;
+            color: var(--text-1);
         }
         .action-info .sub {
-            font-size: 0.78rem;
+            font-size: 0.8rem;
             color: var(--text-muted);
+            margin-top: 2px;
         }
 
         .referral-row {
@@ -179,32 +186,36 @@
         }
         .referral-row input {
             flex: 1;
-            padding: 10px 16px;
-            background: #0b101c;
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 9999px;
+            padding: 11px 16px;
+            background: var(--bg-white);
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-pill);
             font-family: var(--font-mono);
             font-size: 0.82rem;
             color: var(--text-primary);
             outline: none;
         }
+        .referral-row input:focus {
+            border-color: var(--primary);
+            box-shadow: var(--ring);
+        }
         .copy-btn {
-            padding: 10px 20px;
-            background: #ffffff;
-            color: #080b11;
+            padding: 11px 22px;
+            background: linear-gradient(135deg, var(--primary) 0%, #0077c8 100%);
+            color: #ffffff;
             border: none;
-            border-radius: 9999px;
+            border-radius: var(--radius-pill);
             font-weight: 700;
             font-size: 0.85rem;
             cursor: pointer;
             transition: all var(--duration-fast);
             white-space: nowrap;
-            box-shadow: 0 4px 14px rgba(255, 255, 255, 0.18);
+            box-shadow: 0 4px 12px rgba(0, 91, 170, 0.25);
         }
         .copy-btn:hover {
-            background: #f1f5f9;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
             transform: translateY(-1px);
-            box-shadow: 0 6px 18px rgba(255, 255, 255, 0.28);
+            box-shadow: 0 6px 16px rgba(0, 91, 170, 0.35);
         }
     </style>
     <script src="theme.js"></script>
@@ -235,25 +246,25 @@
 
             <!-- Rectangle with circular edges (Floating Pill Menu) -->
             <nav class="portal-pill-nav" aria-label="Main Navigation">
-                <a href="dashboard.html" class="portal-pill-item active">
+                <a href="dashboard.html" class="portal-pill-item active" aria-current="page">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11.47 3.841a.75.75 0 0 1 1.06 0l8.69 8.69a.75.75 0 1 0 1.06-1.061l-8.689-8.69a2.25 2.25 0 0 0-3.182 0l-8.69 8.69a.75.75 0 1 0 1.061 1.06l8.69-8.689Z"/><path d="m12 5.432 8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 0 1-.75-.75v-4.5a.75.75 0 0 0-.75-.75h-3a.75.75 0 0 0-.75.75V21a.75.75 0 0 1-.75.75H5.625a1.875 1.875 0 0 1-1.875-1.875v-6.198a2.29 2.29 0 0 0 .091-.086L12 5.432Z"/></svg>
                     <span>Dashboard</span>
                 </a>
                 <a href="trade.html" class="portal-pill-item">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M3 4.5h18v15H3v-15Zm6.75 10.5a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM12 15a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM15.75 15a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM9.75 9a.75.75 0 0 0-1.5 0v4.5a.75.75 0 0 0 1.5 0V9Zm3.75-3a.75.75 0 0 0-1.5 0v7.5a.75.75 0 0 0 1.5 0V6Zm2.25 1.5a.75.75 0 0 0-1.5 0v6a.75.75 0 0 0 1.5 0v-6Z"/></svg>
-                    <span>Trade</span>
+                    <span>Trade Desk</span>
                 </a>
                 <a href="transactions.html" class="portal-pill-item">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clip-rule="evenodd"/></svg>
-                    <span>Transactions</span>
+                    <span>Ledger History</span>
                 </a>
                 <a href="profile.html" class="portal-pill-item">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd"/></svg>
-                    <span>Profile</span>
+                    <span>Account Profile</span>
                 </a>
                 <a href="support.html" class="portal-pill-item">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm11.378-3.917c-.89-.777-2.366-.777-3.255 0a.75.75 0 0 1-1.06-1.06c2.298-2.013 5.824-2.013 8.122 0a.75.75 0 0 1-1.06 1.06ZM12 15.75a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" clip-rule="evenodd"/></svg>
-                    <span>Support</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M4.804 21.644A6.707 6.707 0 0 0 6 21.75a6.721 6.721 0 0 0 3.583-1.029c.774.182 1.584.279 2.417.279 5.322 0 9.75-3.97 9.75-9 0-5.03-4.428-9-9.75-9s-9.75 3.97-9.75 9c0 2.409 1.025 4.587 2.674 6.192.232.226.277.428.254.543a3.73 3.73 0 0 1-.814 1.686.75.75 0 0 0 .44 1.223Z" clip-rule="evenodd"/></svg>
+                    <span>Help &amp; Support</span>
                 </a>
             </nav>
 
@@ -282,23 +293,170 @@
 
             <div id="auth-debug"></div>
 
-            <!-- Quick Trading Tiles -->
-            <div class="dash-quick-actions">
-                <a href="trade.html" class="btn-action-tile">
-                    <div class="action-icon buy">&plus;</div>
-                    <div class="action-info">
-                        <span class="title">Buy Cryptocurrency</span>
-                        <span class="sub">Instant settlement via verified rails</span>
-                    </div>
-                </a>
-                <a href="trade.html" class="btn-action-tile">
-                    <div class="action-icon sell">&minus;</div>
-                    <div class="action-info">
-                        <span class="title">Sell Cryptocurrency</span>
-                        <span class="sub">Fast fiat payout to your account</span>
-                    </div>
-                </a>
+            <!-- Coinza-Inspired Hero Balance Card -->
+            <div class="coinza-hero-card">
+                <div class="coinza-balance-label">
+                    <span>Portfolio Liquidity &amp; Balance</span>
+                    <span class="coinza-trend-badge"><span class="pulse-dot"></span> Live Corridor</span>
+                </div>
+                <div class="coinza-balance-val">GH₵ <span id="total-balance-display">56,893.30</span></div>
+                <div style="font-size:0.86rem; color:var(--text-secondary); margin-bottom: 4px;">
+                    Ghana Cedi (GHS) Instant Settlement Rail
+                </div>
+                
+                <div class="coinza-actions-row">
+                    <a href="trade.html" class="coinza-btn-pill primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+                        <span>Deposit / Buy</span>
+                    </a>
+                    <a href="trade.html" class="coinza-btn-pill secondary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></svg>
+                        <span>Withdraw / Sell</span>
+                    </a>
+                    <a href="transactions.html" class="coinza-btn-pill secondary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                        <span>Audit Ledger</span>
+                    </a>
+                </div>
             </div>
+
+            <!-- KPI Cards -->
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-card__header">
+                        <span class="kpi-card__label">Total Orders Executed</span>
+                        <div class="kpi-card__icon kpi-card__icon--blue">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M4.848 2.771A49.144 49.144 0 0 1 12 2.25c2.43 0 4.817.178 7.152.52 1.978.292 3.348 2.024 3.348 3.97v6.02c0 1.946-1.37 3.678-3.348 3.97a48.901 48.901 0 0 1-3.476.383.75.75 0 0 0-.629.29l-2.378 3.17a.75.75 0 0 1-1.04 0l-2.378-3.17a.75.75 0 0 0-.63-.29 48.899 48.899 0 0 1-3.475-.384c-1.978-.29-3.348-2.022-3.348-3.97V6.741c0-1.947 1.37-3.68 3.348-3.97Z" clip-rule="evenodd"/></svg>
+                        </div>
+                    </div>
+                    <div class="kpi-card__value" id="total-transactions-value">&mdash;</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-card__header">
+                        <span class="kpi-card__label">Pending Settlements</span>
+                        <div class="kpi-card__icon kpi-card__icon--orange">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clip-rule="evenodd"/></svg>
+                        </div>
+                    </div>
+                    <div class="kpi-card__value" id="pending-orders-value">&mdash;</div>
+                </div>
+            </div>
+
+            <!-- Main 2-col layout -->
+            <div class="dash-layout">
+                <div class="dash-main">
+
+                    <!-- Chart card -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Order Ratio &amp; Execution Breakdown</h3>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="portfolioChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Recent Transactions -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Recent Transactions</h3>
+                            <a href="transactions.html" class="view-all">Full Ledger &rarr;</a>
+                        </div>
+                        <div class="table-wrap">
+                            <table class="data-table data-table--cards">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Direction</th>
+                                        <th>Asset</th>
+                                        <th>Settlement (GH₵)</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="transactions-tbody">
+                                    <tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:24px;">Syncing ledger records…</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Aside -->
+                <aside class="dash-aside">
+
+                    <!-- Referral Card -->
+                    <div class="card">
+                        <div class="card-header" style="margin-bottom:10px;">
+                            <h3 class="card-title">Partner Referral Desk</h3>
+                        </div>
+                        <p style="font-size:0.83rem;color:var(--text-secondary);margin-bottom:14px;line-height:1.5;">Share your unique verified onboarding link with fellow traders:</p>
+                        <div class="referral-row">
+                            <input type="text" id="referral-link" readonly placeholder="Generating link…">
+                            <button id="copy-referral-btn" class="copy-btn">Copy Link</button>
+                        </div>
+                    </div>
+
+                    <!-- Market Watch -->
+                    <div class="card">
+                        <div class="card-header" style="margin-bottom:14px;">
+                            <h3 class="card-title">Institutional Watchlist</h3>
+                        </div>
+                        <ul class="market-list" id="market-watch-list">
+                            <li class="market-item"><div class="market-item__asset"><div class="skeleton skeleton-avatar"></div><div class="skeleton skeleton-line" style="width:50px;margin-left:4px;"></div></div><div class="skeleton skeleton-line" style="width:70px;"></div></li>
+                            <li class="market-item"><div class="market-item__asset"><div class="skeleton skeleton-avatar"></div><div class="skeleton skeleton-line" style="width:50px;margin-left:4px;"></div></div><div class="skeleton skeleton-line" style="width:70px;"></div></li>
+                            <li class="market-item"><div class="market-item__asset"><div class="skeleton skeleton-avatar"></div><div class="skeleton skeleton-line" style="width:50px;margin-left:4px;"></div></div><div class="skeleton skeleton-line" style="width:70px;"></div></li>
+                        </ul>
+                    </div>
+
+                    <!-- News -->
+                    <div class="card">
+                        <div class="card-header" style="margin-bottom:14px;">
+                            <h3 class="card-title">Market Intel &amp; Bulletins</h3>
+                        </div>
+                        <ul class="news-list" id="news-list">
+                            <li class="news-item"><div class="skeleton skeleton-line" style="margin-bottom:6px;"></div><div class="skeleton skeleton-line" style="width:40%;"></div></li>
+                            <li class="news-item"><div class="skeleton skeleton-line" style="margin-bottom:6px;"></div><div class="skeleton skeleton-line" style="width:40%;"></div></li>
+                            <li class="news-item"><div class="skeleton skeleton-line" style="margin-bottom:6px;"></div><div class="skeleton skeleton-line" style="width:40%;"></div></li>
+                        </ul>
+                    </div>
+
+                </aside>
+            </div>
+        </main>
+    </div>
+
+    <!-- ================== MOBILE BOTTOM TAB BAR ================== -->
+    <nav class="portal-tabbar" aria-label="Mobile Navigation">
+        <a href="dashboard.html" class="portal-tabbar-item active" aria-current="page">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11.47 3.841a.75.75 0 0 1 1.06 0l8.69 8.69a.75.75 0 1 0 1.06-1.061l-8.689-8.69a2.25 2.25 0 0 0-3.182 0l-8.69 8.69a.75.75 0 1 0 1.061 1.06l8.69-8.689Z"/><path d="m12 5.432 8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 0 1-.75-.75v-4.5a.75.75 0 0 0-.75-.75h-3a.75.75 0 0 0-.75.75V21a.75.75 0 0 1-.75.75H5.625a1.875 1.875 0 0 1-1.875-1.875v-6.198a2.29 2.29 0 0 0 .091-.086L12 5.432Z"/></svg>
+            <span>Dashboard</span>
+        </a>
+        <a href="transactions.html" class="portal-tabbar-item">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clip-rule="evenodd"/></svg>
+            <span>Ledger</span>
+        </a>
+        <a href="trade.html" class="portal-tabbar-item portal-tabbar-center" aria-label="Trade Desk">
+            <div class="tabbar-center-circle">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M15.97 2.47a.75.75 0 0 1 1.06 0l4.5 4.5a.75.75 0 0 1 0 1.06l-4.5 4.5a.75.75 0 1 1-1.06-1.06l3.22-3.22H7.5a.75.75 0 0 1 0-1.5h11.69l-3.22-3.22a.75.75 0 0 1 0-1.06Zm-7.94 9a.75.75 0 0 1 0 1.06l-3.22 3.22H16.5a.75.75 0 0 1 0 1.5H4.81l3.22 3.22a.75.75 0 1 1-1.06 1.06l-4.5-4.5a.75.75 0 0 1 0-1.06l4.5-4.5a.75.75 0 0 1 1.06 0Z" clip-rule="evenodd"/></svg>
+            </div>
+            <span>Trade</span>
+        </a>
+        <a href="profile.html" class="portal-tabbar-item">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd"/></svg>
+            <span>Profile</span>
+        </a>
+        <a href="support.html" class="portal-tabbar-item">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M4.804 21.644A6.707 6.707 0 0 0 6 21.75a6.721 6.721 0 0 0 3.583-1.029c.774.182 1.584.279 2.417.279 5.322 0 9.75-3.97 9.75-9 0-5.03-4.428-9-9.75-9s-9.75 3.97-9.75 9c0 2.409 1.025 4.587 2.674 6.192.232.226.277.428.254.543a3.73 3.73 0 0 1-.814 1.686.75.75 0 0 0 .44 1.223Z" clip-rule="evenodd"/></svg>
+            <span>Support</span>
+        </a>
+    </nav>
+
+    <!-- Ticker Tape -->
+    <div class="ticker-tape"><div class="ticker-tape__track"></div></div>
+
+    <script src="inactivity-timer.js"></script>
+    <script src="chat-widget.js"></script>
+    <script>
 
             <!-- KPI Cards -->
             <div class="kpi-grid">
