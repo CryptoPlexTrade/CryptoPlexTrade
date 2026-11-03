@@ -77,23 +77,67 @@ img.brand-circle:hover {
 }
 
 @media (max-width: 640px) {
-    /* Stack header into two rows */
+    /* Keep header clean & single-row on mobile */
     .header .container,
     .header > .container {
-        flex-wrap: wrap;
-        padding: 10px 16px;
+        flex-wrap: nowrap !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        padding: 10px 16px !important;
+        gap: 8px !important;
+    }
+
+    .logo-wrapper {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        flex-shrink: 0 !important;
+    }
+
+    .logo-wrapper img.logo,
+    .logo-wrapper img {
+        height: 32px !important;
+        max-height: 32px !important;
+        width: auto !important;
+        display: block !important;
+        flex-shrink: 0 !important;
+    }
+
+    .logo-name {
+        font-size: 1.02rem !important;
+        display: inline-block !important;
+        white-space: nowrap !important;
+        flex-shrink: 0 !important;
+        color: #ffffff !important;
+    }
+    .logo-name span {
+        color: #00a9e0 !important;
+    }
+
+    /* Hide long nav links on mobile, keep Sign In + CTA */
+    .nav a:not(.btn-cta):not(.btn-primary):not(.nav-btn-signup):not(.nav-btn-login):not(.nav-link-login):not([href*="login"]):not(#logout-btn),
+    .header-nav a:not(.btn-cta):not(.btn-primary):not(.nav-btn-signup):not(.nav-btn-login):not(.nav-link-login):not([href*="login"]):not(#logout-btn) {
+        display: none !important;
+    }
+
+    .nav, .header-nav {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
         gap: 8px;
     }
 
-    .logo-name { font-size: .95rem !important; }
-
-    /* Hide most nav links on very small screens, keep Login + CTA */
-    .nav a:not(.btn-cta):not([href*="login"]):not(#logout-btn),
-    .header-nav a:not(.btn-cta):not([href*="login"]):not(#logout-btn) {
-        display: none;
+    .nav a.nav-btn-login,
+    .nav a.nav-link-login {
+        padding: 6px 10px !important;
+        font-size: 0.8rem !important;
     }
 
-    .nav, .header-nav { margin-left: auto; }
+    .nav a.nav-btn-signup,
+    .nav a.btn-primary {
+        padding: 6px 12px !important;
+        font-size: 0.8rem !important;
+    }
 }
 
 /* ══════════════════════════════════════════════════════════

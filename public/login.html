@@ -189,6 +189,35 @@
             gap: 20px;
         }
 
+        .auth-mobile-brand {
+            display: none;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+        .auth-mobile-brand img.logo,
+        .auth-mobile-brand img {
+            height: 32px !important;
+            max-height: 32px !important;
+            width: auto !important;
+            object-fit: contain !important;
+        }
+        .auth-mobile-brand .logo-name {
+            font-size: 1.05rem !important;
+            font-weight: 700;
+            color: #ffffff;
+            white-space: nowrap;
+        }
+        .auth-mobile-brand .logo-name span {
+            color: var(--secondary-color, #00a9e0);
+        }
+
+        .auth-top-nav-links {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
         .auth-top-nav a {
             font-size: 0.85rem;
             color: var(--text-secondary);
@@ -435,7 +464,18 @@
                 display: none;
             }
             .auth-right-pane {
-                padding: 32px 24px 80px;
+                padding: 24px 20px 80px;
+            }
+            .auth-top-nav {
+                justify-content: space-between;
+                width: 100%;
+                margin-bottom: 24px;
+            }
+            .auth-mobile-brand {
+                display: inline-flex !important;
+            }
+            .auth-top-nav-links a:not(.nav-reg-btn) {
+                display: none;
             }
         }
     </style>
@@ -496,9 +536,15 @@
         <!-- ================= RIGHT FORM ================= -->
         <main class="auth-right-pane">
             <nav class="auth-top-nav">
-                <a href="rates">Rates</a>
-                <a href="help.html">Help</a>
-                <a href="register.html" class="nav-reg-btn">Create Account</a>
+                <a href="index.html" class="auth-mobile-brand logo-wrapper">
+                    <img src="css/logo.png" alt="CryptoPlexTrade Logo" class="logo">
+                    <span class="logo-name">CryptoPlex<span>Trade</span></span>
+                </a>
+                <div class="auth-top-nav-links">
+                    <a href="rates">Rates</a>
+                    <a href="help.html">Help</a>
+                    <a href="register.html" class="nav-reg-btn">Create Account</a>
+                </div>
             </nav>
 
             <div class="auth-form-card">

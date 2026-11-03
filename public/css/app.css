@@ -246,7 +246,46 @@ img.sidebar-brand__orb {
 .topbar-left {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 14px;
+}
+
+.topbar-mobile-brand {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    flex-shrink: 0;
+}
+.topbar-mobile-brand img.logo {
+    height: 32px !important;
+    max-height: 32px !important;
+    width: auto !important;
+    object-fit: contain !important;
+}
+.topbar-mobile-brand .logo-name {
+    font-size: 1.05rem !important;
+    font-weight: 700;
+    color: var(--text-1);
+    white-space: nowrap;
+    letter-spacing: -0.02em;
+}
+.topbar-mobile-brand .logo-name span {
+    color: var(--secondary-color, #00a9e0);
+}
+
+@media (max-width: 900px) {
+    .hamburger-btn {
+        display: flex !important;
+    }
+    .topbar {
+        padding: 0 16px !important;
+    }
+    .topbar-mobile-brand {
+        display: inline-flex !important;
+    }
+    .topbar-title {
+        display: none !important;
+    }
 }
 
 .topbar-title {

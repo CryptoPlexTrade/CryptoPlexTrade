@@ -122,25 +122,43 @@ body {
 }
 
 .logo-wrapper {
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-    gap: 10px;
+    display: inline-flex !important;
+    align-items: center !important;
+    text-decoration: none !important;
+    gap: 10px !important;
+    flex-shrink: 0 !important;
+}
+
+.logo-wrapper img.logo,
+.logo-wrapper img {
+    height: 38px !important;
+    max-height: 38px !important;
+    width: auto !important;
+    object-fit: contain !important;
+    display: block !important;
+    flex-shrink: 0 !important;
 }
 
 .logo-name {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: #ffffff;
-    text-decoration: none;
-    letter-spacing: -0.02em;
+    display: inline-block !important;
+    font-size: 1.22rem !important;
+    font-weight: 700 !important;
+    color: #ffffff !important;
+    text-decoration: none !important;
+    letter-spacing: -0.02em !important;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+}
+.logo-name span {
+    color: var(--secondary-color, #00a9e0);
 }
 
 .logo {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     text-decoration: none;
     transition: opacity 0.2s ease;
+    flex-shrink: 0;
 }
 .logo:hover {
     opacity: 0.9;
