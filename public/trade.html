@@ -353,15 +353,21 @@
             background: #ffffff;
             border: 1.5px solid var(--border);
             border-radius: var(--radius-md);
-            box-shadow: var(--shadow-lg);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.12), 0 8px 10px -6px rgba(0, 0, 0, 0.08);
             list-style: none;
             padding: 6px;
             margin: 0;
-            z-index: 50;
+            z-index: 1000;
             display: none;
+            max-height: 280px;
+            overflow-y: auto;
         }
-        .asset-select-dropdown.open {
-            display: block;
+        .asset-select-wrap.open > .asset-select-dropdown,
+        .asset-select-dropdown.open,
+        #miner-fee-group.open .asset-select-dropdown,
+        #miner-fee-group.open > .asset-select-wrap > .asset-select-dropdown {
+            display: block !important;
+            z-index: 1000 !important;
         }
         .asset-option {
             display: flex;
@@ -462,7 +468,7 @@
                     <div class="terminal-rate-callout">
                         <div class="rate-label-wrap">
                             <span class="rate-pulse"></span>
-                            <span class="rate-label">Live Exchange Reference</span>
+                            <span class="rate-label">Live Exchange Rate</span>
                         </div>
                         <span class="rate-value" id="rate-info">Fetching market rates…</span>
                     </div>
@@ -551,7 +557,7 @@
 
                             <!-- Miner Fee Selector -->
                             <div class="terminal-field" id="miner-fee-group">
-                                <label class="terminal-field-label">Network Priority / Miner Fee Tier</label>
+                                <label class="terminal-field-label">Network Priority</label>
                                 <div class="asset-select-wrap">
                                     <div class="asset-select-trigger" id="miner-trigger" role="button" tabindex="0" aria-haspopup="listbox" aria-expanded="false">
                                         <div class="asset-select-current">
@@ -568,11 +574,11 @@
                             <!-- Fee and Total Summary Box -->
                             <div class="terminal-breakdown-box">
                                 <div class="breakdown-row" id="fee-ghs-container">
-                                    <span>Estimated Network Miner Fee:</span>
+                                    <span>Network fee:</span>
                                     <span class="val">GH₵ <input type="text" id="fee-ghs" name="fee-ghs" readonly style="width:70px;background:none;border:none;font-family:inherit;font-weight:inherit;color:inherit;text-align:right;"></span>
                                 </div>
                                 <div class="breakdown-row total" id="total-pay-container">
-                                    <span>Total Payable Settlement:</span>
+                                    <span>Total:</span>
                                     <span class="val">GH₵ <input type="text" id="total-pay" name="total-pay" readonly style="width:100px;background:none;border:none;font-family:inherit;font-weight:inherit;color:inherit;text-align:right;"></span>
                                 </div>
                             </div>
@@ -580,7 +586,7 @@
                             <!-- Destination Address Field -->
                             <div class="terminal-field" id="wallet-address-group">
                                 <label class="terminal-field-label" id="wallet-label" for="wallet-address">
-                                    Recipient Blockchain Wallet Address
+                                    Wallet Address
                                 </label>
                                 <div class="terminal-input-wrap">
                                     <input class="terminal-input" type="text" id="wallet-address" name="wallet-address" required placeholder="Enter destination public address" autocomplete="off" spellcheck="false" style="font-size:0.88rem;">
@@ -767,8 +773,10 @@
 
                 const wrap = document.getElementById('miner-fee-group');
                 const trigger = document.getElementById('miner-trigger');
+                const mDropdown = document.getElementById('miner-dropdown');
                 if (wrap && trigger) {
                     wrap.classList.remove('open');
+                    if (mDropdown) mDropdown.classList.remove('open');
                     trigger.setAttribute('aria-expanded', 'false');
                 }
             });
@@ -810,17 +818,17 @@
         const p = productSelect.value;
         if (!rates[p]) return;
         if (currentMode === 'buy') {
-            rateInfo.textContent = `1 ${p} = GH₵ ${rates[p].buy.toFixed(2)} USD Reference`;
+            rateInfo.textContent = `1 USD = GH₵ ${rates[p].buy.toFixed(2)}`;
             usdLabel.textContent = 'Volume to Acquire (USD)';
             ghsLabel.textContent = 'Net Fiat Subtotal (GH₵)';
-            walletLabel.textContent = `Your ${p.replace('_',' ')} Public Address`;
+            walletLabel.textContent = 'Wallet Address';
             minerFeeGroup.style.display = '';
             feeGhsContainer.style.display = 'flex';
             totalPayContainer.style.display = 'flex';
             walletAddressGroup.style.display = '';
             document.getElementById('proceed-btn').textContent = 'Confirm & Proceed to Settlement →';
         } else {
-            rateInfo.textContent = `1 ${p} = GH₵ ${rates[p].sell.toFixed(2)} USD Reference`;
+            rateInfo.textContent = `1 USD = GH₵ ${rates[p].sell.toFixed(2)}`;
             usdLabel.textContent = 'Volume to Liquidate (USD)';
             ghsLabel.textContent = 'Gross Payout to Receive (GH₵)';
             minerFeeGroup.style.display = 'none';
@@ -986,14 +994,17 @@
 
         function openDropdown() {
             wrap.classList.add('open');
+            dropdown.classList.add('open');
             trigger.setAttribute('aria-expanded', 'true');
         }
         function closeDropdown() {
             wrap.classList.remove('open');
+            dropdown.classList.remove('open');
             trigger.setAttribute('aria-expanded', 'false');
         }
 
-        trigger.addEventListener('click', () => {
+        trigger.addEventListener('click', (e) => {
+            e.stopPropagation();
             wrap.classList.contains('open') ? closeDropdown() : openDropdown();
         });
         trigger.addEventListener('keydown', (e) => {
@@ -1039,21 +1050,32 @@
 
     // --- Custom Miner Fee Dropdown toggle ---
     (function() {
-        const minerWrap    = document.getElementById('miner-fee-group');
-        const minerTrigger = document.getElementById('miner-trigger');
+        const minerWrap     = document.getElementById('miner-fee-group');
+        const minerDropdown = document.getElementById('miner-dropdown');
+        const minerTrigger  = document.getElementById('miner-trigger');
         if (!minerTrigger) return;
         
-        minerTrigger.addEventListener('click', () => {
+        minerTrigger.addEventListener('click', (e) => {
+            e.stopPropagation();
             const isOpen = minerWrap.classList.contains('open');
             minerWrap.classList.toggle('open', !isOpen);
+            if (minerDropdown) minerDropdown.classList.toggle('open', !isOpen);
             minerTrigger.setAttribute('aria-expanded', String(!isOpen));
         });
         minerTrigger.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); minerTrigger.click(); }
-            if (e.key === 'Escape') { minerWrap.classList.remove('open'); minerTrigger.setAttribute('aria-expanded', 'false'); }
+            if (e.key === 'Escape') { 
+                minerWrap.classList.remove('open'); 
+                if (minerDropdown) minerDropdown.classList.remove('open');
+                minerTrigger.setAttribute('aria-expanded', 'false'); 
+            }
         });
         document.addEventListener('click', (e) => {
-            if (!minerWrap.contains(e.target)) { minerWrap.classList.remove('open'); minerTrigger.setAttribute('aria-expanded', 'false'); }
+            if (!minerWrap.contains(e.target)) { 
+                minerWrap.classList.remove('open'); 
+                if (minerDropdown) minerDropdown.classList.remove('open');
+                minerTrigger.setAttribute('aria-expanded', 'false'); 
+            }
         });
     })();
 })();

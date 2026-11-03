@@ -39,7 +39,7 @@ window.addEventListener('pageshow', function(event) {
 })();
 
 document.addEventListener('DOMContentLoaded', function() {
-    // --- Mobile Rail Drawer Toggle ---
+    // --- Rail Toggle (Desktop collapse & Mobile drawer) ---
     const rail = document.getElementById('admin-rail');
     const backdrop = document.getElementById('rail-backdrop');
     const openBtn = document.getElementById('rail-open-btn');
@@ -57,9 +57,39 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.style.overflow = '';
     }
 
-    if (openBtn) openBtn.addEventListener('click', openRail);
+    function toggleRailDesktop() {
+        document.body.classList.toggle('rail-collapsed');
+        const isCollapsed = document.body.classList.contains('rail-collapsed');
+        try { localStorage.setItem('admin_rail_collapsed', isCollapsed ? 'true' : 'false'); } catch(_) {}
+    }
+
+    if (openBtn) {
+        openBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (window.innerWidth >= 1024) {
+                toggleRailDesktop();
+            } else {
+                openRail();
+            }
+        });
+    }
     if (closeBtn) closeBtn.addEventListener('click', closeRail);
     if (backdrop) backdrop.addEventListener('click', closeRail);
+
+    // Auto-populate titles for rail items so collapsed tooltips work
+    if (rail) {
+        rail.querySelectorAll('.rail-item').forEach(item => {
+            const label = item.querySelector('span')?.textContent?.trim();
+            if (label && !item.hasAttribute('title')) item.setAttribute('title', label);
+        });
+    }
+
+    // Restore desktop collapsed preference
+    try {
+        if (window.innerWidth >= 1024 && localStorage.getItem('admin_rail_collapsed') === 'true') {
+            document.body.classList.add('rail-collapsed');
+        }
+    } catch(_) {}
 
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && rail && rail.classList.contains('is-open')) {

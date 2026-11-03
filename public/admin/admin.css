@@ -369,7 +369,7 @@ textarea::placeholder {
 }
 
 .rail-toggle {
-    display: none;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     width: 36px;
@@ -380,8 +380,61 @@ textarea::placeholder {
     cursor: pointer;
     color: var(--text-1);
     flex-shrink: 0;
+    transition: all 0.2s ease;
+}
+.rail-toggle:hover {
+    background: var(--bg-hover, #f1f5f9);
+    border-color: var(--primary);
+    color: var(--primary);
 }
 .rail-toggle svg { width: 18px; height: 18px; }
+
+/* ── Desktop Collapsible Rail ────────────────────────────────────────── */
+@media (min-width: 1024px) {
+    .admin-rail {
+        transition: width 0.25s var(--ease-standard), transform 0.25s var(--ease-standard);
+    }
+    .admin-main {
+        transition: margin-left 0.25s var(--ease-standard);
+    }
+    body.rail-collapsed .admin-rail {
+        width: 72px;
+        overflow: hidden;
+    }
+    body.rail-collapsed .admin-rail .admin-brand-name,
+    body.rail-collapsed .admin-rail .rail-item span,
+    body.rail-collapsed .admin-rail .rail-section-label,
+    body.rail-collapsed .admin-rail .rail-user-meta,
+    body.rail-collapsed .admin-rail .admin-logout-btn {
+        display: none !important;
+    }
+    body.rail-collapsed .admin-rail .rail-item {
+        justify-content: center;
+        padding: 12px 0;
+    }
+    body.rail-collapsed .admin-rail .rail-item svg {
+        margin: 0;
+        width: 22px;
+        height: 22px;
+    }
+    body.rail-collapsed .admin-rail .admin-rail-head {
+        padding: 16px 8px;
+        justify-content: center;
+    }
+    body.rail-collapsed .admin-rail .admin-brand {
+        justify-content: center;
+    }
+    body.rail-collapsed .admin-rail-foot {
+        padding: 12px 4px;
+        justify-content: center;
+    }
+    body.rail-collapsed .rail-foot-user {
+        justify-content: center;
+    }
+    body.rail-collapsed .admin-main {
+        margin-left: 72px;
+    }
+}
 
 .admin-topbar-brand {
     display: none;

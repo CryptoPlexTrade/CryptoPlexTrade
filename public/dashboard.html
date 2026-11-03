@@ -301,7 +301,6 @@
                         <ul class="notification-list" id="notification-list"></ul>
                     </div>
                 </div>
-                <div class="portal-user-badge" id="welcome-message">Account</div>
                 <a href="#" id="logout-btn" class="portal-logout-btn">Sign Out</a>
             </div>
         </div>
@@ -471,9 +470,6 @@
         </a>
     </nav>
 
-    <!-- Ticker Tape -->
-    <div class="ticker-tape"><div class="ticker-tape__track"></div></div>
-
     <script src="inactivity-timer.js"></script>
     <script src="chat-widget.js"></script>
     <script>
@@ -528,7 +524,8 @@
             }
             const user = await r.json();
             if (user && user.name) {
-                document.getElementById('welcome-message').textContent = `Overview: ${user.name.split(' ')[0]}`;
+                const welcomeEl = document.getElementById('welcome-message');
+                if (welcomeEl) welcomeEl.textContent = `Overview: ${user.name.split(' ')[0]}`;
                 const ref = document.getElementById('referral-link');
                 if (ref && user.referral_code && user.appUrl) {
                     ref.value = `${user.appUrl}/register.html?ref=${user.referral_code}`;

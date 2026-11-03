@@ -219,6 +219,19 @@ img.brand-circle:hover {
     .stats-grid, .widget-grid, .kpi-grid {
         grid-template-columns: repeat(2, 1fr) !important;
     }
+    .dash-layout {
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        gap: 20px !important;
+    }
+    .dash-main, .dash-aside {
+        width: 100% !important;
+        max-width: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
+    }
 }
 
 @media (max-width: 640px) {
@@ -477,23 +490,111 @@ img.brand-circle:hover {
 
     /* Dashboard mobile adjustments */
     .coinza-hero-card {
-        padding: 20px 16px !important;
+        padding: 18px 14px 16px !important;
+        margin-bottom: 16px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    .coinza-balance-label {
+        font-size: 0.85rem !important;
+        flex-wrap: wrap !important;
+        gap: 6px !important;
+        margin-bottom: 6px !important;
     }
     .coinza-balance-val {
-        font-size: 1.85rem !important;
+        font-size: 1.65rem !important;
+        margin-bottom: 2px !important;
+        word-break: break-word !important;
     }
     .coinza-actions-row {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
         gap: 8px !important;
-        margin-top: 16px !important;
+        margin-top: 14px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
     }
     .coinza-btn-pill {
-        flex: 1 1 100% !important;
-        min-width: 100% !important;
-        padding: 11px 16px !important;
-        font-size: 0.88rem !important;
+        flex: unset !important;
+        min-width: 0 !important;
+        width: 100% !important;
+        padding: 10px 4px !important;
+        font-size: 0.82rem !important;
+        justify-content: center !important;
+        text-align: center !important;
+        box-sizing: border-box !important;
+        gap: 4px !important;
+        white-space: nowrap !important;
     }
+    .coinza-btn-pill svg {
+        width: 15px !important;
+        height: 15px !important;
+        flex-shrink: 0 !important;
+    }
+
     .dash-layout {
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
+        max-width: 100% !important;
         gap: 16px !important;
+        box-sizing: border-box !important;
+    }
+    .dash-main {
+        width: 100% !important;
+        max-width: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 16px !important;
+    }
+    .dash-aside {
+        width: 100% !important;
+        max-width: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 16px !important;
+    }
+    .dash-aside .card {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    .referral-row {
+        display: flex !important;
+        flex-direction: row !important;
+        width: 100% !important;
+        gap: 8px !important;
+        box-sizing: border-box !important;
+    }
+    .referral-row input {
+        min-width: 0 !important;
+        width: 100% !important;
+        font-size: 0.78rem !important;
+        padding: 9px 12px !important;
+    }
+    .copy-btn {
+        padding: 9px 16px !important;
+        font-size: 0.8rem !important;
+        flex-shrink: 0 !important;
+    }
+    .market-list {
+        width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+    .market-item {
+        padding: 8px 6px !important;
+        font-size: 0.85rem !important;
+    }
+    .market-item__asset {
+        gap: 8px !important;
+    }
+    .news-list {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+    .news-item {
+        padding: 10px 0 !important;
     }
     .kpi-card {
         padding: 16px !important;
