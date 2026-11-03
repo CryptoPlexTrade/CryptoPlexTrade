@@ -122,11 +122,17 @@ body {
 }
 
 .logo-wrapper {
-    display: inline-flex !important;
-    align-items: center !important;
-    text-decoration: none !important;
-    gap: 10px !important;
-    flex-shrink: 0 !important;
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.header .logo-wrapper {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
 }
 
 .logo-wrapper img.logo,

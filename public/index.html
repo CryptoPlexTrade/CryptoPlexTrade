@@ -359,6 +359,14 @@
         }
 
         /* Hero Text Content */
+        .hero-left-content {
+            min-width: 0;
+            max-width: 100%;
+            width: 100%;
+            box-sizing: border-box;
+            word-break: break-word;
+        }
+
         .hero-badge-live {
             display: inline-flex;
             align-items: center;
@@ -370,10 +378,14 @@
             font-size: 0.78rem;
             font-weight: 700;
             color: var(--electric-cyan);
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
+            letter-spacing: 0.02em;
             margin-bottom: 24px;
             box-shadow: 0 0 20px rgba(0, 169, 224, 0.15);
+            max-width: 100%;
+            box-sizing: border-box;
+            line-height: 1.45;
+            white-space: normal;
+            word-break: break-word;
         }
 
         .hero-badge-live .live-pulse {
@@ -383,6 +395,7 @@
             background: var(--bull-green);
             box-shadow: 0 0 10px var(--bull-green);
             animation: live-blink 1.6s ease-in-out infinite;
+            flex-shrink: 0;
         }
 
         @keyframes live-blink {
@@ -391,12 +404,14 @@
         }
 
         .hero-headline {
-            font-size: clamp(2.4rem, 2rem + 2.5vw, 4rem);
+            font-size: clamp(2.2rem, 1.8rem + 2vw, 3.8rem);
             font-weight: 900;
-            line-height: 1.1;
+            line-height: 1.12;
             letter-spacing: -0.035em;
             color: #ffffff;
             margin-bottom: 22px;
+            word-break: break-word;
+            overflow-wrap: break-word;
         }
 
         .hero-headline .gradient-text {
@@ -404,14 +419,17 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             display: inline-block;
+            word-break: break-word;
         }
 
         .hero-subhead {
-            font-size: 1.12rem;
+            font-size: 1.1rem;
             line-height: 1.65;
             color: #94a3b8;
             margin-bottom: 34px;
             max-width: 580px;
+            word-break: break-word;
+            overflow-wrap: break-word;
         }
 
         .hero-cta-group {
@@ -420,6 +438,7 @@
             gap: 16px;
             flex-wrap: wrap;
             margin-bottom: 44px;
+            max-width: 100%;
         }
 
         .btn-hero-primary {
@@ -501,6 +520,10 @@
         /* --- RIGHT HERO: INTERACTIVE INSTANT TRADE TERMINAL CARD --- */
         .hero-terminal-wrap {
             position: relative;
+            min-width: 0;
+            max-width: 100%;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         /* Floating 3D Coin Badges in the background of terminal */
@@ -550,6 +573,11 @@
             backdrop-filter: blur(28px);
             position: relative;
             z-index: 4;
+            min-width: 0;
+            max-width: 100%;
+            width: 100%;
+            box-sizing: border-box;
+            overflow: hidden;
         }
 
         .terminal-glass-card::before {
@@ -1220,7 +1248,8 @@
 
         /* --- RESPONSIVE POLISH --- */
         @media (max-width: 1024px) {
-            .cyber-hero-grid { grid-template-columns: 1fr; gap: 48px; }
+            .floating-badge { display: none !important; }
+            .cyber-hero-grid { grid-template-columns: 1fr; gap: 40px; padding: 0 20px; max-width: 100%; }
             .advantage-grid { grid-template-columns: 1fr 1fr; }
             .footer-cols-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
         }
@@ -1228,18 +1257,31 @@
         @media (max-width: 768px) {
             nav.nav { display: none; }
             .mobile-header-cta { display: flex !important; gap: 8px; }
+            .cyber-hero { padding: 50px 0 70px; overflow-x: hidden; }
+            .hero-cta-group { flex-direction: column; width: 100%; align-items: stretch; gap: 12px; margin-bottom: 32px; }
+            .btn-hero-primary, .btn-hero-secondary { width: 100%; justify-content: center; box-sizing: border-box; padding: 14px 20px; }
+            .hero-trust-matrix { grid-template-columns: repeat(3, 1fr); gap: 12px; max-width: 100%; }
+            .terminal-glass-card { padding: 24px 18px; border-radius: 20px; }
             .timeline-steps-grid { grid-template-columns: 1fr; }
             .advantage-grid { grid-template-columns: 1fr; }
             .footer-cols-grid { grid-template-columns: 1fr; }
-            .hero-trust-matrix { grid-template-columns: 1fr 1fr 1fr; }
             .cta-inner-card { padding: 40px 24px; }
         }
 
         @media (max-width: 480px) {
-            .hero-trust-matrix { grid-template-columns: 1fr; gap: 16px; }
-            .hero-cta-group { flex-direction: column; width: 100%; }
-            .btn-hero-primary, .btn-hero-secondary { width: 100%; justify-content: center; }
-            .floating-badge { display: none; }
+            .cyber-hero { padding: 36px 0 54px; }
+            .cyber-hero-grid { padding: 0 16px; gap: 24px; }
+            .hero-badge-live { font-size: 0.7rem; padding: 6px 12px; letter-spacing: 0.01em; margin-bottom: 16px; }
+            .hero-headline { font-size: clamp(1.75rem, 1.45rem + 2vw, 2.25rem); line-height: 1.15; margin-bottom: 14px; }
+            .hero-subhead { font-size: 0.92rem; line-height: 1.55; margin-bottom: 22px; }
+            .hero-trust-matrix { grid-template-columns: 1fr; gap: 14px; padding-top: 18px; }
+            .terminal-glass-card { padding: 18px 12px; border-radius: 16px; }
+            .terminal-input-box { padding: 4px 8px; }
+            .terminal-input-box input { font-size: 1.12rem; }
+            .terminal-currency-pill, .terminal-currency-select { padding: 6px 8px; font-size: 0.78rem; }
+            .terminal-rate-pill { padding: 8px 10px; font-size: 0.74rem; flex-direction: column; align-items: flex-start; gap: 4px; }
+            .btn-terminal-submit { padding: 14px; font-size: 0.92rem; }
+            .floating-badge { display: none !important; }
         }
     </style>
 </head>

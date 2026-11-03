@@ -250,7 +250,7 @@ img.sidebar-brand__orb {
 }
 
 .topbar-mobile-brand {
-    display: none;
+    display: none !important;
     align-items: center;
     gap: 8px;
     text-decoration: none;
@@ -273,7 +273,7 @@ img.sidebar-brand__orb {
     color: var(--secondary-color, #00a9e0);
 }
 
-@media (max-width: 900px) {
+@media (max-width: 640px) {
     .hamburger-btn {
         display: flex !important;
     }
