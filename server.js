@@ -10,6 +10,7 @@ const fetch = require('node-fetch'); // You might need to install this: npm inst
 const path = require('path'); // Import the path module
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
+const compression = require('compression');
 const logger = require('./logger');
 const crypto = require('crypto');
 const db = require('./database');
@@ -31,11 +32,13 @@ const maintenance = require('./maintenanceManager');
 
 // Maintenance check BEFORE static files so dashboard pages get intercepted
 const userPages = ['/index.html', '/', '/dashboard.html', '/trade.html', '/transactions.html', '/profile.html', '/support.html'];
+app.use(compression()); // gzip/brotli-style compression for HTML, CSS, JS and JSON
 app.use(async (req, res, next) => {
     try {
+        const p = req.path.toLowerCase();
+        if (!userPages.includes(p)) return next(); // skip the DB/cache lookup for assets and API calls
         const data = await maintenance.get();
         if (!data.active) return next();
-        const p = req.path.toLowerCase();
         if (userPages.includes(p)) {
             return res.redirect('/maintenance.html');
         }
@@ -46,6 +49,16 @@ app.use(async (req, res, next) => {
 // Middleware
 app.use(express.static(path.join(__dirname, 'public'), { 
     dotfiles: 'ignore',
+    etag: true,
+    setHeaders: (res, filePath) => {
+        if (/\.(png|jpe?g|gif|svg|webp|ico|woff2?)$/i.test(filePath)) {
+            res.setHeader('Cache-Control', 'public, max-age=604800');
+        } else if (/\.(css|js)$/i.test(filePath)) {
+            res.setHeader('Cache-Control', 'public, max-age=3600, stale-while-revalidate=86400');
+        } else {
+            res.setHeader('Cache-Control', 'no-cache');
+        }
+    },
     extensions: ['html'] // This allows extensionless URLs (e.g. /login instead of /login.html)
 })); // Serve static files from the 'public' directory
 // Apply security headers. A functional CSP for the current architecture.

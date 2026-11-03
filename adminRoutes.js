@@ -14,27 +14,16 @@ router.use(authenticateAdminToken, adminOnly);
 // === ADMIN DASHBOARD STATS ===
 router.get('/stats', async (req, res) => {
     try {
-        const [[userCount]] = await db.query('SELECT COUNT(*) as count FROM users');
-        const [[orderCount]] = await db.query('SELECT COUNT(*) as count FROM orders');
-        const [[ticketCount]] = await db.query("SELECT COUNT(*) as count FROM support_tickets WHERE status = 'open'");
-
-        // Buy totals (completed)
-        const [[buyCompleted]] = await db.query(
-            "SELECT COALESCE(COUNT(*),0) as count, COALESCE(SUM(total_paid),0) as total FROM orders WHERE order_type = 'buy' AND status = 'completed'"
-        );
-        // Sell totals (completed)
-        const [[sellCompleted]] = await db.query(
-            "SELECT COALESCE(COUNT(*),0) as count, COALESCE(SUM(total_paid),0) as total FROM orders WHERE order_type = 'sell' AND status = 'completed'"
-        );
-        // Pending orders
-        const [[pendingOrders]] = await db.query(
-            "SELECT COALESCE(COUNT(*),0) as count FROM orders WHERE status != 'completed' AND status != 'failed' AND status != 'cancelled'"
-        );
-        // Total revenue (all completed)
-        const [[totalRevenue]] = await db.query(
-            "SELECT COALESCE(SUM(total_paid),0) as total FROM orders WHERE status = 'completed'"
-        );
-
+        const q = (sql) => db.query(sql).then(([[row]]) => row);
+        const [userCount, orderCount, ticketCount, buyCompleted, sellCompleted, pendingOrders, totalRevenue] = await Promise.all([
+            q('SELECT COUNT(*) as count FROM users'),
+            q('SELECT COUNT(*) as count FROM orders'),
+            q("SELECT COUNT(*) as count FROM support_tickets WHERE status = 'open'"),
+            q("SELECT COALESCE(COUNT(*),0) as count, COALESCE(SUM(total_paid),0) as total FROM orders WHERE order_type = 'buy' AND status = 'completed'"),
+            q("SELECT COALESCE(COUNT(*),0) as count, COALESCE(SUM(total_paid),0) as total FROM orders WHERE order_type = 'sell' AND status = 'completed'"),
+            q("SELECT COALESCE(COUNT(*),0) as count FROM orders WHERE status != 'completed' AND status != 'failed' AND status != 'cancelled'"),
+            q("SELECT COALESCE(SUM(total_paid),0) as total FROM orders WHERE status = 'completed'")
+        ]);
         res.json({
             users: userCount.count,
             orders: orderCount.count,
