@@ -10,7 +10,30 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/tokens.css">
 
-    <link rel="stylesheet" href="admin.css?v=4">
+    <link rel="stylesheet" href="admin.css?v=6">
+    <style>
+        .user-cell {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .cell-name {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .cell-email {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            word-break: break-all;
+        }
+        @media (max-width: 900px) {
+            .user-cell {
+                align-items: flex-end;
+                text-align: right;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- ================== MODERN TOPBAR & FLOATING PILL MENU ================== -->
@@ -184,6 +207,10 @@
                 }
             }
 
+            function esc(str) {
+                return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+            }
+
             function renderReferrals(referrals) {
                 tbody.innerHTML = '';
                 if (referrals.length === 0) {
@@ -194,12 +221,22 @@
                     const row = document.createElement('tr');
                     const hasTransacted = ref.has_transacted;
                     row.innerHTML = `
-                        <td data-label="Referrer">${ref.referrer_name} (${ref.referrer_email})</td>
-                        <td data-label="Referred User">${ref.referred_name} (${ref.referred_email})</td>
-                        <td data-label="Date Joined">${new Date(ref.referred_join_date).toLocaleString()}</td>
+                        <td data-label="Referrer">
+                            <div class="user-cell">
+                                <span class="cell-name">${esc(ref.referrer_name || 'N/A')}</span>
+                                <span class="cell-email">${esc(ref.referrer_email || '')}</span>
+                            </div>
+                        </td>
+                        <td data-label="Referred User">
+                            <div class="user-cell">
+                                <span class="cell-name">${esc(ref.referred_name || 'N/A')}</span>
+                                <span class="cell-email">${esc(ref.referred_email || '')}</span>
+                            </div>
+                        </td>
+                        <td data-label="Date Joined">${new Date(ref.referred_join_date).toLocaleDateString()} ${new Date(ref.referred_join_date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</td>
                         <td data-label="Has Transacted?">
                             <span class="status-badge status-${hasTransacted ? 'completed' : 'failed'}">
-                                ${hasTransacted ? 'Yes' : 'No'}
+                                ${hasTransacted ? '✓ Transacted' : '✗ No Trades Yet'}
                             </span>
                         </td>
                     `;

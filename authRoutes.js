@@ -282,11 +282,16 @@ router.post('/reset-password', async (req, res) => {
 
 // === LOGOUT ENDPOINT ===
 router.post('/logout', (req, res) => {
-    // Clear both user and admin cookies so any portal logout is complete
-    res.clearCookie('token');
-    res.clearCookie('csrf-token');
-    res.clearCookie('admin-token');
-    res.clearCookie('admin-csrf-token');
+    // Clear both user and admin cookies with explicit path & flags so any portal logout is complete
+    const isProd = process.env.NODE_ENV === 'production';
+    const clearOpts = { path: '/', httpOnly: true, sameSite: 'lax', secure: isProd };
+    res.clearCookie('token', clearOpts);
+    res.clearCookie('csrf-token', { ...clearOpts, httpOnly: false });
+    res.clearCookie('admin-token', clearOpts);
+    res.clearCookie('admin-csrf-token', { ...clearOpts, httpOnly: false });
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
     res.status(200).json({ message: 'Logout successful.' });
 });
 

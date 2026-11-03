@@ -311,15 +311,22 @@
         overlay?.addEventListener('click', () => { sidebar?.classList.remove('open'); overlay?.classList.remove('open'); });
     }
 
+    // --- Browser Back-Forward Cache (bfcache) & Swipe-Back Guard ---
+    window.addEventListener('pageshow', function(event) {
+        if (event.persisted) {
+            window.location.reload();
+        }
+    });
+
     // --- Sign Out ---
     const logoutBtn = document.getElementById('logout-btn');
     if (logoutBtn) {
         logoutBtn.addEventListener('click', async (e) => {
             e.preventDefault();
             try { 
-                const r = await fetch('/api/logout', { method: 'POST' }); 
-                if (r.ok) window.location.href = 'login.html'; 
+                await fetch('/api/logout', { method: 'POST' }); 
             } catch (err) { console.error(err); }
+            window.location.replace('login.html');
         });
     }
 

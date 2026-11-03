@@ -586,15 +586,22 @@
     }
     const csrfToken = getCookie('csrf-token');
 
+    // --- Browser Back-Forward Cache (bfcache) & Swipe-Back Guard ---
+    window.addEventListener('pageshow', function(event) {
+        if (event.persisted) {
+            window.location.reload();
+        }
+    });
+
     // --- Logout ---
     const logoutBtn = document.getElementById('logout-btn');
     if (logoutBtn) {
         logoutBtn.addEventListener('click', async (e) => {
             e.preventDefault();
             try {
-                const r = await fetch('/api/logout', { method: 'POST', headers: { 'X-CSRF-Token': csrfToken } });
-                if (r.ok) window.location.href = 'login.html';
+                await fetch('/api/logout', { method: 'POST', headers: { 'X-CSRF-Token': csrfToken } });
             } catch (err) { console.error(err); }
+            window.location.replace('login.html');
         });
     }
 
@@ -605,8 +612,7 @@
             const debug = document.getElementById('auth-debug');
             if (!r.ok) {
                 if (r.status === 401 || r.status === 403) {
-                    debug.textContent = 'Session terminated. Redirecting to authentication desk…';
-                    setTimeout(() => window.location.href = 'login.html', 1500);
+                    window.location.replace('login.html?reason=session_expired');
                 } else {
                     debug.textContent = `Status: ${r.status}`;
                 }

@@ -1422,8 +1422,9 @@ tbody tr:last-child td {
         min-width: 110px;
     }
     
-    tbody td:last-child::before {
-        display: none;
+    tbody td[data-label=""]::before,
+    tbody td:not([data-label])::before {
+        display: none !important;
     }
     
     tbody td:last-child .view-btn,
@@ -1566,6 +1567,46 @@ tbody tr:last-child td {
     background: rgba(0, 169, 224, 0.08);
 }
 .wallet-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+/* Payment Methods Mobile Stacking */
+.btn-remove-momo span.remove-text { display: none; }
+@media (max-width: 768px) {
+    .pm-grid {
+        grid-template-columns: 1fr !important;
+        gap: 14px !important;
+    }
+    .wallet-grid {
+        grid-template-columns: 1fr !important;
+        gap: 14px !important;
+    }
+    .momo-entry {
+        display: flex !important;
+        flex-direction: column !important;
+        background: var(--bg-surface);
+        border: 1px solid var(--border-medium);
+        border-radius: 12px;
+        padding: 16px;
+        gap: 12px;
+        margin-bottom: 14px;
+    }
+    .momo-entry .pm-field {
+        width: 100%;
+        margin-bottom: 0;
+    }
+    .momo-entry .btn-remove-momo {
+        width: 100% !important;
+        height: 40px !important;
+        border-radius: 8px;
+        margin-top: 4px;
+        font-size: 0.86rem !important;
+        gap: 6px;
+    }
+    .btn-remove-momo span.remove-text {
+        display: inline !important;
+        font-weight: 600;
+        font-size: 0.84rem;
+    }
+}
 
 /* --- Support Tickets Modal & Thread --- */
 .message-list {

@@ -11,6 +11,7 @@ const path = require('path'); // Import the path module
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 const compression = require('compression');
+const jwt = require('jsonwebtoken');
 const logger = require('./logger');
 const crypto = require('crypto');
 const db = require('./database');
@@ -33,6 +34,8 @@ const maintenance = require('./maintenanceManager');
 // Maintenance check BEFORE static files so dashboard pages get intercepted
 const userPages = ['/index.html', '/', '/dashboard.html', '/trade.html', '/transactions.html', '/profile.html', '/support.html'];
 app.use(compression()); // gzip/brotli-style compression for HTML, CSS, JS and JSON
+app.use(cookieParser()); // Parse cookies early so auth guards can inspect them
+
 app.use(async (req, res, next) => {
     try {
         const p = req.path.toLowerCase();
@@ -46,6 +49,63 @@ app.use(async (req, res, next) => {
     next();
 });
 
+// --- Guard Protected Pages from Unauthenticated Direct Access and Browser Back Swipe ---
+const userProtectedHtmlPages = [
+    '/dashboard', '/dashboard.html',
+    '/profile', '/profile.html',
+    '/transactions', '/transactions.html',
+    '/trade', '/trade.html',
+    '/support', '/support.html',
+    '/order_summary', '/order_summary.html',
+    '/buyconfirm', '/buyconfirm.html',
+    '/sell_order_summary', '/sell_order_summary.html',
+    '/sell_payment_method', '/sell_payment_method.html',
+    '/sell_payout_details', '/sell_payout_details.html',
+    '/sell_send_crypto', '/sell_send_crypto.html',
+    '/create_ticket', '/create_ticket.html',
+    '/ticket_detail', '/ticket_detail.html'
+];
+
+app.use((req, res, next) => {
+    const p = req.path.toLowerCase();
+
+    // Guard Admin Portal HTML pages (excluding login page and static assets)
+    if (p.startsWith('/admin') && !p.startsWith('/admin-login') && !/\.(css|js|png|jpe?g|svg|ico|webp)$/i.test(p)) {
+        const adminToken = req.cookies && req.cookies['admin-token'];
+        if (!adminToken) {
+            res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
+            return res.redirect('/admin-login?reason=unauthorized');
+        }
+        try {
+            const decoded = jwt.verify(adminToken, process.env.JWT_SECRET);
+            if (decoded.role !== 'admin') {
+                res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
+                return res.redirect('/admin-login?reason=forbidden');
+            }
+        } catch (_) {
+            res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
+            return res.redirect('/admin-login?reason=session_expired');
+        }
+    }
+
+    // Guard User Portal HTML pages
+    if (userProtectedHtmlPages.some(protectedPage => p === protectedPage || p === protectedPage + '/')) {
+        const token = req.cookies && req.cookies.token;
+        if (!token) {
+            res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
+            return res.redirect('/login.html?reason=unauthorized');
+        }
+        try {
+            jwt.verify(token, process.env.JWT_SECRET);
+        } catch (_) {
+            res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
+            return res.redirect('/login.html?reason=session_expired');
+        }
+    }
+
+    next();
+});
+
 // Middleware
 app.use(express.static(path.join(__dirname, 'public'), { 
     dotfiles: 'ignore',
@@ -56,7 +116,9 @@ app.use(express.static(path.join(__dirname, 'public'), {
         } else if (/\.(css|js)$/i.test(filePath)) {
             res.setHeader('Cache-Control', 'public, max-age=3600, stale-while-revalidate=86400');
         } else {
-            res.setHeader('Cache-Control', 'no-cache');
+            res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0');
+            res.setHeader('Pragma', 'no-cache');
+            res.setHeader('Expires', '0');
         }
     },
     extensions: ['html'] // This allows extensionless URLs (e.g. /login instead of /login.html)
@@ -79,7 +141,6 @@ app.use(cors({
     credentials: true
 }));
 app.use(express.json()); // Allows the server to understand JSON data
-app.use(cookieParser()); // Allows the server to parse cookies
 
 // Public endpoint to check maintenance status
 app.get('/api/maintenance', async (req, res) => {

@@ -230,7 +230,7 @@
                         <option value="AirtelTigo" ${data.network === 'AirtelTigo' ? 'selected' : ''}>AirtelTigo</option>
                     </select>
                 </div>
-                <button type="button" class="btn-remove-momo" title="Remove">&times;</button>
+                <button type="button" class="btn-remove-momo" title="Remove">&times; <span class="remove-text">Remove Account</span></button>
             `;
             row.querySelector('.btn-remove-momo').addEventListener('click', () => row.remove());
             momoList.appendChild(row);

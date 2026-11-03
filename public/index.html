@@ -323,6 +323,214 @@
             box-shadow: 0 6px 20px rgba(0, 82, 204, 0.35) !important;
         }
 
+        /* Mobile Hamburger & Drawer Navigation */
+        .header-mobile-controls {
+            display: none;
+            align-items: center;
+            gap: 10px;
+        }
+        .mobile-quick-btn {
+            color: #ffffff !important;
+            font-weight: 700 !important;
+            font-size: 0.8rem !important;
+            padding: 7px 16px !important;
+            border-radius: 9999px !important;
+            background: linear-gradient(135deg, var(--primary, #0052cc) 0%, #0077c8 100%) !important;
+            text-decoration: none !important;
+            box-shadow: 0 3px 10px rgba(0, 82, 204, 0.25);
+            white-space: nowrap;
+        }
+        .mobile-hamburger-btn {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            width: 40px;
+            height: 40px;
+            background: #ffffff;
+            border: 1px solid var(--border-subtle, #e2e8f0);
+            border-radius: 10px;
+            cursor: pointer;
+            padding: 0;
+            box-shadow: 0 2px 8px rgba(11, 45, 90, 0.05);
+            transition: all 0.2s;
+        }
+        .mobile-hamburger-btn:hover {
+            border-color: var(--primary, #0052cc);
+            background: var(--blue-050, #f0f7ff);
+        }
+        .mobile-hamburger-btn .ham-line {
+            display: block;
+            width: 20px;
+            height: 2px;
+            background: var(--text-1, #0a192f);
+            border-radius: 2px;
+            transition: transform 0.25s, opacity 0.2s;
+        }
+        .mobile-hamburger-btn.is-active .ham-line:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+        .mobile-hamburger-btn.is-active .ham-line:nth-child(2) {
+            opacity: 0;
+        }
+        .mobile-hamburger-btn.is-active .ham-line:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+
+        /* Drawer Overlay */
+        .mobile-nav-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 25, 47, 0.6);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .mobile-nav-backdrop.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-nav-drawer {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: min(86vw, 340px);
+            background: #ffffff;
+            z-index: 10001;
+            box-shadow: -10px 0 35px rgba(0, 0, 0, 0.18);
+            display: flex;
+            flex-direction: column;
+            transform: translateX(100%);
+            transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .mobile-nav-drawer.open {
+            transform: translateX(0);
+        }
+
+        .mobile-drawer-header {
+            padding: 18px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-subtle, #e2e8f0);
+            background: #ffffff;
+            flex-shrink: 0;
+        }
+        .mobile-drawer-close {
+            width: 36px;
+            height: 36px;
+            border: 1px solid var(--border-subtle, #e2e8f0);
+            border-radius: 8px;
+            background: var(--blue-050, #f0f7ff);
+            color: var(--text-1, #0a192f);
+            font-size: 1.4rem;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .mobile-drawer-close:hover {
+            background: #e2e8f0;
+            color: var(--primary, #0052cc);
+        }
+
+        .mobile-drawer-links {
+            flex: 1;
+            padding: 16px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .mobile-drawer-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-2, #475569);
+            text-decoration: none !important;
+            transition: all 0.18s;
+        }
+        .mobile-drawer-item svg {
+            color: var(--primary, #0052cc);
+            flex-shrink: 0;
+        }
+        .mobile-drawer-item:hover {
+            background: var(--blue-050, #f0f7ff);
+            color: var(--primary, #0052cc);
+            transform: translateX(3px);
+        }
+        .mobile-drawer-item.active {
+            background: var(--primary, #0052cc) !important;
+            color: #ffffff !important;
+        }
+        .mobile-drawer-item.active svg {
+            color: #ffffff !important;
+        }
+
+        .mobile-drawer-footer {
+            padding: 18px 16px 28px;
+            border-top: 1px solid var(--border-subtle, #e2e8f0);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: #fafcff;
+            flex-shrink: 0;
+        }
+        .mobile-drawer-login {
+            display: block;
+            text-align: center;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid var(--border-subtle, #e2e8f0);
+            background: #ffffff;
+            color: var(--text-1, #0a192f) !important;
+            font-weight: 600;
+            font-size: 0.92rem;
+            text-decoration: none !important;
+            transition: all 0.2s;
+        }
+        .mobile-drawer-login:hover {
+            background: var(--blue-050, #f0f7ff);
+            border-color: var(--primary, #0052cc);
+            color: var(--primary, #0052cc) !important;
+        }
+        .mobile-drawer-signup {
+            display: block;
+            text-align: center;
+            padding: 12px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--primary, #0052cc) 0%, #0077c8 100%);
+            color: #ffffff !important;
+            font-weight: 700;
+            font-size: 0.92rem;
+            text-decoration: none !important;
+            box-shadow: 0 4px 14px rgba(0, 82, 204, 0.28);
+            transition: all 0.2s;
+        }
+        .mobile-drawer-signup:hover {
+            box-shadow: 0 6px 18px rgba(0, 82, 204, 0.4);
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 900px) {
+            .header-pill-nav { display: none !important; }
+            .header-actions { display: none !important; }
+            .header-mobile-controls { display: flex !important; }
+        }
+
         /* --- HERO SECTION WITH WHITE & BLUE BALANCE --- */
         .cyber-hero {
             position: relative;
@@ -1444,7 +1652,7 @@
                 <span class="logo-name">CryptoPlex<span>Trade</span></span>
             </a>
             
-            <!-- Middle Top Floating Pill Navigation -->
+            <!-- Middle Top Floating Pill Navigation (Desktop) -->
             <div class="header-pill-nav">
                 <a href="index.html" class="header-pill-item active">Home</a>
                 <a href="rates" class="header-pill-item">Markets</a>
@@ -1454,12 +1662,66 @@
                 <a href="contact.html" class="header-pill-item">Contact</a>
             </div>
 
-            <!-- Right: Action Buttons -->
+            <!-- Right: Action Buttons (Desktop) -->
             <div class="header-actions">
                 <a href="login.html" class="nav-btn-login">Sign In</a>
                 <a href="register.html" class="nav-btn-signup">Get Started</a>
             </div>
+
+            <!-- Mobile Controls (≤ 900px) -->
+            <div class="header-mobile-controls">
+                <a href="register.html" class="mobile-quick-btn">Get Started</a>
+                <button type="button" class="mobile-hamburger-btn" id="mobile-hamburger-btn" aria-label="Toggle navigation menu" aria-expanded="false">
+                    <span class="ham-line"></span>
+                    <span class="ham-line"></span>
+                    <span class="ham-line"></span>
+                </button>
+            </div>
         </div>
+
+        <!-- Mobile Navigation Drawer -->
+        <div class="mobile-nav-backdrop" id="mobile-nav-backdrop"></div>
+        <aside class="mobile-nav-drawer" id="mobile-nav-drawer" aria-label="Mobile Navigation">
+            <div class="mobile-drawer-header">
+                <a href="index.html" class="logo-wrapper">
+                    <img src="css/logo.png" alt="CryptoPlexTrade Logo" class="logo">
+                    <span class="logo-name">CryptoPlex<span>Trade</span></span>
+                </a>
+                <button type="button" class="mobile-drawer-close" id="mobile-drawer-close" aria-label="Close menu">&times;</button>
+            </div>
+
+            <nav class="mobile-drawer-links">
+                <a href="index.html" class="mobile-drawer-item active">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                    <span>Home</span>
+                </a>
+                <a href="rates" class="mobile-drawer-item">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+                    <span>Markets</span>
+                </a>
+                <a href="trade.html" class="mobile-drawer-item">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m16 3 4 4-4 4"/><path d="M20 7H4"/><path d="m8 21-4-4 4-4"/><path d="M4 17h16"/></svg>
+                    <span>Trade</span>
+                </a>
+                <a href="why-us" class="mobile-drawer-item">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    <span>Infrastructure</span>
+                </a>
+                <a href="help.html" class="mobile-drawer-item">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    <span>Help Desk</span>
+                </a>
+                <a href="contact.html" class="mobile-drawer-item">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    <span>Contact</span>
+                </a>
+            </nav>
+
+            <div class="mobile-drawer-footer">
+                <a href="login.html" class="mobile-drawer-login">Sign In</a>
+                <a href="register.html" class="mobile-drawer-signup">Get Started →</a>
+            </div>
+        </aside>
     </header>
 
     <!-- ================== CYBER HERO & INSTANT TRADE TERMINAL ================== -->
@@ -2133,6 +2395,41 @@
                     };
                     localStorage.setItem('sellOrderDetails', JSON.stringify(sellOrderDetails));
                     window.location.href = 'trade.html?action=sell&product=' + selectedCrypto;
+                }
+            });
+            // --- Mobile Navigation Drawer Toggle ---
+            const mobileMenuBtn = document.getElementById('mobile-hamburger-btn');
+            const mobileDrawer = document.getElementById('mobile-nav-drawer');
+            const mobileBackdrop = document.getElementById('mobile-nav-backdrop');
+            const mobileCloseBtn = document.getElementById('mobile-drawer-close');
+
+            function openMobileMenu() {
+                if (!mobileDrawer) return;
+                mobileDrawer.classList.add('open');
+                if (mobileBackdrop) mobileBackdrop.classList.add('show');
+                if (mobileMenuBtn) mobileMenuBtn.classList.add('is-active');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeMobileMenu() {
+                if (!mobileDrawer) return;
+                mobileDrawer.classList.remove('open');
+                if (mobileBackdrop) mobileBackdrop.classList.remove('show');
+                if (mobileMenuBtn) mobileMenuBtn.classList.remove('is-active');
+                document.body.style.overflow = '';
+            }
+
+            if (mobileMenuBtn) mobileMenuBtn.addEventListener('click', openMobileMenu);
+            if (mobileCloseBtn) mobileCloseBtn.addEventListener('click', closeMobileMenu);
+            if (mobileBackdrop) mobileBackdrop.addEventListener('click', closeMobileMenu);
+
+            document.querySelectorAll('.mobile-drawer-item, .mobile-drawer-login, .mobile-drawer-signup').forEach(link => {
+                link.addEventListener('click', closeMobileMenu);
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && mobileDrawer && mobileDrawer.classList.contains('open')) {
+                    closeMobileMenu();
                 }
             });
         });

@@ -5,6 +5,14 @@ function getCookie(name) {
     if (parts.length === 2) return parts.pop().split(';').shift();
 }
 
+// --- Browser Back-Forward Cache (bfcache) & Swipe-Back Guard ---
+window.addEventListener('pageshow', function(event) {
+    if (event.persisted) {
+        // Page was restored from memory/bfcache after back swipe — force reload to re-evaluate session
+        window.location.reload();
+    }
+});
+
 // --- Global admin session guard ---
 // Intercepts all fetch calls. If any admin API returns 401 or 403,
 // the session has expired — redirect to admin login immediately.
@@ -14,10 +22,20 @@ function getCookie(name) {
         const response = await _fetch(...args);
         const url = typeof args[0] === 'string' ? args[0] : (args[0]?.url || '');
         if ((response.status === 401 || response.status === 403) && url.includes('/api/admin')) {
-            window.location.href = '/admin-login?reason=session_expired';
+            window.location.replace('/admin-login?reason=session_expired');
         }
         return response;
     };
+
+    // Proactively verify admin session on initial load or back swipe
+    (async function verifyAdminAuth() {
+        try {
+            const r = await _fetch('/api/admin/stats', { credentials: 'include' });
+            if (r.status === 401 || r.status === 403) {
+                window.location.replace('/admin-login?reason=session_expired');
+            }
+        } catch (_) {}
+    })();
 })();
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -52,13 +70,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- Logout Logic ---
     async function handleLogout(event) {
         if (event) event.preventDefault();
-        const csrfToken = getCookie('csrf-token');
+        const csrfToken = getCookie('csrf-token') || getCookie('admin-csrf-token');
         try {
             await fetch('/api/logout', { method: 'POST', headers: { 'X-CSRF-Token': csrfToken } });
         } catch (_) {
             // Proceed with client redirection even if network fails
         }
-        window.location.href = '/admin-login';
+        window.location.replace('/admin-login');
     }
 
     const logoutBtn = document.getElementById('logout-btn');
