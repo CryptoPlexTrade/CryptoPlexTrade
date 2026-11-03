@@ -259,29 +259,242 @@ img.brand-circle:hover {
 }
 
 /* ══════════════════════════════════════════════════════════
-   7. TRANSACTIONS TABLE – horizontal scroll
+   7. USER PORTAL TABLES — VERTICAL CARDS ON MOBILE
+   Transforms .data-table--cards into rich, clean mobile cards
+   with left-aligned label and right-aligned value.
+   Preserves desktop & web table layout intact.
    ══════════════════════════════════════════════════════════ */
-@media (max-width: 900px) {
-    .table-container {
-        padding: 16px 12px !important;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
+@media (max-width: 768px) {
+    .table-wrap {
+        overflow-x: visible !important;
+        padding: 0 !important;
     }
 
-    .transactions-table {
-        min-width: 680px;
-        font-size: .82rem;
+    .data-table--cards,
+    .data-table--cards thead,
+    .data-table--cards tbody,
+    .data-table--cards th,
+    .data-table--cards td,
+    .data-table--cards tr {
+        display: block !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
     }
 
-    .transactions-table th,
-    .transactions-table td {
+    .data-table--cards thead {
+        display: none !important;
+    }
+
+    .data-table--cards tbody {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 12px !important;
+        padding: 4px 0 !important;
+    }
+
+    .data-table--cards tbody tr {
+        background: #ffffff !important;
+        border: 1.5px solid var(--border, #e2e8f0) !important;
+        border-radius: var(--radius-lg, 12px) !important;
+        padding: 14px 16px !important;
+        box-shadow: 0 2px 6px rgba(11, 45, 90, 0.04) !important;
+        margin: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 4px !important;
+    }
+
+    .data-table--cards tbody tr:hover {
+        background: #ffffff !important;
+        box-shadow: 0 4px 12px rgba(11, 45, 90, 0.08) !important;
+    }
+
+    .data-table--cards tbody td {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        padding: 8px 0 !important;
+        border-bottom: 1px dashed rgba(226, 232, 240, 0.8) !important;
+        font-size: 0.88rem !important;
+        line-height: 1.4 !important;
+        text-align: right !important;
+        color: var(--text-primary, #0b2d5a) !important;
+        min-height: 36px !important;
+    }
+
+    .data-table--cards tbody td:last-child {
+        border-bottom: none !important;
+        padding-bottom: 2px !important;
+    }
+
+    .data-table--cards tbody td::before {
+        content: attr(data-label);
+        font-size: 0.74rem !important;
+        font-weight: 700 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.05em !important;
+        color: var(--text-muted, #64748b) !important;
+        text-align: left !important;
+        margin-right: 12px !important;
+        flex-shrink: 0 !important;
+    }
+
+    .data-table--cards tbody td[colspan] {
+        display: block !important;
+        text-align: center !important;
+        border: none !important;
+        padding: 28px 16px !important;
+    }
+    .data-table--cards tbody td[colspan]::before {
+        display: none !important;
+    }
+
+    .data-table--cards tbody td[data-label="Destination / Routing"],
+    .data-table--cards tbody td[data-label="Destination"] {
+        word-break: break-all !important;
+        font-size: 0.8rem !important;
+    }
+
+    .data-table--cards tbody td .btn-view {
+        padding: 6px 16px !important;
+        font-size: 0.82rem !important;
+        font-weight: 700 !important;
+        border-radius: var(--radius-pill, 9999px) !important;
+        background: linear-gradient(135deg, var(--primary, #005baa) 0%, #0077c8 100%) !important;
+        color: #ffffff !important;
+        border: none !important;
+        box-shadow: 0 2px 8px rgba(0, 91, 170, 0.22) !important;
+        cursor: pointer !important;
+    }
+
+    /* Transactions filter bar on mobile */
+    .filter-bar {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 12px !important;
+        padding: 14px 16px !important;
+    }
+    .filter-group {
+        width: 100% !important;
+    }
+    .csd-trigger {
+        width: 100% !important;
+        justify-content: space-between !important;
+    }
+}
+
+/* ══════════════════════════════════════════════════════════
+   7b. TRADE TERMINAL & USER PORTAL MOBILE SPACING & ALIGNMENT
+   Prevents text overlap, text clipping, and squished layout
+   ══════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+    .trade-terminal-container {
+        max-width: 100% !important;
+        padding: 0 2px !important;
+    }
+
+    .terminal-header-strip {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 14px !important;
+        margin-bottom: 18px !important;
+    }
+    .terminal-header-strip h1 {
+        font-size: 1.45rem !important;
+    }
+    .terminal-header-strip p {
+        font-size: 0.84rem !important;
+    }
+
+    .terminal-mode-switch {
+        width: 100% !important;
+        display: flex !important;
+    }
+    .terminal-mode-btn {
+        flex: 1 !important;
+        text-align: center !important;
         padding: 10px 8px !important;
+        font-size: 0.85rem !important;
     }
 
-    .filter-controls {
-        flex-wrap: wrap;
-        gap: 10px !important;
+    .terminal-card {
+        padding: 20px 16px !important;
+        border-radius: var(--radius-lg, 14px) !important;
+    }
+
+    .terminal-rate-callout {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 8px !important;
+        padding: 12px 14px !important;
+        margin-bottom: 20px !important;
+    }
+    .terminal-rate-callout .rate-value {
+        font-size: 0.9rem !important;
+        word-break: break-word !important;
+        line-height: 1.4 !important;
+    }
+
+    .terminal-breakdown-box {
         padding: 14px !important;
+        gap: 10px !important;
+    }
+    .breakdown-row {
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        font-size: 0.82rem !important;
+        gap: 8px !important;
+    }
+    .breakdown-row.total {
+        font-size: 0.95rem !important;
+        padding-top: 10px !important;
+    }
+    .breakdown-row input {
+        max-width: 130px !important;
+        font-size: 0.92rem !important;
+    }
+
+    .terminal-input-wrap .terminal-input {
+        padding: 12px 50px 12px 14px !important;
+        font-size: 0.95rem !important;
+    }
+    .terminal-unit-badge {
+        right: 12px !important;
+        font-size: 0.78rem !important;
+    }
+
+    .terminal-execute-btn {
+        padding: 14px !important;
+        font-size: 0.92rem !important;
+        width: 100% !important;
+    }
+
+    /* Dashboard mobile adjustments */
+    .coinza-hero-card {
+        padding: 20px 16px !important;
+    }
+    .coinza-balance-val {
+        font-size: 1.85rem !important;
+    }
+    .coinza-actions-row {
+        gap: 8px !important;
+        margin-top: 16px !important;
+    }
+    .coinza-btn-pill {
+        flex: 1 1 100% !important;
+        min-width: 100% !important;
+        padding: 11px 16px !important;
+        font-size: 0.88rem !important;
+    }
+    .dash-layout {
+        gap: 16px !important;
+    }
+    .kpi-card {
+        padding: 16px !important;
+    }
+    .kpi-card__value {
+        font-size: 1.65rem !important;
     }
 }
 

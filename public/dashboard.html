@@ -179,6 +179,26 @@
             margin-top: 2px;
         }
 
+        .btn-history-blue {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6px 16px;
+            background: linear-gradient(135deg, #005baa 0%, #0077c8 100%);
+            color: #ffffff !important;
+            border-radius: var(--radius-pill, 9999px);
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-decoration: none !important;
+            box-shadow: 0 2px 8px rgba(0, 91, 170, 0.22);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .btn-history-blue:hover {
+            background: linear-gradient(135deg, #004685 0%, #005baa 100%);
+            box-shadow: 0 4px 12px rgba(0, 91, 170, 0.32);
+            transform: translateY(-1px);
+        }
+
         .referral-row {
             display: flex;
             gap: 8px;
@@ -251,20 +271,20 @@
                     <span>Dashboard</span>
                 </a>
                 <a href="trade.html" class="portal-pill-item">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M3 4.5h18v15H3v-15Zm6.75 10.5a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM12 15a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM15.75 15a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM9.75 9a.75.75 0 0 0-1.5 0v4.5a.75.75 0 0 0 1.5 0V9Zm3.75-3a.75.75 0 0 0-1.5 0v7.5a.75.75 0 0 0 1.5 0V6Zm2.25 1.5a.75.75 0 0 0-1.5 0v6a.75.75 0 0 0 1.5 0v-6Z"/></svg>
-                    <span>Trade Desk</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M15.97 2.47a.75.75 0 0 1 1.06 0l4.5 4.5a.75.75 0 0 1 0 1.06l-4.5 4.5a.75.75 0 1 1-1.06-1.06l3.22-3.22H7.5a.75.75 0 0 1 0-1.5h11.69l-3.22-3.22a.75.75 0 0 1 0-1.06Zm-7.94 9a.75.75 0 0 1 0 1.06l-3.22 3.22H16.5a.75.75 0 0 1 0 1.5H4.81l3.22 3.22a.75.75 0 1 1-1.06 1.06l-4.5-4.5a.75.75 0 0 1 0-1.06l4.5-4.5a.75.75 0 0 1 1.06 0Z" clip-rule="evenodd"/></svg>
+                    <span>Trade</span>
                 </a>
                 <a href="transactions.html" class="portal-pill-item">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clip-rule="evenodd"/></svg>
-                    <span>Ledger History</span>
+                    <span>History</span>
                 </a>
                 <a href="profile.html" class="portal-pill-item">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd"/></svg>
-                    <span>Account Profile</span>
+                    <span>Profile</span>
                 </a>
                 <a href="support.html" class="portal-pill-item">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M4.804 21.644A6.707 6.707 0 0 0 6 21.75a6.721 6.721 0 0 0 3.583-1.029c.774.182 1.584.279 2.417.279 5.322 0 9.75-3.97 9.75-9 0-5.03-4.428-9-9.75-9s-9.75 3.97-9.75 9c0 2.409 1.025 4.587 2.674 6.192.232.226.277.428.254.543a3.73 3.73 0 0 1-.814 1.686.75.75 0 0 0 .44 1.223Z" clip-rule="evenodd"/></svg>
-                    <span>Help &amp; Support</span>
+                    <span>Support</span>
                 </a>
             </nav>
 
@@ -299,7 +319,7 @@
                     <span>Portfolio Liquidity &amp; Balance</span>
                     <span class="coinza-trend-badge"><span class="pulse-dot"></span> Live Corridor</span>
                 </div>
-                <div class="coinza-balance-val">GH₵ <span id="total-balance-display">56,893.30</span></div>
+                <div class="coinza-balance-val">GH₵ <span id="total-balance-display">&mdash;</span></div>
                 <div style="font-size:0.86rem; color:var(--text-secondary); margin-bottom: 4px;">
                     Ghana Cedi (GHS) Instant Settlement Rail
                 </div>
@@ -307,15 +327,15 @@
                 <div class="coinza-actions-row">
                     <a href="trade.html" class="coinza-btn-pill primary">
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
-                        <span>Deposit / Buy</span>
+                        <span>BUY</span>
                     </a>
                     <a href="trade.html" class="coinza-btn-pill secondary">
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></svg>
-                        <span>Withdraw / Sell</span>
+                        <span>Sell</span>
                     </a>
                     <a href="transactions.html" class="coinza-btn-pill secondary">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-                        <span>Audit Ledger</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        <span>History</span>
                     </a>
                 </div>
             </div>
@@ -360,7 +380,7 @@
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">Recent Transactions</h3>
-                            <a href="transactions.html" class="view-all">Full Ledger &rarr;</a>
+                            <a href="transactions.html" class="btn-history-blue">History</a>
                         </div>
                         <div class="table-wrap">
                             <table class="data-table data-table--cards">
@@ -433,9 +453,9 @@
         </a>
         <a href="transactions.html" class="portal-tabbar-item">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clip-rule="evenodd"/></svg>
-            <span>Ledger</span>
+            <span>History</span>
         </a>
-        <a href="trade.html" class="portal-tabbar-item portal-tabbar-center" aria-label="Trade Desk">
+        <a href="trade.html" class="portal-tabbar-item portal-tabbar-center" aria-label="Trade">
             <div class="tabbar-center-circle">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M15.97 2.47a.75.75 0 0 1 1.06 0l4.5 4.5a.75.75 0 0 1 0 1.06l-4.5 4.5a.75.75 0 1 1-1.06-1.06l3.22-3.22H7.5a.75.75 0 0 1 0-1.5h11.69l-3.22-3.22a.75.75 0 0 1 0-1.06Zm-7.94 9a.75.75 0 0 1 0 1.06l-3.22 3.22H16.5a.75.75 0 0 1 0 1.5H4.81l3.22 3.22a.75.75 0 1 1-1.06 1.06l-4.5-4.5a.75.75 0 0 1 0-1.06l4.5-4.5a.75.75 0 0 1 1.06 0Z" clip-rule="evenodd"/></svg>
             </div>
@@ -450,118 +470,6 @@
             <span>Support</span>
         </a>
     </nav>
-
-    <!-- Ticker Tape -->
-    <div class="ticker-tape"><div class="ticker-tape__track"></div></div>
-
-    <script src="inactivity-timer.js"></script>
-    <script src="chat-widget.js"></script>
-    <script>
-
-            <!-- KPI Cards -->
-            <div class="kpi-grid">
-                <div class="kpi-card">
-                    <div class="kpi-card__header">
-                        <span class="kpi-card__label">Total Orders Executed</span>
-                        <div class="kpi-card__icon kpi-card__icon--blue">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M4.848 2.771A49.144 49.144 0 0 1 12 2.25c2.43 0 4.817.178 7.152.52 1.978.292 3.348 2.024 3.348 3.97v6.02c0 1.946-1.37 3.678-3.348 3.97a48.901 48.901 0 0 1-3.476.383.75.75 0 0 0-.629.29l-2.378 3.17a.75.75 0 0 1-1.04 0l-2.378-3.17a.75.75 0 0 0-.63-.29 48.899 48.899 0 0 1-3.475-.384c-1.978-.29-3.348-2.022-3.348-3.97V6.741c0-1.947 1.37-3.68 3.348-3.97Z" clip-rule="evenodd"/></svg>
-                        </div>
-                    </div>
-                    <div class="kpi-card__value" id="total-transactions-value">&mdash;</div>
-                </div>
-                <div class="kpi-card">
-                    <div class="kpi-card__header">
-                        <span class="kpi-card__label">Pending Settlements</span>
-                        <div class="kpi-card__icon kpi-card__icon--orange">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clip-rule="evenodd"/></svg>
-                        </div>
-                    </div>
-                    <div class="kpi-card__value" id="pending-orders-value">&mdash;</div>
-                </div>
-            </div>
-
-            <!-- Main 2-col layout -->
-            <div class="dash-layout">
-                <div class="dash-main">
-
-                    <!-- Chart card -->
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">Order Ratio &amp; Execution Breakdown</h3>
-                        </div>
-                        <div class="chart-container">
-                            <canvas id="portfolioChart"></canvas>
-                        </div>
-                    </div>
-
-                    <!-- Recent Transactions -->
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">Recent Transactions</h3>
-                            <a href="transactions.html" class="view-all">Full Ledger &rarr;</a>
-                        </div>
-                        <div class="table-wrap">
-                            <table class="data-table data-table--cards">
-                                <thead>
-                                    <tr>
-                                        <th>Date</th>
-                                        <th>Direction</th>
-                                        <th>Asset</th>
-                                        <th>Settlement (GH₵)</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="transactions-tbody">
-                                    <tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:24px;">Syncing ledger records…</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Right Aside -->
-                <aside class="dash-aside">
-
-                    <!-- Referral Card -->
-                    <div class="card">
-                        <div class="card-header" style="margin-bottom:10px;">
-                            <h3 class="card-title">Partner Referral Desk</h3>
-                        </div>
-                        <p style="font-size:0.83rem;color:var(--text-secondary);margin-bottom:14px;line-height:1.5;">Share your unique verified onboarding link with fellow traders:</p>
-                        <div class="referral-row">
-                            <input type="text" id="referral-link" readonly placeholder="Generating link…">
-                            <button id="copy-referral-btn" class="copy-btn">Copy Link</button>
-                        </div>
-                    </div>
-
-                    <!-- Market Watch -->
-                    <div class="card">
-                        <div class="card-header" style="margin-bottom:14px;">
-                            <h3 class="card-title">Institutional Watchlist</h3>
-                        </div>
-                        <ul class="market-list" id="market-watch-list">
-                            <li class="market-item"><div class="market-item__asset"><div class="skeleton skeleton-avatar"></div><div class="skeleton skeleton-line" style="width:50px;margin-left:4px;"></div></div><div class="skeleton skeleton-line" style="width:70px;"></div></li>
-                            <li class="market-item"><div class="market-item__asset"><div class="skeleton skeleton-avatar"></div><div class="skeleton skeleton-line" style="width:50px;margin-left:4px;"></div></div><div class="skeleton skeleton-line" style="width:70px;"></div></li>
-                            <li class="market-item"><div class="market-item__asset"><div class="skeleton skeleton-avatar"></div><div class="skeleton skeleton-line" style="width:50px;margin-left:4px;"></div></div><div class="skeleton skeleton-line" style="width:70px;"></div></li>
-                        </ul>
-                    </div>
-
-                    <!-- News -->
-                    <div class="card">
-                        <div class="card-header" style="margin-bottom:14px;">
-                            <h3 class="card-title">Market Intel &amp; Bulletins</h3>
-                        </div>
-                        <ul class="news-list" id="news-list">
-                            <li class="news-item"><div class="skeleton skeleton-line" style="margin-bottom:6px;"></div><div class="skeleton skeleton-line" style="width:40%;"></div></li>
-                            <li class="news-item"><div class="skeleton skeleton-line" style="margin-bottom:6px;"></div><div class="skeleton skeleton-line" style="width:40%;"></div></li>
-                            <li class="news-item"><div class="skeleton skeleton-line" style="margin-bottom:6px;"></div><div class="skeleton skeleton-line" style="width:40%;"></div></li>
-                        </ul>
-                    </div>
-
-                </aside>
-            </div>
-        </main>
-    </div>
 
     <!-- Ticker Tape -->
     <div class="ticker-tape"><div class="ticker-tape__track"></div></div>
@@ -686,6 +594,10 @@
             portfolioChart.data.datasets[0].data = [buys, sells];
             portfolioChart.update();
 
+            const settledVolume = txs.filter(t => t.status === 'completed').reduce((s, t) => s + (parseFloat(t.total_paid) || 0), 0);
+            const balEl = document.getElementById('total-balance-display');
+            if (balEl) balEl.textContent = settledVolume.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
             if (txs.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:24px;">No transactions recorded in this account yet.</td></tr>';
                 return;
@@ -708,6 +620,16 @@
     }
 
     // --- Market Watch ---
+    const ASSET_ICONS = {
+        'BTC': '<svg viewBox="0 0 32 32" width="28" height="28"><circle cx="16" cy="16" r="16" fill="#F7931A"/><path fill="#FFF" d="M23.189 14.02c.314-2.096-1.283-3.223-3.465-3.975l.708-2.84-1.728-.43-.69 2.765c-.454-.114-.92-.22-1.385-.326l.695-2.783L15.596 6l-.708 2.839c-.376-.086-.746-.17-1.104-.26l.002-.009-2.384-.595-.46 1.846s1.283.294 1.256.312c.7.175.826.638.805 1.006l-.806 3.235c.048.012.11.03.18.057l-.183-.045-1.13 4.532c-.086.212-.303.531-.793.41.018.025-1.256-.313-1.256-.313l-.858 1.978 2.25.561c.418.105.828.215 1.231.318l-.715 2.872 1.727.43.708-2.84c.472.127.93.245 1.378.357l-.706 2.828 1.728.43.715-2.866c2.948.558 5.164.333 6.097-2.333.752-2.146-.037-3.385-1.588-4.192 1.13-.26 1.98-1.003 2.207-2.538zm-3.95 5.538c-.533 2.147-4.148.987-5.32.695l.95-3.805c1.172.293 4.929.872 4.37 3.11zm.535-5.569c-.487 1.953-3.495.96-4.47.717l.86-3.45c.976.244 4.118.699 3.61 2.733z"/></svg>',
+        'ETH': '<svg viewBox="0 0 32 32" width="28" height="28"><circle cx="16" cy="16" r="16" fill="#627EEA"/><path fill="#FFF" fill-opacity=".6" d="M16.498 4v8.87l7.497 3.35z"/><path fill="#FFF" d="M16.498 4L9 16.22l7.498-3.35z"/><path fill="#FFF" fill-opacity=".6" d="M16.498 21.968v6.027L24 17.616z"/><path fill="#FFF" d="M16.498 27.995v-6.028L9 17.616z"/><path fill="#FFF" fill-opacity=".2" d="M16.498 20.573l7.497-4.353-7.497-3.348z"/><path fill="#FFF" fill-opacity=".6" d="M9 16.22l7.498 4.353v-7.701z"/></svg>',
+        'SOL': '<svg viewBox="0 0 32 32" width="28" height="28"><circle cx="16" cy="16" r="16" fill="#14F195"/><path fill="#000" d="M9.5 20.3h10.9c.4 0 .7.2.9.5l2.4 2.4c.4.4.1 1.1-.5 1.1H12.3c-.4 0-.7-.2-.9-.5l-2.4-2.4c-.4-.4-.1-1.1.5-1.1zm0-6.6h10.9c.4 0 .7.2.9.5l2.4 2.4c.4.4.1 1.1-.5 1.1H12.3c-.4 0-.7-.2-.9-.5l-2.4-2.4c-.4-.4-.1-1.1.5-1.1zm2.8-6.6h10.9c.4 0 .7.2.9.5l-2.4 2.4c-.2.3-.5.5-.9.5H9.9c-.4 0-.7-.2-.9-.5l2.4-2.4c.2-.3.6-.5.9-.5z"/></svg>',
+        'BNB': '<svg viewBox="0 0 32 32" width="28" height="28"><circle cx="16" cy="16" r="16" fill="#F3BA2F"/><path fill="#FFF" d="M12.116 14.404l3.88-3.88 3.882 3.88 2.05-2.05-5.932-5.932-5.93 5.932 2.05 2.05zm-3.882 3.882l2.05-2.05-2.05-2.05-2.05 2.05 2.05 2.05zm7.762 7.764l5.932-5.932-2.05-2.05-3.882 3.88-3.88-3.88-2.05 2.05 5.93 5.932zm7.762-7.764l2.05-2.05-2.05-2.05-2.05 2.05 2.05 2.05zm-7.762-3.882l2.05-2.05-2.05-2.05-2.05 2.05 2.05 2.05z"/></svg>',
+        'USDT': '<svg viewBox="0 0 32 32" width="28" height="28"><circle cx="16" cy="16" r="16" fill="#26A17B"/><path fill="#FFF" d="M17.922 17.383c-.11.008-.68.04-1.803.04-1.036 0-1.637-.032-1.802-.04-4.184-.183-7.302-.911-7.302-1.796 0-.886 3.118-1.614 7.302-1.798v2.87c.168.012.776.046 1.82.046 1.096 0 1.678-.035 1.785-.046v-2.87c4.175.184 7.284.912 7.284 1.798 0 .885-3.109 1.613-7.284 1.796zm0-3.957v-2.31h5.814V7.525H8.263v3.59h5.857v2.31c-4.69.213-8.214 1.11-8.214 2.196 0 1.086 3.524 1.984 8.214 2.197v6.857h3.802v-6.857c4.68-.213 8.196-1.11 8.196-2.197 0-1.086-3.516-1.983-8.196-2.196z"/></svg>',
+        'XRP': '<svg viewBox="0 0 32 32" width="28" height="28"><circle cx="16" cy="16" r="16" fill="#23292F"/><path fill="#FFF" d="M22.9 8.2l-2.7 2.7c-2.3-2.3-6.1-2.3-8.4 0L9.1 8.2c3.8-3.8 10-3.8 13.8 0zm-13.8 15.6l2.7-2.7c2.3 2.3 6.1 2.3 8.4 0l2.7 2.7c-3.8 3.8-10 3.8-13.8 0zm9.3-7.8l3.6-3.6c.7-.7 1.9-.7 2.6 0l1.4 1.4-4.9 4.9-2.7-2.7zm-4.8 0l-3.6 3.6c-.7.7-1.9.7-2.6 0l-1.4-1.4 4.9-4.9 2.7 2.7z"/></svg>',
+        'LTC': '<svg viewBox="0 0 32 32" width="28" height="28"><circle cx="16" cy="16" r="16" fill="#345D9D"/><path fill="#FFF" d="M15.3 7.5h3.4l-2.2 8.7h3.8l-.6 2.3h-3.8l-1.6 6.5h8.6l-.7 2.5H11.5l4.3-17.5l-.5-.5z"/></svg>'
+    };
+
     async function fetchMarketWatch() {
         const list = document.getElementById('market-watch-list');
         if (!list) return;
@@ -722,9 +644,10 @@
                 if (!c) return;
                 const dir = c.CHANGEPCT24HOUR >= 0 ? 'up' : 'down';
                 const sign = dir === 'up' ? '+' : '';
+                const iconHtml = ASSET_ICONS[s] || `<img src="https://www.cryptocompare.com${c.IMAGEURL}" alt="${s}" style="width:26px;height:26px;border-radius:50%;">`;
                 list.innerHTML += `<li class="market-item">
                     <div class="market-item__asset">
-                        <img src="https://www.cryptocompare.com${c.IMAGEURL}" alt="${s}">
+                        <div style="width:28px;height:28px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${iconHtml}</div>
                         <span style="font-family:var(--font-mono);font-weight:700;">${s}</span>
                     </div>
                     <span class="market-item__price" style="font-family:var(--font-mono);">${c.PRICE.toLocaleString('en-US',{style:'currency',currency:'USD'})}</span>
