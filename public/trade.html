@@ -12,6 +12,20 @@
     <link rel="stylesheet" href="css/app.css">
     <link rel="stylesheet" href="css/responsive.css">
 
+    <!-- Immediate Client Auth Guard -->
+    <script>
+    (async function() {
+        try {
+            const r = await fetch('/api/user/me', { credentials: 'include' });
+            if (!r.ok) {
+                window.location.replace('login.html?redirect=trade.html');
+            }
+        } catch (_) {
+            window.location.replace('login.html?redirect=trade.html');
+        }
+    })();
+    </script>
+
     <style>
         .trade-terminal-container {
             max-width: 680px;
@@ -536,7 +550,6 @@
     async function fetchRates() {
         try {
             const r = await fetch('/api/rates');
-            if (r.status === 401 || r.status === 403) { window.location.href = 'login.html'; return; }
             if (!r.ok) throw new Error('Could not fetch rates');
             rates = await r.json();
             populateMinerFees();
@@ -806,7 +819,7 @@
     const coinSymbols = ['BTC','ETH','SOL','BNB','XRP','LTC','ADA','DOGE'];
     async function fetchLiveRates() {
         try {
-            const r = await fetch(`/api/market-rates',')}&tsyms=USD`);
+            const r = await fetch('/api/market-rates');
             if (!r.ok) throw new Error();
             const data = await r.json();
             let html = '';

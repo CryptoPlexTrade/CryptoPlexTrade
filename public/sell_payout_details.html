@@ -369,7 +369,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const coinSymbols = ['BTC', 'ETH', 'SOL', 'BNB', 'XRP', 'LTC', 'ADA', 'DOGE'];
     async function fetchLiveRates() {
         try {
-            const r = await fetch(`/api/market-rates',')}&tsyms=USD`);
+            const r = await fetch('/api/market-rates');
             if (!r.ok) throw new Error();
             const data = await r.json();
             let html = '';

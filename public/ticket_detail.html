@@ -5,6 +5,19 @@
     <link rel="icon" type="image/png" href="css/logo.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ticket Details - CryptoPlexTrade</title>
+    <!-- Immediate Client Auth Guard -->
+    <script>
+    (async function() {
+        try {
+            const r = await fetch('/api/user/me', { credentials: 'include' });
+            if (!r.ok) {
+                window.location.replace('login.html?redirect=ticket_detail.html');
+            }
+        } catch (_) {
+            window.location.replace('login.html?redirect=ticket_detail.html');
+        }
+    })();
+    </script>
     <style>
         :root {
             --primary-color: #005baa; --primary-dark: #004a8a; --secondary-color: #00a9e0; --bg-highlight: #f0f7ff;
@@ -224,6 +237,8 @@
             fetchTicketDetails();
         });
     </script>
+    <div class="ticker-tape"><div class="ticker-tape__track"></div></div>
+    <script src="ticker.js"></script>
     <script src="/chat-widget.js"></script>
 </body>
 </html>

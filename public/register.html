@@ -275,29 +275,53 @@
             display: flex;
         }
 
-        .auth-input {
+        .auth-input,
+        input.auth-input,
+        input[type="text"].auth-input,
+        input[type="tel"].auth-input,
+        input[type="email"].auth-input,
+        input[type="password"].auth-input {
             width: 100%;
             padding: 11px 14px 11px 42px;
-            background: #0b1c38;
+            background: #0b1c38 !important;
             border: 1px solid rgba(0, 169, 224, 0.28);
             border-radius: var(--radius-sm);
             font-family: inherit;
             font-size: 0.9rem;
-            color: var(--text-primary);
+            color: #ffffff !important;
             transition: all var(--duration-fast);
             outline: none;
         }
 
-        .auth-input:focus {
-            background: #0f244a;
-            color: #ffffff;
+        .auth-input:focus,
+        input.auth-input:focus {
+            background: #0f244a !important;
+            color: #ffffff !important;
             border-color: var(--primary-light);
             box-shadow: 0 0 14px rgba(0, 169, 224, 0.35);
         }
 
-        .auth-input.is-error {
-            border-color: var(--accent-red);
-            background: #fff8f8;
+        .auth-input.is-error,
+        input.auth-input.is-error {
+            border-color: #ef4444 !important;
+            background: rgba(239, 68, 68, 0.14) !important;
+            color: #ffffff !important;
+        }
+
+        /* Prevent browser autofill from making email & password boxes light blue / white */
+        .auth-input:-webkit-autofill,
+        .auth-input:-webkit-autofill:hover, 
+        .auth-input:-webkit-autofill:focus, 
+        .auth-input:-webkit-autofill:active,
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover, 
+        input:-webkit-autofill:focus, 
+        input:-webkit-autofill:active {
+            -webkit-box-shadow: 0 0 0 1000px #0b1c38 inset !important;
+            box-shadow: 0 0 0 1000px #0b1c38 inset !important;
+            -webkit-text-fill-color: #ffffff !important;
+            caret-color: #ffffff !important;
+            transition: background-color 5000s ease-in-out 0s;
         }
 
         .error-msg {
@@ -757,29 +781,8 @@
             }
         });
 
-        /* Live Market Ticker */
-        document.addEventListener('DOMContentLoaded', async () => {
-            const track = document.getElementById('ticker-track');
-            const syms = ['BTC', 'ETH', 'SOL', 'BNB', 'XRP', 'LTC', 'ADA', 'DOGE'];
-            async function load() {
-                try {
-                    const r = await fetch(`/api/market-rates',')}&tsyms=USD`);
-                    const d = await r.json();
-                    let html = '';
-                    syms.forEach(s => {
-                        const c = d.RAW?.[s]?.USD;
-                        if (!c) return;
-                        const dir = c.CHANGEPCT24HOUR >= 0 ? 'up' : 'down';
-                        const sign = dir === 'up' ? '+' : '';
-                        html += `<div class="ticker-tape__item"><span class="pair">${s}/USD</span><span class="price">${c.PRICE.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span><span class="change ${dir}">${sign}${c.CHANGEPCT24HOUR.toFixed(2)}% ${dir === 'up' ? '▲' : '▼'}</span></div>`;
-                    });
-                    track.innerHTML = html + html;
-                } catch (e) { }
-            }
-            load();
-            setInterval(load, 60000);
-        });
     </script>
+    <script src="ticker.js"></script>
     <script src="/chat-widget.js"></script>
 </body>
 

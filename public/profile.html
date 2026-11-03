@@ -12,6 +12,20 @@
     <link rel="stylesheet" href="css/app.css">
     <link rel="stylesheet" href="css/responsive.css">
 
+    <!-- Immediate Client Auth Guard -->
+    <script>
+    (async function() {
+        try {
+            const r = await fetch('/api/user/me', { credentials: 'include' });
+            if (!r.ok) {
+                window.location.replace('login.html?redirect=profile.html');
+            }
+        } catch (_) {
+            window.location.replace('login.html?redirect=profile.html');
+        }
+    })();
+    </script>
+
     <style>
         .profile-grid-layout {
             display: grid;
@@ -354,5 +368,7 @@
     });
 })();
 </script>
+<div class="ticker-tape"><div class="ticker-tape__track"></div></div>
+<script src="ticker.js"></script>
 </body>
 </html>

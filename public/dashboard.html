@@ -551,7 +551,7 @@
         if (!list) return;
         const symbols = ['BTC', 'ETH', 'SOL', 'BNB'];
         try {
-            const r = await fetch(`/api/market-rates',')}&tsyms=USD`);
+            const r = await fetch('/api/market-rates');
             if (!r.ok) throw new Error();
             const data = await r.json();
             list.innerHTML = '';
@@ -622,7 +622,7 @@
 
     async function fetchLiveRates() {
         try {
-            const r = await fetch(`/api/market-rates',')}&tsyms=USD`);
+            const r = await fetch('/api/market-rates');
             if (!r.ok) throw new Error();
             updateTicker(await r.json());
         } catch (e) { console.error('Ticker error', e); }

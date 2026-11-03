@@ -13,12 +13,13 @@
 
 /* Desktop – make the logo more prominent and visible */
 img.logo,
+img.brand-logo,
 img.sidebar-brand__orb,
 img.os-brand__orb,
 img.brand-orb,
 img.brand-circle {
-    height: 56px !important;
-    max-height: 56px !important;
+    height: 40px !important;
+    max-height: 40px !important;
     width: auto !important;
     border-radius: 14px !important;
     object-fit: contain !important;
