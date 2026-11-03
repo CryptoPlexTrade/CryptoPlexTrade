@@ -302,61 +302,47 @@
 </head>
 <body>
 
-<div class="sidebar-overlay" id="sidebar-overlay"></div>
-
-<div class="app-shell">
-
-    <!-- ===== SIDEBAR ===== -->
-    <aside class="sidebar" id="sidebar">
-        <a href="dashboard.html" class="sidebar-brand">
-            <img src="css/logo-mark.png" alt="CryptoPlexTrade Emblem" class="sidebar-brand__orb">
-            <span class="sidebar-brand__name">CryptoPlexTrade</span>
+<!-- ================== MODERN FLOATING PILL TOPBAR ================== -->
+<header class="portal-header">
+    <div class="portal-header-inner">
+        <a href="dashboard.html" class="portal-brand">
+            <img src="css/logo.png" alt="CryptoPlexTrade Logo" class="portal-logo">
+            <span class="portal-brand-text">CryptoPlex<span>Trade</span></span>
         </a>
-        <nav class="sidebar-nav">
-            <ul>
-                <li><a href="dashboard.html">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11.47 3.841a.75.75 0 0 1 1.06 0l8.69 8.69a.75.75 0 1 0 1.06-1.061l-8.689-8.69a2.25 2.25 0 0 0-3.182 0l-8.69 8.69a.75.75 0 1 0 1.061 1.06l8.69-8.689Z"/><path d="m12 5.432 8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 0 1-.75-.75v-4.5a.75.75 0 0 0-.75-.75h-3a.75.75 0 0 0-.75.75V21a.75.75 0 0 1-.75.75H5.625a1.875 1.875 0 0 1-1.875-1.875v-6.198a2.29 2.29 0 0 0 .091-.086L12 5.432Z"/></svg>
-                    Dashboard
-                </a></li>
-                <li><a href="trade.html" class="active">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M3 4.5h18v15H3v-15Zm6.75 10.5a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM12 15a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM15.75 15a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM9.75 9a.75.75 0 0 0-1.5 0v4.5a.75.75 0 0 0 1.5 0V9Zm3.75-3a.75.75 0 0 0-1.5 0v7.5a.75.75 0 0 0 1.5 0V6Zm2.25 1.5a.75.75 0 0 0-1.5 0v6a.75.75 0 0 0 1.5 0v-6Z"/></svg>
-                    Trade Desk
-                </a></li>
-                <li><a href="transactions.html">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clip-rule="evenodd"/></svg>
-                    Ledger History
-                </a></li>
-                <li><a href="profile.html">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd"/></svg>
-                    Account Profile
-                </a></li>
-                <li><a href="support.html">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm11.378-3.917c-.89-.777-2.366-.777-3.255 0a.75.75 0 0 1-1.06-1.06c2.298-2.013 5.824-2.013 8.122 0a.75.75 0 0 1-1.06 1.06ZM12 15.75a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" clip-rule="evenodd"/></svg>
-                    Help &amp; Support
-                </a></li>
-            </ul>
+
+        <!-- Rectangle with circular edges (Floating Pill Menu) -->
+        <nav class="portal-pill-nav" aria-label="Main Navigation">
+            <a href="dashboard.html" class="portal-pill-item">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11.47 3.841a.75.75 0 0 1 1.06 0l8.69 8.69a.75.75 0 1 0 1.06-1.061l-8.689-8.69a2.25 2.25 0 0 0-3.182 0l-8.69 8.69a.75.75 0 1 0 1.061 1.06l8.69-8.689Z"/><path d="m12 5.432 8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 0 1-.75-.75v-4.5a.75.75 0 0 0-.75-.75h-3a.75.75 0 0 0-.75.75V21a.75.75 0 0 1-.75.75H5.625a1.875 1.875 0 0 1-1.875-1.875v-6.198a2.29 2.29 0 0 0 .091-.086L12 5.432Z"/></svg>
+                <span>Dashboard</span>
+            </a>
+            <a href="trade.html" class="portal-pill-item active">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M3 4.5h18v15H3v-15Zm6.75 10.5a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM12 15a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM15.75 15a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM9.75 9a.75.75 0 0 0-1.5 0v4.5a.75.75 0 0 0 1.5 0V9Zm3.75-3a.75.75 0 0 0-1.5 0v7.5a.75.75 0 0 0 1.5 0V6Zm2.25 1.5a.75.75 0 0 0-1.5 0v6a.75.75 0 0 0 1.5 0v-6Z"/></svg>
+                <span>Trade</span>
+            </a>
+            <a href="transactions.html" class="portal-pill-item">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clip-rule="evenodd"/></svg>
+                <span>Transactions</span>
+            </a>
+            <a href="profile.html" class="portal-pill-item">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd"/></svg>
+                <span>Profile</span>
+            </a>
+            <a href="support.html" class="portal-pill-item">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm11.378-3.917c-.89-.777-2.366-.777-3.255 0a.75.75 0 0 1-1.06-1.06c2.298-2.013 5.824-2.013 8.122 0a.75.75 0 0 1-1.06 1.06ZM12 15.75a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" clip-rule="evenodd"/></svg>
+                <span>Support</span>
+            </a>
         </nav>
-    </aside>
 
-    <!-- ===== MAIN CONTENT ===== -->
-    <div class="main-wrap">
-        <header class="topbar">
-            <div class="topbar-left">
-                <button class="hamburger-btn" id="hamburger-btn" aria-label="Toggle navigation">
-                    <span></span><span></span><span></span>
-                </button>
-                <a href="trade.html" class="topbar-mobile-brand">
-                    <img src="css/logo.png" alt="CryptoPlexTrade Logo" class="logo">
-                    <span class="logo-name">CryptoPlex<span>Trade</span></span>
-                </a>
-                <span class="topbar-title">Trading Terminal</span>
-            </div>
-            <div class="topbar-right">
-                <a href="#" id="logout-btn" class="btn btn-danger btn-sm">Sign Out</a>
-            </div>
-        </header>
+        <!-- Right: Sign Out -->
+        <div class="portal-user-actions">
+            <a href="#" id="logout-btn" class="portal-logout-btn">Sign Out</a>
+        </div>
+    </div>
+</header>
 
-        <main class="page-content">
+<div class="portal-container">
+    <main class="page-content" style="max-width: 100%; padding: 0;">
             <div class="trade-terminal-container">
                 <div class="terminal-header-strip">
                     <div>
@@ -389,35 +375,45 @@
                                 <div class="asset-select-wrap" id="asset-select-wrap">
                                     <div class="asset-select-trigger" id="asset-select-trigger" role="button" tabindex="0" aria-haspopup="listbox" aria-expanded="false">
                                         <div class="asset-select-current">
-                                            <div class="asset-badge asset-badge--btc" id="asset-badge">BTC</div>
+                                            <div id="asset-badge" style="width:28px;height:28px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                                <svg viewBox="0 0 32 32" width="28" height="28"><circle cx="16" cy="16" r="16" fill="#F7931A"/><path fill="#FFF" d="M23.189 14.02c.314-2.096-1.283-3.223-3.465-3.975l.708-2.84-1.728-.43-.69 2.765c-.454-.114-.92-.22-1.385-.326l.695-2.783L15.596 6l-.708 2.839c-.376-.086-.746-.17-1.104-.26l.002-.009-2.384-.595-.46 1.846s1.283.294 1.256.312c.7.175.826.638.805 1.006l-.806 3.235c.048.012.11.03.18.057l-.183-.045-1.13 4.532c-.086.212-.303.531-.793.41.018.025-1.256-.313-1.256-.313l-.858 1.978 2.25.561c.418.105.828.215 1.231.318l-.715 2.872 1.727.43.708-2.84c.472.127.93.245 1.378.357l-.706 2.828 1.728.43.715-2.866c2.948.558 5.164.333 6.097-2.333.752-2.146-.037-3.385-1.588-4.192 1.13-.26 1.98-1.003 2.207-2.538zm-3.95 5.538c-.533 2.147-4.148.987-5.32.695l.95-3.805c1.172.293 4.929.872 4.37 3.11zm.535-5.569c-.487 1.953-3.495.96-4.47.717l.86-3.45c.976.244 4.118.699 3.61 2.733z"/></svg>
+                                            </div>
                                             <span class="asset-select-name" id="asset-select-name">Bitcoin (BTC)</span>
                                         </div>
                                         <svg class="dropdown-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>
                                     </div>
                                     <ul class="asset-select-dropdown" id="asset-select-dropdown" role="listbox">
-                                        <li class="asset-option selected" data-value="BTC" data-badge-class="asset-badge--btc" data-label="Bitcoin (BTC)" role="option">
-                                            <div class="asset-badge asset-badge--btc">BTC</div>
+                                        <li class="asset-option selected" data-value="BTC" data-label="Bitcoin (BTC)" role="option">
+                                            <div style="width:28px;height:28px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                                <svg viewBox="0 0 32 32" width="28" height="28"><circle cx="16" cy="16" r="16" fill="#F7931A"/><path fill="#FFF" d="M23.189 14.02c.314-2.096-1.283-3.223-3.465-3.975l.708-2.84-1.728-.43-.69 2.765c-.454-.114-.92-.22-1.385-.326l.695-2.783L15.596 6l-.708 2.839c-.376-.086-.746-.17-1.104-.26l.002-.009-2.384-.595-.46 1.846s1.283.294 1.256.312c.7.175.826.638.805 1.006l-.806 3.235c.048.012.11.03.18.057l-.183-.045-1.13 4.532c-.086.212-.303.531-.793.41.018.025-1.256-.313-1.256-.313l-.858 1.978 2.25.561c.418.105.828.215 1.231.318l-.715 2.872 1.727.43.708-2.84c.472.127.93.245 1.378.357l-.706 2.828 1.728.43.715-2.866c2.948.558 5.164.333 6.097-2.333.752-2.146-.037-3.385-1.588-4.192 1.13-.26 1.98-1.003 2.207-2.538zm-3.95 5.538c-.533 2.147-4.148.987-5.32.695l.95-3.805c1.172.293 4.929.872 4.37 3.11zm.535-5.569c-.487 1.953-3.495.96-4.47.717l.86-3.45c.976.244 4.118.699 3.61 2.733z"/></svg>
+                                            </div>
                                             <div class="asset-option__info">
                                                 <span class="asset-option__name">Bitcoin</span>
                                                 <span class="asset-option__ticker">BTC &bull; Native Layer 1</span>
                                             </div>
                                         </li>
-                                        <li class="asset-option" data-value="ETH" data-badge-class="asset-badge--eth" data-label="Ethereum (ETH)" role="option">
-                                            <div class="asset-badge asset-badge--eth">ETH</div>
+                                        <li class="asset-option" data-value="ETH" data-label="Ethereum (ETH)" role="option">
+                                            <div style="width:28px;height:28px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                                <svg viewBox="0 0 32 32" width="28" height="28"><circle cx="16" cy="16" r="16" fill="#627EEA"/><path fill="#FFF" fill-opacity=".6" d="M16.498 4v8.87l7.497 3.35z"/><path fill="#FFF" d="M16.498 4L9 16.22l7.498-3.35z"/><path fill="#FFF" fill-opacity=".6" d="M16.498 21.968v6.027L24 17.616z"/><path fill="#FFF" d="M16.498 27.995v-6.028L9 17.616z"/><path fill="#FFF" fill-opacity=".2" d="M16.498 20.573l7.497-4.353-7.497-3.348z"/><path fill="#FFF" fill-opacity=".6" d="M9 16.22l7.498 4.353v-7.701z"/></svg>
+                                            </div>
                                             <div class="asset-option__info">
                                                 <span class="asset-option__name">Ethereum</span>
                                                 <span class="asset-option__ticker">ETH &bull; ERC-20 Mainnet</span>
                                             </div>
                                         </li>
-                                        <li class="asset-option" data-value="USDT_TRC20" data-badge-class="asset-badge--trc20" data-label="Tether (TRC-20)" role="option">
-                                            <div class="asset-badge asset-badge--trc20">USDT</div>
+                                        <li class="asset-option" data-value="USDT_TRC20" data-label="Tether (TRC-20)" role="option">
+                                            <div style="width:28px;height:28px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                                <svg viewBox="0 0 32 32" width="28" height="28"><circle cx="16" cy="16" r="16" fill="#26A17B"/><path fill="#FFF" d="M17.922 17.383c-.11.008-.68.04-1.803.04-1.036 0-1.637-.032-1.802-.04-4.184-.183-7.302-.911-7.302-1.796 0-.886 3.118-1.614 7.302-1.798v2.87c.168.012.776.046 1.82.046 1.096 0 1.678-.035 1.785-.046v-2.87c4.175.184 7.284.912 7.284 1.798 0 .885-3.109 1.613-7.284 1.796zm0-3.957v-2.31h5.814V7.525H8.263v3.59h5.857v2.31c-4.69.213-8.214 1.11-8.214 2.196 0 1.086 3.524 1.984 8.214 2.197v6.857h3.802v-6.857c4.68-.213 8.196-1.11 8.196-2.197 0-1.086-3.516-1.983-8.196-2.196z"/></svg>
+                                            </div>
                                             <div class="asset-option__info">
                                                 <span class="asset-option__name">Tether (TRC-20)</span>
                                                 <span class="asset-option__ticker">USDT &bull; TRON Network</span>
                                             </div>
                                         </li>
-                                        <li class="asset-option" data-value="USDT_ERC20" data-badge-class="asset-badge--erc20" data-label="Tether (ERC-20)" role="option">
-                                            <div class="asset-badge asset-badge--erc20">USDT</div>
+                                        <li class="asset-option" data-value="USDT_ERC20" data-label="Tether (ERC-20)" role="option">
+                                            <div style="width:28px;height:28px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                                <svg viewBox="0 0 32 32" width="28" height="28"><circle cx="16" cy="16" r="16" fill="#009393"/><path fill="#FFF" d="M17.922 17.383c-.11.008-.68.04-1.803.04-1.036 0-1.637-.032-1.802-.04-4.184-.183-7.302-.911-7.302-1.796 0-.886 3.118-1.614 7.302-1.798v2.87c.168.012.776.046 1.82.046 1.096 0 1.678-.035 1.785-.046v-2.87c4.175.184 7.284.912 7.284 1.798 0 .885-3.109 1.613-7.284 1.796zm0-3.957v-2.31h5.814V7.525H8.263v3.59h5.857v2.31c-4.69.213-8.214 1.11-8.214 2.196 0 1.086 3.524 1.984 8.214 2.197v6.857h3.802v-6.857c4.68-.213 8.196-1.11 8.196-2.197 0-1.086-3.516-1.983-8.196-2.196z"/></svg>
+                                            </div>
                                             <div class="asset-option__info">
                                                 <span class="asset-option__name">Tether (ERC-20)</span>
                                                 <span class="asset-option__ticker">USDT &bull; Ethereum Mainnet</span>
@@ -506,7 +502,6 @@
                 </div>
             </div>
         </main>
-    </div>
 </div>
 
 <div class="ticker-tape"><div class="ticker-tape__track"></div></div>
@@ -515,20 +510,25 @@
 <script src="chat-widget.js"></script>
 <script>
 (function () {
-    // --- Sidebar navigation ---
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('sidebar-overlay');
-    document.getElementById('hamburger-btn').addEventListener('click', () => { sidebar.classList.add('open'); overlay.classList.add('open'); });
-    overlay.addEventListener('click', () => { sidebar.classList.remove('open'); overlay.classList.remove('open'); });
+    const hamburgerBtn = document.getElementById('hamburger-btn');
+    if (hamburgerBtn) {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        hamburgerBtn.addEventListener('click', () => { sidebar?.classList.add('open'); overlay?.classList.add('open'); });
+        overlay?.addEventListener('click', () => { sidebar?.classList.remove('open'); overlay?.classList.remove('open'); });
+    }
 
     // --- Sign Out ---
-    document.getElementById('logout-btn').addEventListener('click', async (e) => {
-        e.preventDefault();
-        try { 
-            const r = await fetch('/api/logout', { method: 'POST' }); 
-            if (r.ok) window.location.href = 'login.html'; 
-        } catch (err) { console.error(err); }
-    });
+    const logoutBtn = document.getElementById('logout-btn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            try { 
+                const r = await fetch('/api/logout', { method: 'POST' }); 
+                if (r.ok) window.location.href = 'login.html'; 
+            } catch (err) { console.error(err); }
+        });
+    }
 
     // --- Core Trade State ---
     const buyTab           = document.getElementById('buy-tab');
@@ -867,14 +867,19 @@
             if (e.key === 'Escape') closeDropdown();
         });
 
+        const ASSET_SVGS = {
+            'BTC': '<svg viewBox="0 0 32 32" width="28" height="28"><circle cx="16" cy="16" r="16" fill="#F7931A"/><path fill="#FFF" d="M23.189 14.02c.314-2.096-1.283-3.223-3.465-3.975l.708-2.84-1.728-.43-.69 2.765c-.454-.114-.92-.22-1.385-.326l.695-2.783L15.596 6l-.708 2.839c-.376-.086-.746-.17-1.104-.26l.002-.009-2.384-.595-.46 1.846s1.283.294 1.256.312c.7.175.826.638.805 1.006l-.806 3.235c.048.012.11.03.18.057l-.183-.045-1.13 4.532c-.086.212-.303.531-.793.41.018.025-1.256-.313-1.256-.313l-.858 1.978 2.25.561c.418.105.828.215 1.231.318l-.715 2.872 1.727.43.708-2.84c.472.127.93.245 1.378.357l-.706 2.828 1.728.43.715-2.866c2.948.558 5.164.333 6.097-2.333.752-2.146-.037-3.385-1.588-4.192 1.13-.26 1.98-1.003 2.207-2.538zm-3.95 5.538c-.533 2.147-4.148.987-5.32.695l.95-3.805c1.172.293 4.929.872 4.37 3.11zm.535-5.569c-.487 1.953-3.495.96-4.47.717l.86-3.45c.976.244 4.118.699 3.61 2.733z"/></svg>',
+            'ETH': '<svg viewBox="0 0 32 32" width="28" height="28"><circle cx="16" cy="16" r="16" fill="#627EEA"/><path fill="#FFF" fill-opacity=".6" d="M16.498 4v8.87l7.497 3.35z"/><path fill="#FFF" d="M16.498 4L9 16.22l7.498-3.35z"/><path fill="#FFF" fill-opacity=".6" d="M16.498 21.968v6.027L24 17.616z"/><path fill="#FFF" d="M16.498 27.995v-6.028L9 17.616z"/><path fill="#FFF" fill-opacity=".2" d="M16.498 20.573l7.497-4.353-7.497-3.348z"/><path fill="#FFF" fill-opacity=".6" d="M9 16.22l7.498 4.353v-7.701z"/></svg>',
+            'USDT_TRC20': '<svg viewBox="0 0 32 32" width="28" height="28"><circle cx="16" cy="16" r="16" fill="#26A17B"/><path fill="#FFF" d="M17.922 17.383c-.11.008-.68.04-1.803.04-1.036 0-1.637-.032-1.802-.04-4.184-.183-7.302-.911-7.302-1.796 0-.886 3.118-1.614 7.302-1.798v2.87c.168.012.776.046 1.82.046 1.096 0 1.678-.035 1.785-.046v-2.87c4.175.184 7.284.912 7.284 1.798 0 .885-3.109 1.613-7.284 1.796zm0-3.957v-2.31h5.814V7.525H8.263v3.59h5.857v2.31c-4.69.213-8.214 1.11-8.214 2.196 0 1.086 3.524 1.984 8.214 2.197v6.857h3.802v-6.857c4.68-.213 8.196-1.11 8.196-2.197 0-1.086-3.516-1.983-8.196-2.196z"/></svg>',
+            'USDT_ERC20': '<svg viewBox="0 0 32 32" width="28" height="28"><circle cx="16" cy="16" r="16" fill="#009393"/><path fill="#FFF" d="M17.922 17.383c-.11.008-.68.04-1.803.04-1.036 0-1.637-.032-1.802-.04-4.184-.183-7.302-.911-7.302-1.796 0-.886 3.118-1.614 7.302-1.798v2.87c.168.012.776.046 1.82.046 1.096 0 1.678-.035 1.785-.046v-2.87c4.175.184 7.284.912 7.284 1.798 0 .885-3.109 1.613-7.284 1.796zm0-3.957v-2.31h5.814V7.525H8.263v3.59h5.857v2.31c-4.69.213-8.214 1.11-8.214 2.196 0 1.086 3.524 1.984 8.214 2.197v6.857h3.802v-6.857c4.68-.213 8.196-1.11 8.196-2.197 0-1.086-3.516-1.983-8.196-2.196z"/></svg>'
+        };
+
         options.forEach(opt => {
             opt.addEventListener('click', () => {
                 const val       = opt.dataset.value;
-                const badgeCls  = opt.dataset.badgeClass;
                 const label     = opt.dataset.label;
 
-                badge.className = `asset-badge ${badgeCls}`;
-                badge.textContent = val;
+                badge.innerHTML = ASSET_SVGS[val] || val;
                 nameEl.textContent = label;
 
                 options.forEach(o => o.classList.remove('selected'));

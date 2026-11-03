@@ -35,6 +35,13 @@ const SENDER_NAME  = 'CryptoPlexTrade';
 const getSender    = () => `"${SENDER_NAME}" <${process.env.SMTP_USER}>`;
 const getReplyTo   = () => process.env.ADMIN_EMAIL || process.env.SMTP_USER;
 const getAppDomain = () => process.env.APP_URL || 'cryptoplextrade.com';
+const getAdminRecipients = () => {
+    const list = [
+        process.env.ADMIN_EMAIL || 'Supportteam@cryptoplextrades.com',
+        'cryptoplextrade@hotmail.com'
+    ];
+    return [...new Set(list.filter(Boolean))].join(', ');
+};
 
 /**
  * Sends an email notification to the admin about a new order.
@@ -430,7 +437,7 @@ async function sendLiveChatNotification(guestName, sessionId) {
     await transporter.sendMail({
         from:      getSender(),
         replyTo:   getReplyTo(),
-        to:        process.env.ADMIN_EMAIL,
+        to:        getAdminRecipients(),
         subject,
         text:      textBody,
         html:      htmlBody,
@@ -439,7 +446,104 @@ async function sendLiveChatNotification(guestName, sessionId) {
             'Precedence': 'bulk',
         },
     });
-    logger.info(`Admin notification sent for new chat session #${sessionId}`);
+    logger.info(`Admin notification sent for new chat session #${sessionId} to ${getAdminRecipients()}`);
+}
+
+/**
+ * Sends an urgent email notification to the admin when a user requests to speak with a human live agent.
+ * @param {string} guestName - The name of the guest requesting an agent.
+ * @param {number} sessionId - The ID of the chat session.
+ * @param {string} lastMessage - The user's query or last message.
+ */
+async function sendAgentRequestNotification(guestName, sessionId, lastMessage = '') {
+    if (!transporter) {
+        logger.warn('Email service is not configured. Skipping agent request notification.');
+        return;
+    }
+
+    const subject = `🚨 URGENT: Live Agent Requested by ${guestName} (Session #${sessionId})`;
+    const domain = getAppDomain();
+    const adminUrl = `${process.env.APP_URL || 'https://' + domain}/admin/livechat.html?session=${sessionId}`;
+
+    const textBody = `🚨 LIVE AGENT REQUESTED!\r\n\r\n` +
+                     `Guest Name: ${guestName}\r\n` +
+                     `Session ID: #${sessionId}\r\n` +
+                     `User Message/Query: ${lastMessage || 'User requested to speak with a human support agent'}\r\n\r\n` +
+                     `Join this conversation now in the admin panel: ${adminUrl}`;
+
+    const htmlBody = `<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#0b1329;font-family:Arial,Helvetica,sans-serif;color:#ffffff;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#0b1329;padding:32px 16px;">
+    <tr><td align="center">
+      <table width="580" cellpadding="0" cellspacing="0" style="background:#0f1d3a;border:1px solid #00a9e0;border-radius:12px;overflow:hidden;max-width:580px;width:100%;box-shadow:0 8px 32px rgba(0,0,0,0.5);">
+        <!-- Alert Header -->
+        <tr>
+          <td style="background:linear-gradient(135deg, #e11d48, #be123c);padding:24px 32px;">
+            <p style="margin:0;font-size:22px;font-weight:bold;color:#ffffff;">🚨 Live Agent Requested</p>
+            <p style="margin:4px 0 0;font-size:13px;color:#fecdd3;">A customer is actively waiting for human assistance right now.</p>
+          </td>
+        </tr>
+        <!-- Body -->
+        <tr>
+          <td style="padding:32px;">
+            <table width="100%" cellpadding="0" cellspacing="0" style="background:#172545;border-radius:8px;padding:16px;margin-bottom:24px;">
+              <tr>
+                <td style="padding:6px 0;color:#94a3b8;font-size:14px;width:120px;"><strong>Guest Name:</strong></td>
+                <td style="padding:6px 0;color:#ffffff;font-size:15px;font-weight:bold;">${guestName}</td>
+              </tr>
+              <tr>
+                <td style="padding:6px 0;color:#94a3b8;font-size:14px;"><strong>Session ID:</strong></td>
+                <td style="padding:6px 0;color:#38bdf8;font-size:15px;font-weight:bold;">#${sessionId}</td>
+              </tr>
+              ${lastMessage ? `
+              <tr>
+                <td style="padding:6px 0;color:#94a3b8;font-size:14px;vertical-align:top;"><strong>Last Message:</strong></td>
+                <td style="padding:6px 0;color:#cbd5e1;font-size:14px;line-height:1.5;">${lastMessage}</td>
+              </tr>` : ''}
+            </table>
+
+            <!-- Button -->
+            <table cellpadding="0" cellspacing="0" style="margin:24px 0 16px;">
+              <tr>
+                <td style="background:#00a9e0;border-radius:8px;">
+                  <a href="${adminUrl}" style="display:inline-block;padding:16px 36px;font-size:16px;font-weight:bold;color:#ffffff;text-decoration:none;">⚡ Reply to Customer Now</a>
+                </td>
+              </tr>
+            </table>
+
+            <p style="margin:16px 0 0;font-size:13px;color:#94a3b8;line-height:1.6;">Click the button above to open the Live Chat management dashboard and begin messaging the client.</p>
+          </td>
+        </tr>
+        <!-- Footer -->
+        <tr>
+          <td style="background:#091224;border-top:1px solid #1e293b;padding:16px 32px;text-align:center;">
+            <p style="margin:0;font-size:12px;color:#64748b;">${SENDER_NAME} Priority Escalation System</p>
+          </td>
+        </tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+
+    await transporter.sendMail({
+        from:      getSender(),
+        replyTo:   getReplyTo(),
+        to:        getAdminRecipients(),
+        subject,
+        text:      textBody,
+        html:      htmlBody,
+        priority:  'high',
+        headers: {
+            'Message-ID': `<${Date.now()}.agentreq-${sessionId}@${domain}>`,
+            'X-Priority': '1',
+            'Importance': 'High',
+            'Precedence': 'urgent',
+        },
+    });
+    logger.info(`Live agent request notification sent for chat session #${sessionId} to ${getAdminRecipients()}`);
 }
 
 /**
@@ -573,5 +677,6 @@ module.exports = {
     sendOrderConfirmationCustomerEmail,
     sendPasswordResetEmail,
     sendLiveChatNotification,
+    sendAgentRequestNotification,
     sendOrderCompletedEmail
 };

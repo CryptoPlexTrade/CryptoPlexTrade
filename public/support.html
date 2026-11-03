@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <link rel="icon" type="image/png" href="css/logo.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Customer Support &amp; Inquiries — CryptoPlexTrade</title>
-    <meta name="description" content="View, open, and manage your institutional support requests and tickets on CryptoPlexTrade.">
-    
+    <meta name="description"
+        content="View, open, and manage your institutional support requests and tickets on CryptoPlexTrade.">
+
     <!-- Design System Stylesheets -->
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="css/app.css">
@@ -23,8 +25,8 @@
         }
 
         .ticket-item {
-            background: #081326;
-            border: 1px solid rgba(0, 169, 224, 0.22);
+            background: #ffffff;
+            border: 1px solid var(--border-light);
             border-radius: var(--radius-lg);
             padding: 20px 24px;
             display: flex;
@@ -75,7 +77,8 @@
             border: 1px solid var(--border-light);
         }
 
-        .status-in_progress, .status-pending {
+        .status-in_progress,
+        .status-pending {
             background: #fffbeb;
             color: #b45309;
             border: 1px solid #fde68a;
@@ -105,8 +108,8 @@
         }
 
         .message-item.user {
-            background: #050c1b;
-            border: 1px solid rgba(0, 169, 224, 0.20);
+            background: #f8fafc;
+            border: 1px solid var(--border-light);
             align-self: flex-end;
             max-width: 85%;
         }
@@ -130,188 +133,186 @@
             white-space: pre-wrap;
         }
     </style>
-    <script src="theme.js"></script>
 </head>
+
 <body>
 
-<div class="sidebar-overlay" id="sidebar-overlay"></div>
-
-<div class="app-shell">
-
-    <!-- ===== SIDEBAR ===== -->
-    <aside class="sidebar" id="sidebar">
-        <a href="dashboard.html" class="sidebar-brand">
-            <img src="css/logo-mark.png" alt="CryptoPlexTrade Emblem" class="sidebar-brand__orb">
-            <span class="sidebar-brand__name">CryptoPlexTrade</span>
+<!-- ================== MODERN FLOATING PILL TOPBAR ================== -->
+<header class="portal-header">
+    <div class="portal-header-inner">
+        <a href="dashboard.html" class="portal-brand">
+            <img src="css/logo.png" alt="CryptoPlexTrade Logo" class="portal-logo">
+            <span class="portal-brand-text">CryptoPlex<span>Trade</span></span>
         </a>
-        <nav class="sidebar-nav">
-            <ul>
-                <li><a href="dashboard.html">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11.47 3.841a.75.75 0 0 1 1.06 0l8.69 8.69a.75.75 0 1 0 1.06-1.061l-8.689-8.69a2.25 2.25 0 0 0-3.182 0l-8.69 8.69a.75.75 0 1 0 1.061 1.06l8.69-8.689Z"/><path d="m12 5.432 8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 0 1-.75-.75v-4.5a.75.75 0 0 0-.75-.75h-3a.75.75 0 0 0-.75.75V21a.75.75 0 0 1-.75.75H5.625a1.875 1.875 0 0 1-1.875-1.875v-6.198a2.29 2.29 0 0 0 .091-.086L12 5.432Z"/></svg>
-                    Dashboard
-                </a></li>
-                <li><a href="trade.html">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M3 4.5h18v15H3v-15Zm6.75 10.5a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM12 15a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM15.75 15a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM9.75 9a.75.75 0 0 0-1.5 0v4.5a.75.75 0 0 0 1.5 0V9Zm3.75-3a.75.75 0 0 0-1.5 0v7.5a.75.75 0 0 0 1.5 0V6Zm2.25 1.5a.75.75 0 0 0-1.5 0v6a.75.75 0 0 0 1.5 0v-6Z"/></svg>
-                    Trade Desk
-                </a></li>
-                <li><a href="transactions.html">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clip-rule="evenodd"/></svg>
-                    Ledger History
-                </a></li>
-                <li><a href="profile.html">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd"/></svg>
-                    Account Profile
-                </a></li>
-                <li><a href="support.html" class="active">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm11.378-3.917c-.89-.777-2.366-.777-3.255 0a.75.75 0 0 1-1.06-1.06c2.298-2.013 5.824-2.013 8.122 0a.75.75 0 0 1-1.06 1.06ZM12 15.75a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" clip-rule="evenodd"/></svg>
-                    Help &amp; Support
-                </a></li>
-            </ul>
+
+        <!-- Rectangle with circular edges (Floating Pill Menu) -->
+        <nav class="portal-pill-nav" aria-label="Main Navigation">
+            <a href="dashboard.html" class="portal-pill-item">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11.47 3.841a.75.75 0 0 1 1.06 0l8.69 8.69a.75.75 0 1 0 1.06-1.061l-8.689-8.69a2.25 2.25 0 0 0-3.182 0l-8.69 8.69a.75.75 0 1 0 1.061 1.06l8.69-8.689Z"/><path d="m12 5.432 8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 0 1-.75-.75v-4.5a.75.75 0 0 0-.75-.75h-3a.75.75 0 0 0-.75.75V21a.75.75 0 0 1-.75.75H5.625a1.875 1.875 0 0 1-1.875-1.875v-6.198a2.29 2.29 0 0 0 .091-.086L12 5.432Z"/></svg>
+                <span>Dashboard</span>
+            </a>
+            <a href="trade.html" class="portal-pill-item">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M3 4.5h18v15H3v-15Zm6.75 10.5a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM12 15a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM15.75 15a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM9.75 9a.75.75 0 0 0-1.5 0v4.5a.75.75 0 0 0 1.5 0V9Zm3.75-3a.75.75 0 0 0-1.5 0v7.5a.75.75 0 0 0 1.5 0V6Zm2.25 1.5a.75.75 0 0 0-1.5 0v6a.75.75 0 0 0 1.5 0v-6Z"/></svg>
+                <span>Trade</span>
+            </a>
+            <a href="transactions.html" class="portal-pill-item">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clip-rule="evenodd"/></svg>
+                <span>Transactions</span>
+            </a>
+            <a href="profile.html" class="portal-pill-item">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd"/></svg>
+                <span>Profile</span>
+            </a>
+            <a href="support.html" class="portal-pill-item active">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm11.378-3.917c-.89-.777-2.366-.777-3.255 0a.75.75 0 0 1-1.06-1.06c2.298-2.013 5.824-2.013 8.122 0a.75.75 0 0 1-1.06 1.06ZM12 15.75a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" clip-rule="evenodd"/></svg>
+                <span>Support</span>
+            </a>
         </nav>
-    </aside>
 
-    <div class="main-wrap">
-        <header class="topbar">
-            <div class="topbar-left">
-                <button class="hamburger-btn" id="hamburger-btn" aria-label="Toggle navigation">
-                    <span></span><span></span><span></span>
-                </button>
-                <span class="topbar-title">Support Tickets</span>
-            </div>
-            <div class="topbar-right">
-                <a href="#" id="logout-btn" class="btn btn-danger btn-sm">Sign Out</a>
-            </div>
-        </header>
-
-        <main class="page-content">
-            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:28px;">
-                <div>
-                    <h1 style="font-size:1.75rem; font-weight:800; letter-spacing:-0.03em; color:var(--text-primary); margin-bottom:4px;">Support Desk</h1>
-                    <p style="font-size:0.9rem; color:var(--text-secondary);">Direct operational communications with our clearing officers.</p>
-                </div>
-                <a href="create_ticket.html" class="btn btn-primary" style="display:inline-flex;align-items:center;gap:8px;">
-                    <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z"/></svg>
-                    Open New Ticket
-                </a>
-            </div>
-
-            <ul class="ticket-list" id="ticket-list">
-                <li style="text-align:center;padding:32px;color:var(--text-muted);background:#fff;border-radius:var(--radius-lg);border:1px solid var(--border-light);">Loading ticket records…</li>
-            </ul>
-        </main>
-    </div>
-</div>
-
-<!-- Ticket Details Modal -->
-<div id="details-modal" class="modal-overlay">
-    <div class="modal-content" style="max-width:640px;">
-        <div class="modal-header">
-            <h2 id="modal-ticket-subject">Ticket Conversation</h2>
-            <button id="close-modal-btn" class="close-btn" aria-label="Close modal">&times;</button>
+        <!-- Right: Sign Out -->
+        <div class="portal-user-actions">
+            <a href="#" id="logout-btn" class="portal-logout-btn">Sign Out</a>
         </div>
-        <div class="modal-body" id="modal-body-content"></div>
     </div>
+</header>
+
+<div class="portal-container">
+    <main class="page-content" style="max-width: 100%; padding: 0;">
+                <div
+                    style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:28px;">
+                    <div>
+                        <h1
+                            style="font-size:1.75rem; font-weight:800; letter-spacing:-0.03em; color:var(--text-primary); margin-bottom:4px;">
+                            Support Desk</h1>
+                        <p style="font-size:0.9rem; color:var(--text-secondary);">Direct operational communications with
+                            our clearing officers.</p>
+                    </div>
+                    <a href="create_ticket.html" class="btn btn-primary"
+                        style="display:inline-flex;align-items:center;gap:8px;">
+                        <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor">
+                            <path
+                                d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z" />
+                        </svg>
+                        Open New Ticket
+                    </a>
+                </div>
+
+                <ul class="ticket-list" id="ticket-list">
+                    <li
+                        style="text-align:center;padding:32px;color:var(--text-muted);background:#fff;border-radius:var(--radius-lg);border:1px solid var(--border-light);">
+                        Loading ticket records…</li>
+                </ul>
+            </main>
 </div>
+
+    <!-- Ticket Details Modal -->
+    <div id="details-modal" class="modal-overlay">
+        <div class="modal-content" style="max-width:640px;">
+            <div class="modal-header">
+                <h2 id="modal-ticket-subject">Ticket Conversation</h2>
+                <button id="close-modal-btn" class="close-btn" aria-label="Close modal">&times;</button>
+            </div>
+            <div class="modal-body" id="modal-body-content"></div>
+        </div>
+    </div>
 
 <div class="ticker-tape"><div class="ticker-tape__track"></div></div>
 
-<script src="inactivity-timer.js"></script>
-<script src="chat-widget.js"></script>
-<script>
-(function () {
-    // --- Sidebar navigation ---
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('sidebar-overlay');
-    document.getElementById('hamburger-btn').addEventListener('click', () => { sidebar.classList.add('open'); overlay.classList.add('open'); });
-    overlay.addEventListener('click', () => { sidebar.classList.remove('open'); overlay.classList.remove('open'); });
+    <script src="inactivity-timer.js"></script>
+    <script src="chat-widget.js"></script>
+    <script>
+        (function () {
+            // --- Cookie helper ---
+            function getCookie(name) {
+                const v = `; ${document.cookie}`, p = v.split(`; ${name}=`);
+                if (p.length === 2) return p.pop().split(';').shift();
+            }
+            const csrfToken = getCookie('csrf-token');
 
-    // --- Cookie helper ---
-    function getCookie(name) {
-        const v = `; ${document.cookie}`, p = v.split(`; ${name}=`);
-        if (p.length === 2) return p.pop().split(';').shift();
-    }
-    const csrfToken = getCookie('csrf-token');
-
-    // --- Sign Out ---
-    document.getElementById('logout-btn').addEventListener('click', async (e) => {
-        e.preventDefault();
-        try { 
-            const r = await fetch('/api/logout', { method: 'POST', headers: { 'X-CSRF-Token': csrfToken } }); 
-            if (r.ok) window.location.href = 'login.html'; 
-        } catch (err) { console.error(err); }
-    });
-
-    const modal        = document.getElementById('details-modal');
-    const closeModal   = document.getElementById('close-modal-btn');
-    const modalSubject = document.getElementById('modal-ticket-subject');
-    const modalBody    = document.getElementById('modal-body-content');
-    const ticketList   = document.getElementById('ticket-list');
-
-    async function fetchTickets() {
-        try {
-            ticketList.innerHTML = '<li style="text-align:center;padding:32px;color:var(--text-muted);background:#fff;border-radius:var(--radius-lg);border:1px solid var(--border-light);">Loading ticket records…</li>';
-            const r = await fetch('/api/support/tickets', { credentials: 'include' });
-            if (r.status === 401 || r.status === 403) { window.location.href = 'login.html'; return; }
-            if (!r.ok) throw new Error('Could not retrieve tickets.');
-            const tickets = await r.json();
-
-            ticketList.innerHTML = '';
-            if (tickets.length === 0) {
-                ticketList.innerHTML = '<li style="text-align:center;padding:32px;color:var(--text-muted);background:#fff;border-radius:var(--radius-lg);border:1px solid var(--border-light);">No open tickets. If you need trade or settlement assistance, click "Open New Ticket" above.</li>';
-                return;
+            // --- Sign Out ---
+            const logoutBtn = document.getElementById('logout-btn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    try {
+                        const r = await fetch('/api/logout', { method: 'POST', headers: { 'X-CSRF-Token': csrfToken } });
+                        if (r.ok) window.location.href = 'login.html';
+                    } catch (err) { console.error(err); }
+                });
             }
 
-            tickets.forEach(ticket => {
-                const item = document.createElement('li');
-                item.className = 'ticket-item';
-                item.dataset.ticketId = ticket.id;
-                item.innerHTML = `
+            const modal = document.getElementById('details-modal');
+            const closeModal = document.getElementById('close-modal-btn');
+            const modalSubject = document.getElementById('modal-ticket-subject');
+            const modalBody = document.getElementById('modal-body-content');
+            const ticketList = document.getElementById('ticket-list');
+
+            async function fetchTickets() {
+                try {
+                    ticketList.innerHTML = '<li style="text-align:center;padding:32px;color:var(--text-muted);background:#fff;border-radius:var(--radius-lg);border:1px solid var(--border-light);">Loading ticket records…</li>';
+                    const r = await fetch('/api/support/tickets', { credentials: 'include' });
+                    if (r.status === 401 || r.status === 403) { window.location.href = 'login.html'; return; }
+                    if (!r.ok) throw new Error('Could not retrieve tickets.');
+                    const tickets = await r.json();
+
+                    ticketList.innerHTML = '';
+                    if (tickets.length === 0) {
+                        ticketList.innerHTML = '<li style="text-align:center;padding:32px;color:var(--text-muted);background:#fff;border-radius:var(--radius-lg);border:1px solid var(--border-light);">No open tickets. If you need trade or settlement assistance, click "Open New Ticket" above.</li>';
+                        return;
+                    }
+
+                    tickets.forEach(ticket => {
+                        const item = document.createElement('li');
+                        item.className = 'ticket-item';
+                        item.dataset.ticketId = ticket.id;
+                        item.innerHTML = `
                     <div class="ticket-info">
                         <div class="subject"></div>
                         <div class="last-update"></div>
                     </div>
                     <div class="ticket-status"></div>
                 `;
-                item.querySelector('.subject').textContent = ticket.subject;
-                item.querySelector('.last-update').textContent = `Last activity: ${new Date(ticket.updated_at).toLocaleString()}`;
-                const statusEl = item.querySelector('.ticket-status');
-                statusEl.className = `ticket-status status-${ticket.status}`;
-                statusEl.textContent = ticket.status.replace('_', ' ');
+                        item.querySelector('.subject').textContent = ticket.subject;
+                        item.querySelector('.last-update').textContent = `Last activity: ${new Date(ticket.updated_at).toLocaleString()}`;
+                        const statusEl = item.querySelector('.ticket-status');
+                        statusEl.className = `ticket-status status-${ticket.status}`;
+                        statusEl.textContent = ticket.status.replace('_', ' ');
 
-                item.addEventListener('click', async () => {
-                    try {
-                        const dr = await fetch(`/api/support/tickets/${ticket.id}`, { credentials: 'include' });
-                        if (!dr.ok) throw new Error('Could not load ticket messages.');
-                        const detail = await dr.json();
-                        modalSubject.textContent = `Ticket #${detail.ticket.id}: ${detail.ticket.subject}`;
-                        modalBody.innerHTML = '';
-                        const msgList = document.createElement('div');
-                        msgList.className = 'message-list';
-                        detail.replies.forEach(reply => {
-                            const div = document.createElement('div');
-                            div.className = `message-item ${reply.is_admin ? 'admin' : 'user'}`;
-                            div.innerHTML = `<div><span class="message-author">${reply.is_admin ? 'Compliance Support' : 'You'}</span><span class="message-date">${new Date(reply.created_at).toLocaleString()}</span></div><div class="message-body"></div>`;
-                            div.querySelector('.message-body').textContent = reply.message;
-                            msgList.appendChild(div);
+                        item.addEventListener('click', async () => {
+                            try {
+                                const dr = await fetch(`/api/support/tickets/${ticket.id}`, { credentials: 'include' });
+                                if (!dr.ok) throw new Error('Could not load ticket messages.');
+                                const detail = await dr.json();
+                                modalSubject.textContent = `Ticket #${detail.ticket.id}: ${detail.ticket.subject}`;
+                                modalBody.innerHTML = '';
+                                const msgList = document.createElement('div');
+                                msgList.className = 'message-list';
+                                detail.replies.forEach(reply => {
+                                    const div = document.createElement('div');
+                                    div.className = `message-item ${reply.is_admin ? 'admin' : 'user'}`;
+                                    div.innerHTML = `<div><span class="message-author">${reply.is_admin ? 'Compliance Support' : 'You'}</span><span class="message-date">${new Date(reply.created_at).toLocaleString()}</span></div><div class="message-body"></div>`;
+                                    div.querySelector('.message-body').textContent = reply.message;
+                                    msgList.appendChild(div);
+                                });
+                                modalBody.appendChild(msgList);
+                                modal.classList.add('show');
+                            } catch (err) { alert(err.message); }
                         });
-                        modalBody.appendChild(msgList);
-                        modal.classList.add('show');
-                    } catch (err) { alert(err.message); }
-                });
-                ticketList.appendChild(item);
-            });
+                        ticketList.appendChild(item);
+                    });
 
-            closeModal.addEventListener('click', () => modal.classList.remove('show'));
-            modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('show'); });
+                    closeModal.addEventListener('click', () => modal.classList.remove('show'));
+                    modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('show'); });
 
-        } catch (e) {
-            ticketList.innerHTML = `<li style="text-align:center;padding:24px;color:var(--accent-red);background:#fff;border-radius:var(--radius-lg);">${e.message}</li>`;
-        }
-    }
+                } catch (e) {
+                    ticketList.innerHTML = `<li style="text-align:center;padding:24px;color:var(--accent-red);background:#fff;border-radius:var(--radius-lg);">${e.message}</li>`;
+                }
+            }
 
-    fetchTickets();
-})();
-</script>
+            fetchTickets();
+        })();
+    </script>
 <script src="ticker.js"></script>
 </body>
+
 </html>

@@ -19,7 +19,7 @@ const db = require('./database');
 const logger = require('./logger');
 const { authenticateAdminToken } = require('./authMiddleware');
 const { adminOnly } = require('./adminAuthMiddleware');
-const { sendLiveChatNotification } = require('./emailService');
+const { sendLiveChatNotification, sendAgentRequestNotification } = require('./emailService');
 
 const router = express.Router();
 
@@ -148,6 +148,45 @@ router.post('/:sessionId/send', async (req, res) => {
         res.json({ success: true });
     } catch (err) {
         logger.error('Chat send error:', err);
+        res.status(500).json({ message: 'Server error.' });
+    }
+});
+
+// POST /api/chat/:sessionId/request-agent – customer explicitly asks to talk to a human agent
+router.post('/:sessionId/request-agent', async (req, res) => {
+    await ensureTables();
+    try {
+        const { sessionId } = req.params;
+        const { lastMessage } = req.body || {};
+
+        const [session] = await db.query(
+            'SELECT id, guest_name, status FROM chat_sessions WHERE id = ?',
+            [sessionId]
+        );
+        if (session.length === 0) return res.status(404).json({ message: 'Session not found.' });
+        if (session[0].status === 'closed') return res.status(400).json({ message: 'This chat session is closed.' });
+
+        const guestName = session[0].guest_name || 'Guest';
+
+        // Add an immediate system message in chat
+        await db.query(
+            'INSERT INTO chat_messages (session_id, sender, message) VALUES (?, ?, ?)',
+            [
+                sessionId,
+                'admin',
+                '🔔 You have requested to speak with a human agent. Our support desk has been alerted via priority email and an agent is joining shortly. Please leave your specific question or trade details here.'
+            ]
+        );
+        await db.query('UPDATE chat_sessions SET updated_at = NOW() WHERE id = ?', [sessionId]);
+
+        // Send high priority urgent email alert to admin(s)
+        sendAgentRequestNotification(guestName, sessionId, lastMessage).catch(err => {
+            logger.error('Failed to send live agent request notification email:', err);
+        });
+
+        res.json({ success: true, message: 'Agent requested successfully.' });
+    } catch (err) {
+        logger.error('Chat request-agent error:', err);
         res.status(500).json({ message: 'Server error.' });
     }
 });

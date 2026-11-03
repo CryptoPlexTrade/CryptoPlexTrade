@@ -22,22 +22,30 @@
         /* ── Bubble ───────────────────────────────────── */
         #cpt-chat-bubble {
             position: fixed;
-            bottom: 28px; right: 28px;
+            bottom: 85px; right: 28px;
             z-index: 9998;
             width: 58px; height: 58px;
             border-radius: 50%;
             background: linear-gradient(135deg, #005baa, #00a9e0);
-            box-shadow: 0 6px 24px rgba(0,91,170,0.38);
+            box-shadow: 0 8px 28px rgba(0,91,170,0.45);
             cursor: pointer;
             display: flex; align-items: center; justify-content: center;
             transition: transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s;
             border: none; outline: none;
         }
-        #cpt-chat-bubble:hover { transform: scale(1.10); box-shadow: 0 10px 32px rgba(0,91,170,.5); }
+        #cpt-chat-bubble:hover { transform: scale(1.10); box-shadow: 0 12px 36px rgba(0,91,170,.6); }
         #cpt-chat-bubble svg { width: 26px; height: 26px; color: #fff; transition: opacity .2s; }
         #cpt-chat-bubble .bubble-close { display: none; }
         #cpt-chat-bubble.open .bubble-chat  { display: none; }
         #cpt-chat-bubble.open .bubble-close { display: block; }
+
+        @media (max-width: 768px) {
+            #cpt-chat-bubble {
+                bottom: 70px; right: 18px;
+                width: 52px; height: 52px;
+            }
+            #cpt-chat-bubble svg { width: 22px; height: 22px; }
+        }
 
         /* Unread badge */
         #cpt-chat-badge {
@@ -55,13 +63,13 @@
         /* ── Chat window ──────────────────────────────── */
         #cpt-chat-window {
             position: fixed;
-            bottom: 100px; right: 28px;
+            bottom: 155px; right: 28px;
             z-index: 9997;
-            width: 360px; max-width: calc(100vw - 32px);
-            height: 500px; max-height: calc(100vh - 130px);
+            width: 370px; max-width: calc(100vw - 32px);
+            height: 520px; max-height: calc(100vh - 180px);
             background: #fff;
             border-radius: 20px;
-            box-shadow: 0 16px 64px rgba(0,0,0,.18), 0 0 0 1px rgba(0,91,170,.08);
+            box-shadow: 0 16px 64px rgba(0,0,0,.22), 0 0 0 1px rgba(0,91,170,.12);
             display: flex; flex-direction: column;
             overflow: hidden;
             transform: scale(.85) translateY(20px);
@@ -70,6 +78,14 @@
             transition: transform .3s cubic-bezier(.34,1.56,.64,1), opacity .25s ease;
         }
         #cpt-chat-window.open { transform: scale(1) translateY(0); opacity: 1; pointer-events: all; }
+
+        @media (max-width: 768px) {
+            #cpt-chat-window {
+                bottom: 130px; right: 14px;
+                width: calc(100vw - 28px);
+                max-height: calc(100vh - 150px);
+            }
+        }
 
         /* Header */
         #cpt-chat-header {
@@ -92,16 +108,55 @@
         @keyframes online-blink { 0%,100%{opacity:1;} 50%{opacity:.4;} }
 
         /* Header action buttons */
-        .chat-header-actions { display: flex; gap: 6px; flex-shrink: 0; }
+        .chat-header-actions { display: flex; gap: 6px; flex-shrink: 0; align-items: center; }
         .chat-hdr-btn {
-            width: 32px; height: 32px; border-radius: 8px;
+            height: 32px; border-radius: 8px;
             border: none; cursor: pointer; display: flex;
             align-items: center; justify-content: center;
             transition: all .2s; background: rgba(255,255,255,.15);
+            font-family: 'Poppins',system-ui,sans-serif;
         }
         .chat-hdr-btn:hover { background: rgba(255,255,255,.3); }
         .chat-hdr-btn svg { width: 16px; height: 16px; color: #fff; }
         .chat-hdr-btn.end-btn:hover { background: rgba(239,68,68,.7); }
+
+        .chat-hdr-btn.agent-btn {
+            padding: 0 10px; font-size: 0.72rem; font-weight: 700; color: #fff; gap: 5px;
+            background: rgba(255,255,255,.2);
+        }
+        .chat-hdr-btn.agent-btn:hover {
+            background: #ffffff; color: #005baa;
+        }
+        .chat-hdr-btn.agent-btn.alerted {
+            background: #22c55e !important; color: #ffffff !important;
+        }
+
+        /* Quick prompt chips */
+        #cpt-quick-chips {
+            display: flex; gap: 6px; padding: 8px 12px;
+            overflow-x: auto; background: #f8fafc;
+            border-top: 1px solid #e2e8f0; flex-shrink: 0;
+            scrollbar-width: none;
+        }
+        #cpt-quick-chips::-webkit-scrollbar { display: none; }
+        .cpt-chip {
+            white-space: nowrap; font-size: 0.72rem; font-weight: 600;
+            padding: 5px 11px; border-radius: 9999px;
+            background: #ffffff; border: 1px solid #cbd5e1;
+            color: #005baa; cursor: pointer; transition: all 0.2s;
+            font-family: 'Poppins', system-ui, sans-serif;
+            display: inline-flex; align-items: center; gap: 4px;
+        }
+        .cpt-chip:hover {
+            background: #005baa; color: #ffffff; border-color: #005baa;
+            transform: translateY(-1px);
+        }
+        .cpt-chip.agent-chip {
+            background: #eff6ff; border-color: #0284c7; color: #0284c7; font-weight: 700;
+        }
+        .cpt-chip.agent-chip:hover {
+            background: #0284c7; color: #ffffff;
+        }
 
         /* Customer confirmation overlay */
         #cpt-cust-confirm {
@@ -261,6 +316,10 @@
                 <div class="chat-header-sub"><span class="chat-online-dot"></span>We're online — typically reply in minutes</div>
             </div>
             <div class="chat-header-actions">
+                <button class="chat-hdr-btn agent-btn" id="cpt-agent-header-btn" title="Speak to a Human Agent">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width:14px;height:14px;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    <span>Talk to Agent</span>
+                </button>
                 <button class="chat-hdr-btn" id="cpt-minimize-btn" aria-label="Minimize chat" title="Minimize">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3"/></svg>
                 </button>
@@ -299,6 +358,13 @@
 
         <div id="cpt-chat-messages"></div>
         <div id="cpt-chat-closed-banner">This chat session has been closed by the support team.</div>
+        <div id="cpt-quick-chips">
+            <button class="cpt-chip" data-ask="How do I buy crypto with MoMo?">💰 Buy with MoMo</button>
+            <button class="cpt-chip" data-ask="How do I sell crypto for Cedis?">💵 Sell for Cedis</button>
+            <button class="cpt-chip" data-ask="How long does settlement take?">⚡ Settlement Speed</button>
+            <button class="cpt-chip" data-ask="What are your fees?">📊 Fees &amp; Rates</button>
+            <button class="cpt-chip agent-chip" data-action="agent">👤 Talk to Live Agent</button>
+        </div>
         <div id="cpt-chat-input-wrap">
             <textarea id="cpt-chat-input" placeholder="Type your message…" rows="1" maxlength="2000"></textarea>
             <button id="cpt-chat-send" aria-label="Send message">
@@ -331,9 +397,128 @@
     const sendBtn      = document.getElementById('cpt-chat-send');
     const minimizeBtn  = document.getElementById('cpt-minimize-btn');
     const endChatBtn   = document.getElementById('cpt-endchat-btn');
+    const agentHdrBtn  = document.getElementById('cpt-agent-header-btn');
+    const quickChips   = document.getElementById('cpt-quick-chips');
     const custConfirm  = document.getElementById('cpt-cust-confirm');
     const confNoBtn    = document.getElementById('cpt-conf-no');
     const confYesBtn   = document.getElementById('cpt-conf-yes');
+
+    // ── AI Knowledge Base for Instant Customer Support ───────────────
+    const KNOWLEDGE_BASE = [
+        {
+            topics: ['buy', 'purchase', 'how to buy', 'deposit', 'momo to crypto'],
+            answer: 'To buy Bitcoin, Ethereum, or USDT on CryptoPlexTrade:\n1. Click "Trade" in the top menu.\n2. Select your coin (BTC, ETH, USDT) and enter your amount.\n3. Paste your receiving crypto wallet address.\n4. Send payment via MTN Mobile Money, Telecel Cash, or Bank Transfer.\n5. Submit your MoMo Transaction ID. Your crypto is released to your wallet in minutes!'
+        },
+        {
+            topics: ['sell', 'payout', 'how to sell', 'cashout', 'cedis', 'ghs', 'crypto to momo'],
+            answer: 'To sell crypto for Ghana Cedis (GH₵):\n1. Select "Sell" on the Trade page.\n2. Choose the coin and quantity you are selling.\n3. Enter your MoMo mobile number & account name (or Bank details).\n4. Transfer crypto to our official deposit address shown on screen.\n5. Paste your blockchain TXID. Once 1 confirmation is received, Cedis are sent straight to your MoMo or bank account!'
+        },
+        {
+            topics: ['speed', 'how long', 'time', 'settlement', 'duration', 'minutes', 'delay'],
+            answer: 'Settlement takes an average of 5 to 15 minutes! Once payment or blockchain transfer is confirmed, our automated system and treasury release funds immediately.'
+        },
+        {
+            topics: ['fee', 'fees', 'spread', 'rate', 'rates', 'hidden', 'charge', 'cost'],
+            answer: 'CryptoPlexTrade charges ZERO hidden fees! The rate displayed on the trade calculator is your final rate. You only pay standard on-chain blockchain network/miner fees.'
+        },
+        {
+            topics: ['momo', 'mtn', 'telecel', 'vodafone', 'payment method', 'bank'],
+            answer: 'We support MTN Mobile Money, Telecel Cash, and all major Ghanaian commercial banks. Payment details and account numbers appear clearly during trade execution.'
+        },
+        {
+            topics: ['kyc', 'verify', 'verification', 'id', 'ghana card', 'limits', 'limit'],
+            answer: 'Verification is fast! Upload your Ghana Card or Passport on your Profile page. Tier 1 unlocks everyday trading limits; higher limits are available for institutional/OTC accounts.'
+        }
+    ];
+
+    let agentRequested = false;
+
+    async function requestLiveAgent(customNote = '') {
+        if (!sessionId) {
+            alert('Please start a chat first so an agent can join your conversation.');
+            return;
+        }
+        if (agentRequested) {
+            appendMsg({
+                sender: 'admin',
+                message: '🔔 Our support team is already alerted and has this chat open. An agent is typing back to you shortly.',
+                created_at: new Date().toISOString()
+            });
+            return;
+        }
+
+        agentRequested = true;
+        if (agentHdrBtn) {
+            agentHdrBtn.classList.add('alerted');
+            agentHdrBtn.innerHTML = `<span>Agent Alerted ✓</span>`;
+        }
+
+        try {
+            const res = await fetch(`/api/chat/${sessionId}/request-agent`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ lastMessage: customNote })
+            });
+            const data = await res.json();
+            if (data.success) {
+                appendMsg({
+                    sender: 'admin',
+                    message: '🚨 A live support specialist has received an urgent priority notification to join your chat! Please describe your request or order ID below.',
+                    created_at: new Date().toISOString()
+                });
+            }
+        } catch (e) {
+            console.error('Agent alert request failed', e);
+        }
+    }
+
+    if (agentHdrBtn) {
+        agentHdrBtn.addEventListener('click', () => {
+            requestLiveAgent('User clicked Talk to Agent button');
+        });
+    }
+
+    if (quickChips) {
+        quickChips.addEventListener('click', (e) => {
+            const btn = e.target.closest('.cpt-chip');
+            if (!btn) return;
+
+            if (btn.dataset.action === 'agent') {
+                requestLiveAgent('User clicked Talk to Agent chip');
+                return;
+            }
+
+            const ask = btn.dataset.ask;
+            if (ask) {
+                inputEl.value = ask;
+                sendMessage();
+            }
+        });
+    }
+
+    function checkAiKnowledge(userText) {
+        const lower = userText.toLowerCase();
+
+        // Check if asking for a real person / agent
+        if (lower.includes('agent') || lower.includes('human') || lower.includes('representative') || lower.includes('person') || lower.includes('talk to someone') || lower.includes('call')) {
+            requestLiveAgent(userText);
+            return;
+        }
+
+        // Check knowledge base
+        for (const item of KNOWLEDGE_BASE) {
+            if (item.topics.some(t => lower.includes(t))) {
+                setTimeout(() => {
+                    appendMsg({
+                        sender: 'admin',
+                        message: `🤖 <strong>CryptoPlex Assistant:</strong><br>${item.answer.replace(/\n/g, '<br>')}<br><br><small style="color:#0284c7;">Need human help? Click "Talk to Agent" above at any time.</small>`,
+                        created_at: new Date().toISOString()
+                    });
+                }, 450);
+                break;
+            }
+        }
+    }
 
     function fmtTime(iso) {
         const d = new Date(iso);
@@ -394,6 +579,14 @@
         closedBanner.style.display = 'none';
         inputEl.disabled = false;
         sendBtn.disabled = false;
+        agentRequested = false;
+        if (agentHdrBtn) {
+            agentHdrBtn.classList.remove('alerted');
+            agentHdrBtn.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width:14px;height:14px;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <span>Talk to Agent</span>
+            `;
+        }
         updateBadge();
         
         if (isOpen) {
@@ -521,6 +714,9 @@
         const tempId = 'temp_' + Date.now();
         // Optimistic render
         appendMsg({ sender: 'customer', message: msg, created_at: new Date().toISOString(), tempId });
+
+        // Trigger AI Assistant check or live agent dispatch
+        checkAiKnowledge(msg);
 
         try {
             const r = await fetch(`/api/chat/${sessionId}/send`, {

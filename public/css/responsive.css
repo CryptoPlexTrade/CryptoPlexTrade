@@ -629,4 +629,53 @@ html, body {
     input, select, textarea {
         font-size: 16px !important; /* Prevents iOS auto-zoom */
     }
+
+    /* Compact Mobile Ticker Tape */
+    .ticker-tape {
+        height: 28px !important;
+        padding: 0 !important;
+        background: #060d1a !important;
+    }
+    .ticker-tape__item {
+        padding: 0 12px !important;
+        font-size: 0.72rem !important;
+    }
+    .ticker-tape__item .pair {
+        margin-right: 6px !important;
+        font-size: 0.7rem !important;
+    }
+    .ticker-tape__item .price {
+        margin-right: 6px !important;
+        font-size: 0.72rem !important;
+    }
+    .ticker-tape__item .change {
+        font-size: 0.68rem !important;
+    }
+}
+
+/* Remove underline on header buttons and navigation links */
+.header .nav a,
+.header-nav a,
+.nav-btn-login,
+.nav-btn-signup,
+a.btn-primary,
+a.btn-secondary,
+.header a,
+a[href*="login"],
+a[href*="register"],
+.nav a {
+    text-decoration: none !important;
+}
+
+.header .nav a:hover,
+.header-nav a:hover,
+.nav-btn-login:hover,
+.nav-btn-signup:hover,
+a.btn-primary:hover,
+a.btn-secondary:hover,
+.header a:hover,
+a[href*="login"]:hover,
+a[href*="register"]:hover,
+.nav a:hover {
+    text-decoration: none !important;
 }

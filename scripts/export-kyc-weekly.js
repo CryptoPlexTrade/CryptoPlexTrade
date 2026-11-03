@@ -16,3 +16,4 @@ const { exportNewKYC } = require('../kycExporter');
         process.exit(1);
     }
 })();
+

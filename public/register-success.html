@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <link rel="icon" type="image/png" href="css/logo.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Registration Confirmed — CryptoPlexTrade</title>
-    <meta name="description" content="Your CryptoPlexTrade account has been successfully registered. Access your trading terminal now.">
-    
+    <meta name="description"
+        content="Your CryptoPlexTrade account has been successfully registered. Access your trading terminal now.">
+
     <!-- Design System Stylesheets -->
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="css/app.css">
@@ -17,8 +19,8 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            background: radial-gradient(circle at 50% 0%, #0c1f40 0%, #050d1e 60%, #040914 100%);
-            color: #ffffff;
+            background: linear-gradient(180deg, #ffffff 0%, var(--bg-highlight) 100%);
+            color: var(--text-primary);
         }
 
         .auth-topbar {
@@ -62,8 +64,8 @@
         .success-panel {
             width: 100%;
             max-width: 500px;
-            background: #081326;
-            border: 1px solid rgba(0, 169, 224, 0.22);
+            background: #ffffff;
+            border: 1px solid var(--border-light);
             border-radius: var(--radius-xl);
             padding: 48px 44px;
             text-align: center;
@@ -72,8 +74,15 @@
         }
 
         @keyframes panelFadeUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .success-glyph-ring {
@@ -186,17 +195,18 @@
             color: var(--text-muted);
         }
     </style>
-    <script src="theme.js"></script>
 </head>
+
 <body>
 
     <header class="auth-topbar">
         <a href="index.html" class="auth-topbar-brand">
-            <img src="css/logo.png" alt="CryptoPlexTrade Logo">
+            <img src="css/logo.jpg" alt="CryptoPlexTrade Logo">
             <span>CryptoPlexTrade</span>
         </a>
         <div style="font-size: 0.85rem; color: var(--text-secondary);">
-            Need assistance? <a href="contact.html" style="color: var(--primary-color); font-weight: 600;">Contact Desk</a>
+            Need assistance? <a href="contact.html" style="color: var(--primary-color); font-weight: 600;">Contact
+                Desk</a>
         </div>
     </header>
 
@@ -204,12 +214,15 @@
         <div class="success-panel">
             <div class="success-glyph-ring">
                 <svg viewBox="0 0 24 24" fill="currentColor">
-                    <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.06-1.06l-3.103 3.103-1.53-1.53a.75.75 0 0 0-1.06 1.06l2.06 2.06a.75.75 0 0 0 1.06 0l3.64-3.64Z" clip-rule="evenodd"/>
+                    <path fill-rule="evenodd"
+                        d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.06-1.06l-3.103 3.103-1.53-1.53a.75.75 0 0 0-1.06 1.06l2.06 2.06a.75.75 0 0 0 1.06 0l3.64-3.64Z"
+                        clip-rule="evenodd" />
                 </svg>
             </div>
 
             <h1>Account Initialized</h1>
-            <p class="desc">Your CryptoPlexTrade exchange account is active and configured. You are ready to authenticate and initialize your trading dashboard.</p>
+            <p class="desc">Your CryptoPlexTrade exchange account is active and configured. You are ready to
+                authenticate and initialize your trading dashboard.</p>
 
             <div class="action-timeline">
                 <div class="action-timeline__heading">Recommended Next Steps</div>
@@ -242,7 +255,26 @@
         <div class="ticker-tape__track" id="ticker-track"></div>
     </div>
 
-    <script src="ticker.js"></script>
+    <script>
+        (async () => {
+            const track = document.getElementById('ticker-track');
+            const syms = ['BTC', 'ETH', 'SOL', 'BNB', 'XRP', 'LTC', 'ADA', 'DOGE'];
+            try {
+                const r = await fetch(`https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${syms.join(',')}&tsyms=USD`);
+                const d = await r.json();
+                let html = '';
+                syms.forEach(s => {
+                    const c = d.RAW?.[s]?.USD;
+                    if (!c) return;
+                    const dir = c.CHANGEPCT24HOUR >= 0 ? 'up' : 'down';
+                    const sign = dir === 'up' ? '+' : '';
+                    html += `<div class="ticker-tape__item"><span class="pair">${s}/USD</span><span class="price">${c.PRICE.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span><span class="change ${dir}">${sign}${c.CHANGEPCT24HOUR.toFixed(2)}% ${dir === 'up' ? '▲' : '▼'}</span></div>`;
+                });
+                track.innerHTML = html + html;
+            } catch (e) { }
+        })();
+    </script>
     <script src="/chat-widget.js"></script>
 </body>
+
 </html>
