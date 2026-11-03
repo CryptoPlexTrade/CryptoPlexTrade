@@ -10,13 +10,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/tokens.css">
 
-    <link rel="stylesheet" href="admin.css?v=4">
+    <link rel="stylesheet" href="admin.css?v=5">
     <style>
         @media (max-width: 900px) {
             .chat-layout { grid-template-columns: 1fr; height: auto; }
             .sessions-panel { height: 280px; }
             .message-panel { min-height: 400px; }
+            .chat-layout.chat-open .sessions-panel { display: none; }
+            .chat-layout:not(.chat-open) .message-panel { display: none; }
+            .chat-layout.chat-open { height: calc(100vh - 150px); }
+            .chat-back-btn { display: inline-flex !important; }
         }
+        .chat-back-btn { display: none; align-items: center; gap: 4px; background: none; border: 1px solid var(--border-medium); color: var(--text-secondary); border-radius: 8px; padding: 6px 10px; font-weight: 600; font-size: .8rem; cursor: pointer; margin-right: 10px; }
 
         /* ── Custom Confirmation Modal ────────────────── */
         .cpt-conf-overlay {
@@ -177,7 +182,8 @@
 
                     <div id="chat-detail" style="display:none;flex:1;flex-direction:column;overflow:hidden;">
                         <div class="message-panel-header">
-                            <div>
+                            <button type="button" class="chat-back-btn" id="chat-back-btn">← Back</button>
+                            <div style="flex:1;min-width:0;">
                                 <p class="msg-panel-name" id="detail-name">—</p>
                                 <p class="msg-panel-sub" id="detail-sub">—</p>
                             </div>
@@ -232,9 +238,9 @@
         const closeBtn = document.getElementById('sidebar-close-btn');
         function openSidebar()  { sidebar.classList.add('sidebar-open'); sOverlay.classList.add('show'); sOverlay.style.display='block'; }
         function closeSidebar() { sidebar.classList.remove('sidebar-open'); sOverlay.classList.remove('show'); setTimeout(()=>sOverlay.style.display='none',300); }
-        menuBtn.addEventListener('click', openSidebar);
-        closeBtn.addEventListener('click', closeSidebar);
-        sOverlay.addEventListener('click', closeSidebar);
+        if (menuBtn && sidebar && sOverlay) menuBtn.addEventListener('click', openSidebar);
+        if (closeBtn && sidebar && sOverlay) closeBtn.addEventListener('click', closeSidebar);
+        if (sOverlay && sidebar) sOverlay.addEventListener('click', closeSidebar);
     </script>
     <script>
     (function() {
@@ -253,6 +259,19 @@
         const sendBtn       = document.getElementById('admin-send-btn');
         const closeSessionBtn = document.getElementById('close-session-btn');
         const deleteSessionBtn = document.getElementById('delete-session-btn');
+        const chatLayout = document.querySelector('.chat-layout');
+        const chatBackBtn = document.getElementById('chat-back-btn');
+        let lastMsgSig = '';
+        chatBackBtn.addEventListener('click', () => {
+            chatLayout.classList.remove('chat-open');
+            chatDetail.classList.remove('active');
+            chatDetail.style.display = 'none';
+            emptyPanel.classList.remove('hidden');
+            emptyPanel.style.display = 'flex';
+            activeId = null;
+            if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+            renderSessions();
+        });
 
         function fmtRelative(iso) {
             const diff = Date.now() - new Date(iso).getTime();
@@ -313,10 +332,12 @@
                 </div>
             `).join('');
 
-            sessionsList.querySelectorAll('.session-item').forEach(el => {
-                el.addEventListener('click', () => openSession(parseInt(el.dataset.id)));
-            });
         }
+
+        sessionsList.addEventListener('click', (e) => {
+            const el = e.target.closest('.session-item');
+            if (el) openSession(parseInt(el.dataset.id, 10));
+        });
 
         // ── Load sessions ────────────────────────────────────────────
         async function loadSessions() {
@@ -331,9 +352,14 @@
         // ── Open session ─────────────────────────────────────────────
         async function openSession(id) {
             activeId = id;
+            lastMsgSig = '';
             renderSessions();
+            emptyPanel.classList.add('hidden');
             emptyPanel.style.display = 'none';
+            chatDetail.classList.add('active');
             chatDetail.style.display = 'flex';
+            chatLayout.classList.add('chat-open');
+            adminMessages.innerHTML = '<p style="padding:16px;opacity:.6;">Loading messages…</p>';
 
             const sess = sessions.find(s => s.id === id);
             if (sess) {
@@ -354,13 +380,24 @@
         async function loadMessages() {
             if (!activeId) return;
             try {
-                const r = await fetch(`/api/admin/chat/${activeId}`, { credentials: 'include' });
-                if (!r.ok) return;
+                const requestedId = activeId;
+                const r = await fetch(`/api/admin/chat/${requestedId}`, { credentials: 'include' });
+                if (requestedId !== activeId) return;
+                if (!r.ok) {
+                    adminMessages.innerHTML = '<p style="padding:16px;color:#ef4444;">Could not load this chat (error ' + r.status + ').</p>';
+                    return;
+                }
                 const data = await r.json();
+                const sig = data.messages.length + ':' + (data.messages.length ? data.messages[data.messages.length - 1].id : 0);
+                if (sig === lastMsgSig) return;
+                lastMsgSig = sig;
+                const nearBottom = adminMessages.scrollHeight - adminMessages.scrollTop - adminMessages.clientHeight < 80;
                 adminMessages.innerHTML = '';
                 data.messages.forEach(m => appendAdminMsg(m));
-                adminMessages.scrollTop = adminMessages.scrollHeight;
-            } catch (_) {}
+                if (nearBottom || data.messages.length) adminMessages.scrollTop = adminMessages.scrollHeight;
+            } catch (_) {
+                adminMessages.innerHTML = '<p style="padding:16px;color:#ef4444;">Network error loading chat.</p>';
+            }
         }
 
         function appendAdminMsg(m) {
@@ -387,6 +424,8 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ message: msg })
                 });
+                lastMsgSig = '';
+                await loadMessages();
                 await loadSessions();
             } catch (_) {}
 
@@ -439,8 +478,11 @@
             try {
                 await fetch(`/api/admin/chat/${activeId}`, { method: 'DELETE', credentials: 'include' });
                 activeId = null;
+                chatDetail.classList.remove('active');
                 chatDetail.style.display = 'none';
-                emptyPanel.style.display = '';
+                chatLayout.classList.remove('chat-open');
+                emptyPanel.classList.remove('hidden');
+                emptyPanel.style.display = 'flex';
                 if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
                 await loadSessions();
             } catch (_) {}

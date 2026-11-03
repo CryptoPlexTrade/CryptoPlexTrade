@@ -199,22 +199,34 @@
             const pager = new AdminPagination({
                 containerId: 'pagination-bar',
                 defaultPerPage: 10,
-                onPageChange: (page, perPage) => {
-                    renderOrders(pager.getSlice(filteredOrders));
-                }
+                onPageChange: (page, perPage) => loadOrders(page, perPage)
             });
+            let reqCounter = 0;
 
-            async function fetchOrders() {
+            function fetchOrders() { pager.goToPage(pager.currentPage); }
+
+            async function loadOrders(page, perPage) {
+                const myReq = ++reqCounter;
                 try {
                     tbody.innerHTML = '<tr><td colspan="8">Loading...</td></tr>';
-                    const response = await fetch('/api/admin/orders', { credentials: 'include' });
+                    const qs = new URLSearchParams({
+                        page, limit: perPage,
+                        type: document.getElementById('filter-type').value,
+                        status: document.getElementById('filter-status').value
+                    });
+                    const response = await fetch('/api/admin/orders?' + qs, { credentials: 'include' });
                     if (response.status === 401 || response.status === 403) {
                         window.location.href = '/admin-login';
                         return;
                     }
                     if (!response.ok) throw new Error('Failed to fetch orders');
-                    allOrders = await response.json();
-                    applyFilters();
+                    const data = await response.json();
+                    if (myReq !== reqCounter) return; // a newer request superseded this one
+                    allOrders = data.items;
+                    pager.setTotal(data.total);
+                    pager.currentPage = Math.min(data.page, pager.totalPages);
+                    pager._render();
+                    renderOrders(allOrders);
                 } catch (error) {
                     tbody.innerHTML = `<tr><td colspan="8" class="error-message">${error.message}</td></tr>`;
                 }
@@ -265,18 +277,6 @@
             }
 
             function applyFilters() {
-                const typeFilter = document.getElementById('filter-type').value;
-                const statusFilter = document.getElementById('filter-status').value;
-                filteredOrders = [...allOrders];
-
-                if (typeFilter !== 'all') {
-                    filteredOrders = filteredOrders.filter(order => order.order_type === typeFilter);
-                }
-                if (statusFilter !== 'all') {
-                    filteredOrders = filteredOrders.filter(order => order.status === statusFilter);
-                }
-
-                pager.setTotal(filteredOrders.length);
                 pager.goToPage(1);
             }
 

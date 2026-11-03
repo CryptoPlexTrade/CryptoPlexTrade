@@ -265,20 +265,28 @@
             const pager = new AdminPagination({
                 containerId: 'pagination-bar',
                 defaultPerPage: 10,
-                onPageChange: () => renderUsers(pager.getSlice(filteredUsers))
+                onPageChange: (page, perPage) => loadUsers(page, perPage)
             });
+            let reqCounter = 0;
 
-            async function fetchUsers() {
+            async function loadUsers(page, perPage) {
+                const myReq = ++reqCounter;
                 try {
                     tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:24px;">Loading user accounts...</td></tr>';
-                    const response = await fetch('/api/admin/users', { credentials: 'include' });
+                    const qs = new URLSearchParams({ page, limit: perPage, search: searchInput.value.trim(), kyc: kycFilter.value });
+                    const response = await fetch('/api/admin/users?' + qs, { credentials: 'include' });
                     if (response.status === 401 || response.status === 403) {
                         window.location.href = '/admin-login';
                         return;
                     }
                     if (!response.ok) throw new Error('Failed to fetch users');
-                    allUsers = await response.json();
-                    applyFilters();
+                    const data = await response.json();
+                    if (myReq !== reqCounter) return; // a newer request superseded this one
+                    allUsers = data.items;
+                    pager.setTotal(data.total);
+                    pager.currentPage = Math.min(data.page, pager.totalPages);
+                    pager._render();
+                    renderUsers(allUsers);
                 } catch (error) {
                     tbody.innerHTML = `<tr><td colspan="8" class="error-message" style="text-align:center;padding:24px;">${error.message}</td></tr>`;
                 }
@@ -335,21 +343,15 @@
             }
 
             function applyFilters() {
-                const searchTerm = searchInput.value.toLowerCase().trim();
-                const selectedKyc = kycFilter.value;
-
-                filteredUsers = allUsers.filter(user => {
-                    const matchesSearch = (user.fullname && user.fullname.toLowerCase().includes(searchTerm)) ||
-                                          (user.email && user.email.toLowerCase().includes(searchTerm)) ||
-                                          (user.phone && user.phone.includes(searchTerm));
-                    const userKyc = (user.kyc_status || 'unverified').toLowerCase();
-                    const matchesKyc = (selectedKyc === 'all') || (userKyc === selectedKyc);
-
-                    return matchesSearch && matchesKyc;
-                });
-
-                pager.setTotal(filteredUsers.length);
                 pager.goToPage(1);
+            }
+            function refreshCurrentPage() {
+                pager.goToPage(pager.currentPage);
+            }
+            let searchTimer = null;
+            function applyFiltersDebounced() {
+                clearTimeout(searchTimer);
+                searchTimer = setTimeout(applyFilters, 300);
             }
 
             function openKycModal(user) {
@@ -461,7 +463,7 @@
                     if (targetUser) {
                         targetUser.kyc_status = status;
                     }
-                    applyFilters();
+                    refreshCurrentPage();
                     kycModal.classList.remove('show');
                     showBanner(`KYC status for User #${userId} successfully set to "${status.toUpperCase()}".`, 'success');
                 } catch (err) {
@@ -536,10 +538,10 @@
                 if (e.target === lightboxModal) lightboxModal.classList.remove('show');
             });
 
-            searchInput.addEventListener('input', applyFilters);
+            searchInput.addEventListener('input', applyFiltersDebounced);
             kycFilter.addEventListener('change', applyFilters);
 
-            fetchUsers();
+            pager.goToPage(1);
         });
     </script>
 </body>

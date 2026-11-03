@@ -42,6 +42,21 @@ router.get('/stats', async (req, res) => {
 // === ORDER MANAGEMENT ===
 router.get('/orders', async (req, res) => {
     try {
+        // Server-side pagination: /orders?page=1&limit=10&type=buy&status=completed
+        if (req.query.page !== undefined) {
+            const page = Math.max(1, parseInt(req.query.page, 10) || 1);
+            const limit = Math.min(100, Math.max(1, parseInt(req.query.limit, 10) || 10));
+            const where = [];
+            const params = [];
+            if (req.query.type && req.query.type !== 'all') { where.push('o.order_type = ?'); params.push(req.query.type); }
+            if (req.query.status && req.query.status !== 'all') { where.push('o.status = ?'); params.push(req.query.status); }
+            const whereSql = where.length ? 'WHERE ' + where.join(' AND ') : '';
+            const [ [countRows], [items] ] = await Promise.all([
+                db.query(`SELECT COUNT(*) AS total FROM orders o ${whereSql}`, params),
+                db.query(`SELECT o.*, u.email FROM orders o JOIN users u ON o.user_id = u.id ${whereSql} ORDER BY o.created_at DESC LIMIT ? OFFSET ?`, [...params, limit, (page - 1) * limit])
+            ]);
+            return res.json({ items: items || [], total: parseInt(countRows[0]?.total || 0, 10), page, limit });
+        }
         const [orders] = await db.query('SELECT o.*, u.email FROM orders o JOIN users u ON o.user_id = u.id ORDER BY o.created_at DESC');
         res.json(orders);
     } catch (error) {
@@ -165,6 +180,34 @@ router.put('/rates', async (req, res) => {
 // === USER & KYC MANAGEMENT ===
 router.get('/users', async (req, res) => {
     try {
+        // Server-side pagination: /users?page=1&limit=10&search=...&kyc=approved
+        if (req.query.page !== undefined) {
+            const page = Math.max(1, parseInt(req.query.page, 10) || 1);
+            const limit = Math.min(100, Math.max(1, parseInt(req.query.limit, 10) || 10));
+            const where = [];
+            const params = [];
+            const search = String(req.query.search || '').trim().slice(0, 100);
+            if (search) {
+                const like = `%${search.replace(/[\\%_]/g, '\\$&')}%`;
+                where.push('(fullname ILIKE ? OR email ILIKE ? OR phone ILIKE ?)');
+                params.push(like, like, like);
+            }
+            const kyc = String(req.query.kyc || 'all').toLowerCase();
+            if (kyc !== 'all') { where.push("LOWER(COALESCE(kyc_status, 'unverified')) = ?"); params.push(kyc); }
+            const whereSql = where.length ? 'WHERE ' + where.join(' AND ') : '';
+            const [ [countRows], [items] ] = await Promise.all([
+                db.query(`SELECT COUNT(*) AS total FROM users ${whereSql}`, params),
+                db.query(`
+                    SELECT id, fullname, email, phone, role, kyc_status, id_type,
+                           (id_front IS NOT NULL AND id_front != '') AS has_front,
+                           (id_back IS NOT NULL AND id_back != '') AS has_back,
+                           (id_selfie IS NOT NULL AND id_selfie != '') AS has_selfie,
+                           kyc_exported_at, created_at
+                    FROM users ${whereSql}
+                    ORDER BY created_at DESC LIMIT ? OFFSET ?`, [...params, limit, (page - 1) * limit])
+            ]);
+            return res.json({ items: items || [], total: parseInt(countRows[0]?.total || 0, 10), page, limit });
+        }
         const [users] = await db.query(`
             SELECT id, fullname, email, phone, role, kyc_status, id_type,
                    (id_front IS NOT NULL AND id_front != '') AS has_front,

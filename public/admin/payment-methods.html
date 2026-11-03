@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/tokens.css">
 
-    <link rel="stylesheet" href="admin.css?v=4">
+    <link rel="stylesheet" href="admin.css?v=5">
 </head>
 <body>
     <!-- ================== MODERN TOPBAR & FLOATING PILL MENU ================== -->
@@ -170,8 +170,9 @@
                 </div>
             </div>
 
-            <div class="pm-actions">
-                <button class="btn-save" id="save-btn">Save All Payment Details</button>
+            <div class="save-row">
+                <button type="button" class="btn-save" id="save-btn">💾 Save All Payment Details</button>
+                <span class="save-msg" id="save-msg"></span>
             </div>
             <p class="last-updated" id="last-updated"></p>
         
@@ -314,7 +315,7 @@
                 saveMsg.className = 'save-msg error'; saveMsg.style.display = 'block';
             } finally {
                 saveBtn.disabled = false;
-                saveBtn.textContent = 'Save All Payment Details';
+                saveBtn.textContent = '💾 Save All Payment Details';
                 setTimeout(() => { saveMsg.style.display = 'none'; }, 5000);
             }
         });

@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/tokens.css">
 
-    <link rel="stylesheet" href="admin.css?v=4">
+    <link rel="stylesheet" href="admin.css?v=5">
     <style>
         .settings-card { max-width: 620px; }
         .settings-card h2 { font-size: 1.15rem; font-weight: 700; color: var(--text-primary); margin: 0 0 8px; display: flex; align-items: center; gap: 10px; }
@@ -40,13 +40,6 @@
         .pass-toggle svg { width: 20px; height: 20px; }
 
         .save-row { display: flex; align-items: center; gap: 16px; margin-top: 28px; }
-        .save-row .btn-save {
-            padding: 12px 28px; background: var(--primary-color); color: #fff; border: none;
-            border-radius: 9px; font-weight: 600; font-size: .92rem; cursor: pointer;
-            font-family: var(--font-sans); transition: background .2s, transform .15s;
-        }
-        .save-row .btn-save:hover { background: var(--primary-dark); transform: translateY(-1px); }
-        .save-row .btn-save:disabled { opacity: .55; cursor: not-allowed; transform: none; }
         .save-msg { font-size: .88rem; font-weight: 600; }
         .save-msg.success { color: #10b981; }
         .save-msg.error { color: #ef4444; }
