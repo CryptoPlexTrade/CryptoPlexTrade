@@ -32,9 +32,8 @@
         /* ── Left Hero Panel ── */
         .auth-left-pane {
             flex: 0 0 45%;
-            background: radial-gradient(circle at 0% 0%, #0c1f40 0%, #050d1e 60%, #040914 100%);
-            border-right: 1px solid rgba(0, 169, 224, 0.22);
-            border-right: 1px solid var(--border-light);
+            background: radial-gradient(circle at 0% 0%, #131b2e 0%, #0d121f 60%, #080b11 100%);
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
             padding: 48px 56px;
             display: flex;
             flex-direction: column;
@@ -181,7 +180,7 @@
             flex-direction: column;
             justify-content: space-between;
             padding: 40px 64px;
-            background: #040914;
+            background: #080b11;
             overflow-y: auto;
         }
 
@@ -311,10 +310,10 @@
         input[type="email"].auth-input,
         input[type="password"].auth-input {
             width: 100%;
-            padding: 11px 14px 11px 42px;
-            background: #0b1c38 !important;
-            border: 1px solid rgba(0, 169, 224, 0.28);
-            border-radius: var(--radius-sm);
+            padding: 12px 14px 12px 44px;
+            background: #0d121f !important;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 9999px;
             font-family: inherit;
             font-size: 0.9rem;
             color: #ffffff !important;
@@ -324,10 +323,10 @@
 
         .auth-input:focus,
         input.auth-input:focus {
-            background: #0f244a !important;
+            background: #111827 !important;
             color: #ffffff !important;
-            border-color: var(--primary-light);
-            box-shadow: 0 0 14px rgba(0, 169, 224, 0.35);
+            border-color: #ffffff;
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.18);
         }
 
         .auth-input.is-error,
@@ -413,23 +412,23 @@
 
         .auth-submit-btn {
             width: 100%;
-            padding: 13px;
-            background: var(--primary-color);
-            color: #ffffff;
+            padding: 14px;
+            background: #ffffff;
+            color: #080b11;
             border: none;
-            border-radius: var(--radius-sm);
+            border-radius: 9999px;
             font-family: inherit;
             font-size: 0.95rem;
             font-weight: 700;
             cursor: pointer;
             transition: all var(--duration-fast);
-            box-shadow: var(--shadow-sm);
+            box-shadow: 0 4px 16px rgba(255, 255, 255, 0.22);
             margin-top: 6px;
         }
 
         .auth-submit-btn:hover {
-            background: var(--primary-dark);
-            box-shadow: var(--shadow-md);
+            background: #f1f5f9;
+            box-shadow: 0 6px 22px rgba(255, 255, 255, 0.35);
             transform: translateY(-1px);
         }
 

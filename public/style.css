@@ -36,23 +36,23 @@ body {
     /* Ice Pale Blue */
     --primary-pale: #f0f7ff;
 
-    /* Deep Midnight Titanium Surfaces (Default Dark Mode) */
-    --dark-bg: #040914;
-    --dark-surface: #081326;
-    --dark-card: #0b1c38;
-    --bg-white: #081326;
-    --bg-light: #081326;
-    --bg: #040914;
-    --surface-subtle: #050c1b;
-    --surface-card: #081326;
-    --surface-input: #0b1c38;
+    /* Sovereign Obsidian & Slate Surfaces (Balanced with Crisp White) */
+    --dark-bg: #080b11;
+    --dark-surface: #0d121f;
+    --dark-card: #0f1628;
+    --bg-white: #0f1628;
+    --bg-light: #0d121f;
+    --bg: #080b11;
+    --surface-subtle: #0a0e19;
+    --surface-card: #0f1628;
+    --surface-input: #0b101c;
 
-    /* Precision Glass Borders */
+    /* Precision Subtle Platinum & White Borders */
     --border-light: rgba(255, 255, 255, 0.08);
-    --border: rgba(0, 169, 224, 0.20);
-    --border-medium: rgba(0, 169, 224, 0.32);
-    --border-mid: rgba(0, 169, 224, 0.32);
-    --border-glass: rgba(0, 169, 224, 0.22);
+    --border: rgba(255, 255, 255, 0.08);
+    --border-medium: rgba(255, 255, 255, 0.14);
+    --border-mid: rgba(255, 255, 255, 0.14);
+    --border-glass: rgba(255, 255, 255, 0.10);
 
     /* Luminous Typographic Hierarchy */
     --text-primary: #ffffff;

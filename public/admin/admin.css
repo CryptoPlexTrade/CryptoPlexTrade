@@ -4,60 +4,61 @@
    ========================================================================== */
 
 :root {
-    /* Brand & Accent Architecture */
-    --primary-color: #005baa;
-    --primary-dark: #00427a;
-    --primary-hover: #006ecf;
-    --secondary-color: #00a9e0;
+    /* Brand & Clean Tech Accents */
+    --primary-color: #3b82f6;        /* Electric Blue Accent */
+    --primary-dark: #2563eb;
+    --primary-hover: #60a5fa;
+    --secondary-color: #38bdf8;      /* Clean Cyan Accent */
     --accent-cyan: #38bdf8;
-    --bg-highlight: rgba(0, 169, 224, 0.12);
-    --bg-highlight-strong: rgba(0, 169, 224, 0.22);
+    --accent-white: #ffffff;
+    --bg-highlight: rgba(255, 255, 255, 0.06);
+    --bg-highlight-strong: rgba(255, 255, 255, 0.12);
     
-    /* Sovereign Dark Midnight Canvas Hierarchy */
-    --bg-canvas: #040914;      /* Deepest page background */
-    --bg-sidebar: #060e1f;     /* Lateral navigation plane */
-    --bg-card: #081427;        /* Cards, panels, modal dialogs */
-    --bg-surface: #0c1a32;     /* Secondary controls, table headers */
-    --bg-surface-hover: #102342;/* Active, focus, hover surfaces */
-    --bg-input: #09152a;       /* Form inputs, select fields */
-    --bg-white: #081427;       /* Alias for legacy card backgrounds */
-    --bg-light: #040914;       /* Alias for legacy page background */
+    /* Sovereign Obsidian & Slate Canvas Hierarchy (Balanced with White) */
+    --bg-canvas: #080b11;            /* Deep Obsidian Slate Canvas */
+    --bg-sidebar: #0d121e;           /* Secondary Surface */
+    --bg-card: #0f1626;              /* Elevated Glass Cards */
+    --bg-surface: #131c31;           /* Secondary Controls & Table Header */
+    --bg-surface-hover: #19243d;     /* Active/Hover Surface */
+    --bg-input: #0b101c;             /* Input Fields */
+    --bg-white: #0f1626;             /* Alias for card surfaces */
+    --bg-light: #080b11;             /* Alias for canvas */
     
-    /* Precision Tech Borders */
-    --border-light: rgba(0, 169, 224, 0.16);
-    --border-medium: rgba(0, 169, 224, 0.28);
-    --border-focus: #00a9e0;
-    --border-subtle: rgba(255, 255, 255, 0.08);
+    /* Precision Subtle Platinum & White Borders */
+    --border-light: rgba(255, 255, 255, 0.08);
+    --border-medium: rgba(255, 255, 255, 0.14);
+    --border-focus: #ffffff;
+    --border-subtle: rgba(255, 255, 255, 0.05);
     
     /* High-Legibility Typography */
-    --text-primary: #ffffff;
-    --text-body: #cbd5e1;
-    --text-secondary: #94a3b8;
+    --text-primary: #ffffff;         /* Pure Crisp White */
+    --text-body: #cbd5e1;            /* Light Silver Body */
+    --text-secondary: #94a3b8;       /* Subtle Gray Labels */
     --text-muted: #64748b;
-    --text-inverse: #040914;
+    --text-inverse: #080b11;
     
     /* Semantic Status Accents */
-    --status-green: #22c55e;
-    --status-green-bg: rgba(34, 197, 94, 0.14);
-    --status-green-border: rgba(34, 197, 94, 0.35);
+    --status-green: #10b981;
+    --status-green-bg: rgba(16, 185, 129, 0.12);
+    --status-green-border: rgba(16, 185, 129, 0.3);
     
     --status-amber: #f59e0b;
-    --status-amber-bg: rgba(245, 158, 11, 0.14);
-    --status-amber-border: rgba(245, 158, 11, 0.35);
+    --status-amber-bg: rgba(245, 158, 11, 0.12);
+    --status-amber-border: rgba(245, 158, 11, 0.3);
     
     --status-red: #ef4444;
-    --status-red-bg: rgba(239, 68, 68, 0.14);
-    --status-red-border: rgba(239, 68, 68, 0.35);
+    --status-red-bg: rgba(239, 68, 68, 0.12);
+    --status-red-border: rgba(239, 68, 68, 0.3);
     
-    --status-blue: #00a9e0;
-    --status-blue-bg: rgba(0, 169, 224, 0.14);
-    --status-blue-border: rgba(0, 169, 224, 0.35);
+    --status-blue: #38bdf8;
+    --status-blue-bg: rgba(56, 189, 248, 0.12);
+    --status-blue-border: rgba(56, 189, 248, 0.3);
 
     /* Elevation & Glows */
-    --shadow-subtle: 0 2px 8px rgba(0, 0, 0, 0.35);
-    --shadow-medium: 0 8px 24px rgba(0, 0, 0, 0.45);
-    --shadow-glow: 0 0 20px rgba(0, 169, 224, 0.22);
-    --shadow-blue: 0 4px 16px rgba(0, 91, 170, 0.35);
+    --shadow-subtle: 0 4px 12px rgba(0, 0, 0, 0.4);
+    --shadow-medium: 0 12px 36px rgba(0, 0, 0, 0.55);
+    --shadow-glow: 0 0 24px rgba(255, 255, 255, 0.08);
+    --shadow-blue: 0 4px 16px rgba(59, 130, 246, 0.3);
     
     /* Typography Stacks */
     --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -169,6 +170,252 @@ textarea:focus {
 input::placeholder,
 textarea::placeholder {
     color: var(--text-muted);
+}
+
+/* ==========================================================================
+   ADMIN TOPBAR & FLOATING PILL NAVIGATION (TOKENX / TOKENERA / CLOUDX STYLE)
+   ========================================================================== */
+
+.admin-topbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+    background: rgba(8, 11, 17, 0.92);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 10px 24px;
+}
+
+.admin-topbar-inner {
+    max-width: 1700px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.admin-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    flex-shrink: 0;
+}
+
+.admin-brand img {
+    height: 32px;
+    width: auto;
+    object-fit: contain;
+}
+
+.admin-brand-name {
+    font-size: 1.02rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+}
+.admin-brand-name span {
+    color: #94a3b8;
+    font-weight: 500;
+}
+
+.admin-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+/* Floating Center Pill Navigation with Circular Edges */
+.admin-pill-nav {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    background: rgba(15, 22, 38, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 9999px;
+    padding: 4px 6px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    overflow-x: auto;
+    scrollbar-width: none;
+    max-width: 1050px;
+}
+.admin-pill-nav::-webkit-scrollbar {
+    display: none;
+}
+
+.admin-pill-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 13px;
+    border-radius: 9999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #94a3b8;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.admin-pill-item svg {
+    width: 14px;
+    height: 14px;
+    opacity: 0.75;
+    flex-shrink: 0;
+}
+
+.admin-pill-item:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* Active State: Crisp Solid White Capsule with Dark Text (TokenX & Digifin style) */
+.admin-pill-item.active {
+    background: #ffffff !important;
+    color: #080b11 !important;
+    font-weight: 700 !important;
+    box-shadow: 0 3px 12px rgba(255, 255, 255, 0.25);
+}
+.admin-pill-item.active svg {
+    color: #080b11 !important;
+    opacity: 1 !important;
+}
+
+/* Right side actions */
+.admin-topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.admin-status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    border-radius: 9999px;
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.25);
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #10b981;
+    text-transform: uppercase;
+}
+
+.admin-status-pill .pulse-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #10b981;
+    box-shadow: 0 0 8px #10b981;
+}
+
+.admin-logout-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 16px;
+    border-radius: 9999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #f87171;
+    background: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.25);
+    text-decoration: none;
+    transition: all 0.2s;
+}
+.admin-logout-btn:hover {
+    background: #ef4444;
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35);
+}
+
+.admin-mobile-toggle {
+    display: none;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    padding: 8px;
+    cursor: pointer;
+    flex-direction: column;
+    gap: 4px;
+}
+.admin-mobile-toggle span {
+    display: block;
+    width: 18px;
+    height: 2px;
+    background: #ffffff;
+    border-radius: 2px;
+}
+
+/* Full Width Admin Container (replacing cramped sidebar layout) */
+.admin-container {
+    max-width: 1650px;
+    margin: 0 auto;
+    padding: 28px 24px 80px;
+    width: 100%;
+}
+
+/* Live Chat Empty Panel Fix */
+.empty-panel {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: 100% !important;
+    min-height: 380px !important;
+    padding: 40px 20px !important;
+    text-align: center !important;
+    color: var(--text-secondary) !important;
+}
+.empty-panel svg {
+    width: 44px !important;
+    height: 44px !important;
+    max-width: 44px !important;
+    max-height: 44px !important;
+    margin-bottom: 16px !important;
+    color: #64748b !important;
+    opacity: 0.7 !important;
+}
+.empty-panel p {
+    font-size: 0.95rem !important;
+    font-weight: 500 !important;
+    color: var(--text-secondary) !important;
+    margin: 0 !important;
+}
+
+/* Responsive Topbar Navigation */
+@media (max-width: 1200px) {
+    .admin-pill-nav {
+        max-width: 65vw;
+    }
+}
+
+@media (max-width: 900px) {
+    .admin-topbar-inner {
+        flex-wrap: wrap;
+    }
+    .admin-mobile-toggle {
+        display: flex;
+    }
+    .admin-pill-nav {
+        order: 3;
+        width: 100%;
+        max-width: 100%;
+        margin-top: 8px;
+    }
 }
 
 /* ==========================================================================

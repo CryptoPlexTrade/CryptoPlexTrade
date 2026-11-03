@@ -27,24 +27,24 @@
     --secondary-color:  var(--primary-light);
     --bg-highlight:     var(--primary-pale);
 
-    /* Deep Midnight Titanium Surfaces (Matching index.html) */
-    --dark-bg:          #040914;  /* Deep Midnight Space */
-    --dark-surface:     #081326;  /* Elevated Titanium Surface */
-    --dark-card:        #0b1c38;  /* Recessed Card / Container Ground */
-    --bg:               #040914;  /* Clean Deep Midnight Ground */
-    --bg-dark:          #040914;
-    --bg-light:         #081326;
-    --bg-white:         #081326;  /* Primary Card Canvas Surface */
-    --surface-subtle:   #050c1b;  /* Recessed Table Header & Troughs */
-    --surface-card:     #081326;
-    --surface-input:    #0b1c38;
+    /* Sovereign Obsidian & Slate Surfaces (Balanced with Crisp White) */
+    --dark-bg:          #080b11;  /* Deep Obsidian Slate Space */
+    --dark-surface:     #0d121f;  /* Elevated Obsidian Slate Surface */
+    --dark-card:        #0f1628;  /* Glass Card Ground */
+    --bg:               #080b11;  /* Clean Deep Ground */
+    --bg-dark:          #080b11;
+    --bg-light:         #0d121f;
+    --bg-white:         #0f1628;  /* Primary Card Canvas Surface */
+    --surface-subtle:   #0a0e19;  /* Recessed Table Header & Troughs */
+    --surface-card:     #0f1628;
+    --surface-input:    #0b101c;
     
-    /* Precision Glass Borders */
-    --border:           rgba(0, 169, 224, 0.20);  /* Hairline Cyan Border */
+    /* Precision Subtle Platinum & White Borders */
+    --border:           rgba(255, 255, 255, 0.08); /* Clean Subtle Divider */
     --border-light:     rgba(255, 255, 255, 0.08); /* Secondary Hairline Divider */
-    --border-mid:       rgba(0, 169, 224, 0.32);  /* Form Input & Container Boundary */
-    --border-medium:    rgba(0, 169, 224, 0.32);
-    --border-glass:     rgba(0, 169, 224, 0.22);
+    --border-mid:       rgba(255, 255, 255, 0.14); /* Form Input & Container Boundary */
+    --border-medium:    rgba(255, 255, 255, 0.14);
+    --border-glass:     rgba(255, 255, 255, 0.10);
 
     /* Luminous Typographic Hierarchy */
     --text-1:           #ffffff;  /* Pure Crisp White — Primary Titles & Financial Values */
@@ -1473,17 +1473,17 @@ input.is-error {
     color: var(--primary-color, #00a9e0);
 }
 
-/* Floating Rounded Rectangle Pill Menu */
+/* Floating Rounded Rectangle Pill Menu (TokenX / TokenEra Balanced Design) */
 .portal-pill-nav {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    background: rgba(8, 19, 38, 0.85);
-    border: 1px solid rgba(0, 169, 224, 0.28);
+    background: rgba(14, 19, 32, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 9999px;
     padding: 6px 10px;
     backdrop-filter: blur(16px);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(0, 169, 224, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
 }
 
 .portal-pill-item {
@@ -1496,7 +1496,7 @@ input.is-error {
     color: #94a3b8;
     font-size: 0.88rem;
     font-weight: 600;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     white-space: nowrap;
 }
 
@@ -1508,20 +1508,21 @@ input.is-error {
 }
 
 .portal-pill-item:hover {
-    color: #38bdf8;
-    background: rgba(0, 169, 224, 0.12);
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.08);
     transform: translateY(-1px);
 }
 
+/* Crisp Solid White Capsule with Dark Text (TokenX style) */
 .portal-pill-item.active {
-    background: linear-gradient(135deg, #005baa, #00a9e0);
-    color: #ffffff;
+    background: #ffffff !important;
+    color: #080b11 !important;
     font-weight: 700;
-    box-shadow: 0 4px 16px rgba(0, 91, 170, 0.4);
+    box-shadow: 0 4px 16px rgba(255, 255, 255, 0.25);
 }
 
 .portal-pill-item.active svg {
-    color: #ffffff;
+    color: #080b11 !important;
 }
 
 /* Right side actions */
