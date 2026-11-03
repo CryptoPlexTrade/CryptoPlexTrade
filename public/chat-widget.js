@@ -387,21 +387,21 @@
     let isFetching = false;
     const displayedMessageIds = new Set();
 
-    const badge        = document.getElementById('cpt-chat-badge');
-    const namePrompt   = document.getElementById('cpt-name-prompt');
-    const nameInput    = document.getElementById('cpt-name-input');
-    const startBtn     = document.getElementById('cpt-start-chat');
-    const messagesEl   = document.getElementById('cpt-chat-messages');
+    const badge = document.getElementById('cpt-chat-badge');
+    const namePrompt = document.getElementById('cpt-name-prompt');
+    const nameInput = document.getElementById('cpt-name-input');
+    const startBtn = document.getElementById('cpt-start-chat');
+    const messagesEl = document.getElementById('cpt-chat-messages');
     const closedBanner = document.getElementById('cpt-chat-closed-banner');
-    const inputEl      = document.getElementById('cpt-chat-input');
-    const sendBtn      = document.getElementById('cpt-chat-send');
-    const minimizeBtn  = document.getElementById('cpt-minimize-btn');
-    const endChatBtn   = document.getElementById('cpt-endchat-btn');
-    const agentHdrBtn  = document.getElementById('cpt-agent-header-btn');
-    const quickChips   = document.getElementById('cpt-quick-chips');
-    const custConfirm  = document.getElementById('cpt-cust-confirm');
-    const confNoBtn    = document.getElementById('cpt-conf-no');
-    const confYesBtn   = document.getElementById('cpt-conf-yes');
+    const inputEl = document.getElementById('cpt-chat-input');
+    const sendBtn = document.getElementById('cpt-chat-send');
+    const minimizeBtn = document.getElementById('cpt-minimize-btn');
+    const endChatBtn = document.getElementById('cpt-endchat-btn');
+    const agentHdrBtn = document.getElementById('cpt-agent-header-btn');
+    const quickChips = document.getElementById('cpt-quick-chips');
+    const custConfirm = document.getElementById('cpt-cust-confirm');
+    const confNoBtn = document.getElementById('cpt-conf-no');
+    const confYesBtn = document.getElementById('cpt-conf-yes');
 
     // ── AI Knowledge Base for Instant Customer Support ───────────────
     const KNOWLEDGE_BASE = [
@@ -535,253 +535,253 @@
                 // Keep its position in the thread (so it doesn't jump below the bot reply)
                 const temps = messagesEl.querySelectorAll('[data-temp-id]');
                 for (const t of temps) {
-                    const body = t.firstChild ? t.firstChild.textContent : '';
-                    if (body === msg.message || body.trim() === String(msg.message).trim()) {
-                        t.removeAttribute('data-temp-id');
-                        t.setAttribute('data-id', msg.id);
-                        return;
+                        const body = t.firstChild ? t.firstChild.textContent : '';
+                        if (body === msg.message || body.trim() === String(msg.message).trim()) {
+                            t.removeAttribute('data-temp-id');
+                            t.setAttribute('data-id', msg.id);
+                            return;
+                        }
                     }
                 }
             }
+
+            const div = document.createElement('div');
+            div.className = 'chat-msg ' + msg.sender;
+            if (msg.tempId) div.setAttribute('data-temp-id', msg.tempId);
+
+            div.innerHTML = `${msg.message}<div class="chat-msg-time">${fmtTime(msg.created_at)}</div>`;
+            messagesEl.appendChild(div);
+            if (scroll) messagesEl.scrollTop = messagesEl.scrollHeight;
         }
 
-        const div = document.createElement('div');
-        div.className = 'chat-msg ' + msg.sender;
-        if (msg.tempId) div.setAttribute('data-temp-id', msg.tempId);
-        
-        div.innerHTML = `${msg.message}<div class="chat-msg-time">${fmtTime(msg.created_at)}</div>`;
-        messagesEl.appendChild(div);
-        if (scroll) messagesEl.scrollTop = messagesEl.scrollHeight;
-    }
-
-    function updateBadge() {
-        if (unreadCount > 0 && !isOpen) {
-            badge.textContent = unreadCount > 9 ? '9+' : unreadCount;
-            badge.classList.add('show');
-        } else {
-            badge.classList.remove('show');
+        function updateBadge() {
+            if (unreadCount > 0 && !isOpen) {
+                badge.textContent = unreadCount > 9 ? '9+' : unreadCount;
+                badge.classList.add('show');
+            } else {
+                badge.classList.remove('show');
+            }
         }
-    }
 
-    function resetChat() {
-        if (pollInterval) {
-            clearInterval(pollInterval);
-            pollInterval = null;
-        }
-        sessionId = null;
-        lastMsgTime = '1970-01-01';
-        isFetching = false;
-        unreadCount = 0;
-        displayedMessageIds.clear();
-        localStorage.removeItem('cpt_chat_session_id');
-        localStorage.removeItem('cpt_chat_last_time');
-        localStorage.removeItem('cpt_chat_session'); // Clear session key so a fresh one is generated
-        
-        // Reset UI
-        messagesEl.innerHTML = '';
-        closedBanner.style.display = 'none';
-        inputEl.disabled = false;
-        sendBtn.disabled = false;
-        agentRequested = false;
-        if (agentHdrBtn) {
-            agentHdrBtn.classList.remove('alerted');
-            agentHdrBtn.innerHTML = `
+        function resetChat() {
+            if (pollInterval) {
+                clearInterval(pollInterval);
+                pollInterval = null;
+            }
+            sessionId = null;
+            lastMsgTime = '1970-01-01';
+            isFetching = false;
+            unreadCount = 0;
+            displayedMessageIds.clear();
+            localStorage.removeItem('cpt_chat_session_id');
+            localStorage.removeItem('cpt_chat_last_time');
+            localStorage.removeItem('cpt_chat_session'); // Clear session key so a fresh one is generated
+
+            // Reset UI
+            messagesEl.innerHTML = '';
+            closedBanner.style.display = 'none';
+            inputEl.disabled = false;
+            sendBtn.disabled = false;
+            agentRequested = false;
+            if (agentHdrBtn) {
+                agentHdrBtn.classList.remove('alerted');
+                agentHdrBtn.innerHTML = `
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width:14px;height:14px;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                 <span>Talk to Agent</span>
             `;
-        }
-        updateBadge();
-        
-        if (isOpen) {
-            namePrompt.style.display = 'flex';
-        }
-    }
-
-    // ── Poll for new messages ──────────────────────────────────────────
-    async function pollMessages() {
-        if (!sessionId || isFetching) return;
-        isFetching = true;
-        try {
-            const r = await fetch(`/api/chat/${sessionId}?since=${encodeURIComponent(lastMsgTime)}`);
-            if (!r.ok) { isFetching = false; return; }
-            const data = await r.json();
-
-            if (data.status === 'closed') {
-                resetChat();
-                return;
             }
+            updateBadge();
 
-            data.messages.forEach(m => {
-                // Only count genuinely new messages toward unread badge
-                const isNew = !m.id || !displayedMessageIds.has(m.id);
-                appendMsg(m);
-                lastMsgTime = m.created_at;
-                if (isNew && m.sender === 'admin' && !isOpen) {
-                    unreadCount++;
-                }
-            });
-
-            if (data.messages.length) {
-                localStorage.setItem('cpt_chat_last_time', lastMsgTime);
-                updateBadge();
+            if (isOpen) {
+                namePrompt.style.display = 'flex';
             }
-        } catch (_) {
-        } finally {
-            isFetching = false;
         }
-    }
 
-    // ── Open / close ───────────────────────────────────────────────────
-    function openChat() {
-        isOpen = true;
-        win.classList.add('open');
-        bubble.classList.add('open');
-        unreadCount = 0;
-        updateBadge();
-        messagesEl.scrollTop = messagesEl.scrollHeight;
+        // ── Poll for new messages ──────────────────────────────────────────
+        async function pollMessages() {
+            if (!sessionId || isFetching) return;
+            isFetching = true;
+            try {
+                const r = await fetch(`/api/chat/${sessionId}?since=${encodeURIComponent(lastMsgTime)}`);
+                if (!r.ok) { isFetching = false; return; }
+                const data = await r.json();
 
-        // Show name prompt only if no session
-        if (!sessionId) {
-            namePrompt.style.display = 'flex';
-        } else {
-            namePrompt.style.display = 'none';
-        }
-    }
-
-    function closeChat() {
-        isOpen = false;
-        win.classList.remove('open');
-        bubble.classList.remove('open');
-    }
-
-    bubble.addEventListener('click', () => isOpen ? closeChat() : openChat());
-
-    // ── Minimize button ───────────────────────────────────────────────
-    minimizeBtn.addEventListener('click', closeChat);
-
-    // ── End chat button (customer) ────────────────────────────────────
-    endChatBtn.addEventListener('click', () => {
-        if (!sessionId) return;
-        custConfirm.classList.add('show');
-    });
-
-    confNoBtn.addEventListener('click', () => {
-        custConfirm.classList.remove('show');
-    });
-
-    confYesBtn.addEventListener('click', async () => {
-        custConfirm.classList.remove('show');
-        if (!sessionId) return;
-        try {
-            await fetch(`/api/chat/${sessionId}/close`, { method: 'PUT' });
-        } catch (_) {}
-        resetChat();
-    });
-
-    // ── Start session ──────────────────────────────────────────────────
-    async function startSession(name) {
-        const key = getSessionKey();
-        try {
-            const r = await fetch('/api/chat/session', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ sessionKey: key, guestName: name })
-            });
-            const data = await r.json();
-            sessionId = data.sessionId;
-            localStorage.setItem('cpt_chat_session_id', sessionId);
-            namePrompt.style.display = 'none';
-
-            // Load initial greeting
-            await pollMessages();
-            startPolling();
-        } catch (_) {}
-    }
-
-    startBtn.addEventListener('click', () => {
-        const name = nameInput.value.trim() || 'Guest';
-        startSession(name);
-    });
-    nameInput.addEventListener('keydown', e => {
-        if (e.key === 'Enter') { e.preventDefault(); startBtn.click(); }
-    });
-
-    // ── Send message ───────────────────────────────────────────────────
-    async function sendMessage() {
-        const msg = inputEl.value.trim();
-        if (!msg || !sessionId) return;
-        inputEl.value = '';
-        inputEl.style.height = 'auto';
-        sendBtn.disabled = true;
-
-        const tempId = 'temp_' + Date.now();
-        // Optimistic render
-        appendMsg({ sender: 'customer', message: msg, created_at: new Date().toISOString(), tempId });
-
-        // Trigger AI Assistant check or live agent dispatch
-        checkAiKnowledge(msg);
-
-        try {
-            const r = await fetch(`/api/chat/${sessionId}/send`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: msg })
-            });
-            
-            // Session was closed by admin — reset to fresh chat
-            if (r.status === 400) {
-                resetChat();
-                return;
-            }
-        } catch (_) {}
-
-        sendBtn.disabled = false;
-        inputEl.focus();
-    }
-
-    sendBtn.addEventListener('click', sendMessage);
-    inputEl.addEventListener('keydown', e => {
-        if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
-    });
-
-    // Auto-resize textarea
-    inputEl.addEventListener('input', () => {
-        inputEl.style.height = 'auto';
-        inputEl.style.height = Math.min(inputEl.scrollHeight, 100) + 'px';
-    });
-
-    // ── Polling ────────────────────────────────────────────────────────
-    function startPolling() {
-        if (pollInterval) return;
-        pollInterval = setInterval(pollMessages, 4000);
-    }
-
-    // Resume if session already exists
-    if (sessionId) {
-        namePrompt.style.display = 'none';
-        isFetching = true; // Use the same lock
-        // Load history on first open
-        fetch(`/api/chat/${sessionId}`)
-            .then(r => r.json())
-            .then(data => {
                 if (data.status === 'closed') {
                     resetChat();
                     return;
                 }
-                data.messages?.forEach(m => {
-                    appendMsg(m, false);
-                    lastMsgTime = m.created_at;
-                });
-                messagesEl.scrollTop = messagesEl.scrollHeight;
-                localStorage.setItem('cpt_chat_last_time', lastMsgTime);
-                isFetching = false;
-                startPolling();
-            }).catch(() => {
-                isFetching = false;
-            });
-    }
 
-    document.addEventListener('visibilitychange', () => {
-        if (!document.hidden && sessionId) startPolling();
-    });
-})();
+                data.messages.forEach(m => {
+                    // Only count genuinely new messages toward unread badge
+                    const isNew = !m.id || !displayedMessageIds.has(m.id);
+                    appendMsg(m);
+                    lastMsgTime = m.created_at;
+                    if (isNew && m.sender === 'admin' && !isOpen) {
+                        unreadCount++;
+                    }
+                });
+
+                if (data.messages.length) {
+                    localStorage.setItem('cpt_chat_last_time', lastMsgTime);
+                    updateBadge();
+                }
+            } catch (_) {
+            } finally {
+                isFetching = false;
+            }
+        }
+
+        // ── Open / close ───────────────────────────────────────────────────
+        function openChat() {
+            isOpen = true;
+            win.classList.add('open');
+            bubble.classList.add('open');
+            unreadCount = 0;
+            updateBadge();
+            messagesEl.scrollTop = messagesEl.scrollHeight;
+
+            // Show name prompt only if no session
+            if (!sessionId) {
+                namePrompt.style.display = 'flex';
+            } else {
+                namePrompt.style.display = 'none';
+            }
+        }
+
+        function closeChat() {
+            isOpen = false;
+            win.classList.remove('open');
+            bubble.classList.remove('open');
+        }
+
+        bubble.addEventListener('click', () => isOpen ? closeChat() : openChat());
+
+        // ── Minimize button ───────────────────────────────────────────────
+        minimizeBtn.addEventListener('click', closeChat);
+
+        // ── End chat button (customer) ────────────────────────────────────
+        endChatBtn.addEventListener('click', () => {
+            if (!sessionId) return;
+            custConfirm.classList.add('show');
+        });
+
+        confNoBtn.addEventListener('click', () => {
+            custConfirm.classList.remove('show');
+        });
+
+        confYesBtn.addEventListener('click', async () => {
+            custConfirm.classList.remove('show');
+            if (!sessionId) return;
+            try {
+                await fetch(`/api/chat/${sessionId}/close`, { method: 'PUT' });
+            } catch (_) { }
+            resetChat();
+        });
+
+        // ── Start session ──────────────────────────────────────────────────
+        async function startSession(name) {
+            const key = getSessionKey();
+            try {
+                const r = await fetch('/api/chat/session', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sessionKey: key, guestName: name })
+                });
+                const data = await r.json();
+                sessionId = data.sessionId;
+                localStorage.setItem('cpt_chat_session_id', sessionId);
+                namePrompt.style.display = 'none';
+
+                // Load initial greeting
+                await pollMessages();
+                startPolling();
+            } catch (_) { }
+        }
+
+        startBtn.addEventListener('click', () => {
+            const name = nameInput.value.trim() || 'Guest';
+            startSession(name);
+        });
+        nameInput.addEventListener('keydown', e => {
+            if (e.key === 'Enter') { e.preventDefault(); startBtn.click(); }
+        });
+
+        // ── Send message ───────────────────────────────────────────────────
+        async function sendMessage() {
+            const msg = inputEl.value.trim();
+            if (!msg || !sessionId) return;
+            inputEl.value = '';
+            inputEl.style.height = 'auto';
+            sendBtn.disabled = true;
+
+            const tempId = 'temp_' + Date.now();
+            // Optimistic render
+            appendMsg({ sender: 'customer', message: msg, created_at: new Date().toISOString(), tempId });
+
+            // Trigger AI Assistant check or live agent dispatch
+            checkAiKnowledge(msg);
+
+            try {
+                const r = await fetch(`/api/chat/${sessionId}/send`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: msg })
+                });
+
+                // Session was closed by admin — reset to fresh chat
+                if (r.status === 400) {
+                    resetChat();
+                    return;
+                }
+            } catch (_) { }
+
+            sendBtn.disabled = false;
+            inputEl.focus();
+        }
+
+        sendBtn.addEventListener('click', sendMessage);
+        inputEl.addEventListener('keydown', e => {
+            if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+        });
+
+        // Auto-resize textarea
+        inputEl.addEventListener('input', () => {
+            inputEl.style.height = 'auto';
+            inputEl.style.height = Math.min(inputEl.scrollHeight, 100) + 'px';
+        });
+
+        // ── Polling ────────────────────────────────────────────────────────
+        function startPolling() {
+            if (pollInterval) return;
+            pollInterval = setInterval(pollMessages, 4000);
+        }
+
+        // Resume if session already exists
+        if (sessionId) {
+            namePrompt.style.display = 'none';
+            isFetching = true; // Use the same lock
+            // Load history on first open
+            fetch(`/api/chat/${sessionId}`)
+                .then(r => r.json())
+                .then(data => {
+                    if (data.status === 'closed') {
+                        resetChat();
+                        return;
+                    }
+                    data.messages?.forEach(m => {
+                        appendMsg(m, false);
+                        lastMsgTime = m.created_at;
+                    });
+                    messagesEl.scrollTop = messagesEl.scrollHeight;
+                    localStorage.setItem('cpt_chat_last_time', lastMsgTime);
+                    isFetching = false;
+                    startPolling();
+                }).catch(() => {
+                    isFetching = false;
+                });
+        }
+
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden && sessionId) startPolling();
+        });
+    }) ();
