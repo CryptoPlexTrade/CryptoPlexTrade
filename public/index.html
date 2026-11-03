@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="css/app.css">
     <link rel="stylesheet" href="css/responsive.css">
+    <script src="theme.js"></script>
 
     <style>
         /* ============================================================
@@ -22,6 +23,81 @@
            Palette: #040914 (Dark Void), #005baa (Royal Cobalt), 
                     #004a8a (Deep Navy), #00a9e0 (Electric Cyan), #f0f7ff (Ice)
            ============================================================ */
+
+        [data-theme="light"] {
+            --dark-bg: #f8fafc;
+            --dark-surface: #ffffff;
+            --dark-card: #ffffff;
+            --dark-card-hover: #f1f5f9;
+            --cyber-border: rgba(0, 91, 170, 0.16);
+            --cyber-border-bright: rgba(0, 91, 170, 0.35);
+        }
+
+        [data-theme="light"] body {
+            background-color: #f8fafc !important;
+            color: #334155 !important;
+        }
+
+        [data-theme="light"] .cyber-hero {
+            background: radial-gradient(circle at 50% 0%, #e0f2fe 0%, #f0f7ff 50%, #f8fafc 100%) !important;
+        }
+
+        [data-theme="light"] .cyber-hero-title,
+        [data-theme="light"] .section-title,
+        [data-theme="light"] .stat-val,
+        [data-theme="light"] .advantage-card h3,
+        [data-theme="light"] .timeline-step-content h3 {
+            color: #0f172a !important;
+        }
+
+        [data-theme="light"] .cyber-hero-desc,
+        [data-theme="light"] .section-sub,
+        [data-theme="light"] .stat-lbl,
+        [data-theme="light"] .advantage-card p,
+        [data-theme="light"] .timeline-step-content p {
+            color: #475569 !important;
+        }
+
+        [data-theme="light"] .stat-tile,
+        [data-theme="light"] .advantage-card,
+        [data-theme="light"] .timeline-step-card,
+        [data-theme="light"] .instant-swap-card,
+        [data-theme="light"] .live-orders-card,
+        [data-theme="light"] .rates-table-wrap,
+        [data-theme="light"] .terminal-panel {
+            background: #ffffff !important;
+            border-color: rgba(0, 91, 170, 0.14) !important;
+            box-shadow: 0 4px 20px rgba(0, 91, 170, 0.06) !important;
+        }
+
+        [data-theme="light"] .live-rates-table th {
+            background: #f1f5f9 !important;
+            color: #0f172a !important;
+        }
+
+        [data-theme="light"] .live-rates-table tr:hover {
+            background: #f8fafc !important;
+        }
+
+        [data-theme="light"] header.header {
+            background: rgba(255, 255, 255, 0.94) !important;
+            border-bottom: 1px solid rgba(0, 91, 170, 0.14) !important;
+        }
+
+        [data-theme="light"] nav.nav a {
+            color: #475569 !important;
+        }
+
+        [data-theme="light"] nav.nav a:hover,
+        [data-theme="light"] nav.nav a.active {
+            color: #005baa !important;
+        }
+
+        [data-theme="light"] .nav-btn-login {
+            color: #005baa !important;
+            border-color: rgba(0, 91, 170, 0.25) !important;
+            background: rgba(0, 91, 170, 0.06) !important;
+        }
 
         :root {
             --dark-bg: #040914;

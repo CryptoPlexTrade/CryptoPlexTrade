@@ -4,6 +4,17 @@
    Preserved Brand Palette: #005baa, #004a8a, #00a9e0, #f0f7ff
    ============================================================ */
 
+/* --- Universal Box-Sizing & Viewport Containment --- */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+html, body {
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
+}
+
 /* --- Master Typography Imports --- */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Poppins:wght@400;500;600;700&display=swap');
 
@@ -18,7 +29,7 @@
     --bg-highlight:     #f0f7ff;  /* Ice Pale Blue */
     --primary-pale:     #f0f7ff;
 
-    /* Deep Midnight Titanium Surfaces (Matching index.html) */
+    /* Deep Midnight Titanium Surfaces (Default Dark Mode) */
     --dark-bg:          #040914;
     --dark-surface:     #081326;
     --dark-card:        #0b1c38;
@@ -64,6 +75,103 @@
     /* Typography Stacks */
     --font-sans:        'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, 'Poppins', sans-serif;
     --font-mono:        'JetBrains Mono', SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+/* --- Light Mode Design Tokens (UI/UX Pro Max) --- */
+[data-theme="light"] {
+    --bg-highlight:     #f0f7ff;
+    --primary-pale:     #e0f0ff;
+
+    --dark-bg:          #f8fafc;
+    --dark-surface:     #ffffff;
+    --dark-card:        #ffffff;
+    --bg-white:         #ffffff;
+    --bg-light:         #f1f5f9;
+    --bg:               #f8fafc;
+    --surface-subtle:   #f1f5f9;
+    --surface-card:     #ffffff;
+    --surface-input:    #ffffff;
+
+    --border-light:     rgba(0, 91, 170, 0.12);
+    --border:           rgba(0, 91, 170, 0.18);
+    --border-medium:    rgba(0, 91, 170, 0.28);
+    --border-mid:       rgba(0, 91, 170, 0.22);
+    --border-glass:     rgba(0, 91, 170, 0.16);
+
+    --text-primary:     #0f172a;
+    --text-1:           #0f172a;
+    --text-body:        #334155;
+    --text-2:           #334155;
+    --text-secondary:   #64748b;
+    --text-3:           #64748b;
+    --text-muted:       #94a3b8;
+
+    --shadow-subtle:    rgba(0, 91, 170, 0.04);
+    --shadow-medium:    rgba(0, 91, 170, 0.08);
+    --shadow-blue:      rgba(0, 91, 170, 0.15);
+    --shadow-sm:        0 1px 3px 0 rgba(0, 91, 170, 0.06), 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+    --shadow-md:        0 4px 16px -2px rgba(0, 91, 170, 0.08), 0 2px 6px -1px rgba(0, 0, 0, 0.04);
+    --shadow-lg:        0 12px 32px -4px rgba(0, 91, 170, 0.12), 0 4px 12px -2px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .header {
+    background: rgba(255, 255, 255, 0.94) !important;
+    border-bottom: 1px solid rgba(0, 91, 170, 0.14) !important;
+}
+
+[data-theme="light"] .animated-background {
+    background: #f8fafc !important;
+    background-image: radial-gradient(circle at 50% 0%, #e0f2fe 0%, #f0f7ff 60%, #f8fafc 100%) !important;
+}
+
+[data-theme="light"] .legal-page-header {
+    background: radial-gradient(circle at 50% 0%, #e0f2fe 0%, #f0f7ff 60%, #f8fafc 100%) !important;
+    border-bottom: 1px solid rgba(0, 91, 170, 0.14) !important;
+}
+
+[data-theme="light"] .legal-toc,
+[data-theme="light"] .legal-content-card {
+    background: #ffffff !important;
+    border-color: rgba(0, 91, 170, 0.14) !important;
+    box-shadow: 0 4px 20px rgba(0, 91, 170, 0.06) !important;
+}
+
+[data-theme="light"] .footer {
+    background: #061124;
+    color: #94a3b8;
+}
+
+[data-theme="light"] .ticker-tape {
+    background-color: #0b1c38;
+}
+
+[data-theme="light"] .auth-input,
+[data-theme="light"] input.auth-input {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    border-color: rgba(0, 91, 170, 0.25) !important;
+}
+
+[data-theme="light"] .auth-input:focus,
+[data-theme="light"] input.auth-input:focus {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    border-color: #005baa !important;
+    box-shadow: 0 0 0 3px rgba(0, 91, 170, 0.15) !important;
+}
+
+[data-theme="light"] .auth-input:-webkit-autofill,
+[data-theme="light"] input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+    box-shadow: 0 0 0 1000px #ffffff inset !important;
+    -webkit-text-fill-color: #0f172a !important;
+    caret-color: #0f172a !important;
+}
+
+[data-theme="light"] .theme-toggle-btn {
+    background: rgba(0, 91, 170, 0.08) !important;
+    color: #005baa !important;
+    border-color: rgba(0, 91, 170, 0.2) !important;
 }
 
 /* --- Base Body & Typography --- */
@@ -213,12 +321,16 @@ img.logo, img.brand-logo {
 
 /* --- Footer --- */
 .footer {
-    padding: 36px 0 24px;
+    padding: 36px 0 calc(60px + env(safe-area-inset-bottom));
     font-size: 0.88rem;
     margin-top: auto;
     background: #02050b;
     border-top: 1px solid rgba(0, 169, 224, 0.22);
     color: #94a3b8;
+    width: 100%;
+    max-width: 100vw;
+    overflow: hidden;
+    box-sizing: border-box;
 }
 
 .footer-cols-grid, .footer-grid {
@@ -226,11 +338,15 @@ img.logo, img.brand-logo {
     grid-template-columns: 1.5fr 1fr 1fr 1fr;
     gap: 36px;
     margin-bottom: 28px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .footer-col, .footer-column {
     display: flex;
     flex-direction: column;
+    min-width: 0;
+    word-break: break-word;
 }
 
 .footer-col h4, .footer-column h4 {
@@ -268,20 +384,54 @@ img.logo, img.brand-logo {
     text-align: center;
     font-size: 0.82rem;
     color: #64748b;
+    width: 100%;
 }
 
 @media (max-width: 960px) {
     .footer-cols-grid, .footer-grid {
-        grid-template-columns: 1fr 1fr;
-        gap: 24px;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 28px !important;
     }
 }
 
-@media (max-width: 600px) {
-    .footer-cols-grid, .footer-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
+@media (max-width: 640px) {
+    .footer {
+        padding: 28px 0 calc(68px + env(safe-area-inset-bottom)) !important;
     }
+    .footer-cols-grid, .footer-grid {
+        grid-template-columns: 1fr !important;
+        gap: 22px !important;
+        text-align: left !important;
+    }
+    .footer-col p {
+        max-width: 100% !important;
+    }
+}
+
+/* --- Theme Toggle Switch Icon --- */
+.theme-toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: rgba(0, 169, 224, 0.12);
+    border: 1px solid rgba(0, 169, 224, 0.25);
+    color: #00a9e0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 0;
+    margin-left: 10px;
+    flex-shrink: 0;
+}
+.theme-toggle-btn:hover {
+    background: rgba(0, 169, 224, 0.22);
+    transform: rotate(15deg);
+}
+.theme-toggle-btn svg {
+    width: 18px;
+    height: 18px;
 }
 
 /* --- Ticker Tape --- */

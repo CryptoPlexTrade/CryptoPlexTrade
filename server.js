@@ -218,6 +218,14 @@ if (require.main === module) {
     app.listen(PORT, () => {
         logger.info(`Server is running on http://localhost:${PORT}`);
         logger.info(`Admin portal is available at http://localhost:${PORT}/admin-login`);
+        
+        // Initialize weekly automated KYC document export routine
+        try {
+            const { initKycWeeklyScheduler } = require('./kycExporter');
+            initKycWeeklyScheduler();
+        } catch (e) {
+            logger.error('Failed to initialize KYC weekly scheduler:', e);
+        }
     });
 }
 

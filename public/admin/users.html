@@ -4,11 +4,61 @@
     <meta charset="UTF-8">
     <link rel="icon" type="image/png" href="../css/logo.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Users - Admin</title>
-        <link rel=preconnect href="https://fonts.googleapis.com">
+    <title>Manage Users & KYC - Admin Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="admin.css">
+    <script src="../theme.js"></script>
+    <style>
+        .kyc-doc-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-light);
+            border-radius: 10px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            transition: all 0.2s ease;
+        }
+        .kyc-doc-card:hover {
+            border-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        .kyc-doc-preview {
+            width: 100%;
+            height: 190px;
+            object-fit: cover;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 1px solid var(--border-medium);
+            background: #000;
+            transition: opacity 0.2s ease;
+        }
+        .kyc-doc-preview:hover {
+            opacity: 0.9;
+        }
+        .status-badge.status-approved {
+            background: rgba(16, 185, 129, 0.15);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        .status-badge.status-pending {
+            background: rgba(245, 158, 11, 0.15);
+            color: #f59e0b;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+        .status-badge.status-rejected {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+        .status-badge.status-unverified {
+            background: rgba(148, 163, 184, 0.15);
+            color: #94a3b8;
+            border: 1px solid rgba(148, 163, 184, 0.3);
+        }
+    </style>
 </head>
 <body>
     <!-- Mobile Hamburger Button -->
@@ -52,16 +102,35 @@
             </div>
         </aside>
         <main class="admin-content">
-            <div class="admin-header">
-                <h1>Manage Users</h1>
-                <p>View and manage all registered users.</p>
+            <div class="admin-header" style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px;">
+                <div>
+                    <h1>Manage Users & KYC</h1>
+                    <p>Review customer accounts, verify identity documents, and export compliance packages.</p>
+                </div>
+                <div id="export-status-banner" style="display: none; padding: 8px 16px; border-radius: 8px; font-size: 0.85rem; font-weight: 500;"></div>
             </div>
 
-            <div class="filter-controls">
-                <div class="filter-group" style="flex-grow: 1;">
+            <div class="filter-controls" style="display: flex; gap: 16px; align-items: flex-end; flex-wrap: wrap;">
+                <div class="filter-group" style="flex-grow: 1; min-width: 240px;">
                     <label for="search-user">Search by Name or Email</label>
                     <input type="text" id="search-user" placeholder="Start typing to filter users...">
                 </div>
+                <div class="filter-group" style="min-width: 170px;">
+                    <label for="kyc-filter">KYC Status</label>
+                    <select id="kyc-filter" style="width: 100%; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border-medium); background-color: var(--bg-white); color: var(--text-primary); font-family: var(--font-sans); font-size: 0.9rem;">
+                        <option value="all">All KYC Statuses</option>
+                        <option value="pending">Pending Review</option>
+                        <option value="approved">Approved</option>
+                        <option value="rejected">Rejected</option>
+                        <option value="unverified">Unverified</option>
+                    </select>
+                </div>
+                <button id="export-kyc-btn" style="padding: 10px 18px; background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%); color: #ffffff; border: none; border-radius: 8px; font-weight: 600; font-size: 0.88rem; cursor: pointer; display: flex; align-items: center; gap: 8px; box-shadow: var(--shadow-blue); transition: all 0.2s; white-space: nowrap; height: 38px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+                    </svg>
+                    <span id="export-kyc-text">Export New KYC via Email</span>
+                </button>
             </div>
 
             <div class="table-container">
@@ -73,7 +142,9 @@
                             <th>Email</th>
                             <th>Phone</th>
                             <th>Role</th>
+                            <th>KYC Status</th>
                             <th>Date Joined</th>
+                            <th style="text-align: right;">Action</th>
                         </tr>
                     </thead>
                     <tbody id="users-tbody">
@@ -83,6 +154,31 @@
             </div>
             <div id="pagination-bar"></div>
         </main>
+    </div>
+
+    <!-- KYC Review Modal -->
+    <div class="modal-overlay" id="kyc-modal">
+        <div class="modal-content" style="max-width: 820px; max-height: 90vh; overflow-y: auto;">
+            <div class="modal-header">
+                <div>
+                    <h2 id="kyc-modal-title" style="margin: 0; font-size: 1.3rem;">KYC Document Review</h2>
+                    <p id="kyc-modal-subtitle" style="margin: 4px 0 0; font-size: 0.85rem; color: var(--text-secondary);"></p>
+                </div>
+                <button class="close-btn" id="kyc-modal-close" aria-label="Close modal">&times;</button>
+            </div>
+            <div class="modal-body" id="kyc-modal-body">
+                <!-- User details and images loaded dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Lightbox Zoom Modal -->
+    <div class="modal-overlay" id="lightbox-modal" style="z-index: 1200; background-color: rgba(0, 0, 0, 0.9);">
+        <div style="position: relative; max-width: 92vw; max-height: 92vh; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+            <button class="close-btn" id="lightbox-close" style="position: absolute; top: -38px; right: 0; color: #ffffff; font-size: 2.2rem; cursor: pointer; background: none; border: none;">&times;</button>
+            <img id="lightbox-img" src="" alt="Enlarged KYC document" style="max-width: 100%; max-height: 82vh; object-fit: contain; border-radius: 8px; box-shadow: 0 16px 48px rgba(0,0,0,0.8);">
+            <p id="lightbox-caption" style="margin-top: 12px; color: #cbd5e1; font-size: 0.9rem; font-weight: 500;"></p>
+        </div>
     </div>
 
     <script src="admin.js"></script>
@@ -110,8 +206,26 @@
     <script>
         document.addEventListener('DOMContentLoaded', async function() {
             const tbody = document.getElementById('users-tbody');
+            const searchInput = document.getElementById('search-user');
+            const kycFilter = document.getElementById('kyc-filter');
+            const exportBtn = document.getElementById('export-kyc-btn');
+            const exportText = document.getElementById('export-kyc-text');
+            const statusBanner = document.getElementById('export-status-banner');
+
+            const kycModal = document.getElementById('kyc-modal');
+            const kycModalTitle = document.getElementById('kyc-modal-title');
+            const kycModalSubtitle = document.getElementById('kyc-modal-subtitle');
+            const kycModalBody = document.getElementById('kyc-modal-body');
+            const kycModalClose = document.getElementById('kyc-modal-close');
+
+            const lightboxModal = document.getElementById('lightbox-modal');
+            const lightboxImg = document.getElementById('lightbox-img');
+            const lightboxCaption = document.getElementById('lightbox-caption');
+            const lightboxClose = document.getElementById('lightbox-close');
+
             let allUsers = [];
             let filteredUsers = [];
+            let activeModalUserId = null;
 
             const pager = new AdminPagination({
                 containerId: 'pagination-bar',
@@ -121,7 +235,7 @@
 
             async function fetchUsers() {
                 try {
-                    tbody.innerHTML = '<tr><td colspan="6">Loading...</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:24px;">Loading user accounts...</td></tr>';
                     const response = await fetch('/api/admin/users', { credentials: 'include' });
                     if (response.status === 401 || response.status === 403) {
                         window.location.href = '/admin-login';
@@ -131,41 +245,266 @@
                     allUsers = await response.json();
                     applyFilters();
                 } catch (error) {
-                    tbody.innerHTML = `<tr><td colspan="6" class="error-message">${error.message}</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="8" class="error-message" style="text-align:center;padding:24px;">${error.message}</td></tr>`;
                 }
             }
 
             function renderUsers(users) {
                 tbody.innerHTML = '';
                 if (users.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="6">No users found.</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:24px;">No users matching criteria.</td></tr>';
                     return;
                 }
                 users.forEach(user => {
                     const row = document.createElement('tr');
+                    const kycStatus = (user.kyc_status || 'unverified').toLowerCase();
+                    let badgeClass = 'status-unverified';
+                    let badgeLabel = 'Unverified';
+                    if (kycStatus === 'approved') {
+                        badgeClass = 'status-approved';
+                        badgeLabel = 'Approved';
+                    } else if (kycStatus === 'pending') {
+                        badgeClass = 'status-pending';
+                        badgeLabel = 'Pending Review';
+                    } else if (kycStatus === 'rejected') {
+                        badgeClass = 'status-rejected';
+                        badgeLabel = 'Rejected';
+                    }
+
+                    const hasDocs = user.has_front || user.has_back || user.has_selfie;
+                    const actionButton = hasDocs
+                        ? `<button class="btn-review-kyc" data-userid="${user.id}" style="padding:6px 14px;font-size:0.8rem;font-weight:600;border-radius:6px;background:rgba(0,169,224,0.15);color:var(--secondary-color);border:1px solid rgba(0,169,224,0.35);cursor:pointer;transition:all 0.2s;">Review KYC</button>`
+                        : `<span style="font-size:0.8rem;color:var(--text-secondary);opacity:0.6;">No Docs</span>`;
+
                     row.innerHTML = `
                         <td data-label="User ID" style="font-family:var(--font-mono);font-size:0.8rem;color:var(--text-secondary);">${user.id}</td>
-                        <td data-label="Full Name" style="font-weight:600;color:var(--text-primary);">${user.fullname}</td>
+                        <td data-label="Full Name" style="font-weight:600;color:var(--text-primary);">${user.fullname || 'N/A'}</td>
                         <td data-label="Email">${user.email}</td>
-                        <td data-label="Phone" style="font-family:var(--font-mono);">${user.phone || 'N/A'}</td>
+                        <td data-label="Phone" style="font-family:var(--font-mono);font-size:0.85rem;">${user.phone || 'N/A'}</td>
                         <td data-label="Role"><span class="status-badge status-${user.role === 'admin' ? 'completed' : 'open'}">${user.role}</span></td>
-                        <td data-label="Date Joined" style="font-size:0.8rem;color:var(--text-secondary);">${new Date(user.created_at).toLocaleString()}</td>
+                        <td data-label="KYC Status"><span class="status-badge ${badgeClass}">${badgeLabel}</span></td>
+                        <td data-label="Date Joined" style="font-size:0.8rem;color:var(--text-secondary);">${new Date(user.created_at).toLocaleDateString()}</td>
+                        <td data-label="Action" style="text-align:right;">${actionButton}</td>
                     `;
                     tbody.appendChild(row);
+                });
+
+                // Attach KYC review click events
+                document.querySelectorAll('.btn-review-kyc').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const userId = this.getAttribute('data-userid');
+                        const user = allUsers.find(u => String(u.id) === String(userId));
+                        if (user) openKycModal(user);
+                    });
                 });
             }
 
             function applyFilters() {
-                const searchTerm = document.getElementById('search-user').value.toLowerCase();
+                const searchTerm = searchInput.value.toLowerCase().trim();
+                const selectedKyc = kycFilter.value;
+
                 filteredUsers = allUsers.filter(user => {
-                    return user.fullname.toLowerCase().includes(searchTerm) || user.email.toLowerCase().includes(searchTerm);
+                    const matchesSearch = (user.fullname && user.fullname.toLowerCase().includes(searchTerm)) ||
+                                          (user.email && user.email.toLowerCase().includes(searchTerm)) ||
+                                          (user.phone && user.phone.includes(searchTerm));
+                    const userKyc = (user.kyc_status || 'unverified').toLowerCase();
+                    const matchesKyc = (selectedKyc === 'all') || (userKyc === selectedKyc);
+
+                    return matchesSearch && matchesKyc;
                 });
+
                 pager.setTotal(filteredUsers.length);
                 pager.goToPage(1);
             }
 
+            function openKycModal(user) {
+                activeModalUserId = user.id;
+                kycModalTitle.textContent = `KYC Review: ${user.fullname}`;
+                kycModalSubtitle.textContent = `User #${user.id} · ${user.email} · Phone: ${user.phone || 'N/A'}`;
+
+                const kycStatus = (user.kyc_status || 'unverified').toLowerCase();
+                const exportedNotice = user.kyc_exported_at
+                    ? `<span style="color:#10b981;">Exported to Admin: ${new Date(user.kyc_exported_at).toLocaleDateString()}</span>`
+                    : `<span style="color:#f59e0b;">Unexported (Scheduled for weekly compliance batch)</span>`;
+
+                let imagesGridHtml = '<div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));gap:16px;margin:20px 0;">';
+
+                if (user.has_front) {
+                    imagesGridHtml += `
+                        <div class="kyc-doc-card">
+                            <span style="font-weight:600;font-size:0.85rem;color:var(--text-primary);">Front of ID / Document</span>
+                            <img class="kyc-doc-preview zoomable-doc" data-caption="Front of ID - ${user.fullname}" src="/api/admin/users/${user.id}/kyc-image/front" alt="Front ID">
+                            <span style="font-size:0.75rem;color:var(--text-secondary);text-align:center;">Click to inspect full resolution</span>
+                        </div>
+                    `;
+                }
+
+                if (user.has_back) {
+                    imagesGridHtml += `
+                        <div class="kyc-doc-card">
+                            <span style="font-weight:600;font-size:0.85rem;color:var(--text-primary);">Back of ID Document</span>
+                            <img class="kyc-doc-preview zoomable-doc" data-caption="Back of ID - ${user.fullname}" src="/api/admin/users/${user.id}/kyc-image/back" alt="Back ID">
+                            <span style="font-size:0.75rem;color:var(--text-secondary);text-align:center;">Click to inspect full resolution</span>
+                        </div>
+                    `;
+                }
+
+                if (user.has_selfie) {
+                    imagesGridHtml += `
+                        <div class="kyc-doc-card">
+                            <span style="font-weight:600;font-size:0.85rem;color:var(--text-primary);">Live Selfie / Verification Photo</span>
+                            <img class="kyc-doc-preview zoomable-doc" data-caption="Live Selfie - ${user.fullname}" src="/api/admin/users/${user.id}/kyc-image/selfie" alt="Selfie">
+                            <span style="font-size:0.75rem;color:var(--text-secondary);text-align:center;">Click to inspect full resolution</span>
+                        </div>
+                    `;
+                }
+
+                imagesGridHtml += '</div>';
+
+                kycModalBody.innerHTML = `
+                    <div style="background:rgba(255,255,255,0.03);border:1px solid var(--border-light);border-radius:10px;padding:16px;margin-bottom:16px;">
+                        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:12px;font-size:0.88rem;">
+                            <div><strong style="color:var(--text-secondary);">Document Type:</strong> <span style="color:var(--text-primary);text-transform:capitalize;">${user.document_type || 'National ID'}</span></div>
+                            <div><strong style="color:var(--text-secondary);">Current Status:</strong> <span style="font-weight:700;text-transform:uppercase;color:${kycStatus === 'approved' ? '#10b981' : kycStatus === 'pending' ? '#f59e0b' : '#ef4444'}">${kycStatus}</span></div>
+                            <div><strong style="color:var(--text-secondary);">Batch Export:</strong> ${exportedNotice}</div>
+                        </div>
+                    </div>
+
+                    ${imagesGridHtml}
+
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:24px;padding-top:18px;border-top:1px solid var(--border-light);flex-wrap:wrap;gap:12px;">
+                        <div style="display:flex;gap:10px;">
+                            <button id="btn-approve-kyc" style="padding:10px 20px;background:#10b981;color:#fff;border:none;border-radius:8px;font-weight:700;font-size:0.9rem;cursor:pointer;display:flex;align-items:center;gap:6px;transition:opacity 0.2s;">
+                                ✓ Approve KYC
+                            </button>
+                            <button id="btn-reject-kyc" style="padding:10px 20px;background:#ef4444;color:#fff;border:none;border-radius:8px;font-weight:700;font-size:0.9rem;cursor:pointer;display:flex;align-items:center;gap:6px;transition:opacity 0.2s;">
+                                ✕ Reject KYC
+                            </button>
+                        </div>
+                        <button id="btn-close-modal" style="padding:10px 18px;background:transparent;color:var(--text-secondary);border:1px solid var(--border-medium);border-radius:8px;font-weight:600;cursor:pointer;">
+                            Close
+                        </button>
+                    </div>
+                `;
+
+                // Attach zoom clicks
+                kycModalBody.querySelectorAll('.zoomable-doc').forEach(img => {
+                    img.addEventListener('click', function() {
+                        lightboxImg.src = this.src;
+                        lightboxCaption.textContent = this.getAttribute('data-caption') || 'Document View';
+                        lightboxModal.classList.add('show');
+                    });
+                });
+
+                // Attach status update buttons
+                const btnApprove = document.getElementById('btn-approve-kyc');
+                const btnReject = document.getElementById('btn-reject-kyc');
+                const btnClose = document.getElementById('btn-close-modal');
+
+                btnApprove.addEventListener('click', () => updateKycStatus(user.id, 'approved', btnApprove));
+                btnReject.addEventListener('click', () => updateKycStatus(user.id, 'rejected', btnReject));
+                btnClose.addEventListener('click', () => kycModal.classList.remove('show'));
+
+                kycModal.classList.add('show');
+            }
+
+            async function updateKycStatus(userId, status, buttonElem) {
+                const origText = buttonElem.textContent;
+                buttonElem.disabled = true;
+                buttonElem.textContent = 'Saving...';
+                try {
+                    const response = await fetch(`/api/admin/users/${userId}/kyc-status`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        credentials: 'include',
+                        body: JSON.stringify({ status })
+                    });
+                    if (!response.ok) throw new Error('Failed to update KYC status');
+
+                    // Update local state
+                    const targetUser = allUsers.find(u => String(u.id) === String(userId));
+                    if (targetUser) {
+                        targetUser.kyc_status = status;
+                    }
+                    applyFilters();
+                    kycModal.classList.remove('show');
+                    showBanner(`KYC status for User #${userId} successfully set to "${status.toUpperCase()}".`, 'success');
+                } catch (err) {
+                    alert('Error updating KYC: ' + err.message);
+                } finally {
+                    buttonElem.disabled = false;
+                    buttonElem.textContent = origText;
+                }
+            }
+
+            // Export New KYC via Email trigger
+            exportBtn.addEventListener('click', async function() {
+                if (exportBtn.disabled) return;
+                exportBtn.disabled = true;
+                exportText.textContent = 'Exporting & Zipping...';
+
+                try {
+                    const response = await fetch('/api/admin/kyc/export-now', {
+                        method: 'POST',
+                        credentials: 'include'
+                    });
+                    const data = await response.json();
+
+                    if (!response.ok) {
+                        throw new Error(data.message || 'Export failed');
+                    }
+
+                    if (data.exportedCount === 0) {
+                        showBanner('No new KYC submissions to export. Zero spam policy maintained.', 'info');
+                    } else {
+                        showBanner(`Success! ${data.exportedCount} KYC submission package(s) zipped & emailed to ${data.email}.`, 'success');
+                        // Refresh user list so exported tags update
+                        fetchUsers();
+                    }
+                } catch (err) {
+                    showBanner(`Export failed: ${err.message}`, 'error');
+                } finally {
+                    exportBtn.disabled = false;
+                    exportText.textContent = 'Export New KYC via Email';
+                }
+            });
+
+            function showBanner(message, type) {
+                statusBanner.style.display = 'block';
+                statusBanner.textContent = message;
+                if (type === 'success') {
+                    statusBanner.style.background = 'rgba(16, 185, 129, 0.15)';
+                    statusBanner.style.color = '#10b981';
+                    statusBanner.style.border = '1px solid rgba(16, 185, 129, 0.3)';
+                } else if (type === 'error') {
+                    statusBanner.style.background = 'rgba(239, 68, 68, 0.15)';
+                    statusBanner.style.color = '#ef4444';
+                    statusBanner.style.border = '1px solid rgba(239, 68, 68, 0.3)';
+                } else {
+                    statusBanner.style.background = 'rgba(0, 169, 224, 0.15)';
+                    statusBanner.style.color = 'var(--secondary-color)';
+                    statusBanner.style.border = '1px solid rgba(0, 169, 224, 0.3)';
+                }
+                setTimeout(() => {
+                    statusBanner.style.display = 'none';
+                }, 8000);
+            }
+
+            // Close modals on clicking overlay or close button
+            kycModalClose.addEventListener('click', () => kycModal.classList.remove('show'));
+            kycModal.addEventListener('click', (e) => {
+                if (e.target === kycModal) kycModal.classList.remove('show');
+            });
+
+            lightboxClose.addEventListener('click', () => lightboxModal.classList.remove('show'));
+            lightboxModal.addEventListener('click', (e) => {
+                if (e.target === lightboxModal) lightboxModal.classList.remove('show');
+            });
+
+            searchInput.addEventListener('input', applyFilters);
+            kycFilter.addEventListener('change', applyFilters);
+
             fetchUsers();
-            document.getElementById('search-user').addEventListener('input', applyFilters);
         });
     </script>
 </body>

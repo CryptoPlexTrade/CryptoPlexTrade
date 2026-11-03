@@ -3,7 +3,7 @@ const db = require('./database');
 const { authenticateToken } = require('./authMiddleware');
 const { getRates } = require('./rates'); // Assuming rates are managed in a separate file
 const logger = require('./logger');
-const { sendNewOrderNotification } = require('./emailService');
+const { sendNewOrderNotification, sendOrderConfirmationCustomerEmail } = require('./emailService');
 const { ORDER_STATUS } = require('./constants');
 
 const router = express.Router();
@@ -57,8 +57,7 @@ router.post('/create', authenticateToken, async (req, res) => {
         const [users] = await db.query('SELECT email FROM users WHERE id = ?', [userId]);
         const userEmail = users.length > 0 ? users[0].email : 'N/A';
 
-        // Send email notification to admin
-        sendNewOrderNotification({
+        const orderData = {
             order_type: 'buy',
             product: product,
             usd_amount: parsedUsdAmount,
@@ -66,8 +65,16 @@ router.post('/create', authenticateToken, async (req, res) => {
             wallet_address: walletAddress,
             user_transaction_id: transactionId,
             user_email: userEmail
-        }, newOrderId).catch(emailError => {
+        };
+
+        // Send email notification to admin
+        sendNewOrderNotification(orderData, newOrderId).catch(emailError => {
             logger.error(`Failed to send admin notification email for order #${newOrderId}:`, emailError);
+        });
+
+        // Send confirmation receipt to customer
+        sendOrderConfirmationCustomerEmail(orderData, newOrderId, userEmail).catch(emailError => {
+            logger.error(`Failed to send customer confirmation email for order #${newOrderId}:`, emailError);
         });
 
         res.status(201).json({ message: 'Order created successfully!', orderId: newOrderId });
@@ -141,8 +148,7 @@ router.post('/create-sell-order', authenticateToken, async (req, res) => {
         const [users] = await db.query('SELECT email FROM users WHERE id = ?', [userId]);
         const userEmail = users.length > 0 ? users[0].email : 'N/A';
 
-        // Send email notification to admin
-        sendNewOrderNotification({
+        const sellOrderData = {
             order_type: 'sell',
             product: product,
             product_amount: parsedProductAmount,
@@ -150,8 +156,16 @@ router.post('/create-sell-order', authenticateToken, async (req, res) => {
             user_transaction_id: transactionId,
             payout_info: payoutInfo, // The original object, not the string
             user_email: userEmail
-        }, newSellOrderId).catch(emailError => {
+        };
+
+        // Send email notification to admin
+        sendNewOrderNotification(sellOrderData, newSellOrderId).catch(emailError => {
             logger.error(`Failed to send admin notification email for sell order #${newSellOrderId}:`, emailError);
+        });
+
+        // Send confirmation receipt to customer
+        sendOrderConfirmationCustomerEmail(sellOrderData, newSellOrderId, userEmail).catch(emailError => {
+            logger.error(`Failed to send customer confirmation email for sell order #${newSellOrderId}:`, emailError);
         });
 
         res.status(201).json({ message: 'Sell order created successfully!', orderId: newSellOrderId });

@@ -133,6 +133,145 @@ async function sendNewOrderNotification(orderDetails, orderId) {
 }
 
 /**
+ * Sends an immediate order confirmation receipt to the customer who placed the order.
+ * @param {object} orderDetails - The details of the order.
+ * @param {number} orderId - The ID of the newly created order.
+ * @param {string} userEmail - Customer's verified email address.
+ */
+async function sendOrderConfirmationCustomerEmail(orderDetails, orderId, userEmail) {
+    if (!transporter) {
+        logger.warn('Email service is not configured. Skipping customer order receipt.');
+        return;
+    }
+    if (!userEmail || userEmail === 'N/A') {
+        logger.warn(`Skipping customer order receipt for #${orderId} due to missing email.`);
+        return;
+    }
+
+    const { order_type, product } = orderDetails;
+    const isBuy = order_type === 'buy';
+    const subject = `Order Confirmation: #${orderId} - ${isBuy ? 'Purchase of' : 'Sale of'} ${product}`;
+    const domain = getAppDomain();
+
+    const summaryRows = isBuy
+        ? `
+            <tr>
+              <td style="padding:10px 0;font-size:14px;color:#64748b;border-bottom:1px solid #f1f5f9;">Order Type</td>
+              <td style="padding:10px 0;font-size:14px;font-weight:700;color:#10b981;text-align:right;border-bottom:1px solid #f1f5f9;">BUY CRYPTO</td>
+            </tr>
+            <tr>
+              <td style="padding:10px 0;font-size:14px;color:#64748b;border-bottom:1px solid #f1f5f9;">Cryptocurrency</td>
+              <td style="padding:10px 0;font-size:14px;font-weight:600;color:#0f172a;text-align:right;border-bottom:1px solid #f1f5f9;">${product}</td>
+            </tr>
+            <tr>
+              <td style="padding:10px 0;font-size:14px;color:#64748b;border-bottom:1px solid #f1f5f9;">Amount You Buy</td>
+              <td style="padding:10px 0;font-size:14px;font-weight:600;color:#0f172a;text-align:right;border-bottom:1px solid #f1f5f9;">${orderDetails.usd_amount} USD (${product})</td>
+            </tr>
+            <tr>
+              <td style="padding:10px 0;font-size:14px;color:#64748b;border-bottom:1px solid #f1f5f9;">Total Paid (GHS)</td>
+              <td style="padding:10px 0;font-size:16px;font-weight:800;color:#005baa;text-align:right;border-bottom:1px solid #f1f5f9;">₵${Number(orderDetails.total_paid_ghs).toFixed(2)}</td>
+            </tr>
+            <tr>
+              <td style="padding:10px 0;font-size:14px;color:#64748b;border-bottom:1px solid #f1f5f9;">Receiving Wallet</td>
+              <td style="padding:10px 0;font-size:12px;font-family:monospace;color:#334155;text-align:right;word-break:break-all;border-bottom:1px solid #f1f5f9;">${orderDetails.wallet_address}</td>
+            </tr>
+            <tr>
+              <td style="padding:10px 0;font-size:14px;color:#64748b;">Payment TX / Ref</td>
+              <td style="padding:10px 0;font-size:12px;font-family:monospace;color:#334155;text-align:right;word-break:break-all;">${orderDetails.user_transaction_id}</td>
+            </tr>`
+        : `
+            <tr>
+              <td style="padding:10px 0;font-size:14px;color:#64748b;border-bottom:1px solid #f1f5f9;">Order Type</td>
+              <td style="padding:10px 0;font-size:14px;font-weight:700;color:#f59e0b;text-align:right;border-bottom:1px solid #f1f5f9;">SELL CRYPTO</td>
+            </tr>
+            <tr>
+              <td style="padding:10px 0;font-size:14px;color:#64748b;border-bottom:1px solid #f1f5f9;">Cryptocurrency Sold</td>
+              <td style="padding:10px 0;font-size:14px;font-weight:600;color:#0f172a;text-align:right;border-bottom:1px solid #f1f5f9;">${orderDetails.product_amount} ${product}</td>
+            </tr>
+            <tr>
+              <td style="padding:10px 0;font-size:14px;color:#64748b;border-bottom:1px solid #f1f5f9;">GHS Payout to You</td>
+              <td style="padding:10px 0;font-size:16px;font-weight:800;color:#005baa;text-align:right;border-bottom:1px solid #f1f5f9;">₵${Number(orderDetails.ghs_to_receive).toFixed(2)}</td>
+            </tr>
+            <tr>
+              <td style="padding:10px 0;font-size:14px;color:#64748b;border-bottom:1px solid #f1f5f9;">Crypto TX Hash</td>
+              <td style="padding:10px 0;font-size:12px;font-family:monospace;color:#334155;text-align:right;word-break:break-all;border-bottom:1px solid #f1f5f9;">${orderDetails.user_transaction_id}</td>
+            </tr>
+            <tr>
+              <td style="padding:10px 0;font-size:14px;color:#64748b;">Payout Destination</td>
+              <td style="padding:10px 0;font-size:13px;color:#0f172a;text-align:right;">${orderDetails.payout_info && orderDetails.payout_info.method === 'momo' ? `MoMo: ${orderDetails.payout_info.number} (${orderDetails.payout_info.name})` : 'Bank Transfer'}</td>
+            </tr>`;
+
+    const htmlBody = `<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#0d1117;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#0d1117;padding:32px 16px;">
+    <tr><td align="center">
+      <table width="560" cellpadding="0" cellspacing="0" style="background:#161b22;border:1px solid rgba(255,255,255,0.08);border-radius:12px;overflow:hidden;max-width:560px;width:100%;box-shadow:0 12px 36px rgba(0,0,0,0.5);">
+        <!-- Sovereign Header -->
+        <tr>
+          <td style="background:linear-gradient(135deg, #005baa 0%, #004a8a 100%);padding:28px 32px;border-bottom:2px solid #00a9e0;">
+            <p style="margin:0;font-size:22px;font-weight:800;color:#ffffff;letter-spacing:-0.5px;">${SENDER_NAME}</p>
+            <p style="margin:4px 0 0;font-size:13px;color:#b3d4f0;font-weight:500;">Institutional Crypto Settlement Service</p>
+          </td>
+        </tr>
+        <!-- Main Content -->
+        <tr>
+          <td style="padding:32px;color:#f0f6fc;">
+            <div style="display:inline-block;padding:4px 12px;background:rgba(0,169,224,0.15);border:1px solid rgba(0,169,224,0.3);border-radius:999px;font-size:12px;font-weight:700;color:#00a9e0;margin-bottom:16px;">
+              ORDER #${orderId} RECEIVED
+            </div>
+            <h2 style="margin:0 0 12px;font-size:20px;font-weight:700;color:#ffffff;">Trade Initiated Successfully</h2>
+            <p style="margin:0 0 24px;font-size:14px;color:#8b949e;line-height:1.6;">
+              Thank you for trading with CryptoPlexTrade. Your order <strong>#${orderId}</strong> has been logged in our secure settlement queue and is awaiting blockchain / payment confirmation.
+            </p>
+
+            <table width="100%" cellpadding="0" cellspacing="0" style="background:#0d1117;border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:16px 20px;margin-bottom:24px;">
+              ${summaryRows}
+            </table>
+
+            <div style="background:rgba(56,189,248,0.08);border-left:3px solid #00a9e0;padding:12px 16px;border-radius:4px;margin-bottom:24px;">
+              <p style="margin:0;font-size:13px;color:#bae6fd;line-height:1.5;">
+                <strong>Next Step:</strong> Our automated settlement system and compliance operators will verify the transaction hash. Once confirmed, your settlement will complete immediately.
+              </p>
+            </div>
+
+            <p style="margin:0;font-size:12px;color:#8b949e;line-height:1.5;">
+              Security notice: CryptoPlexTrade personnel will never ask for your password, 2FA code, or wallet recovery seed phrases.
+            </p>
+          </td>
+        </tr>
+        <!-- Footer -->
+        <tr>
+          <td style="background:#0d1117;border-top:1px solid rgba(255,255,255,0.08);padding:20px 32px;text-align:center;">
+            <p style="margin:0;font-size:11px;color:#8b949e;">&copy; 2026 CryptoPlexTrade. Licensed & Secure Digital Asset Exchange.</p>
+            <p style="margin:4px 0 0;font-size:11px;color:#8b949e;">Need support? Contact us at <a href="mailto:${process.env.ADMIN_EMAIL}" style="color:#00a9e0;text-decoration:none;">${process.env.ADMIN_EMAIL}</a></p>
+          </td>
+        </tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+
+    const textBody = `CryptoPlexTrade - Order #${orderId} Received\r\n\r\nYour ${order_type.toUpperCase()} order has been initiated successfully.\r\nOrder ID: #${orderId}\r\nProduct: ${product}\r\nStatus: Pending Confirmation\r\n\r\nOur settlement team is processing your order. You can track this in your dashboard.\r\nSupport: ${process.env.ADMIN_EMAIL}`;
+
+    await transporter.sendMail({
+        from: getSender(),
+        replyTo: getReplyTo(),
+        to: userEmail,
+        subject,
+        text: textBody,
+        html: htmlBody,
+        headers: {
+            'Message-ID': `<${Date.now()}.receipt-${orderId}@${domain}>`,
+            'Precedence': 'bulk',
+        },
+    });
+    logger.info(`Customer order receipt sent to ${userEmail} for order #${orderId}`);
+}
+
+/**
  * Sends a password reset email to a user.
  * @param {object} user - The user object ({ fullname, email }).
  * @param {string} resetUrl - The full reset URL with token.
@@ -414,7 +553,7 @@ async function sendOrderCompletedEmail(order, userEmail) {
 </html>`;
 
     await transporter.sendMail({
-        from:    `"${SENDER_NAME}" <noreply@cryptoplextrade.com>`,
+        from:    getSender(),
         replyTo: getReplyTo(),
         to:      userEmail,
         subject,
@@ -429,4 +568,10 @@ async function sendOrderCompletedEmail(order, userEmail) {
     logger.info(`Order completed email sent to ${userEmail} for order #${orderId}`);
 }
 
-module.exports = { sendNewOrderNotification, sendPasswordResetEmail, sendLiveChatNotification, sendOrderCompletedEmail };
+module.exports = {
+    sendNewOrderNotification,
+    sendOrderConfirmationCustomerEmail,
+    sendPasswordResetEmail,
+    sendLiveChatNotification,
+    sendOrderCompletedEmail
+};

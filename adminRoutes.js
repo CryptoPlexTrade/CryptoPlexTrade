@@ -173,16 +173,110 @@ router.put('/rates', async (req, res) => {
     }
 });
 
-// === USER MANAGEMENT ===
+// === USER & KYC MANAGEMENT ===
 router.get('/users', async (req, res) => {
     try {
-        const [users] = await db.query(
-            'SELECT id, fullname, email, phone, role, created_at FROM users ORDER BY created_at DESC'
-        );
+        const [users] = await db.query(`
+            SELECT id, fullname, email, phone, role, kyc_status, id_type,
+                   (id_front IS NOT NULL AND id_front != '') AS has_front,
+                   (id_back IS NOT NULL AND id_back != '') AS has_back,
+                   (id_selfie IS NOT NULL AND id_selfie != '') AS has_selfie,
+                   kyc_exported_at, created_at
+            FROM users 
+            ORDER BY created_at DESC
+        `);
         res.status(200).json(users);
     } catch (error) {
         logger.error('Error fetching all users:', error);
         res.status(500).json({ message: 'Server error while fetching users.' });
+    }
+});
+
+// Single user KYC metadata (lightweight, zero megabyte transfer)
+router.get('/users/:id/kyc', async (req, res) => {
+    try {
+        const [rows] = await db.query(`
+            SELECT id, fullname, email, phone, kyc_status, id_type,
+                   (id_front IS NOT NULL AND id_front != '') AS has_front,
+                   (id_back IS NOT NULL AND id_back != '') AS has_back,
+                   (id_selfie IS NOT NULL AND id_selfie != '') AS has_selfie,
+                   kyc_exported_at, created_at, updated_at
+            FROM users WHERE id = ?
+        `, [req.params.id]);
+        if (rows.length === 0) return res.status(404).json({ message: 'User not found.' });
+        res.json(rows[0]);
+    } catch (error) {
+        logger.error('Error fetching user KYC summary:', error);
+        res.status(500).json({ message: 'Failed to fetch KYC summary.' });
+    }
+});
+
+// High-speed binary KYC document streaming with 24-hr caching
+router.get('/users/:id/kyc-image/:type', async (req, res) => {
+    const { id, type } = req.params;
+    let col = null;
+    if (type === 'front') col = 'id_front';
+    else if (type === 'back') col = 'id_back';
+    else if (type === 'selfie') col = 'id_selfie';
+    else return res.status(400).send('Invalid document type');
+
+    try {
+        const [rows] = await db.query(`SELECT ${col} FROM users WHERE id = ?`, [id]);
+        if (rows.length === 0 || !rows[0][col]) {
+            return res.status(404).send('Document not found');
+        }
+
+        const dataUri = rows[0][col];
+        let mimeType = 'image/jpeg';
+        let base64Data = dataUri;
+
+        if (dataUri.startsWith('data:')) {
+            const commaIdx = dataUri.indexOf(',');
+            const meta = dataUri.substring(5, commaIdx);
+            base64Data = dataUri.substring(commaIdx + 1);
+            if (meta.includes('image/png')) mimeType = 'image/png';
+            else if (meta.includes('image/webp')) mimeType = 'image/webp';
+            else if (meta.includes('application/pdf')) mimeType = 'application/pdf';
+        }
+
+        const buffer = Buffer.from(base64Data, 'base64');
+        res.setHeader('Content-Type', mimeType);
+        res.setHeader('Content-Length', buffer.length);
+        res.setHeader('Cache-Control', 'private, max-age=86400');
+        res.setHeader('ETag', `"${id}-${type}-${buffer.length}"`);
+        res.end(buffer);
+    } catch (err) {
+        logger.error('Error serving KYC image:', err);
+        res.status(500).send('Failed to load image');
+    }
+});
+
+// Update user KYC status (Approve / Reject)
+router.put('/users/:id/kyc-status', async (req, res) => {
+    const { status } = req.body;
+    const valid = ['approved', 'rejected', 'pending', 'unverified'];
+    if (!valid.includes(status)) {
+        return res.status(400).json({ message: 'Invalid KYC status.' });
+    }
+    try {
+        await db.query('UPDATE users SET kyc_status = ?, updated_at = NOW() WHERE id = ?', [status, req.params.id]);
+        logger.info(`Admin updated KYC status for user #${req.params.id} to '${status}'`);
+        res.json({ message: `KYC status successfully updated to '${status}'.` });
+    } catch (err) {
+        logger.error('Error updating KYC status:', err);
+        res.status(500).json({ message: 'Failed to update KYC status.' });
+    }
+});
+
+// Trigger instant manual export of all new KYC to email
+router.post('/kyc/export-now', async (req, res) => {
+    try {
+        const { exportNewKYC } = require('./kycExporter');
+        const result = await exportNewKYC();
+        res.json(result);
+    } catch (err) {
+        logger.error('Error executing KYC export:', err);
+        res.status(500).json({ message: err.message || 'KYC export failed.' });
     }
 });
 

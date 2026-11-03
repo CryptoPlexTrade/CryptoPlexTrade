@@ -525,3 +525,64 @@ img.brand-circle:hover {
 
     .detail-item .value { font-size: .85rem !important; }
 }
+
+/* ══════════════════════════════════════════════════════════
+   21. MOBILE FIT & FOOTER DISTORTION SHIELD
+   ══════════════════════════════════════════════════════════ */
+html, body {
+    overflow-x: hidden !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+    position: relative;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding-left: 16px !important;
+        padding-right: 16px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    .footer {
+        padding: 32px 0 calc(68px + env(safe-area-inset-bottom)) !important;
+        width: 100% !important;
+        max-width: 100vw !important;
+        overflow: hidden !important;
+        box-sizing: border-box !important;
+    }
+
+    .footer-cols-grid,
+    .footer-grid {
+        grid-template-columns: 1fr !important;
+        gap: 22px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        margin-bottom: 24px !important;
+    }
+
+    .footer-col,
+    .footer-column {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    .footer-col p,
+    .footer-column p {
+        max-width: 100% !important;
+        font-size: 0.85rem !important;
+        line-height: 1.5 !important;
+    }
+
+    .footer-bottom,
+    .footer-bottom-strip {
+        padding-top: 16px !important;
+        font-size: 0.8rem !important;
+    }
+
+    /* Prevent mobile input zoom & maintain uniform touch target */
+    input, select, textarea {
+        font-size: 16px !important; /* Prevents iOS auto-zoom */
+    }
+}
