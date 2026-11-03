@@ -6,12 +6,15 @@
     <link rel="icon" type="image/png" href="css/logo.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>CryptoPlexTrade — Premium Cryptocurrency Exchange & Instant MoMo Settlement</title>
-    <meta name="description" content="Trade Bitcoin, Ethereum, and USDT with instant Ghana Cedi (GHS) Mobile Money and Bank settlement, deep order book liquidity, and zero hidden slippage.">
-    
+    <meta name="description"
+        content="Trade Bitcoin, Ethereum, and USDT with instant Ghana Cedi (GHS) Mobile Money and Bank settlement, deep order book liquidity, and zero hidden slippage.">
+
     <!-- Design System Typography & Core Stylesheets -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="css/tokens.css">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="css/app.css">
@@ -79,8 +82,15 @@
         }
 
         @keyframes pulse-preloader-ambient {
-            0% { transform: scale(0.85); opacity: 0.6; }
-            100% { transform: scale(1.15); opacity: 1; }
+            0% {
+                transform: scale(0.85);
+                opacity: 0.6;
+            }
+
+            100% {
+                transform: scale(1.15);
+                opacity: 1;
+            }
         }
 
         .preloader-core {
@@ -104,7 +114,8 @@
             justify-content: center;
         }
 
-        .preloader-radar::before, .preloader-radar::after {
+        .preloader-radar::before,
+        .preloader-radar::after {
             content: '';
             position: absolute;
             inset: 0;
@@ -125,10 +136,15 @@
         }
 
         @keyframes radar-spin {
-            100% { transform: rotate(360deg); }
+            100% {
+                transform: rotate(360deg);
+            }
         }
+
         @keyframes radar-spin-reverse {
-            100% { transform: rotate(-360deg); }
+            100% {
+                transform: rotate(-360deg);
+            }
         }
 
         .preloader-logo-orb {
@@ -329,6 +345,7 @@
             align-items: center;
             gap: 10px;
         }
+
         .mobile-quick-btn {
             color: #ffffff !important;
             font-weight: 700 !important;
@@ -340,6 +357,7 @@
             box-shadow: 0 3px 10px rgba(0, 82, 204, 0.25);
             white-space: nowrap;
         }
+
         .mobile-hamburger-btn {
             display: flex;
             flex-direction: column;
@@ -356,10 +374,12 @@
             box-shadow: 0 2px 8px rgba(11, 45, 90, 0.05);
             transition: all 0.2s;
         }
+
         .mobile-hamburger-btn:hover {
             border-color: var(--primary, #0052cc);
             background: var(--blue-050, #f0f7ff);
         }
+
         .mobile-hamburger-btn .ham-line {
             display: block;
             width: 20px;
@@ -368,12 +388,15 @@
             border-radius: 2px;
             transition: transform 0.25s, opacity 0.2s;
         }
+
         .mobile-hamburger-btn.is-active .ham-line:nth-child(1) {
             transform: translateY(7px) rotate(45deg);
         }
+
         .mobile-hamburger-btn.is-active .ham-line:nth-child(2) {
             opacity: 0;
         }
+
         .mobile-hamburger-btn.is-active .ham-line:nth-child(3) {
             transform: translateY(-7px) rotate(-45deg);
         }
@@ -390,6 +413,7 @@
             visibility: hidden;
             transition: opacity 0.3s ease, visibility 0.3s ease;
         }
+
         .mobile-nav-backdrop.show {
             opacity: 1;
             visibility: visible;
@@ -411,6 +435,7 @@
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
         }
+
         .mobile-nav-drawer.open {
             transform: translateX(0);
         }
@@ -424,6 +449,7 @@
             background: #ffffff;
             flex-shrink: 0;
         }
+
         .mobile-drawer-close {
             width: 36px;
             height: 36px;
@@ -439,6 +465,7 @@
             cursor: pointer;
             transition: all 0.2s;
         }
+
         .mobile-drawer-close:hover {
             background: #e2e8f0;
             color: var(--primary, #0052cc);
@@ -451,6 +478,7 @@
             flex-direction: column;
             gap: 6px;
         }
+
         .mobile-drawer-item {
             display: flex;
             align-items: center;
@@ -463,19 +491,23 @@
             text-decoration: none !important;
             transition: all 0.18s;
         }
+
         .mobile-drawer-item svg {
             color: var(--primary, #0052cc);
             flex-shrink: 0;
         }
+
         .mobile-drawer-item:hover {
             background: var(--blue-050, #f0f7ff);
             color: var(--primary, #0052cc);
             transform: translateX(3px);
         }
+
         .mobile-drawer-item.active {
             background: var(--primary, #0052cc) !important;
             color: #ffffff !important;
         }
+
         .mobile-drawer-item.active svg {
             color: #ffffff !important;
         }
@@ -489,6 +521,7 @@
             background: #fafcff;
             flex-shrink: 0;
         }
+
         .mobile-drawer-login {
             display: block;
             text-align: center;
@@ -502,11 +535,13 @@
             text-decoration: none !important;
             transition: all 0.2s;
         }
+
         .mobile-drawer-login:hover {
             background: var(--blue-050, #f0f7ff);
             border-color: var(--primary, #0052cc);
             color: var(--primary, #0052cc) !important;
         }
+
         .mobile-drawer-signup {
             display: block;
             text-align: center;
@@ -520,15 +555,24 @@
             box-shadow: 0 4px 14px rgba(0, 82, 204, 0.28);
             transition: all 0.2s;
         }
+
         .mobile-drawer-signup:hover {
             box-shadow: 0 6px 18px rgba(0, 82, 204, 0.4);
             transform: translateY(-1px);
         }
 
         @media (max-width: 900px) {
-            .header-pill-nav { display: none !important; }
-            .header-actions { display: none !important; }
-            .header-mobile-controls { display: flex !important; }
+            .header-pill-nav {
+                display: none !important;
+            }
+
+            .header-actions {
+                display: none !important;
+            }
+
+            .header-mobile-controls {
+                display: flex !important;
+            }
         }
 
         /* --- HERO SECTION WITH WHITE & BLUE BALANCE --- */
@@ -539,6 +583,7 @@
             overflow: hidden;
             border-bottom: 1px solid var(--border-subtle, #e2e8f0);
         }
+
         /* Floating background ambient glow spheres */
         .ambient-sphere {
             position: absolute;
@@ -547,6 +592,7 @@
             pointer-events: none;
             opacity: 0.25;
         }
+
         .sphere-1 {
             top: -100px;
             left: 10%;
@@ -555,6 +601,7 @@
             background: radial-gradient(circle, var(--blue-200, #b8d9f8) 0%, transparent 70%);
             animation: float-sphere 12s ease-in-out infinite alternate;
         }
+
         .sphere-2 {
             top: 20%;
             right: 5%;
@@ -565,12 +612,23 @@
         }
 
         @keyframes float-sphere {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(60px, 40px) scale(1.15); }
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            100% {
+                transform: translate(60px, 40px) scale(1.15);
+            }
         }
+
         @keyframes float-sphere-rev {
-            0% { transform: translate(0, 0) scale(1.1); }
-            100% { transform: translate(-50px, 30px) scale(0.9); }
+            0% {
+                transform: translate(0, 0) scale(1.1);
+            }
+
+            100% {
+                transform: translate(-50px, 30px) scale(0.9);
+            }
         }
 
         .cyber-hero-grid {
@@ -626,8 +684,17 @@
         }
 
         @keyframes live-blink {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.4; transform: scale(1.3); }
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.4;
+                transform: scale(1.3);
+            }
         }
 
         .hero-headline {
@@ -784,13 +851,27 @@
         }
 
         @keyframes float-btc {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-12px) rotate(2deg); }
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-12px) rotate(2deg);
+            }
         }
 
         @keyframes float-usdt {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(14px) rotate(-2deg); }
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(14px) rotate(-2deg);
+            }
         }
 
         .terminal-glass-card {
@@ -992,8 +1073,13 @@
         }
 
         @keyframes scroll-trades {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(-50%);
+            }
         }
 
         .trade-stream-item {
@@ -1091,19 +1177,23 @@
                 border-radius: 0;
                 overflow: visible;
             }
+
             .cyber-table {
                 display: block;
                 width: 100%;
             }
+
             .cyber-table thead {
                 display: none;
             }
+
             .cyber-table tbody {
                 display: flex;
                 flex-direction: column;
                 gap: 16px;
                 width: 100%;
             }
+
             .cyber-table tr {
                 display: block;
                 background: #ffffff;
@@ -1112,6 +1202,7 @@
                 padding: 18px 16px;
                 box-shadow: 0 4px 16px rgba(11, 45, 90, 0.04);
             }
+
             .cyber-table td {
                 display: flex;
                 justify-content: space-between;
@@ -1121,17 +1212,20 @@
                 font-size: 0.88rem;
                 color: var(--text-1, #0a192f);
             }
+
             .cyber-table td:first-child {
                 padding-top: 0;
                 padding-bottom: 12px;
                 border-bottom: 1px solid var(--border-subtle, #e2e8f0);
             }
+
             .cyber-table td:last-child {
                 border-bottom: none;
                 padding-bottom: 0;
                 padding-top: 14px;
                 justify-content: stretch;
             }
+
             .cyber-table td[data-label]::before {
                 content: attr(data-label);
                 font-weight: 600;
@@ -1140,6 +1234,7 @@
                 text-transform: uppercase;
                 letter-spacing: 0.04em;
             }
+
             .cyber-table td:last-child .btn-market-trade {
                 width: 100%;
                 text-align: center;
@@ -1544,85 +1639,325 @@
 
         /* --- RESPONSIVE POLISH --- */
         @media (max-width: 1024px) {
-            .floating-badge { display: none !important; }
-            .cyber-hero-grid { grid-template-columns: 1fr; gap: 40px; padding: 0 20px; max-width: 100%; }
-            .advantage-grid { grid-template-columns: 1fr 1fr; }
-            .footer-cols-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+            .floating-badge {
+                display: none !important;
+            }
+
+            .cyber-hero-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+                padding: 0 20px;
+                max-width: 100%;
+            }
+
+            .advantage-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .footer-cols-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 32px;
+            }
         }
 
         @media (max-width: 768px) {
-            nav.nav { display: none; }
-            .mobile-header-cta { display: flex !important; gap: 8px; }
-            .cyber-hero { padding: 50px 0 70px; overflow-x: hidden; }
-            .hero-cta-group { flex-direction: column; width: 100%; align-items: stretch; gap: 12px; margin-bottom: 32px; }
-            .btn-hero-primary, .btn-hero-secondary { width: 100%; justify-content: center; box-sizing: border-box; padding: 14px 20px; }
-            .hero-trust-matrix { grid-template-columns: repeat(3, 1fr); gap: 12px; max-width: 100%; }
-            .terminal-glass-card { padding: 24px 18px; border-radius: 20px; }
-            .timeline-steps-grid { grid-template-columns: 1fr; }
-            .advantage-grid { grid-template-columns: 1fr; }
-            .footer-cols-grid { grid-template-columns: 1fr; }
-            .cta-inner-card { padding: 40px 24px; }
+            nav.nav {
+                display: none;
+            }
+
+            .mobile-header-cta {
+                display: flex !important;
+                gap: 8px;
+            }
+
+            .cyber-hero {
+                padding: 50px 0 70px;
+                overflow-x: hidden;
+            }
+
+            .hero-cta-group {
+                flex-direction: column;
+                width: 100%;
+                align-items: stretch;
+                gap: 12px;
+                margin-bottom: 32px;
+            }
+
+            .btn-hero-primary,
+            .btn-hero-secondary {
+                width: 100%;
+                justify-content: center;
+                box-sizing: border-box;
+                padding: 14px 20px;
+            }
+
+            .hero-trust-matrix {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 12px;
+                max-width: 100%;
+            }
+
+            .terminal-glass-card {
+                padding: 24px 18px;
+                border-radius: 20px;
+            }
+
+            .timeline-steps-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .advantage-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-cols-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-inner-card {
+                padding: 40px 24px;
+            }
         }
 
         @media (max-width: 480px) {
-            .cyber-hero { padding: 36px 0 54px; }
-            .cyber-hero-grid { padding: 0 16px; gap: 24px; }
-            .hero-badge-live { font-size: 0.7rem; padding: 6px 12px; letter-spacing: 0.01em; margin-bottom: 16px; }
-            .hero-headline { font-size: clamp(1.75rem, 1.45rem + 2vw, 2.25rem); line-height: 1.15; margin-bottom: 14px; }
-            .hero-subhead { font-size: 0.92rem; line-height: 1.55; margin-bottom: 22px; }
-            .hero-trust-matrix { grid-template-columns: 1fr; gap: 14px; padding-top: 18px; }
-            .terminal-glass-card { padding: 18px 12px; border-radius: 16px; }
-            .terminal-input-box { padding: 4px 8px; }
-            .terminal-input-box input { font-size: 1.12rem; }
-            .terminal-currency-pill, .terminal-currency-select { padding: 6px 8px; font-size: 0.78rem; }
-            .terminal-rate-pill { padding: 8px 10px; font-size: 0.74rem; flex-direction: column; align-items: flex-start; gap: 4px; }
-            .btn-terminal-submit { padding: 14px; font-size: 0.92rem; }
-            .floating-badge { display: none !important; }
+            .cyber-hero {
+                padding: 36px 0 54px;
+            }
+
+            .cyber-hero-grid {
+                padding: 0 16px;
+                gap: 24px;
+            }
+
+            .hero-badge-live {
+                font-size: 0.7rem;
+                padding: 6px 12px;
+                letter-spacing: 0.01em;
+                margin-bottom: 16px;
+            }
+
+            .hero-headline {
+                font-size: clamp(1.75rem, 1.45rem + 2vw, 2.25rem);
+                line-height: 1.15;
+                margin-bottom: 14px;
+            }
+
+            .hero-subhead {
+                font-size: 0.92rem;
+                line-height: 1.55;
+                margin-bottom: 22px;
+            }
+
+            .hero-trust-matrix {
+                grid-template-columns: 1fr;
+                gap: 14px;
+                padding-top: 18px;
+            }
+
+            .terminal-glass-card {
+                padding: 18px 12px;
+                border-radius: 16px;
+            }
+
+            .terminal-input-box {
+                padding: 4px 8px;
+            }
+
+            .terminal-input-box input {
+                font-size: 1.12rem;
+            }
+
+            .terminal-currency-pill,
+            .terminal-currency-select {
+                padding: 6px 8px;
+                font-size: 0.78rem;
+            }
+
+            .terminal-rate-pill {
+                padding: 8px 10px;
+                font-size: 0.74rem;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+            }
+
+            .btn-terminal-submit {
+                padding: 14px;
+                font-size: 0.92rem;
+            }
+
+            .floating-badge {
+                display: none !important;
+            }
         }
 
         /* --- RESPONSIVE POLISH --- */
         @media (max-width: 1024px) {
-            .floating-badge { display: none !important; }
-            .cyber-hero-grid { grid-template-columns: 1fr; gap: 40px; padding: 0 20px; max-width: 100%; }
-            .advantage-grid { grid-template-columns: 1fr 1fr; }
-            .footer-cols-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+            .floating-badge {
+                display: none !important;
+            }
+
+            .cyber-hero-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+                padding: 0 20px;
+                max-width: 100%;
+            }
+
+            .advantage-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .footer-cols-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 32px;
+            }
         }
 
         @media (max-width: 768px) {
-            nav.nav { display: none; }
-            .mobile-header-cta { display: flex !important; gap: 8px; }
-            .cyber-hero { padding: 50px 0 70px; overflow-x: hidden; }
-            .hero-cta-group { flex-direction: column; width: 100%; align-items: stretch; gap: 12px; margin-bottom: 32px; }
-            .btn-hero-primary, .btn-hero-secondary { width: 100%; justify-content: center; box-sizing: border-box; padding: 14px 20px; }
-            .hero-trust-matrix { grid-template-columns: repeat(3, 1fr); gap: 12px; max-width: 100%; }
-            .terminal-glass-card { padding: 24px 18px; border-radius: 20px; }
-            .timeline-steps-grid { grid-template-columns: 1fr; }
-            .advantage-grid { grid-template-columns: 1fr; }
-            .footer-cols-grid { grid-template-columns: 1fr; }
-            .cta-inner-card { padding: 40px 24px; }
+            nav.nav {
+                display: none;
+            }
+
+            .mobile-header-cta {
+                display: flex !important;
+                gap: 8px;
+            }
+
+            .cyber-hero {
+                padding: 50px 0 70px;
+                overflow-x: hidden;
+            }
+
+            .hero-cta-group {
+                flex-direction: column;
+                width: 100%;
+                align-items: stretch;
+                gap: 12px;
+                margin-bottom: 32px;
+            }
+
+            .btn-hero-primary,
+            .btn-hero-secondary {
+                width: 100%;
+                justify-content: center;
+                box-sizing: border-box;
+                padding: 14px 20px;
+            }
+
+            .hero-trust-matrix {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 12px;
+                max-width: 100%;
+            }
+
+            .terminal-glass-card {
+                padding: 24px 18px;
+                border-radius: 20px;
+            }
+
+            .timeline-steps-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .advantage-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-cols-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-inner-card {
+                padding: 40px 24px;
+            }
         }
 
         @media (max-width: 480px) {
-            .cyber-hero { padding: 36px 0 54px; }
-            .cyber-hero-grid { padding: 0 16px; gap: 24px; }
-            .hero-badge-live { font-size: 0.7rem; padding: 6px 12px; letter-spacing: 0.01em; margin-bottom: 16px; }
-            .hero-headline { font-size: clamp(1.75rem, 1.45rem + 2vw, 2.25rem); line-height: 1.15; margin-bottom: 14px; }
-            .hero-subhead { font-size: 0.92rem; line-height: 1.55; margin-bottom: 22px; }
-            .hero-trust-matrix { grid-template-columns: 1fr; gap: 14px; padding-top: 18px; }
-            .terminal-glass-card { padding: 18px 12px; border-radius: 16px; }
-            .terminal-input-box { padding: 4px 8px; }
-            .terminal-input-box input { font-size: 1.12rem; }
-            .terminal-currency-pill, .terminal-currency-select { padding: 6px 8px; font-size: 0.78rem; }
-            .terminal-rate-pill { padding: 8px 10px; font-size: 0.74rem; flex-direction: column; align-items: flex-start; gap: 4px; }
-            .btn-terminal-submit { padding: 14px; font-size: 0.92rem; }
-            .floating-badge { display: none !important; }
+            .cyber-hero {
+                padding: 36px 0 54px;
+            }
+
+            .cyber-hero-grid {
+                padding: 0 16px;
+                gap: 24px;
+            }
+
+            .hero-badge-live {
+                font-size: 0.7rem;
+                padding: 6px 12px;
+                letter-spacing: 0.01em;
+                margin-bottom: 16px;
+            }
+
+            .hero-headline {
+                font-size: clamp(1.75rem, 1.45rem + 2vw, 2.25rem);
+                line-height: 1.15;
+                margin-bottom: 14px;
+            }
+
+            .hero-subhead {
+                font-size: 0.92rem;
+                line-height: 1.55;
+                margin-bottom: 22px;
+            }
+
+            .hero-trust-matrix {
+                grid-template-columns: 1fr;
+                gap: 14px;
+                padding-top: 18px;
+            }
+
+            .terminal-glass-card {
+                padding: 18px 12px;
+                border-radius: 16px;
+            }
+
+            .terminal-input-box {
+                padding: 4px 8px;
+            }
+
+            .terminal-input-box input {
+                font-size: 1.12rem;
+            }
+
+            .terminal-currency-pill,
+            .terminal-currency-select {
+                padding: 6px 8px;
+                font-size: 0.78rem;
+            }
+
+            .terminal-rate-pill {
+                padding: 8px 10px;
+                font-size: 0.74rem;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+            }
+
+            .btn-terminal-submit {
+                padding: 14px;
+                font-size: 0.92rem;
+            }
+
+            .floating-badge {
+                display: none !important;
+            }
         }
-    
+
         @media (max-width: 768px) {
-            .hero-trust-matrix { margin-left: auto; margin-right: auto; justify-items: center; text-align: center; }
-            .trust-stat-item { text-align: center; }
+            .hero-trust-matrix {
+                margin-left: auto;
+                margin-right: auto;
+                justify-items: center;
+                text-align: center;
+            }
+
+            .trust-stat-item {
+                text-align: center;
+            }
         }
-</style>
+    </style>
 </head>
 
 <body>
@@ -1651,7 +1986,7 @@
                 <img src="css/logo.png" alt="CryptoPlexTrade Logo" class="logo">
                 <span class="logo-name">CryptoPlex<span>Trade</span></span>
             </a>
-            
+
             <!-- Middle Top Floating Pill Navigation (Desktop) -->
             <div class="header-pill-nav">
                 <a href="index.html" class="header-pill-item active">Home</a>
@@ -1671,7 +2006,8 @@
             <!-- Mobile Controls (≤ 900px) -->
             <div class="header-mobile-controls">
                 <a href="register.html" class="mobile-quick-btn">Get Started</a>
-                <button type="button" class="mobile-hamburger-btn" id="mobile-hamburger-btn" aria-label="Toggle navigation menu" aria-expanded="false">
+                <button type="button" class="mobile-hamburger-btn" id="mobile-hamburger-btn"
+                    aria-label="Toggle navigation menu" aria-expanded="false">
                     <span class="ham-line"></span>
                     <span class="ham-line"></span>
                     <span class="ham-line"></span>
@@ -1687,32 +2023,53 @@
                     <img src="css/logo.png" alt="CryptoPlexTrade Logo" class="logo">
                     <span class="logo-name">CryptoPlex<span>Trade</span></span>
                 </a>
-                <button type="button" class="mobile-drawer-close" id="mobile-drawer-close" aria-label="Close menu">&times;</button>
+                <button type="button" class="mobile-drawer-close" id="mobile-drawer-close"
+                    aria-label="Close menu">&times;</button>
             </div>
 
             <nav class="mobile-drawer-links">
                 <a href="index.html" class="mobile-drawer-item active">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                        <polyline points="9 22 9 12 15 12 15 22" />
+                    </svg>
                     <span>Home</span>
                 </a>
                 <a href="rates" class="mobile-drawer-item">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="20" x2="12" y2="10" />
+                        <line x1="18" y1="20" x2="18" y2="4" />
+                        <line x1="6" y1="20" x2="6" y2="16" />
+                    </svg>
                     <span>Markets</span>
                 </a>
                 <a href="trade.html" class="mobile-drawer-item">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m16 3 4 4-4 4"/><path d="M20 7H4"/><path d="m8 21-4-4 4-4"/><path d="M4 17h16"/></svg>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="m16 3 4 4-4 4" />
+                        <path d="M20 7H4" />
+                        <path d="m8 21-4-4 4-4" />
+                        <path d="M4 17h16" />
+                    </svg>
                     <span>Trade</span>
                 </a>
                 <a href="why-us" class="mobile-drawer-item">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                    </svg>
                     <span>Infrastructure</span>
                 </a>
                 <a href="help.html" class="mobile-drawer-item">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10" />
+                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                        <line x1="12" y1="17" x2="12.01" y2="17" />
+                    </svg>
                     <span>Help Desk</span>
                 </a>
                 <a href="contact.html" class="mobile-drawer-item">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                    </svg>
                     <span>Contact</span>
                 </a>
             </nav>
@@ -1743,16 +2100,24 @@
                 </h1>
 
                 <p class="hero-subhead">
-                    Trade Bitcoin, Ethereum, and USDT directly with MTN Mobile Money, Telecel Cash, and Bank Transfer. Zero hidden spreads, non-custodial direct delivery, and settlement in minutes.
+                    Trade Bitcoin, Ethereum, and USDT directly with MTN Mobile Money, Telecel Cash, and Bank Transfer.
+                    Zero hidden spreads, non-custodial direct delivery, and settlement in minutes.
                 </p>
 
                 <div class="hero-cta-group">
                     <a href="trade.html" class="btn-hero-primary">
                         Launch Instant Exchange
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5">
+                            <path d="M5 12h14M12 5l7 7-7 7" />
+                        </svg>
                     </a>
                     <a href="#markets" class="btn-hero-secondary">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                            <polyline points="17 6 23 6 23 12"></polyline>
+                        </svg>
                         Live Order Book
                     </a>
                 </div>
@@ -1778,7 +2143,8 @@
             <div class="hero-terminal-wrap">
                 <!-- Floating animated decorative token cards -->
                 <div class="floating-badge btc">
-                    <img src="https://assets.coingecko.com/coins/images/1/small/bitcoin.png" alt="BTC" width="24" height="24">
+                    <img src="https://assets.coingecko.com/coins/images/1/small/bitcoin.png" alt="BTC" width="24"
+                        height="24">
                     <div>
                         <div style="font-size:0.75rem;font-weight:700;color:#fff;">BTC/GHS</div>
                         <div style="font-size:0.68rem;color:#10b981;font-family:var(--font-mono);">+3.42% ▲</div>
@@ -1786,7 +2152,8 @@
                 </div>
 
                 <div class="floating-badge usdt">
-                    <img src="https://assets.coingecko.com/coins/images/325/small/Tether.png" alt="USDT" width="24" height="24">
+                    <img src="https://assets.coingecko.com/coins/images/325/small/Tether.png" alt="USDT" width="24"
+                        height="24">
                     <div>
                         <div style="font-size:0.75rem;font-weight:700;color:#fff;">USDT/GHS</div>
                         <div style="font-size:0.68rem;color:#38bdf8;font-family:var(--font-mono);">Instant MoMo</div>
@@ -1804,7 +2171,7 @@
                     <div class="terminal-input-group">
                         <div class="terminal-label-row">
                             <span id="label-pay-mode">You Pay</span>
-                            
+
                         </div>
                         <div class="terminal-input-box">
                             <input type="number" id="terminal-pay-amount" value="1500" min="50" step="50">
@@ -1818,7 +2185,7 @@
                     <div class="terminal-input-group">
                         <div class="terminal-label-row">
                             <span id="label-receive-mode">You Receive (Estimated)</span>
-                            
+
                         </div>
                         <div class="terminal-input-box">
                             <input type="text" id="terminal-receive-amount" value="0.001045" readonly>
@@ -1838,7 +2205,11 @@
                             <strong id="terminal-live-rate" style="color:#ffffff;">1 USD = ₵15.85</strong>
                         </div>
                         <div class="lock-timer">
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.5">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
                             <span>Live rate</span>
                         </div>
                     </div>
@@ -1846,7 +2217,10 @@
                     <!-- Execution Action Button -->
                     <button type="button" class="btn-terminal-submit" id="btn-execute-quick-trade">
                         <span>Continue to Settlement</span>
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5">
+                            <path d="M5 12h14M12 5l7 7-7 7" />
+                        </svg>
                     </button>
                 </div>
             </div>
@@ -1857,17 +2231,37 @@
     <div class="live-trades-stream">
         <div class="live-trades-track" id="trades-stream-track">
             <!-- Simulated streaming trades for velocity & realism -->
-            <div class="trade-stream-item"><span class="trade-dot"></span> <span class="trade-crypto">0.052 BTC</span> bought via MTN MoMo <span class="trade-ghs">(₵49,800)</span> <span class="trade-time">• 4s ago</span></div>
-            <div class="trade-stream-item"><span class="trade-dot"></span> <span class="trade-crypto">1,500 USDT</span> sold to Telecel Cash <span class="trade-ghs">(₵23,850)</span> <span class="trade-time">• 12s ago</span></div>
-            <div class="trade-stream-item"><span class="trade-dot"></span> <span class="trade-crypto">0.85 ETH</span> bought via Bank Wire <span class="trade-ghs">(₵35,700)</span> <span class="trade-time">• 22s ago</span></div>
-            <div class="trade-stream-item"><span class="trade-dot"></span> <span class="trade-crypto">3,200 USDT</span> bought via AT Money <span class="trade-ghs">(₵50,880)</span> <span class="trade-time">• 38s ago</span></div>
-            <div class="trade-stream-item"><span class="trade-dot"></span> <span class="trade-crypto">0.12 BTC</span> sold to Stanbic Account <span class="trade-ghs">(₵114,600)</span> <span class="trade-time">• 54s ago</span></div>
+            <div class="trade-stream-item"><span class="trade-dot"></span> <span class="trade-crypto">0.052 BTC</span>
+                bought via MTN MoMo <span class="trade-ghs">(₵49,800)</span> <span class="trade-time">• 4s ago</span>
+            </div>
+            <div class="trade-stream-item"><span class="trade-dot"></span> <span class="trade-crypto">1,500 USDT</span>
+                sold to Telecel Cash <span class="trade-ghs">(₵23,850)</span> <span class="trade-time">• 12s ago</span>
+            </div>
+            <div class="trade-stream-item"><span class="trade-dot"></span> <span class="trade-crypto">0.85 ETH</span>
+                bought via Bank Wire <span class="trade-ghs">(₵35,700)</span> <span class="trade-time">• 22s ago</span>
+            </div>
+            <div class="trade-stream-item"><span class="trade-dot"></span> <span class="trade-crypto">3,200 USDT</span>
+                bought via AT Money <span class="trade-ghs">(₵50,880)</span> <span class="trade-time">• 38s ago</span>
+            </div>
+            <div class="trade-stream-item"><span class="trade-dot"></span> <span class="trade-crypto">0.12 BTC</span>
+                sold to Stanbic Account <span class="trade-ghs">(₵114,600)</span> <span class="trade-time">• 54s
+                    ago</span></div>
             <!-- Duplicated for continuous loop -->
-            <div class="trade-stream-item"><span class="trade-dot"></span> <span class="trade-crypto">0.052 BTC</span> bought via MTN MoMo <span class="trade-ghs">(₵49,800)</span> <span class="trade-time">• 4s ago</span></div>
-            <div class="trade-stream-item"><span class="trade-dot"></span> <span class="trade-crypto">1,500 USDT</span> sold to Telecel Cash <span class="trade-ghs">(₵23,850)</span> <span class="trade-time">• 12s ago</span></div>
-            <div class="trade-stream-item"><span class="trade-dot"></span> <span class="trade-crypto">0.85 ETH</span> bought via Bank Wire <span class="trade-ghs">(₵35,700)</span> <span class="trade-time">• 22s ago</span></div>
-            <div class="trade-stream-item"><span class="trade-dot"></span> <span class="trade-crypto">3,200 USDT</span> bought via AT Money <span class="trade-ghs">(₵50,880)</span> <span class="trade-time">• 38s ago</span></div>
-            <div class="trade-stream-item"><span class="trade-dot"></span> <span class="trade-crypto">0.12 BTC</span> sold to Stanbic Account <span class="trade-ghs">(₵114,600)</span> <span class="trade-time">• 54s ago</span></div>
+            <div class="trade-stream-item"><span class="trade-dot"></span> <span class="trade-crypto">0.052 BTC</span>
+                bought via MTN MoMo <span class="trade-ghs">(₵49,800)</span> <span class="trade-time">• 4s ago</span>
+            </div>
+            <div class="trade-stream-item"><span class="trade-dot"></span> <span class="trade-crypto">1,500 USDT</span>
+                sold to Telecel Cash <span class="trade-ghs">(₵23,850)</span> <span class="trade-time">• 12s ago</span>
+            </div>
+            <div class="trade-stream-item"><span class="trade-dot"></span> <span class="trade-crypto">0.85 ETH</span>
+                bought via Bank Wire <span class="trade-ghs">(₵35,700)</span> <span class="trade-time">• 22s ago</span>
+            </div>
+            <div class="trade-stream-item"><span class="trade-dot"></span> <span class="trade-crypto">3,200 USDT</span>
+                bought via AT Money <span class="trade-ghs">(₵50,880)</span> <span class="trade-time">• 38s ago</span>
+            </div>
+            <div class="trade-stream-item"><span class="trade-dot"></span> <span class="trade-crypto">0.12 BTC</span>
+                sold to Stanbic Account <span class="trade-ghs">(₵114,600)</span> <span class="trade-time">• 54s
+                    ago</span></div>
         </div>
     </div>
 
@@ -1877,7 +2271,8 @@
             <div class="section-header-dark">
                 <span class="section-tag-cyber">Live Liquidity Feed</span>
                 <h2 class="section-title-dark">Institutional Market Rates</h2>
-                <p class="section-desc-dark">Real-time cryptographic rate indices verified with tier-one global market depth and transparent local settlement pricing.</p>
+                <p class="section-desc-dark">Real-time cryptographic rate indices verified with tier-one global market
+                    depth and transparent local settlement pricing.</p>
             </div>
 
             <div class="markets-table-card">
@@ -1910,40 +2305,58 @@
             <div class="section-header-dark">
                 <span class="section-tag-cyber">Institutional Infrastructure</span>
                 <h2 class="section-title-dark">Why Professional Traders Choose Us</h2>
-                <p class="section-desc-dark">Engineered to eliminate exchange delays, slippage gouging, and non-responsive support desks.</p>
+                <p class="section-desc-dark">Engineered to eliminate exchange delays, slippage gouging, and
+                    non-responsive support desks.</p>
             </div>
 
             <div class="advantage-grid">
                 <div class="advantage-card">
                     <div class="advantage-icon-box">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="5" width="20" height="14" rx="2" />
+                            <line x1="2" y1="10" x2="22" y2="10" />
+                        </svg>
                     </div>
                     <h3>Instant MoMo Rails</h3>
-                    <p>Direct integration with MTN Mobile Money, Telecel Cash, and all major Ghanaian commercial banks for near-instant fiat release.</p>
+                    <p>Direct integration with MTN Mobile Money, Telecel Cash, and all major Ghanaian commercial banks
+                        for near-instant fiat release.</p>
                 </div>
 
                 <div class="advantage-card">
                     <div class="advantage-icon-box">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                        </svg>
                     </div>
                     <h3>Cold Vault Custody</h3>
-                    <p>98% of all cryptographic reserves are stored in multisig institutional cold storage with zero internet exposure.</p>
+                    <p>98% of all cryptographic reserves are stored in multisig institutional cold storage with zero
+                        internet exposure.</p>
                 </div>
 
                 <div class="advantage-card">
                     <div class="advantage-icon-box">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/><path d="m14.83 14.83 4.24 4.24"/><path d="m9.17 14.83-4.24 4.24"/></svg>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10" />
+                            <path d="m4.93 4.93 4.24 4.24" />
+                            <path d="m14.83 9.17 4.24-4.24" />
+                            <path d="m14.83 14.83 4.24 4.24" />
+                            <path d="m9.17 14.83-4.24 4.24" />
+                        </svg>
                     </div>
                     <h3>Non-Custodial Delivery</h3>
-                    <p>Cryptocurrency purchases are broadcast directly to your private self-hosted or hardware wallet address with on-chain verification.</p>
+                    <p>Cryptocurrency purchases are broadcast directly to your private self-hosted or hardware wallet
+                        address with on-chain verification.</p>
                 </div>
 
                 <div class="advantage-card">
                     <div class="advantage-icon-box">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                        </svg>
                     </div>
                     <h3>Dedicated Human Desk</h3>
-                    <p>Every transaction is monitored by active OTC operators. Direct telephone and live chat support whenever you need assistance.</p>
+                    <p>Every transaction is monitored by active OTC operators. Direct telephone and live chat support
+                        whenever you need assistance.</p>
                 </div>
             </div>
         </div>
@@ -1962,19 +2375,22 @@
                 <div class="timeline-step-card">
                     <span class="step-index-badge">STEP 01</span>
                     <h3>Register Account</h3>
-                    <p>Create your verified trading profile in 60 seconds with simple mobile and email authentication.</p>
+                    <p>Create your verified trading profile in 60 seconds with simple mobile and email authentication.
+                    </p>
                 </div>
 
                 <div class="timeline-step-card">
                     <span class="step-index-badge">STEP 02</span>
                     <h3>Lock Rate &amp; Transfer</h3>
-                    <p>Choose Buy or Sell, select your asset, and complete payment via Mobile Money or your preferred bank app.</p>
+                    <p>Choose Buy or Sell, select your asset, and complete payment via Mobile Money or your preferred
+                        bank app.</p>
                 </div>
 
                 <div class="timeline-step-card">
                     <span class="step-index-badge">STEP 03</span>
                     <h3>Instant Settlement</h3>
-                    <p>Crypto is dispatched straight to your wallet or GHS funds land in your Mobile Money wallet within minutes.</p>
+                    <p>Crypto is dispatched straight to your wallet or GHS funds land in your Mobile Money wallet within
+                        minutes.</p>
                 </div>
             </div>
         </div>
@@ -1993,40 +2409,54 @@
                 <div class="faq-accordion-item open">
                     <button type="button" class="faq-trigger">
                         <span>How fast is Mobile Money payout settlement?</span>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
                     </button>
                     <div class="faq-content">
-                        Most Mobile Money (MTN MoMo, Telecel Cash, AT Money) transactions are completed within 1 to 5 minutes after transaction verification. Bank transfers typically settle within the same business hour.
+                        Most Mobile Money (MTN MoMo, Telecel Cash, AT Money) transactions are completed within 1 to 5
+                        minutes after transaction verification. Bank transfers typically settle within the same business
+                        hour.
                     </div>
                 </div>
 
                 <div class="faq-accordion-item">
                     <button type="button" class="faq-trigger">
                         <span>Which cryptocurrencies are supported on CryptoPlexTrade?</span>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
                     </button>
                     <div class="faq-content">
-                        We actively support Bitcoin (BTC), Ethereum (ETH), USDT on TRON (TRC-20), and USDT on Ethereum (ERC-20), with additional layer-1 assets continuously integrated based on liquidity.
+                        We actively support Bitcoin (BTC), Ethereum (ETH), USDT on TRON (TRC-20), and USDT on Ethereum
+                        (ERC-20), with additional layer-1 assets continuously integrated based on liquidity.
                     </div>
                 </div>
 
                 <div class="faq-accordion-item">
                     <button type="button" class="faq-trigger">
                         <span>Are there hidden exchange fees or withdrawal penalties?</span>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
                     </button>
                     <div class="faq-content">
-                        Zero hidden fees. The exact exchange rate and miner network fee displayed on your order summary is the exact total you pay or receive. What you see is what you get.
+                        Zero hidden fees. The exact exchange rate and miner network fee displayed on your order summary
+                        is the exact total you pay or receive. What you see is what you get.
                     </div>
                 </div>
 
                 <div class="faq-accordion-item">
                     <button type="button" class="faq-trigger">
                         <span>What should I do if I need urgent help with a transfer?</span>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
                     </button>
                     <div class="faq-content">
-                        You can call our direct telephone desk at <strong style="color:#ffffff;">0246556706</strong>, email us at <strong style="color:#ffffff;">Supportteam@cryptoplextrades.com</strong>, or open a live chat session directly through the chat widget on the bottom right of your screen.
+                        You can call our direct telephone desk at <strong style="color:#ffffff;">0246556706</strong>,
+                        email us at <strong style="color:#ffffff;">Supportteam@cryptoplextrades.com</strong>, or open a
+                        live chat session directly through the chat widget on the bottom right of your screen.
                     </div>
                 </div>
             </div>
@@ -2037,10 +2467,14 @@
     <div class="cyber-cta-banner">
         <div class="cta-inner-card">
             <h2>Ready to Trade with Sovereign Precision?</h2>
-            <p>Join thousands of smart individuals and businesses in Ghana and Africa trading digital assets with zero friction.</p>
-            <a href="register.html" class="btn-hero-primary" style="display:inline-flex; padding: 18px 40px; font-size: 1.05rem;">
+            <p>Join thousands of smart individuals and businesses in Ghana and Africa trading digital assets with zero
+                friction.</p>
+            <a href="register.html" class="btn-hero-primary"
+                style="display:inline-flex; padding: 18px 40px; font-size: 1.05rem;">
                 Create Free Trading Account
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
             </a>
         </div>
     </div>
@@ -2055,7 +2489,8 @@
                         <span class="logo-name">CryptoPlex<span>Trade</span></span>
                     </a>
                     <p style="font-size: 0.88rem; color: #94a3b8; line-height: 1.6; max-width: 320px;">
-                        Sovereign digital asset gateway providing instant Mobile Money and banking cryptocurrency exchange services.
+                        Sovereign digital asset gateway providing instant Mobile Money and banking cryptocurrency
+                        exchange services.
                     </p>
                 </div>
 
@@ -2226,7 +2661,7 @@
                             });
                             data = { RAW: raw };
                         }
-                    } catch (e2) {}
+                    } catch (e2) { }
                 }
 
                 // Fallback default data if offline
@@ -2255,7 +2690,7 @@
                             <div class="ticker-tape__item">
                                 <span class="pair">${sym}/USD</span>
                                 <span class="price">${formattedPrice}</span>
-                                <span class="change ${dir}">${sign}${c.CHANGEPCT24HOUR.toFixed(2)}% ${dir==='up'?'▲':'▼'}</span>
+                                <span class="change ${dir}">${sign}${c.CHANGEPCT24HOUR.toFixed(2)}% ${dir === 'up' ? '▲' : '▼'}</span>
                             </div>
                         `;
                     });
@@ -2325,7 +2760,7 @@
                 const payVal = parseFloat(payInput.value) || 0;
                 const selectedCrypto = cryptoSelect.value;
                 const usdAmount = payVal / adminGhsRate;
-                
+
                 let coinPriceUsd = 68000;
                 if (selectedCrypto === 'BTC') coinPriceUsd = 68000;
                 else if (selectedCrypto === 'ETH') coinPriceUsd = 3500;
@@ -2436,4 +2871,5 @@
     </script>
     <script src="/chat-widget.js"></script>
 </body>
+
 </html>

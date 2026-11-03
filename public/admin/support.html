@@ -102,13 +102,19 @@
                 </div>
             </header>
 <div class="admin-container">
-<div class="admin-header">
-                <h1>Support Tickets</h1>
-                <p>View and respond to user support requests.</p>
+            <div class="admin-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+                <div>
+                    <h1>Support Tickets</h1>
+                    <p>View and respond to user support requests.</p>
+                </div>
+                <button type="button" class="btn-primary" id="refresh-tickets-btn" style="padding: 9px 18px; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 6px;">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"/></svg>
+                    <span>Refresh</span>
+                </button>
             </div>
 
             <div class="table-container">
-                <table>
+                <table class="data-table--cards">
                     <thead>
                         <tr>
                             <th>Ticket ID</th>
@@ -160,6 +166,13 @@
     <script>
         document.addEventListener('DOMContentLoaded', async function() {
             const tbody = document.getElementById('tickets-tbody');
+            const modal = document.getElementById('details-modal');
+            const closeModalBtn = document.getElementById('close-modal-btn');
+            const modalSubject = document.getElementById('modal-ticket-subject');
+            const modalBody = document.getElementById('modal-body-content');
+            const replyForm = document.getElementById('reply-form');
+            const formMessage = document.getElementById('form-message');
+            const refreshBtn = document.getElementById('refresh-tickets-btn');
             let allTickets = [];
 
             const pager = new AdminPagination({
@@ -170,7 +183,7 @@
 
             async function fetchTickets() {
                 try {
-                    tbody.innerHTML = '<tr><td colspan="6">Loading...</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px;">Loading support tickets...</td></tr>';
                     const response = await fetch('/api/admin/tickets', { credentials: 'include' });
                     if (response.status === 401 || response.status === 403) {
                         window.location.href = '/admin-login';
@@ -185,85 +198,82 @@
                 }
             }
 
-            function renderTickets(tickets) {
-                const modal = document.getElementById('details-modal');
-                const closeModalBtn = document.getElementById('close-modal-btn');
-                const modalSubject = document.getElementById('modal-ticket-subject');
-                const modalBody = document.getElementById('modal-body-content');
+            if (refreshBtn) {
+                refreshBtn.addEventListener('click', fetchTickets);
+            }
 
+            function renderTickets(tickets) {
                 tbody.innerHTML = '';
-                if (tickets.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="6">No support tickets found.</td></tr>';
+                if (!tickets || tickets.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:28px;color:var(--text-secondary);">No support tickets found.</td></tr>';
                     return;
                 }
                 tickets.forEach(ticket => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                        <td data-label="Ticket ID" style="font-family:var(--font-mono);font-size:0.8rem;color:var(--text-secondary);">${ticket.id}</td>
-                        <td data-label="User Email" style="font-weight:500;">${ticket.email}</td>
+                        <td data-label="Ticket ID" style="font-family:var(--font-mono);font-size:0.8rem;color:var(--text-secondary);">#${ticket.id}</td>
+                        <td data-label="User Email" style="font-weight:600;color:var(--text-primary);">${ticket.email || '—'}</td>
                         <td data-label="Subject" style="font-weight:600;color:var(--text-primary);">${ticket.subject}</td>
                         <td data-label="Status"><span class="status-badge status-${ticket.status}">${ticket.status}</span></td>
                         <td data-label="Last Updated" style="font-size:0.8rem;color:var(--text-secondary);">${new Date(ticket.updated_at).toLocaleString()}</td>
-                        <td data-label="Action"><button class="action-btn" data-ticket-id="${ticket.id}">View</button></td>
+                        <td data-label="Action"><button type="button" class="action-btn" data-ticket-id="${ticket.id}">View</button></td>
                     `;
                     tbody.appendChild(row);
                 });
-
-                const replyForm = document.getElementById('reply-form');
-                const formMessage = document.getElementById('form-message');
-
-                replyForm.addEventListener('submit', async function(e) {
-                    e.preventDefault();
-                    const ticketId = this.dataset.ticketId;
-                    const messageTextarea = document.getElementById('reply-message');
-                    const message = messageTextarea.value;
-
-                    if (!ticketId || !message.trim()) return;
-
-                    try {
-                        const csrfToken = getCookie('csrf-token');
-                        const response = await fetch(`/api/admin/tickets/${ticketId}/reply`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrfToken },
-                            body: JSON.stringify({ message })
-                        });
-                        if (!response.ok) throw new Error('Failed to send reply.');
-
-                        messageTextarea.value = ''; // Clear textarea
-                        formMessage.style.display = 'none';
-                        await openTicketModal(ticketId); // Refresh modal content
-                        fetchTickets(); // Refresh the main ticket list to update status/date
-                    } catch (error) {
-                        formMessage.textContent = error.message;
-                        formMessage.className = 'message error';
-                        formMessage.style.display = 'block';
-                    }
-                });
-
-                document.querySelectorAll('.action-btn').forEach(button => {
-                    button.addEventListener('click', async function() {
-                        const ticketId = this.dataset.ticketId;
-                        // Use the dedicated function to open the modal, which correctly sets the ticket ID on the form.
-                        await openTicketModal(ticketId);
-                    });
-                });
-                closeModalBtn.addEventListener('click', () => modal.classList.remove('show'));
-                modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('show'); });
             }
 
-            async function openTicketModal(ticketId) {
-                const modal = document.getElementById('details-modal');
-                const modalSubject = document.getElementById('modal-ticket-subject');
-                const modalBody = document.getElementById('modal-body-content');
-                const replyForm = document.getElementById('reply-form');
+            // Event delegation on tbody for action buttons
+            tbody.addEventListener('click', async function(e) {
+                const btn = e.target.closest('.action-btn');
+                if (!btn) return;
+                const ticketId = btn.dataset.ticketId;
+                if (ticketId) await openTicketModal(ticketId);
+            });
+
+            // Single reply form submit listener
+            replyForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const ticketId = this.dataset.ticketId;
+                const messageTextarea = document.getElementById('reply-message');
+                const message = messageTextarea.value.trim();
+
+                if (!ticketId || !message) return;
 
                 try {
+                    const csrfToken = getCookie('admin-csrf-token') || getCookie('csrf-token');
+                    const response = await fetch(`/api/admin/tickets/${ticketId}/reply`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrfToken },
+                        body: JSON.stringify({ message })
+                    });
+                    if (!response.ok) throw new Error('Failed to send reply.');
+
+                    messageTextarea.value = '';
+                    formMessage.style.display = 'none';
+                    await openTicketModal(ticketId);
+                    fetchTickets();
+                } catch (error) {
+                    formMessage.textContent = error.message;
+                    formMessage.className = 'message error';
+                    formMessage.style.display = 'block';
+                }
+            });
+
+            closeModalBtn.addEventListener('click', () => modal.classList.remove('show'));
+            modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('show'); });
+
+            async function openTicketModal(ticketId) {
+                try {
+                    modalSubject.textContent = `Loading Ticket #${ticketId}…`;
+                    modalBody.innerHTML = '<p style="padding:20px;text-align:center;">Loading conversation…</p>';
+                    modal.classList.add('show');
+
                     const detailResponse = await fetch(`/api/admin/tickets/${ticketId}`, { credentials: 'include' });
                     if (!detailResponse.ok) throw new Error('Could not load ticket details.');
                     const detailData = await detailResponse.json();
 
                     modalSubject.textContent = `Ticket #${detailData.ticket.id}: ${detailData.ticket.subject}`;
-                    modalBody.innerHTML = ''; // Clear previous content
+                    modalBody.innerHTML = '';
 
                     const messageListDiv = document.createElement('div');
                     messageListDiv.className = 'message-list';
@@ -271,14 +281,13 @@
                     detailData.replies.forEach(reply => {
                         const replyItem = document.createElement('div');
                         replyItem.className = `message-item ${reply.is_admin ? 'admin' : 'user'}`;
-                        replyItem.innerHTML = `<div><span class="message-author">${reply.is_admin ? 'Admin' : 'User'}</span> <span class="message-date">${new Date(reply.created_at).toLocaleString()}</span></div><div class="message-body"></div>`;
+                        replyItem.innerHTML = `<div><span class="message-author">${reply.is_admin ? 'Admin' : 'User (' + (detailData.ticket.email || 'Customer') + ')'}</span> <span class="message-date">${new Date(reply.created_at).toLocaleString()}</span></div><div class="message-body"></div>`;
                         replyItem.querySelector('.message-body').textContent = reply.message;
                         messageListDiv.appendChild(replyItem);
                     });
 
                     modalBody.appendChild(messageListDiv);
-                    replyForm.dataset.ticketId = ticketId; // Set ticket ID on the form for submission
-                    modal.classList.add('show');
+                    replyForm.dataset.ticketId = ticketId;
                 } catch (detailError) {
                     alert(detailError.message);
                 }

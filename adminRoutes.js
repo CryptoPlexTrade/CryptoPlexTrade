@@ -114,7 +114,9 @@ router.put('/orders/:id/status', async (req, res) => {
 // === SUPPORT TICKET MANAGEMENT ===
 router.get('/tickets', async (req, res) => {
     try {
-        const [tickets] = await db.query('SELECT t.*, u.email FROM support_tickets t JOIN users u ON t.user_id = u.id ORDER BY t.updated_at DESC');
+        const [tickets] = await db.query(
+            "SELECT t.*, COALESCE(u.email, 'guest@cryptoplex.internal') AS email FROM support_tickets t LEFT JOIN users u ON t.user_id = u.id ORDER BY t.updated_at DESC"
+        );
         res.json(tickets);
     } catch (error) {
         logger.error('Admin tickets fetch error:', error);
@@ -126,7 +128,7 @@ router.get('/tickets', async (req, res) => {
 router.get('/tickets/:id', async (req, res) => {
     try {
         const [tickets] = await db.query(
-            'SELECT t.*, u.email FROM support_tickets t JOIN users u ON t.user_id = u.id WHERE t.id = ?',
+            "SELECT t.*, COALESCE(u.email, 'guest@cryptoplex.internal') AS email FROM support_tickets t LEFT JOIN users u ON t.user_id = u.id WHERE t.id = ?",
             [req.params.id]
         );
         if (tickets.length === 0) {

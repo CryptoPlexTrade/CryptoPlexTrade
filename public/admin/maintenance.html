@@ -3,56 +3,354 @@
 <head>
     <meta charset="UTF-8">
     <link rel="icon" type="image/png" href="../css/logo.png">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maintenance Mode - Admin</title>
-        <link rel=preconnect href="https://fonts.googleapis.com">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Maintenance Mode Control — Admin Console</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/tokens.css">
+    <link rel="stylesheet" href="admin.css?v=6">
 
-    <link rel="stylesheet" href="admin.css?v=5">
     <style>
-        .maint-card { max-width: 760px; }
-        .toggle-row { display: flex; align-items: center; gap: 14px; margin-bottom: 22px; }
-        .toggle-switch { position: relative; width: 50px; height: 26px; flex-shrink: 0; }
+        .maint-grid {
+            display: grid;
+            grid-template-columns: 1.15fr 0.85fr;
+            gap: 24px;
+            align-items: start;
+        }
+        @media (max-width: 1024px) {
+            .maint-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .maint-card {
+            background: var(--bg-card, #ffffff);
+            border: 1px solid var(--border-light, #e2e8f0);
+            border-radius: 16px;
+            padding: 28px;
+            box-shadow: 0 4px 20px rgba(11, 45, 90, 0.04);
+            margin-bottom: 24px;
+        }
+
+        .maint-card-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-light, #f1f5f9);
+        }
+
+        .maint-card-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text-primary, #0a192f);
+            margin: 0;
+        }
+
+        .maint-card-title svg {
+            color: var(--primary-color, #0052cc);
+            width: 20px;
+            height: 20px;
+        }
+
+        .maint-alert-box {
+            display: none;
+            background: #fffbeb;
+            border: 1.5px solid #fde68a;
+            border-radius: 12px;
+            padding: 16px 18px;
+            margin-bottom: 22px;
+            gap: 14px;
+            align-items: flex-start;
+        }
+        .maint-alert-box.show {
+            display: flex;
+        }
+        .maint-alert-box svg {
+            color: #d97706;
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+        .maint-alert-box h4 {
+            margin: 0 0 4px 0;
+            font-size: 0.92rem;
+            font-weight: 800;
+            color: #92400e;
+        }
+        .maint-alert-box p {
+            margin: 0;
+            font-size: 0.82rem;
+            color: #b45309;
+            line-height: 1.5;
+        }
+
+        .toggle-row-modern {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--bg-surface, #f8fafc);
+            border: 1px solid var(--border-light, #e2e8f0);
+            border-radius: 12px;
+            padding: 18px 20px;
+            margin-bottom: 22px;
+        }
+
+        .toggle-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 52px;
+            height: 28px;
+            flex-shrink: 0;
+        }
         .toggle-switch input { opacity: 0; width: 0; height: 0; }
         .toggle-slider {
-            position: absolute; cursor: pointer; inset: 0; background: var(--border-medium);
-            border-radius: 28px; transition: .3s;
+            position: absolute; cursor: pointer; inset: 0;
+            background: #cbd5e1;
+            border-radius: 28px; transition: .25s ease;
         }
         .toggle-slider::before {
-            content: ''; position: absolute; height: 20px; width: 20px; left: 3px; bottom: 3px;
-            background: #fff; border-radius: 50%; transition: .3s; box-shadow: 0 2px 4px rgba(0,0,0,.25);
+            content: ''; position: absolute; height: 20px; width: 20px; left: 4px; bottom: 4px;
+            background: #ffffff; border-radius: 50%; transition: .25s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,.2);
         }
-        .toggle-switch input:checked + .toggle-slider { background: #ef4444; }
-        .toggle-switch input:checked + .toggle-slider::before { transform: translateX(24px); }
-        .toggle-label { font-weight: 600; font-size: .95rem; color: var(--text-primary); }
-        .status-indicator { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 20px; font-size: .8rem; font-weight: 600; }
-        .status-indicator.live { background: rgba(239,68,68,.15); color: #ef4444; border: 1px solid rgba(239,68,68,.3); }
-        .status-indicator.off { background: rgba(16,185,129,.15); color: #10b981; border: 1px solid rgba(16,185,129,.3); }
-        .status-dot { width: 8px; height: 8px; border-radius: 50%; }
-        .status-indicator.live .status-dot { background: #ef4444; animation: pulse 1.5s infinite; }
-        .status-indicator.off .status-dot { background: #10b981; }
-        @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .4; } }
-
-        .warning-box {
-            background: rgba(239,68,68,.1); border: 1px solid rgba(239,68,68,.3);
-            border-radius: 12px; padding: 16px 20px; margin-bottom: 22px;
-            display: none; align-items: flex-start; gap: 12px;
+        .toggle-switch input:checked + .toggle-slider {
+            background: #ef4444;
         }
-        .warning-box.show { display: flex; }
-        .warning-box svg { width: 22px; height: 22px; flex-shrink: 0; color: #ef4444; margin-top: 2px; }
-        .warning-box p { font-size: .88rem; color: var(--text-secondary); line-height: 1.6; margin: 0; }
-        .warning-box strong { color: #ef4444; }
+        .toggle-switch input:checked + .toggle-slider::before {
+            transform: translateX(24px);
+        }
 
-        .save-row { display: flex; align-items: center; gap: 16px; margin-top: 24px; }
-        .save-msg { font-size: .88rem; font-weight: 600; }
-        .save-msg.success { color: #10b981; }
-        .save-msg.error { color: #ef4444; }
+        .toggle-desc h4 {
+            margin: 0 0 2px 0;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-primary, #0a192f);
+        }
+        .toggle-desc p {
+            margin: 0;
+            font-size: 0.8rem;
+            color: var(--text-secondary, #64748b);
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 9999px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+        }
+        .status-pill.online {
+            background: rgba(34, 197, 94, 0.12);
+            color: #16a34a;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+        .status-pill.offline {
+            background: rgba(239, 68, 68, 0.12);
+            color: #dc2626;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+        .status-pill .dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+        }
+        .status-pill.online .dot { background: #16a34a; }
+        .status-pill.offline .dot { background: #ef4444; animation: pulseOffline 1.2s infinite; }
+        @keyframes pulseOffline { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: .4; transform: scale(0.9); } }
+
+        .preset-pills {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+        .preset-btn {
+            background: var(--bg-surface, #f8fafc);
+            border: 1px solid var(--border-medium, #cbd5e1);
+            color: var(--text-secondary, #475569);
+            font-size: 0.78rem;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 9999px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .preset-btn:hover {
+            background: var(--blue-050, #f0f7ff);
+            border-color: var(--primary-color, #0052cc);
+            color: var(--primary-color, #0052cc);
+        }
+
+        .form-field-item {
+            margin-bottom: 20px;
+        }
+        .form-field-item label {
+            display: block;
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--text-primary, #0a192f);
+            margin-bottom: 8px;
+        }
+        .form-field-item textarea {
+            width: 100%;
+            padding: 13px 16px;
+            background: #ffffff;
+            border: 1.5px solid var(--border-medium, #cbd5e1);
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 0.92rem;
+            color: var(--text-primary, #0a192f);
+            outline: none;
+            transition: all 0.15s ease;
+            box-sizing: border-box;
+            min-height: 110px;
+            resize: vertical;
+            line-height: 1.5;
+        }
+        .form-field-item textarea:focus {
+            border-color: var(--primary-color, #0052cc);
+            box-shadow: 0 0 0 3px rgba(0, 82, 204, 0.15);
+        }
+
+        .save-bar {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-top: 26px;
+            padding-top: 18px;
+            border-top: 1px solid var(--border-light, #f1f5f9);
+            flex-wrap: wrap;
+        }
+        .btn-save-settings {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 13px 28px;
+            background: linear-gradient(135deg, var(--primary-color, #0052cc) 0%, #0077c8 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 9999px;
+            font-family: inherit;
+            font-size: 0.92rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(0, 82, 204, 0.25);
+            transition: all 0.2s ease;
+        }
+        .btn-save-settings.danger {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            box-shadow: 0 4px 14px rgba(220, 38, 38, 0.3);
+        }
+        .btn-save-settings:hover {
+            transform: translateY(-1px);
+        }
+        .btn-save-settings:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .save-status-msg {
+            font-size: 0.88rem;
+            font-weight: 600;
+        }
+        .save-status-msg.success { color: #16a34a; }
+        .save-status-msg.error { color: #dc2626; }
+
+        /* Simulator Card */
+        .preview-pane {
+            position: sticky;
+            top: 20px;
+        }
+        .sim-browser {
+            background: #ffffff;
+            border: 1px solid var(--border-light, #e2e8f0);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+        }
+        .sim-browser-head {
+            background: #f1f5f9;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .sim-dot { width: 9px; height: 9px; border-radius: 50%; }
+        .sim-dot.red { background: #ef4444; }
+        .sim-dot.yellow { background: #f59e0b; }
+        .sim-dot.green { background: #10b981; }
+        .sim-url {
+            margin-left: 10px;
+            background: #ffffff;
+            border-radius: 6px;
+            padding: 3px 12px;
+            font-size: 0.72rem;
+            font-family: var(--font-mono, monospace);
+            color: #64748b;
+            flex: 1;
+        }
+        .sim-browser-body {
+            padding: 36px 24px;
+            text-align: center;
+            background: #fafcff;
+        }
+        .sim-icon-orb {
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            background: #eff6ff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            color: var(--primary-color, #0052cc);
+        }
+        .sim-icon-orb svg { width: 28px; height: 28px; }
+        .sim-title {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #0a192f;
+            margin: 0 0 8px 0;
+        }
+        .sim-msg {
+            font-size: 0.85rem;
+            color: #64748b;
+            line-height: 1.6;
+            margin: 0 auto 20px;
+            max-width: 320px;
+            white-space: pre-wrap;
+        }
+        .sim-badge {
+            display: inline-block;
+            background: #e2e8f0;
+            color: #334155;
+            font-size: 0.74rem;
+            font-weight: 700;
+            padding: 5px 12px;
+            border-radius: 9999px;
+        }
     </style>
 </head>
 <body>
-    <!-- ================== MODERN TOPBAR & FLOATING PILL MENU ================== -->
     <div class="admin-layout">
         <div class="rail-backdrop" id="rail-backdrop"></div>
 
@@ -140,52 +438,99 @@
                     <a href="#" id="logout-btn" class="admin-logout-btn">Sign Out</a>
                 </div>
             </header>
-<div class="admin-container">
-<div class="admin-header">
-                <div>
-                    <h1>Maintenance Mode</h1>
-                    <p>Toggle platform access for scheduled maintenance. Admin control panel remains operational.</p>
+
+            <div class="admin-container">
+                <div class="admin-header" style="margin-bottom: 24px;">
+                    <div>
+                        <h1 style="font-size: 1.75rem; font-weight: 800; color: var(--text-primary); margin-bottom: 4px;">Maintenance Control</h1>
+                        <p style="font-size: 0.9rem; color: var(--text-secondary);">Direct emergency and scheduled maintenance kill-switch. Authorized administrative channels remain fully accessible.</p>
+                    </div>
+                </div>
+
+                <div class="maint-grid">
+                    <!-- Left Column: Master Toggle & Notice Form -->
+                    <div class="maint-card">
+                        <div class="maint-card-head">
+                            <h2 class="maint-card-title">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 6.75a5.25 5.25 0 0 1 6.775-5.025.75.75 0 0 1 .313 1.248l-3.32 3.319c.063.475.276.934.641 1.299.365.365.824.578 1.3.64l3.318-3.319a.75.75 0 0 1 1.248.313 5.25 5.25 0 0 1-5.472 6.756c-1.018-.086-1.87.1-2.309.634L7.344 21.3A3.298 3.298 0 1 1 2.7 16.657l8.684-7.151c.533-.44.72-1.291.634-2.309A5.342 5.342 0 0 1 12 6.75Z" clip-rule="evenodd"/></svg>
+                                Master Gateway Isolation
+                            </h2>
+                        </div>
+
+                        <!-- Active Warning Alert Box -->
+                        <div class="maint-alert-box" id="warning-box">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003ZM12 8.25a.75.75 0 0 1 .75-.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" clip-rule="evenodd"/></svg>
+                            <div>
+                                <h4>Exchange Gateway Is Offline</h4>
+                                <p>All public customer pages are currently intercepted and redirecting to the maintenance landing page. Only administrative sessions are permitted.</p>
+                            </div>
+                        </div>
+
+                        <!-- Modern Master Toggle Row -->
+                        <div class="toggle-row-modern">
+                            <div class="toggle-left">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="maint-active">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                                <div class="toggle-desc">
+                                    <h4>Enable Maintenance Mode</h4>
+                                    <p>Intercept public visitors &amp; suspend customer order desks</p>
+                                </div>
+                            </div>
+                            <span class="status-pill online" id="status-badge">
+                                <span class="dot"></span>
+                                <span id="status-text">Platform Live</span>
+                            </span>
+                        </div>
+
+                        <!-- Presets -->
+                        <label style="font-size:0.8rem; font-weight:700; color:var(--text-secondary); margin-bottom:8px; display:block;">Quick Message Presets</label>
+                        <div class="preset-pills">
+                            <button type="button" class="preset-btn" data-msg="We are performing scheduled core protocol optimization. Our trading desks and liquidity corridors will resume shortly.">⚙️ Scheduled Optimization</button>
+                            <button type="button" class="preset-btn" data-msg="Scheduled database and ledger maintenance in progress. All customer balances are secure and trading will reopen immediately after completion.">🔒 Security Upgrade</button>
+                            <button type="button" class="preset-btn" data-msg="MoMo payment gateway and bank clearing synchronization in progress. Thank you for your patience.">⚡ Liquidity Clearing</button>
+                        </div>
+
+                        <div class="form-field-item">
+                            <label for="maint-message">Public Notice Message Body</label>
+                            <textarea id="maint-message" placeholder="We are performing scheduled maintenance. We'll be back shortly!"></textarea>
+                        </div>
+
+                        <div class="save-bar">
+                            <button type="button" class="btn-save-settings" id="save-btn">
+                                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z"/></svg>
+                                <span>Save Settings</span>
+                            </button>
+                            <span class="save-status-msg" id="save-msg"></span>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Live Intercept Simulator -->
+                    <div class="preview-pane">
+                        <div class="sim-browser">
+                            <div class="sim-browser-head">
+                                <span class="sim-dot red"></span>
+                                <span class="sim-dot yellow"></span>
+                                <span class="sim-dot green"></span>
+                                <span class="sim-url">https://cryptoplextrades.com/maintenance.html</span>
+                            </div>
+                            <div class="sim-browser-body">
+                                <div class="sim-icon-orb">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 6.75a5.25 5.25 0 0 1 6.775-5.025.75.75 0 0 1 .313 1.248l-3.32 3.319c.063.475.276.934.641 1.299.365.365.824.578 1.3.64l3.318-3.319a.75.75 0 0 1 1.248.313 5.25 5.25 0 0 1-5.472 6.756c-1.018-.086-1.87.1-2.309.634L7.344 21.3A3.298 3.298 0 1 1 2.7 16.657l8.684-7.151c.533-.44.72-1.291.634-2.309A5.342 5.342 0 0 1 12 6.75Z" clip-rule="evenodd"/></svg>
+                                </div>
+                                <h3 class="sim-title">Protocol Maintenance</h3>
+                                <p class="sim-msg" id="sim-message">We are performing scheduled maintenance. We'll be back shortly!</p>
+                                <span class="sim-badge">Clearance Protocol Offline</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            <div class="form-card maint-card">
-                <div class="warning-box" id="warning-box">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" clip-rule="evenodd"/></svg>
-                    <p><strong>Site is currently offline!</strong> All user-facing pages are redirecting to the maintenance screen. The admin portal remains accessible. Toggle off when you're done.</p>
-                </div>
-
-                <div class="toggle-row">
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="maint-active">
-                        <span class="toggle-slider"></span>
-                    </label>
-                    <span class="toggle-label">Enable Maintenance Mode</span>
-                    <span class="status-indicator off" id="status-badge">
-                        <span class="status-dot"></span>
-                        <span id="status-text">Site Online</span>
-                    </span>
-                </div>
-
-                <div class="form-group" style="margin-bottom: 18px;">
-                    <label for="maint-message" style="font-weight:600; margin-bottom:6px; display:block;">Message shown to visitors</label>
-                    <textarea id="maint-message" placeholder="We're performing scheduled maintenance. We'll be back shortly!"></textarea>
-                </div>
-
-                <div class="save-row">
-                    <button class="btn-save" id="save-btn">💾 Save Settings</button>
-                    <span class="save-msg" id="save-msg"></span>
-                </div>
-            </div>
-        
+        </div>
     </div>
-        </div> <!-- /.admin-main -->
-    </div> <!-- /.admin-layout -->
-
-
 
     <script src="admin.js"></script>
-    <script>
-    </script>
     <script>
     (function() {
         const activeToggle = document.getElementById('maint-active');
@@ -195,30 +540,39 @@
         const statusBadge = document.getElementById('status-badge');
         const statusText = document.getElementById('status-text');
         const warningBox = document.getElementById('warning-box');
+        const simMessage = document.getElementById('sim-message');
 
         function updateUI() {
             if (activeToggle.checked) {
-                statusBadge.className = 'status-indicator live';
-                statusText.textContent = 'Site Offline';
+                statusBadge.className = 'status-pill offline';
+                statusText.textContent = 'Platform Offline';
                 warningBox.classList.add('show');
-                saveBtn.className = 'btn-save danger';
+                saveBtn.classList.add('danger');
             } else {
-                statusBadge.className = 'status-indicator off';
-                statusText.textContent = 'Site Online';
+                statusBadge.className = 'status-pill online';
+                statusText.textContent = 'Platform Live';
                 warningBox.classList.remove('show');
-                saveBtn.className = 'btn-save';
+                saveBtn.classList.remove('danger');
             }
+            simMessage.textContent = messageInput.value.trim() || "We are performing scheduled maintenance. We'll be back shortly!";
         }
 
         activeToggle.addEventListener('change', updateUI);
+        messageInput.addEventListener('input', updateUI);
 
-        // Load current state
+        document.querySelectorAll('.preset-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                messageInput.value = btn.dataset.msg;
+                updateUI();
+            });
+        });
+
         async function load() {
             try {
                 const r = await fetch('/api/admin/maintenance', { credentials: 'include' });
                 if (!r.ok) throw new Error();
                 const data = await r.json();
-                activeToggle.checked = data.active;
+                activeToggle.checked = Boolean(data.active);
                 messageInput.value = data.message || '';
                 updateUI();
             } catch (e) {
@@ -226,12 +580,11 @@
             }
         }
 
-        // Save
         saveBtn.addEventListener('click', async () => {
             saveMsg.textContent = '';
             try {
                 saveBtn.disabled = true;
-                saveBtn.textContent = 'Saving…';
+                saveBtn.innerHTML = `<span>Saving…</span>`;
                 const r = await fetch('/api/admin/maintenance', {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
@@ -242,16 +595,18 @@
                     })
                 });
                 if (!r.ok) throw new Error();
-                const result = await r.json();
-                saveMsg.className = 'save-msg success';
-                saveMsg.textContent = activeToggle.checked ? '⚠️ Maintenance mode enabled!' : '✅ Site is back online!';
-                setTimeout(() => saveMsg.textContent = '', 4000);
+                saveMsg.className = 'save-status-msg success';
+                saveMsg.textContent = activeToggle.checked ? '⚠ Maintenance mode active: Site intercepted.' : '✓ Site is back online!';
+                setTimeout(() => { saveMsg.textContent = ''; }, 4000);
             } catch (e) {
-                saveMsg.className = 'save-msg error';
-                saveMsg.textContent = '❌ Failed to save. Please try again.';
+                saveMsg.className = 'save-status-msg error';
+                saveMsg.textContent = '✕ Failed to save settings. Please try again.';
             } finally {
                 saveBtn.disabled = false;
-                saveBtn.textContent = '💾 Save Settings';
+                saveBtn.innerHTML = `
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z"/></svg>
+                    <span>Save Settings</span>
+                `;
                 updateUI();
             }
         });

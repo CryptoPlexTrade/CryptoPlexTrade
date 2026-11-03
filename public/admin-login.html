@@ -60,16 +60,19 @@
 
         .admin-brand-logo {
             display: inline-flex;
+            flex-direction: column;
             align-items: center;
-            gap: 12px;
+            justify-content: center;
+            gap: 10px;
             text-decoration: none;
             margin-bottom: 18px;
         }
 
         .admin-brand-logo img {
-            height: 44px;
+            height: 48px;
             width: auto;
             border-radius: var(--radius-md, 10px);
+            object-fit: contain;
         }
 
         .admin-brand-logo span {
@@ -77,6 +80,7 @@
             font-weight: 800;
             color: var(--primary, #0052cc);
             letter-spacing: -0.02em;
+            text-align: center;
         }
 
         .admin-badge {

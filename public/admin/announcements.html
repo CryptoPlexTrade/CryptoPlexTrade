@@ -3,61 +3,280 @@
 <head>
     <meta charset="UTF-8">
     <link rel="icon" type="image/png" href="../css/logo.png">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Announcements - Admin</title>
-        <link rel=preconnect href="https://fonts.googleapis.com">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Platform Announcements — Admin Console</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/tokens.css">
+    <link rel="stylesheet" href="admin.css?v=6">
 
-    <link rel="stylesheet" href="admin.css?v=5">
     <style>
-        .announcement-form { max-width: 760px; }
-        .toggle-row { display: flex; align-items: center; gap: 14px; margin-bottom: 22px; }
-        .toggle-switch { position: relative; width: 50px; height: 26px; flex-shrink: 0; }
+        .announcements-grid {
+            display: grid;
+            grid-template-columns: 1.18fr 0.82fr;
+            gap: 24px;
+            align-items: start;
+        }
+        @media (max-width: 1024px) {
+            .announcements-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .ann-card {
+            background: var(--bg-card, #ffffff);
+            border: 1px solid var(--border-light, #e2e8f0);
+            border-radius: 16px;
+            padding: 28px;
+            box-shadow: 0 4px 20px rgba(11, 45, 90, 0.04);
+            margin-bottom: 24px;
+        }
+
+        .ann-card-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-light, #f1f5f9);
+        }
+
+        .ann-card-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text-primary, #0a192f);
+            margin: 0;
+        }
+
+        .ann-card-title svg {
+            color: var(--primary-color, #0052cc);
+            width: 20px;
+            height: 20px;
+        }
+
+        .toggle-row-modern {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--bg-surface, #f8fafc);
+            border: 1px solid var(--border-light, #e2e8f0);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 22px;
+        }
+
+        .toggle-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 52px;
+            height: 28px;
+            flex-shrink: 0;
+        }
         .toggle-switch input { opacity: 0; width: 0; height: 0; }
         .toggle-slider {
-            position: absolute; cursor: pointer; inset: 0; background: var(--border-medium);
-            border-radius: 28px; transition: .3s;
+            position: absolute; cursor: pointer; inset: 0;
+            background: #cbd5e1;
+            border-radius: 28px; transition: .25s ease;
         }
         .toggle-slider::before {
-            content: ''; position: absolute; height: 20px; width: 20px; left: 3px; bottom: 3px;
-            background: #fff; border-radius: 50%; transition: .3s; box-shadow: 0 2px 4px rgba(0,0,0,.25);
+            content: ''; position: absolute; height: 20px; width: 20px; left: 4px; bottom: 4px;
+            background: #ffffff; border-radius: 50%; transition: .25s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,.2);
         }
-        .toggle-switch input:checked + .toggle-slider { background: var(--secondary-color); }
-        .toggle-switch input:checked + .toggle-slider::before { transform: translateX(24px); }
-        .toggle-label { font-weight: 600; font-size: .95rem; color: var(--text-primary); }
-        .status-indicator { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 20px; font-size: .8rem; font-weight: 600; }
-        .status-indicator.live { background: rgba(16,185,129,.15); color: #10b981; border: 1px solid rgba(16,185,129,.3); }
-        .status-indicator.off { background: rgba(100,116,139,.15); color: var(--text-muted); border: 1px solid var(--border-light); }
-        .status-dot { width: 8px; height: 8px; border-radius: 50%; }
-        .status-indicator.live .status-dot { background: #10b981; animation: pulse 1.5s infinite; }
-        .status-indicator.off .status-dot { background: #64748b; }
-        @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .4; } }
-        .preview-box {
-            background: rgba(0,91,170,.07);
-            border: 1px solid rgba(0,169,224,.2); border-radius: 14px; padding: 20px;
-            margin-top: 24px;
+        .toggle-switch input:checked + .toggle-slider {
+            background: var(--primary-color, #0052cc);
         }
-        .preview-box h4 { color: var(--secondary-color); margin-bottom: 12px; font-size: .8rem; text-transform: uppercase; letter-spacing: .06em; font-weight: 700; }
-        .preview-popup {
-            background: var(--bg-surface); border-radius: 12px; padding: 20px 24px;
-            box-shadow: 0 10px 30px rgba(0,0,0,.35); border-left: 4px solid var(--secondary-color);
-            border-top: 1px solid var(--border-light);
-            border-right: 1px solid var(--border-light);
-            border-bottom: 1px solid var(--border-light);
+        .toggle-switch input:checked + .toggle-slider::before {
+            transform: translateX(24px);
         }
-        .preview-popup h3 { font-size: 1rem; color: var(--text-primary); margin-bottom: 8px; font-weight: 700; }
-        .preview-popup p { font-size: .9rem; color: var(--text-secondary); line-height: 1.6; }
-        .preview-empty { color: var(--text-muted); font-style: italic; font-size: .88rem; }
-        .save-row { display: flex; align-items: center; gap: 16px; margin-top: 24px; }
-        .save-msg { font-size: .88rem; font-weight: 600; }
-        .save-msg.success { color: #10b981; }
-        .save-msg.error { color: #ef4444; }
+
+        .toggle-desc h4 {
+            margin: 0 0 2px 0;
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: var(--text-primary, #0a192f);
+        }
+        .toggle-desc p {
+            margin: 0;
+            font-size: 0.78rem;
+            color: var(--text-secondary, #64748b);
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 9999px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+        }
+        .status-pill.live {
+            background: rgba(34, 197, 94, 0.12);
+            color: #16a34a;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+        .status-pill.off {
+            background: rgba(100, 116, 139, 0.12);
+            color: #64748b;
+            border: 1px solid rgba(100, 116, 139, 0.25);
+        }
+        .status-pill .dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+        }
+        .status-pill.live .dot { background: #16a34a; animation: pulseLive 1.5s infinite; }
+        .status-pill.off .dot { background: #94a3b8; }
+        @keyframes pulseLive { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: .4; transform: scale(0.9); } }
+
+        .form-field-item {
+            margin-bottom: 20px;
+        }
+        .form-field-item label {
+            display: block;
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--text-primary, #0a192f);
+            margin-bottom: 8px;
+        }
+        .form-field-item input,
+        .form-field-item textarea {
+            width: 100%;
+            padding: 13px 16px;
+            background: #ffffff;
+            border: 1.5px solid var(--border-medium, #cbd5e1);
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 0.92rem;
+            color: var(--text-primary, #0a192f);
+            outline: none;
+            transition: all 0.15s ease;
+            box-sizing: border-box;
+        }
+        .form-field-item input:focus,
+        .form-field-item textarea:focus {
+            border-color: var(--primary-color, #0052cc);
+            box-shadow: 0 0 0 3px rgba(0, 82, 204, 0.15);
+        }
+        .form-field-item textarea {
+            min-height: 120px;
+            resize: vertical;
+            line-height: 1.5;
+        }
+
+        .save-bar {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-top: 26px;
+            padding-top: 18px;
+            border-top: 1px solid var(--border-light, #f1f5f9);
+            flex-wrap: wrap;
+        }
+        .btn-save-settings {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 13px 28px;
+            background: linear-gradient(135deg, var(--primary-color, #0052cc) 0%, #0077c8 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 9999px;
+            font-family: inherit;
+            font-size: 0.92rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(0, 82, 204, 0.25);
+            transition: all 0.2s ease;
+        }
+        .btn-save-settings:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(0, 82, 204, 0.35);
+        }
+        .btn-save-settings:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .save-status-msg {
+            font-size: 0.88rem;
+            font-weight: 600;
+        }
+        .save-status-msg.success { color: #16a34a; }
+        .save-status-msg.error { color: #dc2626; }
+
+        /* Preview Area */
+        .preview-pane {
+            position: sticky;
+            top: 20px;
+        }
+        .preview-simulation {
+            background: #0a192f;
+            border-radius: 16px;
+            padding: 24px;
+            color: #ffffff;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+        }
+        .preview-mock-window {
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 22px;
+            color: #0a192f;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            border-left: 5px solid var(--primary-color, #0052cc);
+        }
+        .preview-mock-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.72rem;
+            font-weight: 800;
+            color: var(--primary-color, #0052cc);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 8px;
+        }
+        .preview-mock-title {
+            font-size: 1.08rem;
+            font-weight: 800;
+            color: #0a192f;
+            margin: 0 0 8px 0;
+            line-height: 1.35;
+        }
+        .preview-mock-body {
+            font-size: 0.88rem;
+            color: #475569;
+            line-height: 1.55;
+            margin: 0 0 16px 0;
+            white-space: pre-wrap;
+        }
+        .preview-mock-btn {
+            display: inline-block;
+            background: var(--primary-color, #0052cc);
+            color: #ffffff;
+            font-size: 0.78rem;
+            font-weight: 700;
+            padding: 7px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
-    <!-- ================== MODERN TOPBAR & FLOATING PILL MENU ================== -->
     <div class="admin-layout">
         <div class="rail-backdrop" id="rail-backdrop"></div>
 
@@ -145,60 +364,94 @@
                     <a href="#" id="logout-btn" class="admin-logout-btn">Sign Out</a>
                 </div>
             </header>
-<div class="admin-container">
-<div class="admin-header">
-                <div>
-                    <h1>Announcements</h1>
-                    <p>Broadcast alerts and operational updates to all user dashboards.</p>
-                </div>
-            </div>
 
-            <div class="form-card announcement-form">
-                <div class="toggle-row">
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="ann-active">
-                        <span class="toggle-slider"></span>
-                    </label>
-                    <span class="toggle-label">Announcement Active</span>
-                    <span class="status-indicator off" id="status-badge">
-                        <span class="status-dot"></span>
-                        <span id="status-text">Inactive</span>
-                    </span>
+            <div class="admin-container">
+                <div class="admin-header" style="margin-bottom: 24px;">
+                    <div>
+                        <h1 style="font-size: 1.75rem; font-weight: 800; color: var(--text-primary); margin-bottom: 4px;">Platform Announcements</h1>
+                        <p style="font-size: 0.9rem; color: var(--text-secondary);">Broadcast operational notices, maintenance heads-up, or alerts directly to authenticated trader dashboards.</p>
+                    </div>
                 </div>
 
-                <div class="form-group" style="margin-bottom: 18px;">
-                    <label for="ann-title" style="font-weight:600; margin-bottom:6px; display:block;">Title</label>
-                    <input type="text" id="ann-title" placeholder="e.g. 🎉 New Feature Launch!">
-                </div>
+                <div class="announcements-grid">
+                    <!-- Left: Broadcast Editor Card -->
+                    <div class="ann-card">
+                        <div class="ann-card-head">
+                            <h2 class="ann-card-title">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M16.881 4.345A23.112 23.112 0 0 1 8.25 6H7.5a5.25 5.25 0 0 0-.88 10.427 21.593 21.593 0 0 0 1.378 3.94c.464 1.004 1.674 1.32 2.582.796l.657-.379c.88-.508 1.165-1.593.772-2.468a17.116 17.116 0 0 1-.628-1.607c1.918.258 3.76.75 5.5 1.446A21.727 21.727 0 0 0 18 11.25c0-2.414-.393-4.735-1.119-6.905Z"/></svg>
+                                Broadcast Configuration
+                            </h2>
+                        </div>
 
-                <div class="form-group" style="margin-bottom: 18px;">
-                    <label for="ann-message" style="font-weight:600; margin-bottom:6px; display:block;">Message</label>
-                    <textarea id="ann-message" placeholder="Write your announcement message here..."></textarea>
-                </div>
+                        <!-- Active Toggle Modern -->
+                        <div class="toggle-row-modern">
+                            <div class="toggle-left">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="ann-active">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                                <div class="toggle-desc">
+                                    <h4>Announcement State</h4>
+                                    <p>Toggle to push or hide this notice across all user portals</p>
+                                </div>
+                            </div>
+                            <span class="status-pill off" id="status-badge">
+                                <span class="dot"></span>
+                                <span id="status-text">Inactive</span>
+                            </span>
+                        </div>
 
-                <div class="save-row">
-                    <button class="btn-save" id="save-btn">💾 Save Announcement</button>
-                    <span class="save-msg" id="save-msg"></span>
-                </div>
+                        <div class="form-field-item">
+                            <label for="ann-title">Headline / Title</label>
+                            <input type="text" id="ann-title" placeholder="e.g. ⚡ System Upgrade & Settlement Speed Announcement">
+                        </div>
 
-                <!-- Live Preview -->
-                <div class="preview-box">
-                    <h4>👁 Live Preview</h4>
-                    <div id="preview-content">
-                        <span class="preview-empty">Fill in the title and message above to see a preview.</span>
+                        <div class="form-field-item">
+                            <label for="ann-message">Announcement Message Body</label>
+                            <textarea id="ann-message" placeholder="Provide full details regarding exchange status, payment corridors, or security procedures..."></textarea>
+                        </div>
+
+                        <div class="save-bar">
+                            <button type="button" class="btn-save-settings" id="save-btn">
+                                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z"/></svg>
+                                <span>Save Announcement</span>
+                            </button>
+                            <span class="save-status-msg" id="save-msg"></span>
+                        </div>
+                    </div>
+
+                    <!-- Right: Live Customer Simulation -->
+                    <div class="preview-pane">
+                        <div class="ann-card" style="padding: 24px;">
+                            <div class="ann-card-head" style="margin-bottom: 16px; padding-bottom: 12px;">
+                                <h3 class="ann-card-title" style="font-size: 0.95rem;">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/></svg>
+                                    Live Dashboard Preview
+                                </h3>
+                                <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 600;">Trader View Simulation</span>
+                            </div>
+
+                            <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 16px; line-height: 1.5;">
+                                This preview demonstrates how users will encounter this alert when they sign into their account.
+                            </p>
+
+                            <div class="preview-mock-window" id="preview-box">
+                                <div class="preview-mock-tag">
+                                    <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--primary-color);"></span>
+                                    <span>Official Protocol Bulletin</span>
+                                </div>
+                                <h4 class="preview-mock-title" id="preview-title">No headline entered</h4>
+                                <p class="preview-mock-body" id="preview-body">Type a headline and notice body to see the live rendering here.</p>
+                                <a href="javascript:void(0)" class="preview-mock-btn">Acknowledge &amp; Dismiss</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        
+        </div>
     </div>
-        </div> <!-- /.admin-main -->
-    </div> <!-- /.admin-layout -->
-
-
 
     <script src="admin.js"></script>
-    <script>
-    </script>
     <script>
     (function() {
         const activeToggle = document.getElementById('ann-active');
@@ -208,14 +461,15 @@
         const saveMsg = document.getElementById('save-msg');
         const statusBadge = document.getElementById('status-badge');
         const statusText = document.getElementById('status-text');
-        const previewContent = document.getElementById('preview-content');
+        const previewTitle = document.getElementById('preview-title');
+        const previewBody = document.getElementById('preview-body');
 
         function updateStatusBadge() {
             if (activeToggle.checked) {
-                statusBadge.className = 'status-indicator live';
-                statusText.textContent = 'Live';
+                statusBadge.className = 'status-pill live';
+                statusText.textContent = 'Active & Live';
             } else {
-                statusBadge.className = 'status-indicator off';
+                statusBadge.className = 'status-pill off';
                 statusText.textContent = 'Inactive';
             }
         }
@@ -223,28 +477,20 @@
         function updatePreview() {
             const title = titleInput.value.trim();
             const message = messageInput.value.trim();
-            if (!title && !message) {
-                previewContent.innerHTML = '<span class="preview-empty">Fill in the title and message above to see a preview.</span>';
-                return;
-            }
-            previewContent.innerHTML = `
-                <div class="preview-popup">
-                    <h3>${title || 'Untitled'}</h3>
-                    <p>${message || 'No message yet...'}</p>
-                </div>`;
+            previewTitle.textContent = title || 'Announcement Headline';
+            previewBody.textContent = message || 'Fill in the message body on the left to preview how traders will read this update.';
         }
 
         activeToggle.addEventListener('change', updateStatusBadge);
         titleInput.addEventListener('input', updatePreview);
         messageInput.addEventListener('input', updatePreview);
 
-        // Load existing announcement
         async function loadAnnouncement() {
             try {
                 const r = await fetch('/api/admin/announcement', { credentials: 'include' });
                 if (!r.ok) throw new Error();
                 const data = await r.json();
-                activeToggle.checked = data.active;
+                activeToggle.checked = Boolean(data.active);
                 titleInput.value = data.title || '';
                 messageInput.value = data.message || '';
                 updateStatusBadge();
@@ -254,7 +500,6 @@
             }
         }
 
-        // Save announcement
         saveBtn.addEventListener('click', async () => {
             saveMsg.textContent = '';
             const payload = {
@@ -263,13 +508,14 @@
                 message: messageInput.value.trim()
             };
             if (payload.active && (!payload.title || !payload.message)) {
-                saveMsg.className = 'save-msg error';
-                saveMsg.textContent = '⚠ Title and message are required when active.';
+                saveMsg.className = 'save-status-msg error';
+                saveMsg.textContent = '⚠ Title and message body are required when active.';
                 return;
             }
             try {
                 saveBtn.disabled = true;
-                saveBtn.textContent = 'Saving…';
+                const originalHtml = saveBtn.innerHTML;
+                saveBtn.innerHTML = `<span>Saving…</span>`;
                 const r = await fetch('/api/admin/announcement', {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
@@ -277,15 +523,18 @@
                     body: JSON.stringify(payload)
                 });
                 if (!r.ok) throw new Error();
-                saveMsg.className = 'save-msg success';
-                saveMsg.textContent = '✅ Announcement saved!';
-                setTimeout(() => saveMsg.textContent = '', 3000);
+                saveMsg.className = 'save-status-msg success';
+                saveMsg.textContent = '✓ Announcement saved and synchronized!';
+                setTimeout(() => { saveMsg.textContent = ''; }, 3500);
             } catch (e) {
-                saveMsg.className = 'save-msg error';
-                saveMsg.textContent = '❌ Failed to save. Please try again.';
+                saveMsg.className = 'save-status-msg error';
+                saveMsg.textContent = '✕ Failed to save. Please check admin permissions.';
             } finally {
                 saveBtn.disabled = false;
-                saveBtn.textContent = '💾 Save Announcement';
+                saveBtn.innerHTML = `
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z"/></svg>
+                    <span>Save Announcement</span>
+                `;
             }
         });
 
