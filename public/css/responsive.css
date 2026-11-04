@@ -68,12 +68,29 @@ img.brand-circle:hover {
     .header .container,
     .header > .container { gap: 12px; }
 
-    /* Public-page nav: collapse links */
-    .nav, .header-nav { gap: 8px; }
-    .nav a, .header-nav a { margin-left: 12px; font-size: .83rem; }
+    /* Public-page nav: collapse links, keep only Register CTA on mobile/tablet */
+    .nav, .header-nav { gap: 8px; margin-left: auto; }
+    .nav a:not(.btn-cta):not(.btn-primary):not(.nav-btn-signup):not([href*="register"]):not(#logout-btn),
+    .header-nav a:not(.btn-cta):not(.btn-primary):not(.nav-btn-signup):not([href*="register"]):not(#logout-btn) {
+        display: none !important;
+    }
 
-    /* Hide "Get Started" btn text, keep it as icon pill */
-    .nav .btn-cta, .header-nav .btn-cta { padding: 7px 14px; font-size: .78rem; }
+    /* Remove Sign In from mobile/tablet headers */
+    .header a[href*="login"]:not(.btn-primary),
+    .nav a[href*="login"],
+    .header-nav a[href*="login"],
+    .mobile-header-cta a[href*="login"],
+    .nav-btn-login,
+    .nav-link-login {
+        display: none !important;
+    }
+
+    /* Keep CTA visible as Register pill */
+    .nav .btn-cta, .header-nav .btn-cta, .nav a.btn-primary, .nav a.nav-btn-signup {
+        padding: 7px 16px;
+        font-size: .82rem;
+        display: inline-flex !important;
+    }
 }
 
 @media (max-width: 640px) {
@@ -104,7 +121,8 @@ img.brand-circle:hover {
     }
 
     .logo-name {
-        font-size: 1.02rem !important;
+        font-size: 1.05rem !important;
+        font-weight: 800 !important;
         display: inline-block !important;
         white-space: nowrap !important;
         flex-shrink: 0 !important;
@@ -116,12 +134,28 @@ img.brand-circle:hover {
     footer .logo-name,
     .footer .logo-name,
     .site-footer .logo-name {
-        color: #ffffff !important;
+        color: #0a192f !important;
+        font-weight: 800 !important;
+        font-size: 1.15rem !important;
+    }
+    footer .logo-name span,
+    .footer .logo-name span,
+    .site-footer .logo-name span {
+        color: #0052cc !important;
     }
 
-    /* Hide long nav links on mobile, keep Sign In + CTA */
-    .nav a:not(.btn-cta):not(.btn-primary):not(.nav-btn-signup):not(.nav-btn-login):not(.nav-link-login):not([href*="login"]):not(#logout-btn),
-    .header-nav a:not(.btn-cta):not(.btn-primary):not(.nav-btn-signup):not(.nav-btn-login):not(.nav-link-login):not([href*="login"]):not(#logout-btn) {
+    /* Hide long nav links on mobile, remove Sign In, keep only Register CTA */
+    .nav a:not(.btn-cta):not(.btn-primary):not(.nav-btn-signup):not([href*="register"]):not(#logout-btn),
+    .header-nav a:not(.btn-cta):not(.btn-primary):not(.nav-btn-signup):not([href*="register"]):not(#logout-btn) {
+        display: none !important;
+    }
+
+    .header a[href*="login"]:not(.btn-primary),
+    .nav a[href*="login"],
+    .header-nav a[href*="login"],
+    .mobile-header-cta a[href*="login"],
+    .nav a.nav-btn-login,
+    .nav a.nav-link-login {
         display: none !important;
     }
 
@@ -132,16 +166,11 @@ img.brand-circle:hover {
         gap: 8px;
     }
 
-    .nav a.nav-btn-login,
-    .nav a.nav-link-login {
-        padding: 6px 10px !important;
-        font-size: 0.8rem !important;
-    }
-
     .nav a.nav-btn-signup,
     .nav a.btn-primary {
-        padding: 6px 12px !important;
-        font-size: 0.8rem !important;
+        padding: 6px 14px !important;
+        font-size: 0.82rem !important;
+        display: inline-flex !important;
     }
 }
 

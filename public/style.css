@@ -278,6 +278,20 @@ a.btn-primary,
     box-sizing: border-box;
 }
 
+.footer .logo-name,
+footer .logo-name {
+    color: var(--text-1, #0a192f) !important;
+    font-weight: 800 !important;
+    font-size: 1.15rem !important;
+    display: inline-block !important;
+    letter-spacing: -0.02em !important;
+}
+
+.footer .logo-name span,
+footer .logo-name span {
+    color: var(--primary, #0052cc) !important;
+}
+
 .footer-cols-grid,
 .footer-grid {
     display: grid;

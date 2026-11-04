@@ -360,14 +360,14 @@
         }
 
         .currency-name {
-            font-weight: 600;
-            color: #ffffff;
-            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-1, #0a192f);
+            font-size: 0.96rem;
         }
 
         .currency-symbol {
             font-size: 0.76rem;
-            color: #94a3b8;
+            color: var(--text-3, #64748b);
             font-family: var(--font-mono);
         }
 
@@ -380,14 +380,14 @@
         }
 
         .rate-highlight {
-            font-weight: 600;
-            color: #ffffff;
+            font-weight: 700;
+            color: var(--text-1, #0a192f);
         }
 
         .rate-ghs-sub {
             display: block;
             font-size: 0.74rem;
-            color: #64748b;
+            color: var(--text-3, #64748b);
             font-family: var(--font-mono);
             margin-top: 2px;
         }
@@ -413,19 +413,136 @@
             transform: translateY(-1px);
         }
 
-        /* --- FOOTER --- */
-        .footer {
-            background: #02050b;
-            border-top: 1px solid var(--border-glass);
-            padding: 60px 0 24px;
-        }
-
         @media (max-width: 860px) {
-            .nav { display: none; }
-            .mobile-header-cta { display: flex; }
+            .nav { display: none !important; }
+            .mobile-header-cta { display: flex !important; }
             .hero-title { font-size: 2rem; }
-            .market-toolbar { flex-direction: column; align-items: stretch; }
-            .market-search { max-width: 100%; }
+            
+            .market-toolbar {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 14px;
+                margin: 20px 0;
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            .category-pills {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+                width: 100%;
+                max-width: 100%;
+                box-sizing: border-box;
+                overflow-x: visible;
+                padding-bottom: 0;
+            }
+
+            .cat-pill {
+                flex: 1 1 calc(50% - 6px);
+                text-align: center;
+                padding: 10px 12px;
+                font-size: 0.8rem;
+                box-sizing: border-box;
+                white-space: normal;
+            }
+
+            .market-search {
+                max-width: 100%;
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            /* Vertical Card Layout for Rates on Mobile */
+            .rates-table-wrap {
+                background: transparent !important;
+                border: none !important;
+                box-shadow: none !important;
+                overflow: visible !important;
+                margin-bottom: 40px;
+            }
+
+            .rates-table-wrap > div {
+                overflow: visible !important;
+            }
+
+            .rates-table-custom {
+                display: block !important;
+                width: 100% !important;
+            }
+
+            .rates-table-custom thead {
+                display: none !important;
+            }
+
+            .rates-table-custom tbody {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 16px !important;
+                width: 100% !important;
+            }
+
+            .rates-table-custom tbody tr {
+                display: flex !important;
+                flex-direction: column !important;
+                background: #ffffff !important;
+                border: 1px solid var(--border-subtle, #e2e8f0) !important;
+                border-radius: var(--radius-xl, 16px) !important;
+                padding: 18px 16px !important;
+                box-shadow: 0 4px 16px rgba(11, 45, 90, 0.05) !important;
+                box-sizing: border-box !important;
+                width: 100% !important;
+            }
+
+            .rates-table-custom tbody td {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                padding: 10px 0 !important;
+                border-bottom: 1px dashed var(--border-subtle, #e2e8f0) !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
+                font-size: 0.92rem !important;
+            }
+
+            .rates-table-custom tbody td:first-child {
+                padding-top: 0 !important;
+                padding-bottom: 14px !important;
+                border-bottom: 1px solid var(--border-subtle, #e2e8f0) !important;
+                justify-content: flex-start !important;
+            }
+
+            .rates-table-custom tbody td:last-child {
+                padding-bottom: 0 !important;
+                padding-top: 14px !important;
+                border-bottom: none !important;
+                justify-content: stretch !important;
+            }
+
+            .rates-table-custom tbody td::before {
+                content: attr(data-label);
+                font-size: 0.78rem;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+                color: var(--text-3, #64748b);
+                text-align: left;
+                margin-right: 12px;
+                flex-shrink: 0;
+            }
+
+            .rates-table-custom tbody td:first-child::before,
+            .rates-table-custom tbody td:last-child::before {
+                display: none !important;
+            }
+
+            .rates-table-custom tbody td:last-child .btn-trade-action {
+                width: 100% !important;
+                justify-content: center !important;
+                padding: 12px !important;
+                font-size: 0.95rem !important;
+                border-radius: var(--radius-md, 10px) !important;
+            }
         }
     </style>
 </head>
@@ -451,7 +568,6 @@
 
             <!-- Mobile CTA Header Buttons -->
             <div class="mobile-header-cta">
-                <a href="login.html" class="nav-btn-login" style="padding:6px 14px; font-size:0.82rem;">Sign In</a>
                 <a href="register.html" class="nav-btn-signup" style="padding:6px 14px; font-size:0.82rem;">Register</a>
             </div>
         </div>
@@ -525,46 +641,47 @@
     <!-- ================== FOOTER ================== -->
     <footer class="footer">
         <div class="container">
-            <div class="grid-3" style="grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 32px; margin-bottom: 40px;">
-                <div>
-                    <a href="index.html" class="logo-wrapper" style="margin-bottom: 14px;">
+            <div class="footer-cols-grid">
+                <div class="footer-col">
+                    <a href="index.html" class="logo-wrapper" style="margin-bottom: 16px;">
                         <img src="css/logo.png" alt="CryptoPlexTrade Logo" class="logo">
-                        <span class="logo-name">CryptoPlex<span>Trade</span></span>
+                        <span class="logo-name" style="color: #0a192f !important; font-weight: 800; font-size: 1.15rem; display: inline-block;">CryptoPlex<span style="color: #0052cc !important;">Trade</span></span>
                     </a>
-                    <p style="font-size: 0.88rem; color: #94a3b8; line-height: 1.6; max-width: 320px;">
-                        Sovereign digital asset trading platform providing instant retail and institutional exchange services worldwide.
+                    <p style="font-size: 0.88rem; color: #64748b; line-height: 1.6; max-width: 320px;">
+                        Sovereign digital asset gateway providing instant Mobile Money and banking cryptocurrency
+                        exchange services.
                     </p>
                 </div>
 
-                <div>
-                    <h4 style="font-size: 0.82rem; font-weight: 700; color: #ffffff; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 16px;">Trading Desk</h4>
-                    <ul style="list-style: none; display: flex; flex-direction: column; gap: 10px; font-size: 0.88rem;">
-                        <li><a href="trade.html" style="text-decoration: none; color: #94a3b8;">Instant Exchange</a></li>
-                        <li><a href="rates" style="text-decoration: none; color: #94a3b8;">Market Directory</a></li>
-                        <li><a href="why-us" style="text-decoration: none; color: #94a3b8;">Why US</a></li>
+                <div class="footer-col">
+                    <h4>Trading Desk</h4>
+                    <ul>
+                        <li><a href="trade.html">Instant Exchange</a></li>
+                        <li><a href="rates">Market Rates</a></li>
+                        <li><a href="why-us">Why US</a></li>
                     </ul>
                 </div>
 
-                <div>
-                    <h4 style="font-size: 0.82rem; font-weight: 700; color: #ffffff; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 16px;">Support & Help</h4>
-                    <ul style="list-style: none; display: flex; flex-direction: column; gap: 10px; font-size: 0.88rem;">
-                        <li><a href="faq.html" style="text-decoration: none; color: #94a3b8;">Frequently Asked Questions</a></li>
-                        <li><a href="help.html" style="text-decoration: none; color: #94a3b8;">Help Centre</a></li>
-                        <li><a href="contact.html" style="text-decoration: none; color: #94a3b8;">Contact Us</a></li>
+                <div class="footer-col">
+                    <h4>Support &amp; Help</h4>
+                    <ul>
+                        <li><a href="faq.html">FAQ</a></li>
+                        <li><a href="help.html">Help Desk</a></li>
+                        <li><a href="contact.html">Contact Us</a></li>
                     </ul>
                 </div>
 
-                <div>
-                    <h4 style="font-size: 0.82rem; font-weight: 700; color: #ffffff; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 16px;">Regulatory & Legal</h4>
-                    <ul style="list-style: none; display: flex; flex-direction: column; gap: 10px; font-size: 0.88rem;">
-                        <li><a href="terms.html" style="text-decoration: none; color: #94a3b8;">Terms of Service</a></li>
-                        <li><a href="privacy.html" style="text-decoration: none; color: #94a3b8;">Privacy Policy</a></li>
-                        <li><a href="aml.html" style="text-decoration: none; color: #94a3b8;">AML / KYC Policy</a></li>
+                <div class="footer-col">
+                    <h4>Legal &amp; Governance</h4>
+                    <ul>
+                        <li><a href="terms.html">Terms of Service</a></li>
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                        <li><a href="aml.html">AML / KYC Policy</a></li>
                     </ul>
                 </div>
             </div>
 
-            <div style="border-top: 1px solid var(--border-glass); padding-top: 24px; text-align: center; font-size: 0.82rem; color: #64748b;">
+            <div class="footer-bottom-strip">
                 &copy; 2026 CryptoPlexTrade. All rights reserved.
             </div>
         </div>
@@ -721,7 +838,7 @@
 
                     html += `
                         <tr data-symbol="${asset.symbol}" data-category="${asset.category}">
-                            <td>
+                            <td data-label="Digital Asset">
                                 <div class="currency-info">
                                     <div class="currency-avatar">${asset.avatar}</div>
                                     <div class="currency-names">
@@ -730,21 +847,21 @@
                                     </div>
                                 </div>
                             </td>
-                            <td>
+                            <td data-label="Spot Price">
                                 <span class="rate-highlight tabular-nums">${formattedUsd}</span>
                             </td>
-                            <td>
+                            <td data-label="24h Change">
                                 <span class="${changeClass}">${changeSign}${change.toFixed(2)}% ${changeArrow}</span>
                             </td>
-                            <td>
+                            <td data-label="Buy Rate">
                                 <span class="rate-highlight tabular-nums">₵${ghsBuy.toFixed(2)} / $</span>
                                 <span class="rate-ghs-sub">≈ ₵${buyTotalGhs} / unit</span>
                             </td>
-                            <td>
+                            <td data-label="Sell Rate">
                                 <span class="rate-highlight tabular-nums">₵${ghsSell.toFixed(2)} / $</span>
                                 <span class="rate-ghs-sub">≈ ₵${sellTotalGhs} / unit</span>
                             </td>
-                            <td style="text-align: right;">
+                            <td data-label="Action" style="text-align: right;">
                                 <a href="trade.html?asset=${asset.symbol}" class="btn-trade-action">
                                     Trade ${asset.symbol} &rarr;
                                 </a>
