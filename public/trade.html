@@ -622,18 +622,23 @@
 
                             <!-- Platform Deposit Address Field (Sell Mode) -->
                             <div class="terminal-field" id="sell-wallet-group" style="display:none;">
-                                <label class="terminal-field-label" id="sell-wallet-label" style="display:flex; justify-content:space-between; align-items:center;">
-                                    <span>CryptoPlex <span id="sell-asset-name">BTC</span> Deposit Wallet</span>
-                                    <span style="font-size:0.75rem; color:var(--text-3); text-transform:none; font-weight:500;">Transfer crypto here</span>
-                                </label>
-                                <div class="terminal-input-wrap" style="position:relative; display:flex; align-items:center;">
-                                    <input class="terminal-input" type="text" id="sell-wallet-address" readonly style="font-size:0.86rem; font-family:var(--font-mono); background:var(--bg-subtle, #f8fafc); padding-right:85px; cursor:text; color:var(--text-1);" value="Loading verified address...">
-                                    <button type="button" id="copy-sell-wallet-btn" class="btn btn-primary btn-sm" style="position:absolute; right:6px; height:32px; padding:0 14px; font-size:0.75rem; font-weight:600; border-radius:6px; cursor:pointer;">
-                                        Copy
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; gap:8px;">
+                                    <label class="terminal-field-label" id="sell-wallet-label" style="margin-bottom:0;">
+                                        Platform Deposit Address (<span id="sell-asset-name">BTC</span>)
+                                    </label>
+                                    <button type="button" id="copy-sell-wallet-btn" class="btn btn-primary btn-sm" style="height:30px; padding:0 12px; font-size:0.75rem; font-weight:600; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:5px; flex-shrink:0;">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                        <span id="copy-btn-text">Copy</span>
                                     </button>
                                 </div>
-                                <div id="sell-wallet-hint" style="margin-top:6px; font-size:0.76rem; color:var(--text-3);">
-                                    Send only <strong id="sell-asset-tag" style="color:var(--text-1);">BTC</strong> to this verified company wallet to liquidate.
+                                <div class="sell-wallet-card" style="background:var(--blue-050, #f0f7ff); border:1.5px dashed rgba(0, 91, 170, 0.35); border-radius:8px; padding:12px 14px;">
+                                    <div id="sell-wallet-address-display" style="font-family:var(--font-mono); font-size:0.86rem; font-weight:600; color:var(--primary-dark, #003d73); word-break:break-all; line-height:1.55; user-select:all;">
+                                        Loading verified address...
+                                    </div>
+                                    <input type="hidden" id="sell-wallet-address" value="">
+                                </div>
+                                <div id="sell-wallet-hint" style="margin-top:6px; font-size:0.75rem; color:var(--text-3); line-height:1.4;">
+                                    Transfer only <strong id="sell-asset-tag" style="color:var(--text-1);">BTC</strong> to this verified deposit address.
                                 </div>
                             </div>
 
@@ -768,6 +773,8 @@
         if (sellAssetTag) sellAssetTag.textContent = displayName;
         const addr = platformWallets[p] || 'Address not configured in admin.';
         if (sellWalletAddress) sellWalletAddress.value = addr;
+        const displayEl = document.getElementById('sell-wallet-address-display');
+        if (displayEl) displayEl.textContent = addr;
     }
 
     async function fetchRates() {
@@ -1083,9 +1090,16 @@
             const val = sellWalletAddress ? sellWalletAddress.value : '';
             if (!val || val.includes('not configured') || val.includes('Loading')) return;
             navigator.clipboard.writeText(val).then(() => {
-                const orig = this.textContent;
-                this.textContent = 'Copied!';
-                setTimeout(() => this.textContent = orig, 1500);
+                const textSpan = document.getElementById('copy-btn-text');
+                if (textSpan) {
+                    const orig = textSpan.textContent;
+                    textSpan.textContent = 'Copied!';
+                    setTimeout(() => textSpan.textContent = orig, 1500);
+                } else {
+                    const orig = this.textContent;
+                    this.textContent = 'Copied!';
+                    setTimeout(() => this.textContent = orig, 1500);
+                }
             }).catch(err => console.error('Copy failed:', err));
         });
     }
