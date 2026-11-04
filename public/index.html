@@ -2101,7 +2101,7 @@
 
         <div class="mobile-drawer-footer">
             <a href="login.html" class="mobile-drawer-login">Sign In</a>
-            <a href="register.html" class="mobile-drawer-signup">Get Started →</a>
+            <a href="register.html" class="mobile-drawer-signup">Register →</a>
         </div>
     </aside>
 
@@ -2862,11 +2862,7 @@
             const mobileBackdrop = document.getElementById('mobile-nav-backdrop');
             const mobileCloseBtn = document.getElementById('mobile-drawer-close');
 
-            function openMobileMenu(e) {
-                if (e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                }
+            function openMobileMenu() {
                 if (!mobileDrawer) return;
                 mobileDrawer.classList.add('open');
                 if (mobileBackdrop) mobileBackdrop.classList.add('show');
@@ -2877,11 +2873,7 @@
                 document.body.style.overflow = 'hidden';
             }
 
-            function closeMobileMenu(e) {
-                if (e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                }
+            function closeMobileMenu() {
                 if (!mobileDrawer) return;
                 mobileDrawer.classList.remove('open');
                 if (mobileBackdrop) mobileBackdrop.classList.remove('show');
@@ -2897,23 +2889,34 @@
                     e.preventDefault();
                     e.stopPropagation();
                     if (mobileDrawer && mobileDrawer.classList.contains('open')) {
-                        closeMobileMenu(e);
+                        closeMobileMenu();
                     } else {
-                        openMobileMenu(e);
+                        openMobileMenu();
                     }
                 });
             }
 
             if (mobileCloseBtn) {
-                mobileCloseBtn.addEventListener('click', closeMobileMenu);
+                mobileCloseBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeMobileMenu();
+                });
             }
 
             if (mobileBackdrop) {
-                mobileBackdrop.addEventListener('click', closeMobileMenu);
+                mobileBackdrop.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeMobileMenu();
+                });
             }
 
+            // Allow navigation to proceed naturally without e.preventDefault()
             document.querySelectorAll('.mobile-drawer-item, .mobile-drawer-login, .mobile-drawer-signup').forEach(link => {
-                link.addEventListener('click', closeMobileMenu);
+                link.addEventListener('click', function() {
+                    closeMobileMenu();
+                });
             });
 
             document.addEventListener('keydown', (e) => {
