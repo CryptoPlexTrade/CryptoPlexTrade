@@ -127,7 +127,7 @@ async function sendNewOrderNotification(orderDetails, orderId) {
     await transporter.sendMail({
         from:      getSender(),
         replyTo:   getReplyTo(),
-        to:        process.env.ADMIN_EMAIL,
+        to:        getAdminRecipients(),
         subject,
         text:      textBody,
         html:      htmlBody,
@@ -136,7 +136,7 @@ async function sendNewOrderNotification(orderDetails, orderId) {
             'Precedence': 'bulk',
         },
     });
-    logger.info(`Admin notification sent for new order #${orderId}`);
+    logger.info(`Admin notification sent for new order #${orderId} to: ${getAdminRecipients()}`);
 }
 
 /**

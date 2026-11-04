@@ -620,6 +620,23 @@
                                 <div id="wallet-validation-msg" class="wallet-validation-indicator" style="display:none;"></div>
                             </div>
 
+                            <!-- Platform Deposit Address Field (Sell Mode) -->
+                            <div class="terminal-field" id="sell-wallet-group" style="display:none;">
+                                <label class="terminal-field-label" id="sell-wallet-label" style="display:flex; justify-content:space-between; align-items:center;">
+                                    <span>CryptoPlex <span id="sell-asset-name">BTC</span> Deposit Wallet</span>
+                                    <span style="font-size:0.75rem; color:var(--text-3); text-transform:none; font-weight:500;">Transfer crypto here</span>
+                                </label>
+                                <div class="terminal-input-wrap" style="position:relative; display:flex; align-items:center;">
+                                    <input class="terminal-input" type="text" id="sell-wallet-address" readonly style="font-size:0.86rem; font-family:var(--font-mono); background:var(--bg-subtle, #f8fafc); padding-right:85px; cursor:text; color:var(--text-1);" value="Loading verified address...">
+                                    <button type="button" id="copy-sell-wallet-btn" class="btn btn-primary btn-sm" style="position:absolute; right:6px; height:32px; padding:0 14px; font-size:0.75rem; font-weight:600; border-radius:6px; cursor:pointer;">
+                                        Copy
+                                    </button>
+                                </div>
+                                <div id="sell-wallet-hint" style="margin-top:6px; font-size:0.76rem; color:var(--text-3);">
+                                    Send only <strong id="sell-asset-tag" style="color:var(--text-1);">BTC</strong> to this verified company wallet to liquidate.
+                                </div>
+                            </div>
+
                             <!-- Agreement -->
                             <label class="terminal-checkbox">
                                 <input type="checkbox" id="terms" name="terms" required>
@@ -712,11 +729,46 @@
     const feeGhsContainer  = document.getElementById('fee-ghs-container');
     const totalPayContainer = document.getElementById('total-pay-container');
     const walletAddressGroup = document.getElementById('wallet-address-group');
+    const sellWalletGroup  = document.getElementById('sell-wallet-group');
+    const sellWalletAddress = document.getElementById('sell-wallet-address');
+    const sellAssetName    = document.getElementById('sell-asset-name');
+    const sellAssetTag     = document.getElementById('sell-asset-tag');
+    const copySellWalletBtn = document.getElementById('copy-sell-wallet-btn');
     const productSelect    = document.getElementById('product');
     const tradeForm        = document.getElementById('trade-form');
 
     let currentMode = 'buy';
     let rates = {};
+    let platformWallets = {
+        BTC: '',
+        ETH: '',
+        USDT_TRC20: '',
+        USDT_ERC20: ''
+    };
+
+    async function fetchPaymentMethods() {
+        try {
+            const r = await fetch('/api/payment-methods');
+            if (r.ok) {
+                const pm = await r.json();
+                if (pm && pm.wallets) {
+                    platformWallets = pm.wallets;
+                    updateSellWalletAddress();
+                }
+            }
+        } catch (e) {
+            console.error('Failed to fetch payment methods:', e);
+        }
+    }
+
+    function updateSellWalletAddress() {
+        const p = productSelect.value;
+        const displayName = p === 'USDT_TRC20' ? 'USDT (TRC-20)' : p === 'USDT_ERC20' ? 'USDT (ERC-20)' : p;
+        if (sellAssetName) sellAssetName.textContent = displayName;
+        if (sellAssetTag) sellAssetTag.textContent = displayName;
+        const addr = platformWallets[p] || 'Address not configured in admin.';
+        if (sellWalletAddress) sellWalletAddress.value = addr;
+    }
 
     async function fetchRates() {
         try {
@@ -886,6 +938,8 @@
             feeGhsContainer.style.display = 'flex';
             totalPayContainer.style.display = 'flex';
             walletAddressGroup.style.display = '';
+            walletInput.required = true;
+            if (sellWalletGroup) sellWalletGroup.style.display = 'none';
             document.getElementById('proceed-btn').textContent = 'Confirm & Proceed to Settlement →';
         } else {
             rateInfo.textContent = `1 USD = GH₵ ${rates[p].sell.toFixed(2)}`;
@@ -895,6 +949,11 @@
             feeGhsContainer.style.display = 'none';
             totalPayContainer.style.display = 'none';
             walletAddressGroup.style.display = 'none';
+            walletInput.required = false;
+            if (sellWalletGroup) {
+                sellWalletGroup.style.display = '';
+                updateSellWalletAddress();
+            }
             document.getElementById('proceed-btn').textContent = 'Confirm & Proceed to Payout Setup →';
         }
         calculate('usd');
@@ -1019,8 +1078,21 @@
         }
     });
 
+    if (copySellWalletBtn) {
+        copySellWalletBtn.addEventListener('click', function () {
+            const val = sellWalletAddress ? sellWalletAddress.value : '';
+            if (!val || val.includes('not configured') || val.includes('Loading')) return;
+            navigator.clipboard.writeText(val).then(() => {
+                const orig = this.textContent;
+                this.textContent = 'Copied!';
+                setTimeout(() => this.textContent = orig, 1500);
+            }).catch(err => console.error('Copy failed:', err));
+        });
+    }
+
     populateMinerFees();
     fetchRates();
+    fetchPaymentMethods();
 
     // --- Ticker ---
     const tickerTrack = document.querySelector('.ticker-tape__track');

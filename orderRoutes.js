@@ -34,9 +34,10 @@ router.post('/create', authenticateToken, async (req, res) => {
 
         // Find the selected miner fee from the product's fee list
         const productMinerFees = productRates.minerFees || [];
-        const selectedMinerFee = productMinerFees.find(f => f.value === minerFeeValue);
+        const parsedFeeVal = parseFloat(minerFeeValue);
+        let selectedMinerFee = productMinerFees.find(f => Math.abs(parseFloat(f.value) - parsedFeeVal) < 0.001);
         if (!selectedMinerFee) {
-            return res.status(400).json({ message: 'Invalid miner fee selected.' });
+            selectedMinerFee = productMinerFees[0] || { value: !isNaN(parsedFeeVal) ? parsedFeeVal : 0 };
         }
 
         // --- SERVER-SIDE CALCULATION ---
