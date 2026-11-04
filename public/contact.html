@@ -13,30 +13,78 @@
     <link rel="stylesheet" href="css/responsive.css">
 
     <style>
+        body {
+            background: var(--bg);
+        }
+
         .page-hero {
-            padding: 60px 0 36px;
-            background: radial-gradient(circle at 50% 0%, #0c1f40 0%, #050d1e 60%, var(--dark-bg) 100%);
-            border-bottom: 1px solid var(--border-glass);
-            border-bottom: 1px solid var(--border);
+            padding: 64px 0 44px;
+            background: linear-gradient(180deg, var(--blue-050, #f0f7ff) 0%, #ffffff 100%);
+            border-bottom: 1px solid var(--border-subtle, #e2e8f0);
             text-align: center;
         }
+
+        .contact-meta-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--blue-050, #f0f7ff);
+            color: var(--primary, #0052cc);
+            border-radius: 9999px;
+            padding: 6px 16px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            border: 1px solid rgba(0, 82, 204, 0.18);
+            margin-bottom: 16px;
+        }
+
         .contact-layout {
             display: grid;
             grid-template-columns: 1.3fr 1fr;
-            gap: 36px;
+            gap: 32px;
             align-items: start;
-            margin-top: 40px;
-            margin-bottom: 80px;
         }
 
         .form-card {
-            background: rgba(8, 19, 38, 0.75);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--border-glass);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            padding: 36px;
-            box-shadow: var(--shadow-sm);
+            background: #ffffff;
+            border: 1px solid var(--border-subtle, #e2e8f0);
+            border-radius: var(--radius-2xl, 20px);
+            padding: 36px 40px;
+            box-shadow: 0 4px 24px rgba(11, 45, 90, 0.05);
+        }
+
+        .form-card label {
+            display: block;
+            font-size: 0.84rem;
+            font-weight: 600;
+            color: var(--text-1, #0a192f);
+            margin-bottom: 8px;
+        }
+
+        .form-card input,
+        .form-card textarea {
+            width: 100%;
+            padding: 13px 16px;
+            background: #ffffff;
+            border: 1.5px solid var(--border-medium, #cbd5e1);
+            border-radius: var(--radius-md, 10px);
+            font-size: 0.95rem;
+            color: var(--text-1, #0a192f);
+            box-sizing: border-box;
+            outline: none;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .form-card input:focus,
+        .form-card textarea:focus {
+            border-color: var(--primary, #0052cc);
+            box-shadow: 0 0 0 3px rgba(0, 82, 204, 0.15);
+        }
+
+        .form-card textarea {
+            min-height: 130px;
+            resize: vertical;
         }
 
         .info-col {
@@ -44,56 +92,69 @@
             flex-direction: column;
             gap: 16px;
         }
+
         .info-card {
-            background: rgba(8, 19, 38, 0.75);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--border-glass);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-md);
-            padding: 24px;
-            box-shadow: var(--shadow-sm);
+            background: #ffffff;
+            border: 1px solid var(--border-subtle, #e2e8f0);
+            border-radius: var(--radius-xl, 16px);
+            padding: 24px 26px;
+            box-shadow: 0 4px 16px rgba(11, 45, 90, 0.04);
+            transition: all 0.25s ease;
         }
+
+        .info-card:hover {
+            border-color: var(--primary, #0052cc);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(11, 45, 90, 0.08);
+        }
+
         .info-card-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: var(--radius-sm);
-            background: var(--primary-pale);
-            color: var(--primary);
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: var(--blue-050, #f0f7ff);
+            color: var(--primary, #0052cc);
             display: flex;
             align-items: center;
             justify-content: center;
             margin-bottom: 14px;
         }
-        .info-card-icon svg { width: 20px; height: 20px; }
+
+        .info-card-icon svg { width: 22px; height: 22px; }
+
         .info-card h3 {
-            font-size: 0.95rem;
+            font-size: 1rem;
             font-weight: 700;
-            color: var(--text-1);
+            color: var(--text-1, #0a192f);
             margin-bottom: 6px;
         }
+
         .info-card p, .info-card a {
-            font-size: 0.88rem;
-            color: var(--text-2);
+            font-size: 0.9rem;
+            color: var(--text-2, #475569);
             text-decoration: none;
             line-height: 1.5;
         }
-        .info-card a:hover { color: var(--primary); }
+
+        .info-card a:hover { color: var(--primary, #0052cc); }
 
         .hours-grid {
             display: flex;
             flex-direction: column;
             gap: 8px;
             margin-top: 10px;
-            font-size: 0.85rem;
+            font-size: 0.88rem;
         }
+
         .hours-row {
             display: flex;
             justify-content: space-between;
-            color: var(--text-2);
+            color: var(--text-2, #475569);
         }
+
         .hours-row span:last-child {
             font-weight: 600;
-            color: var(--primary);
+            color: var(--primary, #0052cc);
         }
 
         #toast {
@@ -103,17 +164,19 @@
             background: #15803d;
             color: #ffffff;
             padding: 14px 20px;
-            border-radius: var(--radius-md);
+            border-radius: var(--radius-md, 10px);
             font-size: 0.88rem;
             font-weight: 600;
             box-shadow: var(--shadow-lg);
             z-index: 9999;
             display: none;
         }
+
         #toast.show { display: block; }
 
         @media (max-width: 900px) {
             .contact-layout { grid-template-columns: 1fr; }
+            .form-card { padding: 28px 20px; }
         }
     </style>
     <script src="theme.js"></script>
@@ -143,17 +206,24 @@
     <!-- ================== PAGE HERO ================== -->
     <div class="page-hero">
         <div class="container">
+            <div class="contact-meta-badge">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M1.5 8.67v8.58a3 3 0 003 3h15a3 3 0 003-3V8.67l-8.928 5.493a3 3 0 01-3.144 0L1.5 8.67z" />
+                    <path d="M22.5 6.908V6.75a3 3 0 00-3-3h-15a3 3 0 00-3 3v.158l9.714 5.978a1.5 1.5 0 001.572 0L22.5 6.908z" />
+                </svg>
+                Direct Support &amp; Trading Desk Inquiries
+            </div>
             <h1 style="font-size: 2.3rem; font-weight: 800; color: var(--text-1); letter-spacing: -0.025em; margin-bottom: 8px;">
-                Contact Support
+                Contact Support Desk
             </h1>
-            <p style="font-size: 1rem; color: var(--text-3); max-width: 520px; margin: 0 auto;">
-                Have questions about your order, payments, or account? Reach out to us directly.
+            <p style="font-size: 1rem; color: var(--text-3); max-width: 540px; margin: 0 auto; line-height: 1.6;">
+                Have questions regarding orders, settlement, account verification, or institution liquidity? Reach our team directly.
             </p>
         </div>
     </div>
 
     <!-- ================== MAIN CONTENT ================== -->
-    <main style="background: var(--bg);">
+    <main style="padding: 48px 0 80px; background: var(--bg);">
         <div class="container">
             <div class="contact-layout">
                 <!-- Contact Form Column -->

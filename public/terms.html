@@ -16,31 +16,38 @@
     <link rel="stylesheet" href="css/responsive.css">
 
     <style>
-        .header {
-            padding: 10px 0;
-            background: rgba(4, 9, 20, 0.95);
+        body {
+            background: var(--bg);
         }
 
-        .header img.logo {
-            height: 38px !important;
-            max-height: 38px !important;
-            width: auto !important;
-            object-fit: contain !important;
+        .page-hero {
+            padding: 64px 0 44px;
+            background: linear-gradient(180deg, var(--blue-050, #f0f7ff) 0%, #ffffff 100%);
+            border-bottom: 1px solid var(--border-subtle, #e2e8f0);
+            text-align: center;
         }
 
-        .legal-page-header {
-            padding: 24px 0 20px;
-            background: radial-gradient(circle at 50% 0%, #0c1f40 0%, #050d1e 60%, var(--dark-bg) 100%);
-            border-bottom: 1px solid rgba(0, 169, 224, 0.18);
+        .legal-meta-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--blue-050, #f0f7ff);
+            color: var(--primary, #0052cc);
+            border-radius: 9999px;
+            padding: 6px 16px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            border: 1px solid rgba(0, 82, 204, 0.18);
+            margin-bottom: 16px;
         }
 
         .legal-page-wrap {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 28px 24px 70px;
+            padding: 40px 24px 80px;
             display: grid;
-            grid-template-columns: 260px 1fr;
-            gap: 28px;
+            grid-template-columns: 280px 1fr;
+            gap: 32px;
             align-items: start;
         }
 
@@ -48,10 +55,10 @@
             position: sticky;
             top: 96px;
             background: #ffffff;
-            border: 1px solid var(--border-light);
-            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-subtle, #e2e8f0);
+            border-radius: var(--radius-xl, 16px);
             padding: 24px 20px;
-            box-shadow: var(--shadow-sm);
+            box-shadow: 0 4px 16px rgba(11, 45, 90, 0.04);
         }
 
         .legal-toc__label {
@@ -59,7 +66,7 @@
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.08em;
-            color: var(--primary-color);
+            color: var(--primary, #0052cc);
             margin-bottom: 16px;
             display: flex;
             align-items: center;
@@ -69,74 +76,60 @@
         .legal-toc a {
             display: block;
             font-size: 0.84rem;
-            color: var(--text-secondary);
+            color: var(--text-2, #475569);
             text-decoration: none;
             padding: 8px 12px;
-            border-radius: var(--radius-sm);
-            transition: all var(--duration-fast) var(--ease-standard);
+            border-radius: var(--radius-md, 8px);
+            transition: all var(--duration-fast, 0.2s) var(--ease-standard, ease);
             margin-bottom: 3px;
             font-weight: 500;
         }
 
         .legal-toc a:hover {
-            background: var(--bg-highlight);
-            color: var(--primary-color);
+            background: var(--blue-050, #f0f7ff);
+            color: var(--primary, #0052cc);
             padding-left: 16px;
         }
 
         .legal-content-card {
             background: #ffffff;
-            border: 1px solid var(--border-light);
-            border-radius: var(--radius-xl);
+            border: 1px solid var(--border-subtle, #e2e8f0);
+            border-radius: var(--radius-2xl, 20px);
             padding: 48px 52px;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .legal-meta-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: var(--bg-highlight);
-            color: var(--primary-color);
-            border-radius: 9999px;
-            padding: 4px 14px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            border: 1px solid rgba(0, 91, 170, 0.15);
-            margin-bottom: 20px;
+            box-shadow: 0 4px 24px rgba(11, 45, 90, 0.05);
         }
 
         .legal-content-card h1 {
-            font-size: 2.25rem;
+            font-size: 2.1rem;
             font-weight: 800;
-            color: var(--text-primary);
-            letter-spacing: -0.03em;
+            color: var(--text-1, #0a192f);
+            letter-spacing: -0.025em;
             margin-bottom: 12px;
         }
 
         .legal-effective-date {
             font-size: 0.85rem;
-            color: var(--text-muted);
-            font-family: var(--font-mono);
+            color: var(--text-3, #64748b);
+            font-family: var(--font-mono, monospace);
             padding-bottom: 24px;
             margin-bottom: 32px;
-            border-bottom: 1px solid var(--border-light);
+            border-bottom: 1px solid var(--border-subtle, #e2e8f0);
         }
 
         .legal-content-card h2 {
-            font-size: 1.15rem;
+            font-size: 1.2rem;
             font-weight: 700;
-            color: var(--text-primary);
+            color: var(--text-1, #0a192f);
             margin-top: 40px;
             margin-bottom: 16px;
             padding-left: 14px;
-            border-left: 3px solid var(--primary-color);
+            border-left: 3px solid var(--primary, #0052cc);
             scroll-margin-top: 110px;
         }
 
         .legal-content-card p {
             font-size: 0.95rem;
-            color: var(--text-secondary);
+            color: var(--text-2, #475569);
             line-height: 1.85;
             margin-bottom: 16px;
         }
@@ -148,26 +141,26 @@
 
         .legal-content-card li {
             font-size: 0.95rem;
-            color: var(--text-secondary);
+            color: var(--text-2, #475569);
             line-height: 1.8;
             margin-bottom: 8px;
         }
 
         .legal-content-card a {
-            color: var(--primary-color);
+            color: var(--primary, #0052cc);
             font-weight: 600;
             text-decoration: underline;
             text-underline-offset: 3px;
         }
 
         .legal-callout-box {
-            background: var(--bg-highlight);
-            border: 1px solid rgba(0, 91, 170, 0.2);
-            border-radius: var(--radius-md);
+            background: var(--blue-050, #f0f7ff);
+            border: 1px solid rgba(0, 82, 204, 0.2);
+            border-radius: var(--radius-lg, 12px);
             padding: 20px 24px;
             margin: 28px 0;
             font-size: 0.9rem;
-            color: var(--primary-dark);
+            color: #004685;
             line-height: 1.7;
         }
 
@@ -195,11 +188,11 @@
                 margin-bottom: 0;
                 padding: 6px 12px;
                 font-size: 0.8rem;
-                background: var(--bg-light);
+                background: var(--blue-050, #f0f7ff);
             }
 
             .legal-content-card {
-                padding: 32px 24px;
+                padding: 32px 20px;
             }
 
             .legal-content-card h1 {
@@ -207,6 +200,7 @@
             }
         }
     </style>
+    <script src="theme.js"></script>
 </head>
 
 <body>
@@ -231,7 +225,7 @@
     </header>
 
     <!-- ================== PAGE HERO ================== -->
-    <section class="legal-page-header">
+    <div class="page-hero">
         <div class="container">
             <div class="legal-meta-badge">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
@@ -241,17 +235,16 @@
                     <path
                         d="M12.971 1.816A5.23 5.23 0 0 1 14.25 5.25v1.875c0 .207.168.375.375.375H16.5a5.23 5.23 0 0 1 3.434 1.279 9.768 9.768 0 0 0-6.963-6.963Z" />
                 </svg>
-                Institutional Governance & Legal Framework
+                Institutional Governance &amp; Legal Framework
             </div>
-            <h1
-                style="font-size: 1.85rem; font-weight: 800; letter-spacing: -0.02em; color: var(--text-primary); margin-bottom: 6px;">
-                Terms of Service</h1>
-            <p style="color: var(--text-secondary); max-width: 720px; font-size: 0.95rem; line-height: 1.5;">
-                These terms govern all transactions, liquidity agreements, custodial protections, and access
-                authorizations across the CryptoPlexTrade terminal ecosystem.
+            <h1 style="font-size: 2.3rem; font-weight: 800; color: var(--text-1, #0a192f); letter-spacing: -0.025em; margin-bottom: 8px;">
+                Terms of Service
+            </h1>
+            <p style="font-size: 1rem; color: var(--text-3, #64748b); max-width: 680px; margin: 0 auto; line-height: 1.6;">
+                These terms govern all transactions, liquidity agreements, custodial protections, and access protocols across CryptoPlexTrade infrastructure.
             </p>
         </div>
-    </section>
+    </div>
 
     <!-- ================== CONTENT LAYOUT ================== -->
     <div class="legal-page-wrap">
@@ -383,23 +376,7 @@
         <div class="ticker-tape__track" id="ticker-track"></div>
     </div>
 
-    <script>
-        (async () => {
-            const track = document.getElementById('ticker-track');
-            const syms = ['BTC', 'ETH', 'SOL', 'BNB', 'XRP', 'LTC', 'ADA', 'DOGE'];
-            try {
-                const r = await fetch(`https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${syms.join(',')}&tsyms=USD`);
-                const d = await r.json();
-                let html = '';
-                syms.forEach(s => {
-                    const c = d.RAW?.[s]?.USD; if (!c) return;
-                    const dir = c.CHANGEPCT24HOUR >= 0 ? 'up' : 'down';
-                    html += `<div class="ticker-tape__item"><span class="pair">${s}/USD</span><span class="price">${c.PRICE.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span><span class="change ${dir}">${dir === 'up' ? '+' : ''}${c.CHANGEPCT24HOUR.toFixed(2)}% ${dir === 'up' ? '▲' : '▼'}</span></div>`;
-                });
-                track.innerHTML = html + html;
-            } catch (e) { }
-        })();
-    </script>
+    <script src="ticker.js"></script>
     <script src="/chat-widget.js"></script>
 </body>
 
