@@ -739,7 +739,11 @@ img.sidebar-brand__orb {
     flex-shrink: 0;
     transition: transform 0.2s ease;
 }
-.asset-select-wrap.open .dropdown-arrow { transform: rotate(180deg); }
+.asset-select-wrap.open .dropdown-arrow,
+#miner-fee-group.open .dropdown-arrow,
+.asset-select-wrap.open .asset-select-trigger .dropdown-arrow {
+    transform: rotate(180deg);
+}
 
 .asset-select-dropdown {
     position: absolute;
@@ -759,11 +763,22 @@ img.sidebar-brand__orb {
     visibility: hidden;
     transform: translateY(-4px);
     transition: all 0.18s ease;
+    pointer-events: none;
 }
-.asset-select-wrap.open .asset-select-dropdown {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
+.asset-select-wrap.open .asset-select-dropdown,
+.asset-select-dropdown.open,
+#miner-fee-group.open .asset-select-dropdown,
+#miner-select-wrap.open .asset-select-dropdown {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateY(0) !important;
+    pointer-events: auto !important;
+}
+
+.asset-select-wrap.open,
+#miner-fee-group.open,
+#miner-select-wrap.open {
+    z-index: 60;
 }
 
 .asset-option {

@@ -558,16 +558,42 @@
                             <!-- Miner Fee Selector -->
                             <div class="terminal-field" id="miner-fee-group">
                                 <label class="terminal-field-label">Network Priority</label>
-                                <div class="asset-select-wrap">
+                                <div class="asset-select-wrap" id="miner-select-wrap">
                                     <div class="asset-select-trigger" id="miner-trigger" role="button" tabindex="0" aria-haspopup="listbox" aria-expanded="false">
                                         <div class="asset-select-current">
-                                            <div class="asset-badge" id="miner-badge" style="background:var(--primary-color);color:#fff;">⚡</div>
-                                            <span class="asset-select-name" id="miner-name">Standard Priority</span>
+                                            <div class="asset-badge" id="miner-badge" style="background:var(--primary-color);color:#fff;">◆</div>
+                                            <span class="asset-select-name" id="miner-name">Standard ($2.50)</span>
                                         </div>
                                         <svg class="dropdown-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>
                                     </div>
-                                    <ul class="asset-select-dropdown" id="miner-dropdown" role="listbox"></ul>
-                                    <select id="miner-fee" name="miner-fee" class="asset-select-native"></select>
+                                    <ul class="asset-select-dropdown" id="miner-dropdown" role="listbox">
+                                        <li class="asset-option selected" data-value="2.50" data-name="Standard ($2.50)" data-badge-bg="var(--primary-color)" data-emoji="◆" role="option">
+                                            <div class="asset-badge" style="background:var(--primary-color);font-size:0.85rem;color:#fff;">◆</div>
+                                            <div class="asset-option__info">
+                                                <span class="asset-option__name">Standard</span>
+                                                <span class="asset-option__ticker">$2.50 USD &bull; Network miner fee</span>
+                                            </div>
+                                        </li>
+                                        <li class="asset-option" data-value="3.50" data-name="Priority ($3.50)" data-badge-bg="var(--primary-dark)" data-emoji="⚡" role="option">
+                                            <div class="asset-badge" style="background:var(--primary-dark);font-size:0.85rem;color:#fff;">⚡</div>
+                                            <div class="asset-option__info">
+                                                <span class="asset-option__name">Priority</span>
+                                                <span class="asset-option__ticker">$3.50 USD &bull; Network miner fee</span>
+                                            </div>
+                                        </li>
+                                        <li class="asset-option" data-value="1.50" data-name="Economy ($1.50)" data-badge-bg="var(--accent-green)" data-emoji="✓" role="option">
+                                            <div class="asset-badge" style="background:var(--accent-green);font-size:0.85rem;color:#fff;">✓</div>
+                                            <div class="asset-option__info">
+                                                <span class="asset-option__name">Economy</span>
+                                                <span class="asset-option__ticker">$1.50 USD &bull; Network miner fee</span>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                    <select id="miner-fee" name="miner-fee" class="asset-select-native">
+                                        <option value="2.50" selected>Standard ($2.50)</option>
+                                        <option value="3.50">Priority ($3.50)</option>
+                                        <option value="1.50">Economy ($1.50)</option>
+                                    </select>
                                 </div>
                             </div>
 
@@ -711,17 +737,41 @@
         'Economy':  { bg: 'var(--accent-green)', emoji: '✓' },
     };
 
+    const DEFAULT_MINER_FEES = {
+        'BTC': [
+            { name: 'Priority', value: 3.50 },
+            { name: 'Standard', value: 2.50 },
+            { name: 'Economy', value: 1.50 }
+        ],
+        'ETH': [
+            { name: 'Priority', value: 5.00 },
+            { name: 'Standard', value: 4.50 },
+            { name: 'Economy', value: 3.00 }
+        ],
+        'USDT_TRC20': [
+            { name: 'Priority', value: 2.00 },
+            { name: 'Standard', value: 1.00 },
+            { name: 'Economy', value: 0.50 }
+        ],
+        'USDT_ERC20': [
+            { name: 'Priority', value: 5.00 },
+            { name: 'Standard', value: 3.00 },
+            { name: 'Economy', value: 1.50 }
+        ]
+    };
+
     function populateMinerFees() {
         if (!minerFeeSelect) return;
-        const p = productSelect.value;
-        if (!rates[p] || !rates[p].minerFees) return;
+        const p = productSelect ? productSelect.value : 'BTC';
+        const feeList = (rates[p] && rates[p].minerFees) ? rates[p].minerFees : (DEFAULT_MINER_FEES[p] || DEFAULT_MINER_FEES['BTC']);
+        if (!feeList || feeList.length === 0) return;
 
         minerFeeSelect.innerHTML = '';
         const dropdownList = document.getElementById('miner-dropdown');
         if (!dropdownList) return;
         dropdownList.innerHTML = '';
 
-        rates[p].minerFees.forEach((fee, idx) => {
+        feeList.forEach((fee, idx) => {
             const opt = document.createElement('option');
             opt.value = fee.value;
             opt.textContent = `${fee.name} ($${fee.value})`;
@@ -746,24 +796,37 @@
             dropdownList.appendChild(li);
         });
 
-        const first = rates[p].minerFees[0];
+        const first = feeList[0];
         if (first) {
             const meta = FEE_META[first.name] || FEE_META['Standard'];
-            document.getElementById('miner-badge').style.background = meta.bg;
-            document.getElementById('miner-badge').textContent = meta.emoji;
-            document.getElementById('miner-name').textContent = `${first.name} ($${first.value})`;
+            const badgeEl = document.getElementById('miner-badge');
+            const nameEl = document.getElementById('miner-name');
+            if (badgeEl) {
+                badgeEl.style.background = meta.bg;
+                badgeEl.textContent = meta.emoji;
+            }
+            if (nameEl) {
+                nameEl.textContent = `${first.name} ($${first.value})`;
+            }
         }
 
         dropdownList.querySelectorAll('.asset-option').forEach(opt => {
-            opt.addEventListener('click', () => {
+            opt.addEventListener('click', (e) => {
+                e.stopPropagation();
                 const val   = opt.dataset.value;
                 const name  = opt.dataset.name;
                 const bg    = opt.dataset.badgeBg;
                 const emoji = opt.dataset.emoji;
 
-                document.getElementById('miner-badge').style.background = bg;
-                document.getElementById('miner-badge').textContent = emoji;
-                document.getElementById('miner-name').textContent = name;
+                const badgeEl = document.getElementById('miner-badge');
+                const nameEl = document.getElementById('miner-name');
+                if (badgeEl) {
+                    badgeEl.style.background = bg;
+                    badgeEl.textContent = emoji;
+                }
+                if (nameEl) {
+                    nameEl.textContent = name;
+                }
 
                 dropdownList.querySelectorAll('.asset-option').forEach(o => o.classList.remove('selected'));
                 opt.classList.add('selected');
@@ -771,14 +834,11 @@
                 minerFeeSelect.value = val;
                 minerFeeSelect.dispatchEvent(new Event('change'));
 
-                const wrap = document.getElementById('miner-fee-group');
+                const wrap = document.getElementById('miner-select-wrap') || document.getElementById('miner-fee-group');
                 const trigger = document.getElementById('miner-trigger');
-                const mDropdown = document.getElementById('miner-dropdown');
-                if (wrap && trigger) {
-                    wrap.classList.remove('open');
-                    if (mDropdown) mDropdown.classList.remove('open');
-                    trigger.setAttribute('aria-expanded', 'false');
-                }
+                if (wrap) wrap.classList.remove('open');
+                if (dropdownList) dropdownList.classList.remove('open');
+                if (trigger) trigger.setAttribute('aria-expanded', 'false');
             });
         });
         
@@ -959,6 +1019,7 @@
         }
     });
 
+    populateMinerFees();
     fetchRates();
 
     // --- Ticker ---
@@ -983,6 +1044,25 @@
     fetchLiveRates();
     setInterval(fetchLiveRates, 60000);
 
+    // --- Coordinated Custom Dropdowns (Asset & Network Priority) ---
+    function closeAllDropdowns() {
+        const assetWrap = document.getElementById('asset-select-wrap');
+        const assetDropdown = document.getElementById('asset-select-dropdown');
+        const assetTrigger = document.getElementById('asset-select-trigger');
+        if (assetWrap) assetWrap.classList.remove('open');
+        if (assetDropdown) assetDropdown.classList.remove('open');
+        if (assetTrigger) assetTrigger.setAttribute('aria-expanded', 'false');
+
+        const minerWrap = document.getElementById('miner-select-wrap') || document.getElementById('miner-fee-group');
+        const minerDropdown = document.getElementById('miner-dropdown');
+        const minerTrigger = document.getElementById('miner-trigger');
+        const minerFeeGroup = document.getElementById('miner-fee-group');
+        if (minerWrap) minerWrap.classList.remove('open');
+        if (minerFeeGroup) minerFeeGroup.classList.remove('open');
+        if (minerDropdown) minerDropdown.classList.remove('open');
+        if (minerTrigger) minerTrigger.setAttribute('aria-expanded', 'false');
+    }
+
     // --- Custom Asset Dropdown ---
     (function () {
         const wrap     = document.getElementById('asset-select-wrap');
@@ -990,9 +1070,11 @@
         const dropdown = document.getElementById('asset-select-dropdown');
         const badge    = document.getElementById('asset-badge');
         const nameEl   = document.getElementById('asset-select-name');
+        if (!wrap || !trigger || !dropdown) return;
         const options  = dropdown.querySelectorAll('.asset-option');
 
         function openDropdown() {
+            closeAllDropdowns();
             wrap.classList.add('open');
             dropdown.classList.add('open');
             trigger.setAttribute('aria-expanded', 'true');
@@ -1020,7 +1102,8 @@
         };
 
         options.forEach(opt => {
-            opt.addEventListener('click', () => {
+            opt.addEventListener('click', (e) => {
+                e.stopPropagation();
                 const val       = opt.dataset.value;
                 const label     = opt.dataset.label;
 
@@ -1038,11 +1121,6 @@
             });
         });
 
-        document.addEventListener('click', (e) => {
-            if (!wrap.contains(e.target)) closeDropdown();
-        });
-        document.addEventListener('scroll', closeDropdown, { passive: true });
-        
         if (minerFeeSelect) {
            minerFeeSelect.addEventListener('change', () => calculate('usd'));
         }
@@ -1050,34 +1128,48 @@
 
     // --- Custom Miner Fee Dropdown toggle ---
     (function() {
-        const minerWrap     = document.getElementById('miner-fee-group');
+        const minerWrap     = document.getElementById('miner-select-wrap') || document.getElementById('miner-fee-group');
+        const minerFeeGroup = document.getElementById('miner-fee-group');
         const minerDropdown = document.getElementById('miner-dropdown');
         const minerTrigger  = document.getElementById('miner-trigger');
         if (!minerTrigger) return;
         
+        function openMinerDropdown() {
+            closeAllDropdowns();
+            if (minerWrap) minerWrap.classList.add('open');
+            if (minerFeeGroup) minerFeeGroup.classList.add('open');
+            if (minerDropdown) minerDropdown.classList.add('open');
+            minerTrigger.setAttribute('aria-expanded', 'true');
+        }
+
+        function closeMinerDropdown() {
+            if (minerWrap) minerWrap.classList.remove('open');
+            if (minerFeeGroup) minerFeeGroup.classList.remove('open');
+            if (minerDropdown) minerDropdown.classList.remove('open');
+            minerTrigger.setAttribute('aria-expanded', 'false');
+        }
+
         minerTrigger.addEventListener('click', (e) => {
             e.stopPropagation();
-            const isOpen = minerWrap.classList.contains('open');
-            minerWrap.classList.toggle('open', !isOpen);
-            if (minerDropdown) minerDropdown.classList.toggle('open', !isOpen);
-            minerTrigger.setAttribute('aria-expanded', String(!isOpen));
+            const isOpen = (minerWrap && minerWrap.classList.contains('open')) ||
+                           (minerDropdown && minerDropdown.classList.contains('open')) ||
+                           (minerFeeGroup && minerFeeGroup.classList.contains('open'));
+            isOpen ? closeMinerDropdown() : openMinerDropdown();
         });
+
         minerTrigger.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); minerTrigger.click(); }
-            if (e.key === 'Escape') { 
-                minerWrap.classList.remove('open'); 
-                if (minerDropdown) minerDropdown.classList.remove('open');
-                minerTrigger.setAttribute('aria-expanded', 'false'); 
-            }
-        });
-        document.addEventListener('click', (e) => {
-            if (!minerWrap.contains(e.target)) { 
-                minerWrap.classList.remove('open'); 
-                if (minerDropdown) minerDropdown.classList.remove('open');
-                minerTrigger.setAttribute('aria-expanded', 'false'); 
-            }
+            if (e.key === 'Escape') { closeMinerDropdown(); }
         });
     })();
+
+    document.addEventListener('click', (e) => {
+        closeAllDropdowns();
+    });
+
+    document.addEventListener('scroll', () => {
+        closeAllDropdowns();
+    }, { passive: true });
 })();
 </script>
 </body>
