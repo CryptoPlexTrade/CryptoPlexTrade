@@ -404,6 +404,84 @@
             width: 0;
             height: 0;
         }
+
+        /* ── Platform Deposit Wallet Box (Sell Mode) ────────── */
+        .sell-wallet-box {
+            background: var(--blue-050, #f0f7ff);
+            border: 1.5px dashed rgba(0, 91, 170, 0.35);
+            border-radius: 10px;
+            padding: 12px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            box-sizing: border-box;
+            width: 100%;
+        }
+
+        .sell-wallet-code-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .sell-wallet-chip {
+            align-self: flex-start;
+            display: inline-flex;
+            align-items: center;
+            font-size: 0.68rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--primary, #005baa);
+            background: rgba(0, 91, 170, 0.1);
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .sell-wallet-address-text {
+            font-family: var(--font-mono, monospace);
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--primary-dark, #003d73);
+            word-break: break-all;
+            line-height: 1.5;
+            user-select: all;
+            background: #ffffff;
+            padding: 10px 12px;
+            border: 1px solid rgba(0, 91, 170, 0.18);
+            border-radius: 6px;
+            box-sizing: border-box;
+            width: 100%;
+        }
+
+        .sell-wallet-copy-action {
+            width: 100%;
+            height: 38px;
+            background: var(--primary, #005baa);
+            color: #ffffff;
+            border: none;
+            border-radius: 7px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            transition: all 0.15s ease;
+            box-shadow: 0 1px 3px rgba(0, 91, 170, 0.2);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .sell-wallet-copy-action:hover {
+            background: var(--primary-dark, #004480);
+        }
+
+        .sell-wallet-copy-action:active {
+            transform: scale(0.98);
+        }
     </style>
     <script src="theme.js"></script>
 </head>
@@ -622,23 +700,24 @@
 
                             <!-- Platform Deposit Address Field (Sell Mode) -->
                             <div class="terminal-field" id="sell-wallet-group" style="display:none;">
-                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; gap:8px;">
-                                    <label class="terminal-field-label" id="sell-wallet-label" style="margin-bottom:0;">
-                                        Platform Deposit Address (<span id="sell-asset-name">BTC</span>)
-                                    </label>
-                                    <button type="button" id="copy-sell-wallet-btn" class="btn btn-primary btn-sm" style="height:30px; padding:0 12px; font-size:0.75rem; font-weight:600; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:5px; flex-shrink:0;">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                                        <span id="copy-btn-text">Copy</span>
-                                    </button>
-                                </div>
-                                <div class="sell-wallet-card" style="background:var(--blue-050, #f0f7ff); border:1.5px dashed rgba(0, 91, 170, 0.35); border-radius:8px; padding:12px 14px;">
-                                    <div id="sell-wallet-address-display" style="font-family:var(--font-mono); font-size:0.86rem; font-weight:600; color:var(--primary-dark, #003d73); word-break:break-all; line-height:1.55; user-select:all;">
-                                        Loading verified address...
+                                <label class="terminal-field-label" id="sell-wallet-label" style="display:block; margin-bottom:8px;">
+                                    Deposit Address &bull; <span id="sell-asset-name" style="color:var(--primary); font-weight:800;">BTC</span>
+                                </label>
+                                <div class="sell-wallet-box">
+                                    <div class="sell-wallet-code-wrap">
+                                        <span class="sell-wallet-chip" id="sell-asset-tag">BTC Network</span>
+                                        <div id="sell-wallet-address-display" class="sell-wallet-address-text">
+                                            Loading verified address...
+                                        </div>
                                     </div>
+                                    <button type="button" id="copy-sell-wallet-btn" class="sell-wallet-copy-action">
+                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                        <span id="copy-btn-text">Copy Address</span>
+                                    </button>
                                     <input type="hidden" id="sell-wallet-address" value="">
                                 </div>
-                                <div id="sell-wallet-hint" style="margin-top:6px; font-size:0.75rem; color:var(--text-3); line-height:1.4;">
-                                    Transfer only <strong id="sell-asset-tag" style="color:var(--text-1);">BTC</strong> to this verified deposit address.
+                                <div id="sell-wallet-hint" style="margin-top:7px; font-size:0.75rem; color:var(--text-3); line-height:1.4;">
+                                    Transfer only <strong id="sell-asset-note" style="color:var(--text-1);">BTC</strong> to this verified deposit address.
                                 </div>
                             </div>
 
@@ -770,7 +849,9 @@
         const p = productSelect.value;
         const displayName = p === 'USDT_TRC20' ? 'USDT (TRC-20)' : p === 'USDT_ERC20' ? 'USDT (ERC-20)' : p;
         if (sellAssetName) sellAssetName.textContent = displayName;
-        if (sellAssetTag) sellAssetTag.textContent = displayName;
+        if (sellAssetTag) sellAssetTag.textContent = `${displayName} Network`;
+        const noteEl = document.getElementById('sell-asset-note');
+        if (noteEl) noteEl.textContent = displayName;
         const addr = platformWallets[p] || 'Address not configured in admin.';
         if (sellWalletAddress) sellWalletAddress.value = addr;
         const displayEl = document.getElementById('sell-wallet-address-display');
