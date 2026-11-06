@@ -2215,3 +2215,29 @@ tbody tr:last-child td {
         padding: 12px;
     }
 }
+
+/* Native form controls on touch devices: 16px keeps iOS Safari from
+   zooming the page on focus, 46px gives a comfortable tap target. */
+@media (max-width: 768px) {
+    .status-select,
+    .pm-field input,
+    .pm-field select,
+    .pm-field input.wallet-input {
+        font-size: 16px;
+    }
+
+    .status-select,
+    .pm-field input,
+    .pm-field select {
+        min-height: 46px;
+    }
+
+    .status-select {
+        padding: 12px 40px 12px 14px;
+    }
+
+    .pm-field select {
+        padding: 12px 14px;
+    }
+}
+
