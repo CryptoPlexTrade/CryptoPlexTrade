@@ -192,7 +192,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', async function() {
             const tbody = document.getElementById('orders-tbody');
-            const orderStatusOptions = ['pending_confirmation', 'pending_payment', 'completed', 'failed', 'cancelled'];
+            const orderStatusOptions = ['pending_confirmation', 'pending_payment', 'completed', 'rejected', 'failed', 'cancelled'];
             let allOrders = []; // Store all fetched orders
             let filteredOrders = [];
 
@@ -285,6 +285,7 @@
                 pending_confirmation: '#005baa',
                 pending_payment: '#f7931a',
                 completed: '#28a745',
+                rejected: '#dc3545',
                 failed: '#dc3545',
                 cancelled: '#dc3545'
             };
@@ -377,7 +378,7 @@
                     const wrapper = e.target.closest('.csd-wrapper');
                     const isOpen = wrapper.classList.contains('csd-open');
                     closeAllDropdowns(null);
-                    if (!isOpen) { wrapper.classList.add('csd-open'); }
+                    if (!isOpen) { positionCSD(wrapper); wrapper.classList.add('csd-open'); }
                     return;
                 }
 

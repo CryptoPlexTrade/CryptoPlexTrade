@@ -101,6 +101,7 @@
             }
         }
         .chat-back-btn { display: none; align-items: center; gap: 4px; background: none; border: 1px solid var(--border-medium); color: var(--text-secondary); border-radius: 8px; padding: 6px 10px; font-weight: 600; font-size: .8rem; cursor: pointer; margin-right: 10px; }
+        .chat-send-error { padding: 8px 12px; color: #b91c1c; font-size: 0.84rem; }
 
         /* ── Custom Confirmation Modal ────────────────── */
         .cpt-conf-overlay {
@@ -282,6 +283,7 @@
                             </div>
                         </div>
                         <div id="admin-messages"></div>
+                        <div id="admin-chat-error" class="chat-send-error" role="alert" hidden></div>
                         <div id="admin-reply-area">
                             <textarea id="admin-reply-input" placeholder="Type your reply…" rows="1"></textarea>
                             <button id="admin-send-btn">
@@ -503,26 +505,39 @@
         async function sendReply() {
             const msg = replyInput.value.trim();
             if (!msg || !activeId) return;
-            replyInput.value = '';
-            replyInput.style.height = 'auto';
+            const requestedId = activeId;
+            const errorMessage = document.getElementById('admin-chat-error');
+            errorMessage.hidden = true;
             sendBtn.disabled = true;
 
-            appendAdminMsg({ sender: 'admin', message: msg, created_at: new Date().toISOString() });
-            adminMessages.scrollTop = adminMessages.scrollHeight;
-
             try {
-                await fetch(`/api/admin/chat/${activeId}/reply`, {
+                const response = await fetch(`/api/admin/chat/${requestedId}/reply`, {
                     method: 'POST', credentials: 'include',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ message: msg })
                 });
+                if (!response.ok) {
+                    const result = await response.json().catch(() => ({}));
+                    throw new Error(result.message || `Request failed (${response.status})`);
+                }
+
+                if (requestedId !== activeId) return;
+                replyInput.value = '';
+                replyInput.style.height = 'auto';
                 lastMsgSig = '';
                 await loadMessages();
                 await loadSessions();
-            } catch (_) {}
-
-            sendBtn.disabled = false;
-            replyInput.focus();
+            } catch (error) {
+                if (requestedId === activeId) {
+                    errorMessage.textContent = `Reply not sent: ${error.message}`;
+                    errorMessage.hidden = false;
+                }
+            } finally {
+                if (requestedId === activeId) {
+                    sendBtn.disabled = false;
+                    replyInput.focus();
+                }
+            }
         }
 
         sendBtn.addEventListener('click', sendReply);

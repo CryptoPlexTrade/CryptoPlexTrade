@@ -1843,6 +1843,12 @@ tbody tr:last-child td {
     background: var(--bg-card);
     flex-shrink: 0;
 }
+.msg-panel-actions svg {
+    display: block;
+    width: 16px;
+    height: 16px;
+    flex: 0 0 16px;
+}
 .msg-panel-name { font-size: 0.96rem; font-weight: 700; color: var(--text-primary); margin: 0; }
 .msg-panel-sub  { font-size: 0.76rem; color: var(--text-muted); margin-top: 2px; }
 
