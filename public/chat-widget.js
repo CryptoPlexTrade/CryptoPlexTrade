@@ -583,6 +583,7 @@
         updateBadge();
 
         if (!sessionId) {
+            namePrompt.style.display = 'flex';
             // Check if user is logged in: automatically use their name and skip name box!
             const loggedInName = await getAuthenticatedUser();
             if (loggedInName) {
