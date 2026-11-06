@@ -14,35 +14,77 @@
     <style>
         @media (max-width: 900px) {
             .admin-container {
-                padding: 10px 12px 16px !important;
+                padding: 8px 12px calc(10px + env(safe-area-inset-bottom, 0px)) !important;
                 margin: 0 !important;
+                height: calc(100dvh - 60px);
+                display: flex;
+                flex-direction: column;
+                overflow: hidden;
+            }
+            .admin-header {
+                flex-shrink: 0;
+                margin-bottom: 10px;
+            }
+            .admin-header h1 {
+                font-size: 1.35rem;
+                margin-bottom: 2px;
+            }
+            .admin-header p {
+                font-size: 0.82rem;
+                line-height: 1.35;
+                margin: 0;
             }
             .body-chat-mobile-open .admin-header {
                 display: none !important;
             }
             .chat-layout {
+                flex: 1 1 auto;
+                min-height: 0;
                 grid-template-columns: 1fr;
                 border-radius: 12px;
                 border: 1px solid var(--border-light);
             }
             /* Sessions list view on mobile */
             .chat-layout:not(.chat-open) {
-                height: calc(100dvh - 150px);
-                min-height: 460px;
+                height: auto;
+                min-height: 0;
             }
             .chat-layout:not(.chat-open) .sessions-panel {
                 height: 100%;
+                min-height: 0;
                 display: flex;
                 flex-direction: column;
             }
             .chat-layout:not(.chat-open) .message-panel {
                 display: none !important;
             }
+            .sessions-panel-header {
+                flex-shrink: 0;
+                padding: 12px 14px 10px;
+            }
+            .sessions-panel-header h2 {
+                margin-bottom: 8px;
+            }
+            .sessions-filter {
+                display: grid;
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 6px;
+            }
+            .filter-btn {
+                width: 100%;
+                min-width: 0;
+                padding: 9px 4px;
+                font-size: 0.8rem;
+                white-space: nowrap;
+            }
+            .sessions-list {
+                min-height: 0;
+            }
 
             /* Active chat detail view on mobile */
             .chat-layout.chat-open {
-                height: calc(100dvh - 72px) !important;
-                min-height: 460px;
+                height: auto !important;
+                min-height: 0;
             }
             .chat-layout.chat-open .sessions-panel {
                 display: none !important;
