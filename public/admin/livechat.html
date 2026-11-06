@@ -16,10 +16,13 @@
             .admin-container {
                 padding: 8px 12px calc(10px + env(safe-area-inset-bottom, 0px)) !important;
                 margin: 0 !important;
+                height: calc(100vh - 60px);
                 height: calc(100dvh - 60px);
                 display: flex;
                 flex-direction: column;
                 overflow: hidden;
+                -webkit-text-size-adjust: 100%;
+                text-size-adjust: 100%;
             }
             .admin-header {
                 flex-shrink: 0;
@@ -58,9 +61,15 @@
             .chat-layout:not(.chat-open) .message-panel {
                 display: none !important;
             }
+            .sessions-panel {
+                isolation: isolate;
+            }
             .sessions-panel-header {
+                position: relative;
+                z-index: 3;
                 flex-shrink: 0;
                 padding: 12px 14px 10px;
+                background: var(--bg-sidebar);
             }
             .sessions-panel-header h2 {
                 margin-bottom: 8px;
@@ -76,6 +85,11 @@
                 padding: 9px 4px;
                 font-size: 0.8rem;
                 white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            .filter-btn.active {
+                box-shadow: 0 1px 4px rgba(0, 91, 170, 0.3);
             }
             .sessions-list {
                 min-height: 0;
