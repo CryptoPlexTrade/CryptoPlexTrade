@@ -1293,6 +1293,15 @@ tbody tr:last-child td {
     flex: 1;
     min-width: 0;
 }
+.modal-status-controls .csd-dropdown {
+    position: absolute;
+    top: auto;
+    right: 0;
+    bottom: calc(100% + 6px);
+    left: 0;
+    width: auto;
+    min-width: 0;
+}
 
 .modal-status-controls .save-btn {
     padding: 9px 20px;

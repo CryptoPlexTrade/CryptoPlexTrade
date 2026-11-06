@@ -378,7 +378,7 @@
                     const wrapper = e.target.closest('.csd-wrapper');
                     const isOpen = wrapper.classList.contains('csd-open');
                     closeAllDropdowns(null);
-                    if (!isOpen) { positionCSD(wrapper); wrapper.classList.add('csd-open'); }
+                    if (!isOpen) { wrapper.classList.add('csd-open'); }
                     return;
                 }
 
