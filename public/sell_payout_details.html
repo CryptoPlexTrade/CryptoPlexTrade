@@ -396,11 +396,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const result = await response.json();
             if (response.ok) {
-                serverMessageDiv.textContent = 'Success! Your sell order has been submitted. You will be notified once the funds are sent. Redirecting to dashboard...';
+                const payout = Number(result.ghsToReceive);
+                const payoutText = Number.isFinite(payout) ? ` Recorded payout: GH₵ ${payout.toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}.` : '';
+                serverMessageDiv.textContent = `Sell order #${result.orderId} submitted.${payoutText} Follow its status in transaction history.`;
                 serverMessageDiv.className = 'success';
                 serverMessageDiv.style.display = 'block';
                 localStorage.removeItem('sellOrderDetails');
-                setTimeout(() => { window.location.href = 'dashboard.html'; }, 4000);
+                submitBtn.disabled = true;
             } else {
                 throw new Error(result.message || 'An unknown error occurred.');
             }

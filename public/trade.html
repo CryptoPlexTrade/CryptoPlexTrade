@@ -17,6 +17,10 @@
     <script>
     (async function() {
         if (window.location.protocol === 'file:' || window.location.search.includes('preview=1')) return;
+        const requestedAsset = new URLSearchParams(window.location.search).get('asset');
+        if (['BTC', 'ETH', 'USDT_TRC20', 'USDT_ERC20'].includes(requestedAsset)) {
+            sessionStorage.setItem('pendingTradeAsset', requestedAsset);
+        }
         try {
             const r = await fetch('/api/user/me', { credentials: 'include' });
             if (!r.ok) {
@@ -29,6 +33,10 @@
     </script>
 
     <style>
+        const requestedAsset = new URLSearchParams(window.location.search).get('asset');
+        if (['BTC', 'ETH', 'USDT_TRC20', 'USDT_ERC20'].includes(requestedAsset)) {
+            sessionStorage.setItem('pendingTradeAsset', requestedAsset);
+        }
         .trade-terminal-container {
             max-width: 680px;
             margin: 0 auto;
@@ -121,12 +129,6 @@
             height: 8px;
             border-radius: 50%;
             background: var(--accent-green);
-            animation: rateBlink 1.8s infinite;
-        }
-
-        @keyframes rateBlink {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.4; transform: scale(0.85); }
         }
 
         .rate-label {
@@ -306,6 +308,14 @@
             transform: translateY(0);
         }
 
+        .terminal-execute-btn:disabled,
+        .terminal-execute-btn:disabled:hover {
+            opacity: 0.58;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
         /* Custom Asset Dropdown (White Clarity Surface) */
         .asset-select-wrap {
             position: relative;
@@ -359,8 +369,9 @@
             margin: 0;
             z-index: 1000;
             display: none;
-            max-height: 280px;
+            max-height: min(320px, 42vh);
             overflow-y: auto;
+            overscroll-behavior: contain;
         }
         .asset-select-wrap.open > .asset-select-dropdown,
         .asset-select-dropdown.open,
@@ -546,9 +557,9 @@
                     <div class="terminal-rate-callout">
                         <div class="rate-label-wrap">
                             <span class="rate-pulse"></span>
-                            <span class="rate-label">Live Exchange Rate</span>
+                                <span class="rate-label" id="rate-label">Exchange Rate</span>
                         </div>
-                        <span class="rate-value" id="rate-info">Fetching market rates…</span>
+                        <span class="rate-value" id="rate-info" role="status" aria-live="polite">Fetching rates…</span>
                     </div>
 
                     <form id="trade-form" novalidate>
@@ -556,9 +567,9 @@
 
                             <!-- Asset Selector -->
                             <div class="terminal-field">
-                                <label class="terminal-field-label">Target Digital Asset</label>
+                                <label class="terminal-field-label" id="asset-field-label">Target Digital Asset</label>
                                 <div class="asset-select-wrap" id="asset-select-wrap">
-                                    <div class="asset-select-trigger" id="asset-select-trigger" role="button" tabindex="0" aria-haspopup="listbox" aria-expanded="false">
+                                    <div class="asset-select-trigger" id="asset-select-trigger" role="button" tabindex="0" aria-labelledby="asset-field-label asset-select-name" aria-haspopup="listbox" aria-expanded="false">
                                         <div class="asset-select-current">
                                             <div id="asset-badge" style="width:28px;height:28px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
                                                 <svg viewBox="0 0 32 32" width="28" height="28"><circle cx="16" cy="16" r="16" fill="#F7931A"/><path fill="#FFF" d="M23.189 14.02c.314-2.096-1.283-3.223-3.465-3.975l.708-2.84-1.728-.43-.69 2.765c-.454-.114-.92-.22-1.385-.326l.695-2.783L15.596 6l-.708 2.839c-.376-.086-.746-.17-1.104-.26l.002-.009-2.384-.595-.46 1.846s1.283.294 1.256.312c.7.175.826.638.805 1.006l-.806 3.235c.048.012.11.03.18.057l-.183-.045-1.13 4.532c-.086.212-.303.531-.793.41.018.025-1.256-.313-1.256-.313l-.858 1.978 2.25.561c.418.105.828.215 1.231.318l-.715 2.872 1.727.43.708-2.84c.472.127.93.245 1.378.357l-.706 2.828 1.728.43.715-2.866c2.948.558 5.164.333 6.097-2.333.752-2.146-.037-3.385-1.588-4.192 1.13-.26 1.98-1.003 2.207-2.538zm-3.95 5.538c-.533 2.147-4.148.987-5.32.695l.95-3.805c1.172.293 4.929.872 4.37 3.11zm.535-5.569c-.487 1.953-3.495.96-4.47.717l.86-3.45c.976.244 4.118.699 3.61 2.733z"/></svg>
@@ -619,8 +630,8 @@
                             <div class="terminal-field">
                                 <label class="terminal-field-label" id="usd-label" for="usd-amount">Volume (USD Equivalent)</label>
                                 <div class="terminal-input-wrap">
-                                    <input class="terminal-input" type="number" id="usd-amount" name="usd-amount" required placeholder="0.00" step="0.01" min="0">
-                                    <span class="terminal-unit-badge">USD</span>
+                                    <input class="terminal-input" type="number" id="usd-amount" name="usd-amount" inputmode="decimal" required placeholder="0.00" step="0.00000001" min="0">
+                                    <span class="terminal-unit-badge" id="asset-amount-unit">USD</span>
                                 </div>
                             </div>
 
@@ -628,16 +639,16 @@
                             <div class="terminal-field">
                                 <label class="terminal-field-label" id="ghs-label" for="ghs-amount">Settlement Amount (GH₵)</label>
                                 <div class="terminal-input-wrap">
-                                    <input class="terminal-input" type="number" id="ghs-amount" name="ghs-amount" required placeholder="0.00" step="0.01" min="0">
+                                    <input class="terminal-input" type="number" id="ghs-amount" name="ghs-amount" inputmode="decimal" required placeholder="0.00" step="0.01" min="0">
                                     <span class="terminal-unit-badge">GH₵</span>
                                 </div>
                             </div>
 
                             <!-- Miner Fee Selector -->
                             <div class="terminal-field" id="miner-fee-group">
-                                <label class="terminal-field-label">Network Priority</label>
+                                <label class="terminal-field-label" id="network-priority-label">Network Priority</label>
                                 <div class="asset-select-wrap" id="miner-select-wrap">
-                                    <div class="asset-select-trigger" id="miner-trigger" role="button" tabindex="0" aria-haspopup="listbox" aria-expanded="false">
+                                    <div class="asset-select-trigger" id="miner-trigger" role="button" tabindex="0" aria-labelledby="network-priority-label miner-name" aria-haspopup="listbox" aria-expanded="false">
                                         <div class="asset-select-current">
                                             <div class="asset-badge" id="miner-badge" style="background:var(--primary-color);color:#fff;">◆</div>
                                             <span class="asset-select-name" id="miner-name">Standard ($2.50)</span>
@@ -677,6 +688,10 @@
 
                             <!-- Fee and Total Summary Box -->
                             <div class="terminal-breakdown-box">
+                                <div class="breakdown-row" id="receive-crypto-container">
+                                    <span id="receive-crypto-label">Estimated crypto received:</span>
+                                    <span class="val" id="estimated-crypto-amount">—</span>
+                                </div>
                                 <div class="breakdown-row" id="fee-ghs-container">
                                     <span>Network fee:</span>
                                     <span class="val">GH₵ <input type="text" id="fee-ghs" name="fee-ghs" readonly style="width:70px;background:none;border:none;font-family:inherit;font-weight:inherit;color:inherit;text-align:right;"></span>
@@ -728,7 +743,7 @@
                             </label>
 
                             <!-- Submission -->
-                            <button type="submit" id="proceed-btn" class="terminal-execute-btn">
+                            <button type="submit" id="proceed-btn" class="terminal-execute-btn" disabled>
                                 Confirm &amp; Proceed to Settlement &rarr;
                             </button>
                         </div>
@@ -820,9 +835,15 @@
     const copySellWalletBtn = document.getElementById('copy-sell-wallet-btn');
     const productSelect    = document.getElementById('product');
     const tradeForm        = document.getElementById('trade-form');
+    const proceedBtn       = document.getElementById('proceed-btn');
+    const assetAmountUnit  = document.getElementById('asset-amount-unit');
+    const estimatedCryptoAmount = document.getElementById('estimated-crypto-amount');
+    const estimatedCryptoLabel = document.getElementById('receive-crypto-label');
+    const receiveCryptoContainer = document.getElementById('receive-crypto-container');
 
     let currentMode = 'buy';
     let rates = {};
+    let marketRatesData = null;
     let platformWallets = {
         BTC: '',
         ETH: '',
@@ -860,15 +881,73 @@
 
     async function fetchRates() {
         try {
-            const r = await fetch('/api/rates');
-            if (!r.ok) throw new Error('Could not fetch rates');
-            rates = await r.json();
+            const [rateResponse, marketResponse] = await Promise.all([
+                fetch('/api/rates'),
+                fetch('/api/market-rates')
+            ]);
+            if (!rateResponse.ok) throw new Error('Could not fetch platform rates');
+            rates = await rateResponse.json();
+            const marketData = marketResponse.ok ? await marketResponse.json() : null;
+            const marketAge = marketData?.timestamp ? Date.now() - marketData.timestamp : Infinity;
+            marketRatesData = marketData?.success && marketData.source !== 'fallback' && marketAge <= 60_000
+                ? marketData
+                : null;
             populateMinerFees();
             updateUI();
+            applyTradeDraft();
         } catch (e) { 
             console.error(e); 
-            rateInfo.textContent = 'Rates temporarily unavailable.'; 
+            rates = {};
+            marketRatesData = null;
+            rateInfo.textContent = 'Rates unavailable. Please retry shortly.';
+            if (proceedBtn) proceedBtn.disabled = true;
         }
+    }
+
+    function getMarketPrice(product) {
+        const symbol = product.startsWith('USDT_') ? 'USDT' : product;
+        const price = Number(marketRatesData?.RAW?.[symbol]?.USD?.PRICE);
+        return Number.isFinite(price) && price > 0 ? price : null;
+    }
+
+    function selectAsset(product) {
+        const option = [...document.querySelectorAll('#asset-select-dropdown .asset-option')]
+            .find(item => item.dataset.value === product);
+        if (option && productSelect.value !== product) option.click();
+    }
+
+    function applyTradeDraft() {
+        let draft = null;
+        try {
+            draft = JSON.parse(localStorage.getItem('quickTradeDraft') || 'null');
+        } catch (_) {
+            localStorage.removeItem('quickTradeDraft');
+        }
+
+        const params = new URLSearchParams(window.location.search);
+        const requestedProduct = draft?.product || params.get('asset') || sessionStorage.getItem('pendingTradeAsset');
+        if (['BTC', 'ETH', 'USDT_TRC20', 'USDT_ERC20'].includes(requestedProduct)) selectAsset(requestedProduct);
+        sessionStorage.removeItem('pendingTradeAsset');
+
+        if (!draft) return;
+        const draftAge = Date.now() - Number(draft.createdAt);
+        const validDraft = draftAge >= 0 && draftAge <= 10 * 60 * 1000
+            && ['buy', 'sell'].includes(draft.mode)
+            && ['BTC', 'ETH', 'USDT_TRC20', 'USDT_ERC20'].includes(draft.product)
+            && Number.isFinite(Number(draft.usdAmount))
+            && Number(draft.usdAmount) > 0
+            && Number.isFinite(Number(draft.cryptoAmount))
+            && Number(draft.cryptoAmount) > 0;
+        if (!validDraft) {
+            localStorage.removeItem('quickTradeDraft');
+            return;
+        }
+        if (draft.mode === 'sell' && !getMarketPrice(draft.product)) return;
+
+        (draft.mode === 'sell' ? sellTab : buyTab).click();
+        usdAmountInput.value = draft.mode === 'sell' ? draft.cryptoAmount : draft.usdAmount;
+        calculate(draft.mode === 'sell' ? 'asset' : 'amount');
+        localStorage.removeItem('quickTradeDraft');
     }
 
     const FEE_META = {
@@ -988,14 +1067,14 @@
     function calculate(source) {
         const p = productSelect.value;
         if (!rates[p]) return;
-        const usd = parseFloat(usdAmountInput.value) || 0;
+        const amount = parseFloat(usdAmountInput.value) || 0;
         const ghs = parseFloat(ghsAmountInput.value) || 0;
         const minerFeeUSD = parseFloat(minerFeeSelect.value) || 0;
         const rate = currentMode === 'buy' ? rates[p].buy : rates[p].sell;
 
         if (currentMode === 'buy') {
-            if (source === 'usd') { 
-                ghsAmountInput.value = (usd * rate).toFixed(2); 
+            if (source !== 'ghs') {
+                ghsAmountInput.value = (amount * rate).toFixed(2);
             } else { 
                 usdAmountInput.value = (ghs / rate).toFixed(2); 
             }
@@ -1003,11 +1082,31 @@
             const minerGhs = minerFeeUSD * rate;
             feeGhsInput.value = minerGhs.toFixed(2);
             totalPayInput.value = (finalGhs + minerGhs).toFixed(2);
+            const marketPrice = getMarketPrice(p);
+            if (marketPrice) {
+                const cryptoAmount = amount / marketPrice;
+                const unit = p.startsWith('USDT_') ? 'USDT' : p;
+                const precision = p.startsWith('USDT_') ? 2 : 8;
+                estimatedCryptoLabel.textContent = `Estimated ${unit} received:`;
+                estimatedCryptoAmount.textContent = `${cryptoAmount.toFixed(precision)} ${unit}`;
+            } else {
+                estimatedCryptoLabel.textContent = 'Estimated crypto received:';
+                estimatedCryptoAmount.textContent = 'Market rate unavailable';
+            }
         } else {
-            if (source === 'usd') { 
-                ghsAmountInput.value = (usd * rate).toFixed(2); 
-            } else { 
-                usdAmountInput.value = (ghs / rate).toFixed(8); 
+            receiveCryptoContainer.style.display = 'none';
+            const marketPrice = getMarketPrice(p);
+            if (!marketPrice) {
+                if (source !== 'ghs') ghsAmountInput.value = '';
+                if (proceedBtn) proceedBtn.disabled = true;
+                return;
+            }
+            if (source === 'ghs') {
+                const usdEquivalent = ghs / rate;
+                const cryptoAmount = usdEquivalent / marketPrice;
+                usdAmountInput.value = cryptoAmount.toFixed(p.startsWith('USDT_') ? 2 : 8);
+            } else {
+                ghsAmountInput.value = (amount * marketPrice * rate).toFixed(2);
             }
             feeGhsInput.value = '0.00';
             totalPayInput.value = ghsAmountInput.value;
@@ -1016,11 +1115,17 @@
 
     function updateUI() {
         const p = productSelect.value;
-        if (!rates[p]) return;
+        if (!rates[p]) {
+            if (proceedBtn) proceedBtn.disabled = true;
+            return;
+        }
+        const marketPrice = getMarketPrice(p);
         if (currentMode === 'buy') {
-            rateInfo.textContent = `1 USD = GH₵ ${rates[p].buy.toFixed(2)}`;
+            receiveCryptoContainer.style.display = 'flex';
+            rateInfo.textContent = `Buy conversion: GH₵ ${Number(rates[p].buy).toFixed(2)} per USD`;
             usdLabel.textContent = 'Volume to Acquire (USD)';
             ghsLabel.textContent = 'Net Fiat Subtotal (GH₵)';
+            assetAmountUnit.textContent = 'USD';
             walletLabel.textContent = 'Wallet Address';
             minerFeeGroup.style.display = '';
             feeGhsContainer.style.display = 'flex';
@@ -1030,9 +1135,13 @@
             if (sellWalletGroup) sellWalletGroup.style.display = 'none';
             document.getElementById('proceed-btn').textContent = 'Confirm & Proceed to Settlement →';
         } else {
-            rateInfo.textContent = `1 USD = GH₵ ${rates[p].sell.toFixed(2)}`;
-            usdLabel.textContent = 'Volume to Liquidate (USD)';
-            ghsLabel.textContent = 'Gross Payout to Receive (GH₵)';
+            const ticker = p.startsWith('USDT_') ? 'USDT' : p;
+            rateInfo.textContent = marketPrice
+                ? `1 ${ticker} ≈ GH₵ ${(marketPrice * Number(rates[p].sell)).toLocaleString('en-US', { maximumFractionDigits: 2 })}`
+                : 'Current market rate unavailable. Selling is paused.';
+            usdLabel.textContent = `Crypto Amount to Sell (${ticker})`;
+            ghsLabel.textContent = 'Estimated Payout (GH₵)';
+            assetAmountUnit.textContent = ticker;
             minerFeeGroup.style.display = 'none';
             feeGhsContainer.style.display = 'none';
             totalPayContainer.style.display = 'none';
@@ -1044,7 +1153,8 @@
             }
             document.getElementById('proceed-btn').textContent = 'Confirm & Proceed to Payout Setup →';
         }
-        calculate('usd');
+        if (proceedBtn) proceedBtn.disabled = !rates[p] || !marketPrice;
+        calculate(currentMode === 'buy' ? 'amount' : 'asset');
     }
 
     buyTab.addEventListener('click', () => {
@@ -1064,7 +1174,7 @@
         updateUI();
     });
 
-    usdAmountInput.addEventListener('input', () => calculate('usd'));
+    usdAmountInput.addEventListener('input', () => calculate(currentMode === 'buy' ? 'amount' : 'asset'));
     ghsAmountInput.addEventListener('input', () => calculate('ghs'));
     productSelect.addEventListener('change', updateUI);
 
@@ -1110,6 +1220,10 @@
 
     tradeForm.addEventListener('submit', function (e) {
         e.preventDefault();
+        if (!rates[productSelect.value] || !getMarketPrice(productSelect.value)) {
+            rateInfo.textContent = 'A current quote is unavailable. Please wait for rates to refresh.';
+            return;
+        }
         const usdAmount = parseFloat(usdAmountInput.value);
         const walletAddress = walletInput.value.trim();
         const termsChecked = document.getElementById('terms').checked;
@@ -1134,10 +1248,14 @@
                 return; 
             }
             const p = productSelect.value;
+            const spotPriceUsd = getMarketPrice(p);
+            const estimatedCryptoAmount = usdAmount / spotPriceUsd;
             localStorage.setItem('buyOrderDetails', JSON.stringify({
                 product: p, 
                 usdAmount: usdAmountInput.value, 
-                productAmount: usdAmount,
+                productAmount: estimatedCryptoAmount,
+                spotPriceUsd,
+                marketQuoteTimestamp: marketRatesData.timestamp,
                 ghsAmount: ghsAmountInput.value, 
                 feeGhs: feeGhsInput.value,
                 totalPay: totalPayInput.value, 
@@ -1187,6 +1305,7 @@
 
     populateMinerFees();
     fetchRates();
+    setInterval(fetchRates, 30000);
     fetchPaymentMethods();
 
     // --- Ticker ---
@@ -1339,5 +1458,6 @@
     }, { passive: true });
 })();
 </script>
+<script src="js/dropdown-accessibility.js"></script>
 </body>
 </html>

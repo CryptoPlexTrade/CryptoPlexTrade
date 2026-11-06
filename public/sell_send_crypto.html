@@ -331,7 +331,11 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     const depositAddress = walletAddresses[product] || 'Address not configured — please contact support.';
 
-    document.getElementById('deposit-label').textContent = `Please send the exact amount of ${product} to the address below:`;
+    const cryptoAmount = Number(orderDetails?.productAmount);
+    const amountText = Number.isFinite(cryptoAmount)
+        ? `${cryptoAmount.toFixed(product.startsWith('USDT_') ? 2 : 8)} ${product.replace('_TRC20', '').replace('_ERC20', '')}`
+        : product;
+    document.getElementById('deposit-label').textContent = `Send approximately ${amountText} to the address below. Your payout is recalculated from the current market rate when you submit your order.`;
     document.getElementById('deposit-address').textContent = depositAddress;
 
     // Copy address button

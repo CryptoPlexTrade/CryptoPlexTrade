@@ -48,12 +48,14 @@ document.addEventListener('DOMContentLoaded', function() {
     function openRail() {
         if (rail) rail.classList.add('is-open');
         if (backdrop) backdrop.classList.add('show');
+        if (openBtn) openBtn.setAttribute('aria-expanded', 'true');
         document.body.style.overflow = 'hidden';
     }
 
     function closeRail() {
         if (rail) rail.classList.remove('is-open');
         if (backdrop) backdrop.classList.remove('show');
+        if (openBtn) openBtn.setAttribute('aria-expanded', 'false');
         document.body.style.overflow = '';
     }
 

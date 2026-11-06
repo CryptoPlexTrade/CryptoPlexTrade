@@ -249,7 +249,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Populate summary
-    document.getElementById('summary-product-amount').textContent = `${parseFloat(orderDetails.productAmount).toFixed(8)} ${orderDetails.product}`;
+    const cryptoPrecision = String(orderDetails.product).startsWith('USDT_') ? 2 : 8;
+    const cryptoSymbol = String(orderDetails.product).replace('_TRC20', '').replace('_ERC20', '');
+    document.getElementById('summary-product-amount').textContent = `${parseFloat(orderDetails.productAmount).toFixed(cryptoPrecision)} ${cryptoSymbol}`;
     document.getElementById('summary-ghs').textContent = `₵ ${parseFloat(orderDetails.ghsToReceive).toFixed(2)}`;
 
     document.getElementById('proceed-to-payment').addEventListener('click', function() {

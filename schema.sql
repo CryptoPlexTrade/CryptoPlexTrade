@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS orders (
     user_id         INTEGER             NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     order_type      VARCHAR(10)         NOT NULL CHECK (order_type IN ('buy', 'sell')),
     product         VARCHAR(20)         NOT NULL,                   -- 'BTC' | 'ETH' etc.
-    usd_amount      NUMERIC(18, 8)      NOT NULL DEFAULT 0,         -- crypto amount (USD face value)
+    usd_amount      NUMERIC(18, 8)      NOT NULL DEFAULT 0,         -- USD face value for buys; crypto units for sells
     ghs_amount      NUMERIC(18, 2)      NOT NULL DEFAULT 0,         -- GHS equivalent
     fee_ghs         NUMERIC(18, 2)      NOT NULL DEFAULT 0,         -- miner fee in GHS (buy orders)
     total_paid      NUMERIC(18, 2)      NOT NULL DEFAULT 0,         -- final amount paid / received

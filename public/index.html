@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>CryptoPlexTrade — Premium Cryptocurrency Exchange & Instant MoMo Settlement</title>
     <meta name="description"
-        content="Trade Bitcoin, Ethereum, and USDT with instant Ghana Cedi (GHS) Mobile Money and Bank settlement, deep order book liquidity, and zero hidden slippage.">
+        content="Compare Ghana cedi conversion rates for Bitcoin, Ethereum, and USDT, then review your order details before submitting.">
 
     <!-- Design System Typography & Core Stylesheets -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -702,23 +702,7 @@
             height: 8px;
             border-radius: 50%;
             background: var(--bull-green);
-            box-shadow: 0 0 10px var(--bull-green);
-            animation: live-blink 1.6s ease-in-out infinite;
             flex-shrink: 0;
-        }
-
-        @keyframes live-blink {
-
-            0%,
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-
-            50% {
-                opacity: 0.4;
-                transform: scale(1.3);
-            }
         }
 
         .hero-headline {
@@ -733,9 +717,7 @@
         }
 
         .hero-headline .gradient-text {
-            background: linear-gradient(135deg, var(--primary, #0052cc) 0%, #0077c8 50%, #0284c7 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: var(--primary);
             display: inline-block;
             word-break: break-word;
         }
@@ -1056,6 +1038,22 @@
             font-size: 0.76rem;
         }
 
+        .terminal-estimate-breakdown {
+            display: grid;
+            gap: 8px;
+            margin: -10px 0 18px;
+            padding: 12px 14px;
+            background: var(--bg-canvas, #f6f9fc);
+            border-radius: 8px;
+            color: var(--text-2, #475569);
+            font-size: 0.84rem;
+        }
+
+        .terminal-estimate-breakdown[hidden] { display: none; }
+        .terminal-estimate-row { display: flex; justify-content: space-between; gap: 12px; }
+        .terminal-estimate-row strong { color: var(--text-1, #0a192c); font-variant-numeric: tabular-nums; }
+        .terminal-estimate-row.total { padding-top: 8px; border-top: 1px solid var(--border); font-weight: 700; }
+
         .btn-terminal-submit {
             width: 100%;
             padding: 16px;
@@ -1079,7 +1077,14 @@
             box-shadow: 0 8px 24px rgba(0, 82, 204, 0.35);
         }
 
-        /* --- REAL-TIME EXECUTION STREAM TICKER --- */
+        .btn-terminal-submit:disabled {
+            opacity: 0.58;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* --- Illustrative trade activity stream --- */
         .live-trades-stream {
             background: #ffffff;
             border-top: 1px solid var(--border-subtle, #e2e8f0);
@@ -1088,6 +1093,14 @@
             overflow: hidden;
             white-space: nowrap;
             position: relative;
+        }
+
+        .trade-stream-disclaimer {
+            display: block;
+            padding: 0 24px 8px;
+            color: var(--text-3, #6c8299);
+            font-size: 0.72rem;
+            font-weight: 600;
         }
 
         .live-trades-track {
@@ -1745,31 +1758,33 @@
 
         @media (max-width: 480px) {
             .cyber-hero {
-                padding: 36px 0 54px;
+                padding: 24px 0 32px;
             }
 
             .cyber-hero-grid {
                 padding: 0 16px;
-                gap: 24px;
+                gap: 12px;
+            }
+
+            .hero-cta-group,
+            .hero-trust-matrix {
+                display: none !important;
             }
 
             .hero-badge-live {
-                font-size: 0.7rem;
-                padding: 6px 12px;
-                letter-spacing: 0.01em;
-                margin-bottom: 16px;
+                display: none;
             }
 
             .hero-headline {
-                font-size: clamp(1.75rem, 1.45rem + 2vw, 2.25rem);
-                line-height: 1.15;
-                margin-bottom: 14px;
+                font-size: 1.6rem;
+                line-height: 1.12;
+                margin-bottom: 8px;
             }
 
             .hero-subhead {
-                font-size: 0.92rem;
-                line-height: 1.55;
-                margin-bottom: 22px;
+                font-size: 0.84rem;
+                line-height: 1.4;
+                margin-bottom: 10px;
             }
 
             .hero-trust-matrix {
@@ -1779,9 +1794,11 @@
             }
 
             .terminal-glass-card {
-                padding: 18px 12px;
+                padding: 14px 12px;
                 border-radius: 16px;
             }
+
+            .terminal-rate-pill { margin-bottom: 12px; }
 
             .terminal-input-box {
                 padding: 4px 8px;
@@ -1981,27 +1998,61 @@
                 text-align: center;
             }
         }
+
+        @media (max-width: 480px) {
+            .cyber-hero {
+                padding: 10px 0 16px !important;
+            }
+
+            .cyber-hero-grid {
+                gap: 8px !important;
+            }
+
+            .hero-badge-live,
+            .hero-cta-group,
+            .hero-trust-matrix {
+                display: none !important;
+            }
+
+            .hero-headline {
+                font-size: 1.45rem !important;
+                line-height: 1.08 !important;
+                margin-bottom: 6px !important;
+            }
+
+            .hero-subhead {
+                font-size: 0.78rem !important;
+                line-height: 1.3 !important;
+                margin-bottom: 4px !important;
+            }
+
+            .terminal-glass-card {
+                padding: 10px 12px !important;
+                border-radius: 12px !important;
+            }
+
+            .terminal-tab-nav { margin-bottom: 10px !important; }
+            .terminal-input-group { margin-bottom: 10px !important; }
+            .terminal-input-box { min-height: 48px; }
+            .terminal-rate-pill { margin-bottom: 8px !important; }
+
+            .terminal-estimate-breakdown {
+                gap: 4px !important;
+                margin: -4px 0 8px !important;
+                padding: 7px 10px !important;
+            }
+
+            .terminal-estimate-row { font-size: 0.76rem !important; }
+            .btn-terminal-submit { min-height: 44px; padding: 10px !important; }
+        }
+
+        @media (max-width: 360px) {
+            .hero-subhead { display: none !important; }
+        }
     </style>
 </head>
 
 <body>
-
-    <!-- ================== CINEMATIC PRELOADER SPLASH SCREEN ================== -->
-    <div id="cpt-preloader" aria-hidden="true">
-        <div class="preloader-ambient"></div>
-        <div class="preloader-core">
-            <div class="preloader-radar">
-                <div class="preloader-logo-orb">
-                    <img src="css/logo-mark.png" alt="CryptoPlexTrade Emblem">
-                </div>
-            </div>
-            <div class="preloader-brand-title">CRYPTOPLEX<span>TRADE</span></div>
-            <div class="preloader-track-wrap">
-                <div class="preloader-track-fill" id="preloader-fill"></div>
-            </div>
-            <div class="preloader-status-stream" id="preloader-stream">INITIALIZING PROTOCOL ENCLAVE...</div>
-        </div>
-    </div>
 
     <!-- ================== FLAGSHIP NAVIGATION HEADER (TOKENX / TOKENERA STYLE) ================== -->
     <header class="header">
@@ -2107,30 +2158,26 @@
 
     <!-- ================== CYBER HERO & INSTANT TRADE TERMINAL ================== -->
     <main class="cyber-hero">
-        <div class="ambient-sphere sphere-1"></div>
-        <div class="ambient-sphere sphere-2"></div>
-
         <div class="cyber-hero-grid">
             <!-- Left: Hero Headline & Institutional Proof -->
             <div class="hero-left-content">
                 <div class="hero-badge-live">
-                    <span class="live-pulse"></span>
-                    <span>Direct Ghana Cedi (GHS) MoMo &amp; Multichain Settlement Active</span>
+                    <span>Ghana cedi settlement for Bitcoin, Ethereum and USDT</span>
                 </div>
 
                 <h1 class="hero-headline">
-                    Sovereign Speed.<br>
-                    <span class="gradient-text">Instant MoMo Liquidity.</span>
+                    Crypto trading in Ghana.<br>
+                    <span class="gradient-text">Clear rates before you trade.</span>
                 </h1>
 
                 <p class="hero-subhead">
-                    Trade Bitcoin, Ethereum, and USDT directly with MTN Mobile Money, Telecel Cash, and Bank Transfer.
-                    Zero hidden spreads, non-custodial direct delivery, and settlement in minutes.
+                    Compare your estimated crypto amount and platform conversion before continuing. Choose Ghana cedi
+                    settlement through supported mobile money or bank payment methods.
                 </p>
 
                 <div class="hero-cta-group">
                     <a href="trade.html" class="btn-hero-primary">
-                        Launch Instant Exchange
+                        Start a trade
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="2.5">
                             <path d="M5 12h14M12 5l7 7-7 7" />
@@ -2142,63 +2189,44 @@
                             <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
                             <polyline points="17 6 23 6 23 12"></polyline>
                         </svg>
-                        Live Order Book
+                        View Market Rates
                     </a>
                 </div>
 
-                <!-- Trust Stats -->
+                <!-- Supported assets and payment rails -->
                 <div class="hero-trust-matrix">
                     <div class="trust-stat-item">
-                        <div class="trust-stat-val">₵280M<span>+</span></div>
-                        <div class="trust-stat-lbl">Settled Volume</div>
+                        <div class="trust-stat-val">BTC · ETH · USDT</div>
+                        <div class="trust-stat-lbl">Supported assets</div>
                     </div>
                     <div class="trust-stat-item">
-                        <div class="trust-stat-val">&lt; 3<span>min</span></div>
-                        <div class="trust-stat-lbl">Average Payout</div>
+                        <div class="trust-stat-val">GHS</div>
+                        <div class="trust-stat-lbl">Local settlement currency</div>
                     </div>
                     <div class="trust-stat-item">
-                        <div class="trust-stat-val">99.99<span>%</span></div>
-                        <div class="trust-stat-lbl">Execution SLA</div>
+                        <div class="trust-stat-val">Rates · Fees</div>
+                        <div class="trust-stat-lbl">Shown before trade submission</div>
                     </div>
                 </div>
             </div>
 
             <!-- Right: Interactive Live Trade Terminal Card -->
             <div class="hero-terminal-wrap">
-                <!-- Floating animated decorative token cards -->
-                <div class="floating-badge btc">
-                    <img src="https://assets.coingecko.com/coins/images/1/small/bitcoin.png" alt="BTC" width="24"
-                        height="24">
-                    <div>
-                        <div style="font-size:0.75rem;font-weight:700;color:#fff;">BTC/GHS</div>
-                        <div style="font-size:0.68rem;color:#10b981;font-family:var(--font-mono);">+3.42% ▲</div>
-                    </div>
-                </div>
-
-                <div class="floating-badge usdt">
-                    <img src="https://assets.coingecko.com/coins/images/325/small/Tether.png" alt="USDT" width="24"
-                        height="24">
-                    <div>
-                        <div style="font-size:0.75rem;font-weight:700;color:#fff;">USDT/GHS</div>
-                        <div style="font-size:0.68rem;color:#38bdf8;font-family:var(--font-mono);">Instant MoMo</div>
-                    </div>
-                </div>
-
                 <div class="terminal-glass-card">
                     <!-- Buy / Sell Toggle Tabs -->
                     <div class="terminal-tab-nav">
-                        <button type="button" class="tab-switch-btn active buy" id="tab-buy-mode">Buy Crypto</button>
-                        <button type="button" class="tab-switch-btn" id="tab-sell-mode">Sell Crypto</button>
+                        <button type="button" class="tab-switch-btn active buy" id="tab-buy-mode" aria-pressed="true">Buy Crypto</button>
+                        <button type="button" class="tab-switch-btn" id="tab-sell-mode" aria-pressed="false">Sell Crypto</button>
                     </div>
 
                     <!-- Input 1: Fiat / GHS -->
                     <div class="terminal-input-group">
                         <div class="terminal-label-row">
-                            <span id="label-pay-mode">You Pay</span>
+                            <label for="terminal-pay-amount" id="label-pay-mode">Trade amount</label>
 
                         </div>
                         <div class="terminal-input-box">
-                            <input type="number" id="terminal-pay-amount" value="1500" min="50" step="50">
+                            <input type="number" id="terminal-pay-amount" value="1500" min="50" step="50" inputmode="decimal" aria-label="Ghana cedi amount">
                             <div class="terminal-currency-pill">
                                 <span>🇬🇭 GHS (₵)</span>
                             </div>
@@ -2208,11 +2236,11 @@
                     <!-- Input 2: Crypto Asset Output -->
                     <div class="terminal-input-group">
                         <div class="terminal-label-row">
-                            <span id="label-receive-mode">You Receive (Estimated)</span>
+                            <label for="terminal-receive-amount" id="label-receive-mode">You Receive (Estimated)</label>
 
                         </div>
                         <div class="terminal-input-box">
-                            <input type="text" id="terminal-receive-amount" value="0.001045" readonly>
+                            <input type="text" id="terminal-receive-amount" value="" readonly aria-label="Estimated crypto amount">
                             <select id="terminal-crypto-select" class="terminal-currency-select">
                                 <option value="BTC" selected>BTC (Bitcoin)</option>
                                 <option value="USDT_TRC20">USDT (TRC-20)</option>
@@ -2226,7 +2254,7 @@
                     <div class="terminal-rate-pill">
                         <div>
                             <span>Rate: </span>
-                            <strong id="terminal-live-rate" style="color:#ffffff;">1 USD = ₵15.85</strong>
+                            <strong id="terminal-live-rate" style="color:#ffffff;" aria-live="polite">Loading verified rates…</strong>
                         </div>
                         <div class="lock-timer">
                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -2234,12 +2262,23 @@
                                 <circle cx="12" cy="12" r="10"></circle>
                                 <polyline points="12 6 12 12 16 14"></polyline>
                             </svg>
-                            <span>Live rate</span>
+                            <span id="terminal-rate-source">Verifying rate</span>
+                        </div>
+                    </div>
+
+                    <div class="terminal-estimate-breakdown" id="terminal-estimate-breakdown" hidden>
+                        <div class="terminal-estimate-row">
+                            <span id="terminal-network-fee-label">Estimated network fee</span>
+                            <strong id="terminal-network-fee">—</strong>
+                        </div>
+                        <div class="terminal-estimate-row total">
+                            <span>Total to pay</span>
+                            <strong id="terminal-total-pay">—</strong>
                         </div>
                     </div>
 
                     <!-- Execution Action Button -->
-                    <button type="button" class="btn-terminal-submit" id="btn-execute-quick-trade">
+                    <button type="button" class="btn-terminal-submit" id="btn-execute-quick-trade" disabled>
                         <span>Continue to Settlement</span>
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="2.5">
@@ -2251,52 +2290,13 @@
         </div>
     </main>
 
-    <!-- ================== REAL-TIME EXECUTION STREAM TICKER ================== -->
-    <div class="live-trades-stream">
-        <div class="live-trades-track" id="trades-stream-track">
-            <!-- Simulated streaming trades for velocity & realism -->
-            <div class="trade-stream-item"><span class="trade-dot"></span> <span class="trade-crypto">0.052 BTC</span>
-                bought via MTN MoMo <span class="trade-ghs">(₵49,800)</span> <span class="trade-time">• 4s ago</span>
-            </div>
-            <div class="trade-stream-item"><span class="trade-dot"></span> <span class="trade-crypto">1,500 USDT</span>
-                sold to Telecel Cash <span class="trade-ghs">(₵23,850)</span> <span class="trade-time">• 12s ago</span>
-            </div>
-            <div class="trade-stream-item"><span class="trade-dot"></span> <span class="trade-crypto">0.85 ETH</span>
-                bought via Bank Wire <span class="trade-ghs">(₵35,700)</span> <span class="trade-time">• 22s ago</span>
-            </div>
-            <div class="trade-stream-item"><span class="trade-dot"></span> <span class="trade-crypto">3,200 USDT</span>
-                bought via AT Money <span class="trade-ghs">(₵50,880)</span> <span class="trade-time">• 38s ago</span>
-            </div>
-            <div class="trade-stream-item"><span class="trade-dot"></span> <span class="trade-crypto">0.12 BTC</span>
-                sold to Stanbic Account <span class="trade-ghs">(₵114,600)</span> <span class="trade-time">• 54s
-                    ago</span></div>
-            <!-- Duplicated for continuous loop -->
-            <div class="trade-stream-item"><span class="trade-dot"></span> <span class="trade-crypto">0.052 BTC</span>
-                bought via MTN MoMo <span class="trade-ghs">(₵49,800)</span> <span class="trade-time">• 4s ago</span>
-            </div>
-            <div class="trade-stream-item"><span class="trade-dot"></span> <span class="trade-crypto">1,500 USDT</span>
-                sold to Telecel Cash <span class="trade-ghs">(₵23,850)</span> <span class="trade-time">• 12s ago</span>
-            </div>
-            <div class="trade-stream-item"><span class="trade-dot"></span> <span class="trade-crypto">0.85 ETH</span>
-                bought via Bank Wire <span class="trade-ghs">(₵35,700)</span> <span class="trade-time">• 22s ago</span>
-            </div>
-            <div class="trade-stream-item"><span class="trade-dot"></span> <span class="trade-crypto">3,200 USDT</span>
-                bought via AT Money <span class="trade-ghs">(₵50,880)</span> <span class="trade-time">• 38s ago</span>
-            </div>
-            <div class="trade-stream-item"><span class="trade-dot"></span> <span class="trade-crypto">0.12 BTC</span>
-                sold to Stanbic Account <span class="trade-ghs">(₵114,600)</span> <span class="trade-time">• 54s
-                    ago</span></div>
-        </div>
-    </div>
-
     <!-- ================== LIVE MARKETS MATRIX SECTION ================== -->
     <section class="markets-section" id="markets">
         <div class="container">
             <div class="section-header-dark">
-                <span class="section-tag-cyber">Live Liquidity Feed</span>
-                <h2 class="section-title-dark">Institutional Market Rates</h2>
-                <p class="section-desc-dark">Real-time cryptographic rate indices verified with tier-one global market
-                    depth and transparent local settlement pricing.</p>
+                <span class="section-tag-cyber" id="market-feed-status">Connecting to market feed…</span>
+                <h2 class="section-title-dark">Crypto rates for GHS settlement</h2>
+                <p class="section-desc-dark">Market spot references are shown alongside configured platform conversion rates. Order values are recalculated when submitted.</p>
             </div>
 
             <div class="markets-table-card">
@@ -2327,10 +2327,9 @@
     <section class="advantage-section">
         <div class="container">
             <div class="section-header-dark">
-                <span class="section-tag-cyber">Institutional Infrastructure</span>
-                <h2 class="section-title-dark">Why Professional Traders Choose Us</h2>
-                <p class="section-desc-dark">Engineered to eliminate exchange delays, slippage gouging, and
-                    non-responsive support desks.</p>
+                    <span class="section-tag-cyber">Order details</span>
+                    <h2 class="section-title-dark">Know what you are submitting</h2>
+                    <p class="section-desc-dark">Review the selected asset, network, conversion rate, and payment instructions as you move through an order.</p>
             </div>
 
             <div class="advantage-grid">
@@ -2341,9 +2340,8 @@
                             <line x1="2" y1="10" x2="22" y2="10" />
                         </svg>
                     </div>
-                    <h3>Instant MoMo Rails</h3>
-                    <p>Direct integration with MTN Mobile Money, Telecel Cash, and all major Ghanaian commercial banks
-                        for near-instant fiat release.</p>
+                    <h3>Local payment options</h3>
+                    <p>Choose from the payment methods available for your order and review the instructions before submitting.</p>
                 </div>
 
                 <div class="advantage-card">
@@ -2352,9 +2350,8 @@
                             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                         </svg>
                     </div>
-                    <h3>Cold Vault Custody</h3>
-                    <p>98% of all cryptographic reserves are stored in multisig institutional cold storage with zero
-                        internet exposure.</p>
+                    <h3>Network-specific assets</h3>
+                    <p>Review the selected crypto network before entering a destination wallet or sending a deposit.</p>
                 </div>
 
                 <div class="advantage-card">
@@ -2367,9 +2364,8 @@
                             <path d="m9.17 14.83-4.24 4.24" />
                         </svg>
                     </div>
-                    <h3>Non-Custodial Delivery</h3>
-                    <p>Cryptocurrency purchases are broadcast directly to your private self-hosted or hardware wallet
-                        address with on-chain verification.</p>
+                    <h3>Wallet details in the order</h3>
+                    <p>Buy orders ask for a destination wallet. Sell orders show the platform deposit address and the transaction reference step.</p>
                 </div>
 
                 <div class="advantage-card">
@@ -2378,9 +2374,8 @@
                             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
                         </svg>
                     </div>
-                    <h3>Dedicated Human Desk</h3>
-                    <p>Every transaction is monitored by active OTC operators. Direct telephone and live chat support
-                        whenever you need assistance.</p>
+                    <h3>Order history and support</h3>
+                    <p>Review submitted orders in transaction history and contact support when you need help with an order.</p>
                 </div>
             </div>
         </div>
@@ -2390,31 +2385,28 @@
     <section class="timeline-section">
         <div class="container">
             <div class="section-header-dark">
-                <span class="section-tag-cyber">Streamlined Workflow</span>
-                <h2 class="section-title-dark">How It Works in 3 Simple Steps</h2>
-                <p class="section-desc-dark">From registration to confirmed delivery in your wallet or MoMo account.</p>
+                <span class="section-tag-cyber">Order flow</span>
+                <h2 class="section-title-dark">From quote to order review</h2>
+                <p class="section-desc-dark">Your order moves through these steps before the submitted order status is shown in history.</p>
             </div>
 
             <div class="timeline-steps-grid">
                 <div class="timeline-step-card">
                     <span class="step-index-badge">STEP 01</span>
-                    <h3>Register Account</h3>
-                    <p>Create your verified trading profile in 60 seconds with simple mobile and email authentication.
-                    </p>
+                    <h3>Choose buy or sell</h3>
+                    <p>Select the asset and enter the fiat amount or crypto quantity for the order.</p>
                 </div>
 
                 <div class="timeline-step-card">
                     <span class="step-index-badge">STEP 02</span>
-                    <h3>Lock Rate &amp; Transfer</h3>
-                    <p>Choose Buy or Sell, select your asset, and complete payment via Mobile Money or your preferred
-                        bank app.</p>
+                    <h3>Review the quote</h3>
+                    <p>Check the configured conversion, network fee where applicable, and payment or wallet details.</p>
                 </div>
 
                 <div class="timeline-step-card">
                     <span class="step-index-badge">STEP 03</span>
-                    <h3>Instant Settlement</h3>
-                    <p>Crypto is dispatched straight to your wallet or GHS funds land in your Mobile Money wallet within
-                        minutes.</p>
+                    <h3>Submit and follow status</h3>
+                    <p>Complete the payment or transfer steps and check the recorded order status in transaction history.</p>
                 </div>
             </div>
         </div>
@@ -2432,15 +2424,13 @@
             <div class="faq-container">
                 <div class="faq-accordion-item open">
                     <button type="button" class="faq-trigger">
-                        <span>How fast is Mobile Money payout settlement?</span>
+                        <span>How long does settlement take?</span>
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <polyline points="6 9 12 15 18 9"></polyline>
                         </svg>
                     </button>
                     <div class="faq-content">
-                        Most Mobile Money (MTN MoMo, Telecel Cash, AT Money) transactions are completed within 1 to 5
-                        minutes after transaction verification. Bank transfers typically settle within the same business
-                        hour.
+                        Settlement time depends on payment processing, network confirmation, and order review. Follow the status shown for your order or contact support if you need help.
                     </div>
                 </div>
 
@@ -2465,8 +2455,7 @@
                         </svg>
                     </button>
                     <div class="faq-content">
-                        Zero hidden fees. The exact exchange rate and miner network fee displayed on your order summary
-                        is the exact total you pay or receive. What you see is what you get.
+                        The trade form and order review show the configured conversion and applicable network fee. Final order values are calculated using the active server rates when the order is submitted.
                     </div>
                 </div>
 
@@ -2490,9 +2479,8 @@
     <!-- ================== HIGH-IMPACT CTA BANNER ================== -->
     <div class="cyber-cta-banner">
         <div class="cta-inner-card">
-            <h2>Ready to Trade with Sovereign Precision?</h2>
-            <p>Join thousands of smart individuals and businesses in Ghana and Africa trading digital assets with zero
-                friction.</p>
+            <h2>Ready to prepare an order?</h2>
+            <p>Create an account to continue to the trade form and review the current order details.</p>
             <a href="register.html" class="btn-hero-primary"
                 style="display:inline-flex; padding: 18px 40px; font-size: 1.05rem;">
                 Create Free Trading Account
@@ -2513,7 +2501,7 @@
                         <span class="logo-name" style="color: #0a192f !important; font-weight: 800; font-size: 1.15rem; display: inline-block;">CryptoPlex<span style="color: #0052cc !important;">Trade</span></span>
                     </a>
                     <p style="font-size: 0.88rem; color: #64748b; line-height: 1.6; max-width: 320px;">
-                        Sovereign digital asset gateway providing instant Mobile Money and banking cryptocurrency
+                        Crypto trading with Ghana cedi settlement. Review current rates and order instructions before submitting.
                         exchange services.
                     </p>
                 </div>
@@ -2552,51 +2540,10 @@
         </div>
     </footer>
 
-    <!-- ================== PERSISTENT TICKER TAPE ================== -->
-    <div class="ticker-tape">
-        <div class="ticker-tape__track">
-            <!-- Dynamically injected live rate ticker -->
-        </div>
-    </div>
-
-    <!-- ================== MOTION UI & API ENGINE SCRIPTS ================== -->
+    <!-- ================== MARKET DATA & INTERACTIONS ================== -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // --- 1. CINEMATIC PRELOADER SPLASH SCREEN ---
-            const preloader = document.getElementById('cpt-preloader');
-            const preloaderFill = document.getElementById('preloader-fill');
-            const preloaderStream = document.getElementById('preloader-stream');
-
-            const statusStages = [
-                { pct: 25, text: "VERIFYING CRYPTOGRAPHIC ENCLAVE..." },
-                { pct: 55, text: "CONNECTING GHS DIRECT LIQUIDITY GATEWAY..." },
-                { pct: 85, text: "CALIBRATING BITCOIN & USDT ORDER BOOKS..." },
-                { pct: 100, text: "CRYPTOPLEX ENGINE ONLINE" }
-            ];
-
-            let stageIdx = 0;
-            const preloaderInterval = setInterval(() => {
-                if (stageIdx < statusStages.length) {
-                    const st = statusStages[stageIdx];
-                    preloaderFill.style.width = st.pct + '%';
-                    preloaderStream.textContent = st.text;
-                    stageIdx++;
-                } else {
-                    clearInterval(preloaderInterval);
-                    setTimeout(() => {
-                        preloader.classList.add('loaded');
-                    }, 400);
-                }
-            }, 180);
-
-            // Safety timeout: ensure preloader never hangs
-            setTimeout(() => {
-                if (preloader && !preloader.classList.contains('loaded')) {
-                    preloader.classList.add('loaded');
-                }
-            }, 2500);
-
-            // --- 2. FAQ ACCORDION INTERACTION ---
+            // --- FAQ ACCORDION INTERACTION ---
             const faqItems = document.querySelectorAll('.faq-accordion-item');
             faqItems.forEach(item => {
                 const trigger = item.querySelector('.faq-trigger');
@@ -2607,34 +2554,12 @@
                 });
             });
 
-            // --- 3. LIVE MARKET DATA & TICKER ENGINE ---
-            const tickerTrack = document.querySelector('.ticker-tape__track');
+            // --- MARKET DATA ---
             const ratesTbody = document.getElementById('rates-tbody');
+            const marketFeedStatus = document.getElementById('market-feed-status');
             const coinSymbols = ['BTC', 'ETH', 'SOL', 'BNB', 'XRP', 'LTC', 'ADA', 'DOGE'];
-            let currentExchangeRates = {
-                BTC: 68500,
-                ETH: 3500,
-                USDT_TRC20: 1,
-                USDT_ERC20: 1
-            };
-            let adminGhsRate = 15.85;
-
-            // Fetch admin rates from backend
-            async function fetchAdminRates() {
-                try {
-                    const res = await fetch('/api/rates');
-                    if (res.ok) {
-                        const data = await res.json();
-                        if (data.rates) {
-                            if (data.rates.btc) currentExchangeRates.BTC = data.rates.btc.buyRate || currentExchangeRates.BTC;
-                            if (data.rates.eth) currentExchangeRates.ETH = data.rates.eth.buyRate || currentExchangeRates.ETH;
-                        }
-                    }
-                } catch (e) {
-                    console.log('Using default rates engine');
-                }
-            }
-            fetchAdminRates();
+            let platformRates = null;
+            let marketData = null;
 
             const COIN_ICONS = {
                 'BTC': {
@@ -2660,79 +2585,42 @@
             };
 
             async function fetchLiveMarketRates() {
-                let data = null;
                 try {
-                    const res = await fetch('/api/market-rates');
-                    if (res.ok) {
-                        data = await res.json();
+                    const [ratesResponse, marketResponse] = await Promise.all([
+                        fetch('/api/rates'),
+                        fetch('/api/market-rates')
+                    ]);
+                    if (!ratesResponse.ok || !marketResponse.ok) throw new Error('Market data is currently unavailable.');
+                    const [nextRates, nextMarketData] = await Promise.all([
+                        ratesResponse.json(),
+                        marketResponse.json()
+                    ]);
+                    const marketAge = nextMarketData.timestamp ? Date.now() - nextMarketData.timestamp : Infinity;
+                    if (!nextMarketData.success || !nextMarketData.RAW || nextMarketData.source === 'fallback' || marketAge > 60_000) {
+                        throw new Error('A current market quote is unavailable.');
                     }
-                } catch (e1) {
-                    try {
-                        const symbolsParam = encodeURIComponent('["BTCUSDT","ETHUSDT","SOLUSDT","XRPUSDT","LTCUSDT"]');
-                        const bRes = await fetch(`https://api.binance.com/api/v3/ticker/24hr?symbols=${symbolsParam}`);
-                        if (bRes.ok) {
-                            const bData = await bRes.json();
-                            const raw = {};
-                            bData.forEach(item => {
-                                const s = item.symbol.replace('USDT', '');
-                                raw[s] = {
-                                    USD: {
-                                        PRICE: parseFloat(item.lastPrice),
-                                        CHANGEPCT24HOUR: parseFloat(item.priceChangePercent),
-                                        FROMSYMBOL: s
-                                    }
-                                };
-                            });
-                            data = { RAW: raw };
-                        }
-                    } catch (e2) { }
-                }
+                    platformRates = nextRates;
+                    marketData = nextMarketData;
+                    marketFeedStatus.textContent = `Market data · ${nextMarketData.source} · ${new Date(nextMarketData.timestamp).toLocaleTimeString()}`;
 
-                // Fallback default data if offline
-                if (!data || !data.RAW) {
-                    data = {
-                        RAW: {
-                            BTC: { USD: { PRICE: 76850.50, CHANGEPCT24HOUR: -1.55, FROMSYMBOL: 'BTC' } },
-                            ETH: { USD: { PRICE: 2254.20, CHANGEPCT24HOUR: -0.62, FROMSYMBOL: 'ETH' } },
-                            SOL: { USD: { PRICE: 91.85, CHANGEPCT24HOUR: -2.45, FROMSYMBOL: 'SOL' } },
-                            XRP: { USD: { PRICE: 1.25, CHANGEPCT24HOUR: 0.12, FROMSYMBOL: 'XRP' } },
-                            LTC: { USD: { PRICE: 53.75, CHANGEPCT24HOUR: -3.20, FROMSYMBOL: 'LTC' } }
-                        }
-                    };
-                }
-
-                try {
-                    // Render Ticker
-                    let tickerHtml = '';
-                    coinSymbols.forEach(sym => {
-                        const c = data.RAW[sym]?.USD;
-                        if (!c) return;
-                        const dir = c.CHANGEPCT24HOUR >= 0 ? 'up' : 'down';
-                        const sign = dir === 'up' ? '+' : '';
-                        const formattedPrice = c.PRICE < 1 ? `$${c.PRICE.toFixed(4)}` : `$${c.PRICE.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-                        tickerHtml += `
-                            <div class="ticker-tape__item">
-                                <span class="pair">${sym}/USD</span>
-                                <span class="price">${formattedPrice}</span>
-                                <span class="change ${dir}">${sign}${c.CHANGEPCT24HOUR.toFixed(2)}% ${dir === 'up' ? '▲' : '▼'}</span>
-                            </div>
-                        `;
-                    });
-                    if (tickerTrack) tickerTrack.innerHTML = tickerHtml + tickerHtml + tickerHtml;
-
-                    // Render Markets Table
-                    const displayCoins = ['BTC', 'ETH', 'SOL', 'XRP', 'LTC'];
+                    const displayAssets = [
+                        { marketSymbol: 'BTC', product: 'BTC', name: 'Bitcoin' },
+                        { marketSymbol: 'ETH', product: 'ETH', name: 'Ethereum' },
+                        { marketSymbol: 'USDT', product: 'USDT_TRC20', name: 'Tether (TRC-20)' },
+                        { marketSymbol: 'USDT', product: 'USDT_ERC20', name: 'Tether (ERC-20)' }
+                    ];
                     let tableHtml = '';
-                    displayCoins.forEach(sym => {
-                        const c = data.RAW[sym]?.USD;
-                        if (!c) return;
+                    displayAssets.forEach(asset => {
+                        const c = marketData.RAW[asset.marketSymbol]?.USD;
+                        const configuredRate = platformRates[asset.product];
+                        if (!c || !configuredRate) return;
                         const dir = c.CHANGEPCT24HOUR >= 0 ? 'rate-positive' : 'rate-negative';
                         const sign = c.CHANGEPCT24HOUR >= 0 ? '+' : '';
-                        const ghsBuy = (c.PRICE * adminGhsRate).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-                        const ghsSell = (c.PRICE * (adminGhsRate * 0.98)).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-                        const meta = COIN_ICONS[sym] || {
+                        const ghsBuy = (c.PRICE * Number(configuredRate.buy)).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                        const ghsSell = (c.PRICE * Number(configuredRate.sell)).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                        const meta = COIN_ICONS[asset.marketSymbol] || {
                             svg: '<svg viewBox="0 0 24 24" width="28" height="28" fill="#38bdf8"><circle cx="12" cy="12" r="10"/></svg>',
-                            name: sym
+                            name: asset.name
                         };
 
                         tableHtml += `
@@ -2744,7 +2632,7 @@
                                         </div>
                                         <div>
                                             <div class="coin-name">${meta.name}</div>
-                                            <div class="coin-sym">${sym} &bull; USD Spot</div>
+                                            <div class="coin-sym">${asset.name} &bull; USD Spot</div>
                                         </div>
                                     </div>
                                 </td>
@@ -2753,20 +2641,26 @@
                                 <td data-label="Buy Rate" style="font-family:var(--font-mono);font-weight:700;color:#10b981;">₵ ${ghsBuy}</td>
                                 <td data-label="Sell Rate" style="font-family:var(--font-mono);font-weight:700;color:#38bdf8;">₵ ${ghsSell}</td>
                                 <td>
-                                    <a href="trade.html?asset=${sym}" class="btn-market-trade">Trade ${sym} &rarr;</a>
+                                    <a href="trade.html?asset=${asset.product}" class="btn-market-trade">Trade ${asset.name} &rarr;</a>
                                 </td>
                             </tr>
                         `;
                     });
-                    if (ratesTbody) ratesTbody.innerHTML = tableHtml;
+                    if (ratesTbody) ratesTbody.innerHTML = tableHtml || '<tr><td colspan="6" style="text-align:center;padding:32px;">Market data is unavailable.</td></tr>';
+                    updateTerminalCalculation();
 
                 } catch (e) {
                     console.error('Market feed error', e);
+                    platformRates = null;
+                    marketData = null;
+                    marketFeedStatus.textContent = 'Current market data unavailable · Trade quotes paused';
+                    if (ratesTbody) ratesTbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:32px;">Current market data is unavailable. Please try again shortly.</td></tr>';
+                    updateTerminalCalculation();
                 }
             }
 
             fetchLiveMarketRates();
-            setInterval(fetchLiveMarketRates, 15000);
+            setInterval(fetchLiveMarketRates, 30000);
 
             // --- 4. INTERACTIVE HERO TRADE TERMINAL ENGINE ---
             let currentTradeMode = 'buy'; // 'buy' or 'sell'
@@ -2779,33 +2673,68 @@
             const labelPay = document.getElementById('label-pay-mode');
             const labelReceive = document.getElementById('label-receive-mode');
             const executeBtn = document.getElementById('btn-execute-quick-trade');
+            const estimateBreakdown = document.getElementById('terminal-estimate-breakdown');
+            const networkFeeLabel = document.getElementById('terminal-network-fee-label');
+            const networkFeeValue = document.getElementById('terminal-network-fee');
+            const totalPayValue = document.getElementById('terminal-total-pay');
+
+            function getCurrentQuote() {
+                const product = cryptoSelect.value;
+                const rateConfig = platformRates?.[product];
+                const symbol = product.startsWith('USDT_') ? 'USDT' : product;
+                const spotPrice = Number(marketData?.RAW?.[symbol]?.USD?.PRICE);
+                const timestamp = Number(marketData?.timestamp);
+                const marketIsCurrent = marketData?.source !== 'fallback'
+                    && Number.isFinite(timestamp)
+                    && Date.now() - timestamp <= 60_000;
+                const conversionRate = Number(rateConfig?.[currentTradeMode === 'buy' ? 'buy' : 'sell']);
+                if (!marketIsCurrent || !Number.isFinite(spotPrice) || spotPrice <= 0 || !Number.isFinite(conversionRate) || conversionRate <= 0) return null;
+                const defaultFee = currentTradeMode === 'buy' ? rateConfig.minerFees?.[0] : null;
+                if (currentTradeMode === 'buy' && (!defaultFee || !Number.isFinite(Number(defaultFee.value)))) return null;
+
+                const ghsAmount = Number(payInput.value);
+                if (!Number.isFinite(ghsAmount) || ghsAmount < 50) return null;
+                const usdAmount = ghsAmount / conversionRate;
+                const cryptoAmount = usdAmount / spotPrice;
+                if (!Number.isFinite(cryptoAmount) || cryptoAmount <= 0) return null;
+                const feeUsd = currentTradeMode === 'buy' ? Number(defaultFee.value) : 0;
+                const feeGhs = feeUsd * conversionRate;
+                return { product, symbol, ghsAmount, usdAmount, cryptoAmount, spotPrice, conversionRate, feeUsd, feeGhs, feeName: defaultFee?.name, totalGhs: ghsAmount + feeGhs };
+            }
 
             function updateTerminalCalculation() {
-                const payVal = parseFloat(payInput.value) || 0;
-                const selectedCrypto = cryptoSelect.value;
-                const usdAmount = payVal / adminGhsRate;
-
-                let coinPriceUsd = 68000;
-                if (selectedCrypto === 'BTC') coinPriceUsd = 68000;
-                else if (selectedCrypto === 'ETH') coinPriceUsd = 3500;
-                else if (selectedCrypto.startsWith('USDT')) coinPriceUsd = 1.0;
-
-                const receiveQty = usdAmount / coinPriceUsd;
-
-                if (currentTradeMode === 'buy') {
-                    receiveInput.value = receiveQty > 0 ? (selectedCrypto.startsWith('USDT') ? receiveQty.toFixed(2) : receiveQty.toFixed(6)) : '0.00';
-                    rateDisplay.textContent = `1 ${selectedCrypto} ≈ $${coinPriceUsd.toLocaleString()} (₵${(coinPriceUsd * adminGhsRate).toLocaleString()})`;
-                } else {
-                    receiveInput.value = receiveQty > 0 ? (selectedCrypto.startsWith('USDT') ? receiveQty.toFixed(2) : receiveQty.toFixed(6)) : '0.00';
-                    rateDisplay.textContent = `1 ${selectedCrypto} ≈ $${coinPriceUsd.toLocaleString()} (₵${(coinPriceUsd * adminGhsRate * 0.98).toLocaleString()})`;
+                const quote = getCurrentQuote();
+                if (!quote) {
+                    receiveInput.value = '';
+                    rateDisplay.textContent = marketData
+                        ? 'Current quote unavailable. Enter at least GH₵ 50.'
+                        : 'Current market rate unavailable.';
+                    document.getElementById('terminal-rate-source').textContent = 'Trade quotes paused';
+                    estimateBreakdown.hidden = true;
+                    executeBtn.disabled = true;
+                    return;
                 }
+
+                const precision = quote.product.startsWith('USDT_') ? 2 : 8;
+                receiveInput.value = quote.cryptoAmount.toFixed(precision);
+                rateDisplay.textContent = `1 USD = GH₵ ${quote.conversionRate.toFixed(2)} · 1 ${quote.symbol} = $${quote.spotPrice.toLocaleString('en-US', { maximumFractionDigits: 2 })}`;
+                document.getElementById('terminal-rate-source').textContent = `Market ${marketData.source} · ${new Date(marketData.timestamp).toLocaleTimeString()}`;
+                estimateBreakdown.hidden = currentTradeMode !== 'buy';
+                if (currentTradeMode === 'buy') {
+                    networkFeeLabel.textContent = `Estimated ${quote.feeName} network fee`;
+                    networkFeeValue.textContent = `GH₵ ${quote.feeGhs.toFixed(2)}`;
+                    totalPayValue.textContent = `GH₵ ${quote.totalGhs.toFixed(2)}`;
+                }
+                executeBtn.disabled = false;
             }
 
             tabBuy.addEventListener('click', () => {
                 currentTradeMode = 'buy';
                 tabBuy.classList.add('active', 'buy');
                 tabSell.classList.remove('active', 'sell');
-                labelPay.textContent = "You Pay";
+                tabBuy.setAttribute('aria-pressed', 'true');
+                tabSell.setAttribute('aria-pressed', 'false');
+                labelPay.textContent = 'Trade amount';
                 labelReceive.textContent = "You Receive (Estimated)";
                 executeBtn.innerHTML = `<span>Continue to Buy Settlement</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
                 updateTerminalCalculation();
@@ -2815,8 +2744,10 @@
                 currentTradeMode = 'sell';
                 tabSell.classList.add('active', 'sell');
                 tabBuy.classList.remove('active', 'buy');
-                labelPay.textContent = "You Send Crypto Value";
-                labelReceive.textContent = "You Receive Payout";
+                tabSell.setAttribute('aria-pressed', 'true');
+                tabBuy.setAttribute('aria-pressed', 'false');
+                labelPay.textContent = 'GHS payout target';
+                labelReceive.textContent = 'Crypto to Send (Estimated)';
                 executeBtn.innerHTML = `<span>Continue to Sell Settlement</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
                 updateTerminalCalculation();
             });
@@ -2827,34 +2758,17 @@
 
             // Execute Quick Trade
             executeBtn.addEventListener('click', () => {
-                const payVal = parseFloat(payInput.value) || 0;
-                const selectedCrypto = cryptoSelect.value;
-                const receiveVal = receiveInput.value;
-
-                if (currentTradeMode === 'buy') {
-                    const buyOrderDetails = {
-                        product: selectedCrypto,
-                        usdAmount: (payVal / adminGhsRate).toFixed(2),
-                        productAmount: receiveVal,
-                        ghsAmount: payVal.toFixed(2),
-                        feeGhs: '15.00',
-                        totalPay: (payVal + 15).toFixed(2),
-                        minerFeeValue: '15',
-                        walletAddress: '',
-                        rate: adminGhsRate.toString()
-                    };
-                    localStorage.setItem('buyOrderDetails', JSON.stringify(buyOrderDetails));
-                    window.location.href = 'trade.html?action=buy&product=' + selectedCrypto;
-                } else {
-                    const sellOrderDetails = {
-                        product: selectedCrypto,
-                        productAmount: receiveVal,
-                        ghsToReceive: payVal.toFixed(2),
-                        rate: adminGhsRate.toString()
-                    };
-                    localStorage.setItem('sellOrderDetails', JSON.stringify(sellOrderDetails));
-                    window.location.href = 'trade.html?action=sell&product=' + selectedCrypto;
-                }
+                const quote = getCurrentQuote();
+                if (!quote) return updateTerminalCalculation();
+                localStorage.setItem('quickTradeDraft', JSON.stringify({
+                    mode: currentTradeMode,
+                    product: quote.product,
+                    usdAmount: quote.usdAmount.toFixed(2),
+                    cryptoAmount: quote.cryptoAmount.toFixed(quote.product.startsWith('USDT_') ? 2 : 8),
+                    ghsAmount: quote.ghsAmount.toFixed(2),
+                    createdAt: Date.now()
+                }));
+                window.location.href = 'trade.html';
             });
             // --- Mobile Navigation Drawer Toggle ---
             const mobileMenuBtn = document.getElementById('mobile-hamburger-btn');

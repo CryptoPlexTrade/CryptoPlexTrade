@@ -5,6 +5,8 @@ const { getRates } = require('./rates'); // Assuming rates are managed in a sepa
 const logger = require('./logger');
 const { sendNewOrderNotification, sendOrderConfirmationCustomerEmail } = require('./emailService');
 const { ORDER_STATUS } = require('./constants');
+const { getLiveMarketRates } = require('./marketRates');
+const { calculateSellPayout } = require('./orderQuotes');
 
 const router = express.Router();
 
@@ -68,14 +70,16 @@ router.post('/create', authenticateToken, async (req, res) => {
             user_email: userEmail
         };
 
-        // Send email notification to admin
-        sendNewOrderNotification(orderData, newOrderId).catch(emailError => {
-            logger.error(`Failed to send admin notification email for order #${newOrderId}:`, emailError);
-        });
+        const emailResults = await Promise.allSettled([
+            sendNewOrderNotification(orderData, newOrderId),
+            sendOrderConfirmationCustomerEmail(orderData, newOrderId, userEmail)
+        ]);
 
-        // Send confirmation receipt to customer
-        sendOrderConfirmationCustomerEmail(orderData, newOrderId, userEmail).catch(emailError => {
-            logger.error(`Failed to send customer confirmation email for order #${newOrderId}:`, emailError);
+        emailResults.forEach((result, index) => {
+            if (result.status === 'rejected') {
+                const type = index === 0 ? 'admin notification' : 'customer confirmation';
+                logger.error(`Failed to send ${type} email for order #${newOrderId}:`, result.reason);
+            }
         });
 
         res.status(201).json({ message: 'Order created successfully!', orderId: newOrderId });
@@ -119,7 +123,8 @@ router.post('/create-sell-order', authenticateToken, async (req, res) => {
     } = req.body;
 
     // Basic validation
-    if (!product || !productAmount || !transactionId || !payoutInfo) {
+    const parsedProductAmount = Number(productAmount);
+    if (!product || !Number.isFinite(parsedProductAmount) || parsedProductAmount <= 0 || !transactionId || !payoutInfo) {
         return res.status(400).json({ message: 'Missing required sell order information.' });
     }
 
@@ -129,11 +134,23 @@ router.post('/create-sell-order', authenticateToken, async (req, res) => {
         if (!productRates) {
             return res.status(400).json({ message: `Invalid product selected: ${product}` });
         }
-        const exchangeRate = productRates.sell; // Use the "sell" rate because the user is selling to us
+        const marketData = await getLiveMarketRates();
+        const marketSymbol = product.startsWith('USDT_') ? 'USDT' : product;
+        const spotPriceUsd = Number(marketData.RAW?.[marketSymbol]?.USD?.PRICE);
+        if (marketData.source === 'fallback' || !Number.isFinite(spotPriceUsd) || spotPriceUsd <= 0) {
+            return res.status(503).json({ message: 'A current market quote is unavailable. Please try again shortly.' });
+        }
+        const exchangeRate = Number(productRates.sell);
+        if (!Number.isFinite(exchangeRate) || exchangeRate <= 0) {
+            return res.status(503).json({ message: 'The sell conversion rate is unavailable. Please try again shortly.' });
+        }
 
         // --- SERVER-SIDE CALCULATION ---
-        const parsedProductAmount = parseFloat(productAmount);
-        const calculatedGhsToReceive = parsedProductAmount * exchangeRate; // Calculate what the user will get
+        const { usdAmount: calculatedUsdAmount, ghsToReceive: calculatedGhsToReceive } = calculateSellPayout(
+            parsedProductAmount,
+            spotPriceUsd,
+            exchangeRate
+        );
         // --- END SERVER-SIDE CALCULATION ---
 
         const payoutDetailsString = JSON.stringify(payoutInfo);
@@ -153,23 +170,33 @@ router.post('/create-sell-order', authenticateToken, async (req, res) => {
             order_type: 'sell',
             product: product,
             product_amount: parsedProductAmount,
+            usd_amount: calculatedUsdAmount,
             ghs_to_receive: calculatedGhsToReceive,
             user_transaction_id: transactionId,
             payout_info: payoutInfo, // The original object, not the string
             user_email: userEmail
         };
 
-        // Send email notification to admin
-        sendNewOrderNotification(sellOrderData, newSellOrderId).catch(emailError => {
-            logger.error(`Failed to send admin notification email for sell order #${newSellOrderId}:`, emailError);
+        const emailResults = await Promise.allSettled([
+            sendNewOrderNotification(sellOrderData, newSellOrderId),
+            sendOrderConfirmationCustomerEmail(sellOrderData, newSellOrderId, userEmail)
+        ]);
+
+        emailResults.forEach((result, index) => {
+            if (result.status === 'rejected') {
+                const type = index === 0 ? 'admin notification' : 'customer confirmation';
+                logger.error(`Failed to send ${type} email for sell order #${newSellOrderId}:`, result.reason);
+            }
         });
 
-        // Send confirmation receipt to customer
-        sendOrderConfirmationCustomerEmail(sellOrderData, newSellOrderId, userEmail).catch(emailError => {
-            logger.error(`Failed to send customer confirmation email for sell order #${newSellOrderId}:`, emailError);
+        res.status(201).json({
+            message: 'Sell order created successfully!',
+            orderId: newSellOrderId,
+            cryptoAmount: parsedProductAmount,
+            spotPriceUsd,
+            platformSellRate: exchangeRate,
+            ghsToReceive: calculatedGhsToReceive
         });
-
-        res.status(201).json({ message: 'Sell order created successfully!', orderId: newSellOrderId });
 
     } catch (error) {
         logger.error('Sell order creation error:', error);

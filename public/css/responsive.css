@@ -916,37 +916,7 @@ img.brand-circle:hover {
 
 @media (max-width: 640px) {
     .ticker-tape {
-        display: block !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-        position: fixed !important;
-        bottom: 0 !important;
-        left: 0 !important;
-        width: 100% !important;
-        z-index: 1000 !important;
-        overflow: hidden !important;
-        white-space: nowrap !important;
-        /* Force GPU layer so iOS doesn't drop it */
-        -webkit-transform: translateZ(0);
-        transform: translateZ(0);
-        padding-bottom: env(safe-area-inset-bottom);
-    }
-    .ticker-tape__track {
-        display: inline-block !important;
-        white-space: nowrap !important;
-        width: max-content !important;
-        min-width: 200% !important;
-        -webkit-animation: scroll-ticker 30s linear infinite !important;
-        animation: scroll-ticker 30s linear infinite !important;
-        -webkit-animation-play-state: running !important;
-        animation-play-state: running !important;
-    }
-    .ticker-tape__item {
-        padding: 0 12px !important;
-        font-size: .75rem !important;
-        display: inline-flex !important;
-        align-items: center !important;
-        flex-shrink: 0 !important;
+        display: none !important;
     }
 }
 
@@ -1078,4 +1048,132 @@ a[href*="login"]:hover,
 a[href*="register"]:hover,
 .nav a:hover {
     text-decoration: none !important;
+}
+
+/* Final shared layout constraints; keep after page-specific responsive rules. */
+html,
+body {
+    max-width: 100%;
+    overflow-x: clip;
+}
+
+img,
+video,
+canvas,
+svg {
+    max-width: 100%;
+}
+
+input,
+select,
+textarea,
+button {
+    max-width: 100%;
+}
+
+.portal-container,
+.page-content,
+.trade-terminal-container,
+.content-wrap,
+.dashboard-content {
+    min-width: 0;
+    max-width: 100%;
+}
+
+.table-wrap,
+.table-container,
+.table-responsive {
+    max-width: 100%;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+}
+
+.asset-select-dropdown {
+    max-height: min(320px, 42dvh);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+
+.asset-option:focus-visible,
+.csd-option:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: -2px;
+}
+
+@media (max-width: 1023px) {
+    .app-shell {
+        height: 100vh;
+        height: 100dvh;
+        min-height: 100vh;
+        min-height: 100dvh;
+    }
+
+    .main-wrap,
+    .page-content,
+    .portal-container,
+    .trade-terminal-container {
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    .page-content {
+        padding: 22px 20px calc(var(--tabbar-height) + 24px + env(safe-area-inset-bottom, 0px));
+    }
+
+    .modal-content {
+        max-height: calc(100dvh - 24px);
+        overflow-y: auto;
+    }
+}
+
+@media (max-width: 640px) {
+    .page-content {
+        padding: 18px 14px calc(var(--tabbar-height) + 22px + env(safe-area-inset-bottom, 0px));
+    }
+
+    .portal-header {
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+
+    .portal-header-inner {
+        min-width: 0;
+        gap: 10px;
+    }
+
+    .portal-brand-text {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 1rem;
+    }
+
+    .filter-bar,
+    .filter-controls {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .terminal-card,
+    .summary-card,
+    .confirmation-wrapper {
+        max-width: 100%;
+    }
+
+    .ticker-tape {
+        display: none !important;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ticker-tape__track,
+    .live-trades-track,
+    .preloader-radar::before,
+    .preloader-radar::after,
+    .preloader-ambient,
+    .ambient-sphere,
+    .floating-badge {
+        animation: none !important;
+        transform: none !important;
+    }
 }

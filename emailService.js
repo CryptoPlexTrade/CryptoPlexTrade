@@ -35,13 +35,26 @@ const SENDER_NAME  = 'CryptoPlexTrade';
 const getSender    = () => `"${SENDER_NAME}" <${process.env.SMTP_USER}>`;
 const getReplyTo   = () => process.env.ADMIN_EMAIL || process.env.SMTP_USER;
 const getAppDomain = () => process.env.APP_URL || 'cryptoplextrade.com';
-const getAdminRecipients = () => {
-    const list = [
+
+function normalizeEmailList(input = []) {
+    const values = Array.isArray(input) ? input : [input];
+    return [...new Set(
+        values
+            .flatMap(value => String(value || '').split(/[;,\n]/))
+            .map(value => value.trim())
+            .filter(Boolean)
+    )];
+}
+
+function buildAdminRecipientList(extraRecipients = []) {
+    const defaults = [
         process.env.ADMIN_EMAIL || 'Supportteam@cryptoplextrades.com',
         'cryptoplextrade@hotmail.com'
     ];
-    return [...new Set(list.filter(Boolean))].join(', ');
-};
+    return normalizeEmailList([...defaults, ...extraRecipients]);
+}
+
+const getAdminRecipients = () => buildAdminRecipientList().join(', ');
 
 /**
  * Sends an email notification to the admin about a new order.
@@ -673,6 +686,9 @@ async function sendOrderCompletedEmail(order, userEmail) {
 }
 
 module.exports = {
+    normalizeEmailList,
+    buildAdminRecipientList,
+    getAdminRecipients,
     sendNewOrderNotification,
     sendOrderConfirmationCustomerEmail,
     sendPasswordResetEmail,

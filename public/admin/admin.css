@@ -2038,3 +2038,101 @@ tbody tr:last-child td {
     .btn-save { width: 100%; justify-content: center; }
     .save-row, .pm-actions { flex-direction: column; align-items: stretch; }
 }
+
+/* Final responsive overrides: keep these after legacy page styles. */
+.admin-layout,
+.admin-main,
+.admin-container,
+.admin-content {
+    min-width: 0;
+    max-width: 100%;
+}
+
+.table-container,
+.table-wrap,
+.admin-table-wrap {
+    max-width: 100%;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+}
+
+.csd-dropdown {
+    max-width: calc(100vw - 16px);
+    box-shadow: 0 12px 32px rgba(11, 45, 90, 0.18);
+}
+
+.csd-trigger:focus-visible,
+.rail-toggle:focus-visible,
+.admin-rail-close:focus-visible,
+.rail-item:focus-visible,
+.csd-option:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+@media (max-width: 1023px) {
+    .admin-content {
+        min-height: calc(100dvh - var(--topbar-height));
+        padding: 24px 20px 36px;
+    }
+
+    .admin-container {
+        width: 100%;
+        padding: 24px 20px calc(36px + env(safe-area-inset-bottom, 0px));
+    }
+
+    .filter-controls,
+    .filters-bar {
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 640px) {
+    .admin-content {
+        padding: 18px 14px 28px;
+    }
+
+    .admin-container {
+        padding: 18px 14px calc(28px + env(safe-area-inset-bottom, 0px));
+    }
+
+    .admin-topbar {
+        gap: 10px;
+        padding: 0 12px;
+    }
+
+    .admin-topbar-actions {
+        gap: 6px;
+    }
+
+    .admin-topbar-actions .admin-logout-btn {
+        padding: 6px 10px;
+        font-size: 0.74rem;
+    }
+
+    .filter-controls,
+    .filters-bar,
+    .modal-status-controls {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .filter-group,
+    .modal-status-controls .csd-wrapper,
+    .modal-status-controls .save-btn {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .modal-content {
+        width: calc(100% - 24px);
+        max-height: calc(100dvh - 24px);
+        padding: 20px 16px;
+    }
+
+    .pagination-bar {
+        justify-content: center;
+        padding: 12px;
+    }
+}

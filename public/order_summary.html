@@ -419,6 +419,11 @@
                                 style="font-family:var(--font-mono);">—</span>
                         </div>
                         <div class="summary-row">
+                            <span class="summary-row__label">Spot reference used for estimate</span>
+                            <span class="summary-row__value" id="summary-spot-reference"
+                                style="font-family:var(--font-mono);">—</span>
+                        </div>
+                        <div class="summary-row">
                             <span class="summary-row__label">Miner Fee</span>
                             <span class="summary-row__value" id="summary-fee"
                                 style="font-family:var(--font-mono);">—</span>
@@ -500,9 +505,18 @@
                 }).catch(() => window.location.href = 'login.html');
 
             function populateSummary(details) {
-                const productAmount = parseFloat(details.usdAmount) / parseFloat(details.rate);
-                document.getElementById('summary-product-amount').textContent = `${productAmount.toFixed(8)} ${details.product}`;
+                const productAmount = Number(details.productAmount);
+                const precision = String(details.product).startsWith('USDT_') ? 2 : 8;
+                const symbol = String(details.product).replace('_TRC20', '').replace('_ERC20', '');
+                document.getElementById('summary-product-amount').textContent = Number.isFinite(productAmount)
+                    ? `${productAmount.toFixed(precision)} ${symbol}`
+                    : `Estimate unavailable for ${symbol}`;
                 document.getElementById('summary-usd').textContent = `$${parseFloat(details.usdAmount).toFixed(2)}`;
+                const spotPrice = Number(details.spotPriceUsd);
+                const quoteTime = Number(details.marketQuoteTimestamp);
+                document.getElementById('summary-spot-reference').textContent = Number.isFinite(spotPrice) && spotPrice > 0
+                    ? `$${spotPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} per ${symbol}${Number.isFinite(quoteTime) ? ` · ${new Date(quoteTime).toLocaleTimeString()}` : ''}`
+                    : 'Unavailable';
                 document.getElementById('summary-fee').textContent = `₵${parseFloat(details.feeGhs).toFixed(2)}`;
                 document.getElementById('summary-total').textContent = `₵${parseFloat(details.totalPay).toFixed(2)}`;
                 document.getElementById('summary-wallet').textContent = details.walletAddress;

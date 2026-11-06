@@ -93,7 +93,9 @@ app.use((req, res, next) => {
         const token = req.cookies && req.cookies.token;
         if (!token) {
             res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
-            return res.redirect('/login.html?reason=unauthorized');
+            const requestedPage = userProtectedHtmlPages.find(page => p === page || p === page + '/');
+            const redirectPage = requestedPage?.replace(/^\//, '').replace(/\/$/, '') || 'dashboard.html';
+            return res.redirect(`/login.html?reason=unauthorized&redirect=${encodeURIComponent(redirectPage)}`);
         }
         try {
             jwt.verify(token, process.env.JWT_SECRET);

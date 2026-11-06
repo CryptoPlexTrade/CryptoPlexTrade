@@ -76,7 +76,7 @@ async function fetchFromCoinGecko() {
     return priceMap;
 }
 
-function buildResponsePayload(priceMap) {
+function buildResponsePayload(priceMap, source) {
     const raw = {};
     const list = [];
 
@@ -110,6 +110,7 @@ function buildResponsePayload(priceMap) {
     return {
         success: true,
         timestamp: Date.now(),
+        source,
         RAW: raw,
         list
     };
@@ -122,22 +123,25 @@ async function getLiveMarketRates() {
     }
 
     let priceMap = null;
+    let source = null;
 
     // Tier 1: Binance
     try {
         priceMap = await fetchFromBinance();
+        source = 'binance';
     } catch (binanceErr) {
         logger.warn('Binance market rates fetch error, falling back to CoinGecko:', binanceErr.message);
         // Tier 2: CoinGecko
         try {
             priceMap = await fetchFromCoinGecko();
+            source = 'coingecko';
         } catch (cgErr) {
             logger.warn('CoinGecko market rates fetch error:', cgErr.message);
         }
     }
 
     if (priceMap && Object.keys(priceMap).length >= 5) {
-        cache = buildResponsePayload(priceMap);
+        cache = buildResponsePayload(priceMap, source);
         lastFetchTime = now;
         return cache;
     }
@@ -152,7 +156,7 @@ async function getLiveMarketRates() {
     for (const [s, meta] of Object.entries(ASSET_META)) {
         fallbackMap[s] = { price: meta.defaultPrice, change24h: meta.defaultChange };
     }
-    cache = buildResponsePayload(fallbackMap);
+    cache = buildResponsePayload(fallbackMap, 'fallback');
     lastFetchTime = now;
     return cache;
 }

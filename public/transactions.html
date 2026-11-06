@@ -117,6 +117,102 @@
             max-width: 60%;
             text-align: right;
         }
+
+        .order-progress {
+            margin: 0 0 20px;
+            padding: 18px 20px;
+            background: var(--blue-050);
+            border-radius: var(--radius-md);
+            animation: progress-enter 220ms ease-out both;
+        }
+
+        .order-progress h3 {
+            margin: 0 0 14px;
+            color: var(--text-1);
+            font-size: 0.95rem;
+        }
+
+        .order-progress ol {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 8px;
+            list-style: none;
+        }
+
+        .order-progress li {
+            min-width: 0;
+            position: relative;
+            padding-top: 24px;
+            color: var(--text-3);
+            font-size: 0.78rem;
+            font-weight: 600;
+            line-height: 1.35;
+        }
+
+        .order-progress li::before {
+            content: "";
+            position: absolute;
+            top: 4px;
+            left: 0;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--bg-white);
+            box-shadow: inset 0 0 0 2px var(--border-strong);
+        }
+
+        .order-progress li:not(:last-child)::after {
+            content: "";
+            position: absolute;
+            top: 9px;
+            left: 18px;
+            right: -2px;
+            height: 2px;
+            background: var(--border-mid);
+        }
+
+        .order-progress li.is-done,
+        .order-progress li.is-current {
+            color: var(--text-1);
+        }
+
+        .order-progress li.is-done::before,
+        .order-progress li.is-current::before {
+            background: var(--green);
+            box-shadow: inset 0 0 0 2px var(--green);
+        }
+
+        .order-progress li.is-done:not(:last-child)::after {
+            background: var(--green);
+        }
+
+        .order-progress li.is-current::before {
+            background: var(--bg-white);
+            box-shadow: inset 0 0 0 3px var(--primary);
+        }
+
+        .order-progress p {
+            margin: 14px 0 0;
+            color: var(--text-2);
+            font-size: 0.8rem;
+            line-height: 1.45;
+        }
+
+        .order-progress.is-terminal {
+            background: var(--orange-bg);
+        }
+
+        @keyframes progress-enter {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 480px) {
+            .order-progress { padding: 16px 14px; }
+            .order-progress li { font-size: 0.7rem; }
+            .detail-item { align-items: flex-start; gap: 10px; }
+            .detail-item .value { max-width: 62%; }
+        }
     </style>
     <script src="theme.js"></script>
 </head>
@@ -394,6 +490,42 @@
     function populateModal(tx) {
         const body = document.getElementById('modal-body-content');
         body.innerHTML = '';
+        const status = String(tx.status || 'pending_confirmation').toLowerCase();
+        const terminal = status === 'failed' || status === 'cancelled';
+        const currentStep = status === 'completed' ? 2 : status === 'pending_payment' ? 1 : 0;
+        const progress = document.createElement('section');
+        progress.className = `order-progress${terminal ? ' is-terminal' : ''}`;
+        progress.setAttribute('aria-label', 'Order progress');
+        const stages = ['Order received', 'Confirmation', 'Complete'];
+        const list = document.createElement('ol');
+        stages.forEach((stage, index) => {
+            const item = document.createElement('li');
+            item.textContent = stage;
+            if (terminal && index === 0) item.classList.add('is-done');
+            if (!terminal && index < currentStep) item.classList.add('is-done');
+            if (!terminal && index === currentStep) {
+                item.classList.add(status === 'completed' ? 'is-done' : 'is-current');
+                if (status !== 'completed') item.setAttribute('aria-current', 'step');
+            }
+            list.appendChild(item);
+        });
+        const progressTitle = document.createElement('h3');
+        progressTitle.textContent = 'Order progress';
+        const progressMessage = document.createElement('p');
+        if (terminal) {
+            progressMessage.textContent = `This order is ${status}. Contact support if you need help with the next step.`;
+        } else if (status === 'completed') {
+            progressMessage.textContent = 'This order is marked complete.';
+        } else if (status === 'pending_payment') {
+            progressMessage.textContent = 'Confirmation is pending. Check the order instructions if an action is required.';
+        } else {
+            progressMessage.textContent = 'Your order has been received and is awaiting confirmation.';
+        }
+        const progressNote = document.createElement('p');
+        progressNote.textContent = 'Progress reflects the latest status recorded for this order.';
+        progress.append(progressTitle, list, progressMessage, progressNote);
+        body.appendChild(progress);
+
         const row = (label, value, cls = '') => {
             const d = document.createElement('div');
             d.className = 'detail-item';
@@ -411,7 +543,7 @@
             body.appendChild(row('Destination Wallet', tx.wallet_address));
             body.appendChild(row('Blockchain TX Hash', tx.transaction_id || 'Pending Dispatch'));
         } else {
-            body.appendChild(row('Cryptocurrency Liquidated', `${tx.product_amount} ${tx.product}`));
+            body.appendChild(row('Cryptocurrency Liquidated', `${tx.usd_amount} ${tx.product}`));
             body.appendChild(row('Deposit TX Hash', tx.transaction_id || 'Verification In-Flight'));
             try {
                 const p = JSON.parse(tx.wallet_address);
@@ -556,5 +688,6 @@
 })();
 </script>
 <script src="ticker.js"></script>
+<script src="js/dropdown-accessibility.js"></script>
 </body>
 </html>
