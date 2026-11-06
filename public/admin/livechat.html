@@ -12,6 +12,7 @@
 
     <link rel="stylesheet" href="admin.css?v=5">
     <style>
+        .sessions-filter-select { display: none; }
         @media (max-width: 900px) {
             .admin-container {
                 padding: 8px 12px calc(10px + env(safe-area-inset-bottom, 0px)) !important;
@@ -43,7 +44,7 @@
             .chat-layout {
                 flex: 1 1 auto;
                 min-height: 0;
-                grid-template-columns: 1fr;
+                grid-template-columns: minmax(0, 1fr);
                 border-radius: 12px;
                 border: 1px solid var(--border-light);
             }
@@ -55,6 +56,7 @@
             .chat-layout:not(.chat-open) .sessions-panel {
                 height: 100%;
                 min-height: 0;
+                min-width: 0;
                 display: flex;
                 flex-direction: column;
             }
@@ -68,31 +70,47 @@
                 position: relative;
                 z-index: 3;
                 flex-shrink: 0;
+                min-width: 0;
+                max-width: 100%;
+                overflow: hidden;
                 padding: 12px 14px 10px;
                 background: var(--bg-sidebar);
             }
             .sessions-panel-header h2 {
                 margin-bottom: 8px;
             }
+            /* Native select on mobile: cannot be stretched or recoloured by the page */
             .sessions-filter {
-                display: grid;
-                grid-template-columns: repeat(3, minmax(0, 1fr));
-                gap: 6px;
+                display: none;
             }
-            .filter-btn {
+            .sessions-filter-select {
+                display: block;
                 width: 100%;
-                min-width: 0;
-                padding: 9px 4px;
-                font-size: 0.8rem;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-            }
-            .filter-btn.active {
-                box-shadow: 0 1px 4px rgba(0, 91, 170, 0.3);
+                max-width: 100%;
+                padding: 10px 12px;
+                border: 1.5px solid var(--border-medium);
+                border-radius: 8px;
+                background: var(--bg-surface);
+                color: var(--text-primary);
+                font-family: var(--font-sans);
+                font-size: 16px; /* keeps iOS from zooming on focus */
+                font-weight: 600;
             }
             .sessions-list {
                 min-height: 0;
+                min-width: 0;
+                max-width: 100%;
+            }
+            .session-item,
+            .session-item-top {
+                min-width: 0;
+                max-width: 100%;
+            }
+            .session-name {
+                min-width: 0;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
             }
 
             /* Active chat detail view on mobile */
@@ -336,6 +354,11 @@
                             <button class="filter-btn" data-filter="open">Open</button>
                             <button class="filter-btn" data-filter="closed">Closed</button>
                         </div>
+                        <select class="sessions-filter-select" id="session-filter-select" aria-label="Filter conversations">
+                            <option value="all">All conversations</option>
+                            <option value="open">Open conversations</option>
+                            <option value="closed">Closed conversations</option>
+                        </select>
                     </div>
                     <div class="sessions-list" id="sessions-list">
                         <p class="no-sessions">Loading chats…</p>
@@ -687,15 +710,22 @@
             } catch (_) {}
         });
 
-        // ── Filter buttons ───────────────────────────────────────────
-        document.querySelectorAll('.filter-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                filter = btn.dataset.filter;
-                renderSessions();
+        // ── Filter controls ──────────────────────────────────────────
+        const filterSelect = document.getElementById('session-filter-select');
+        function setFilter(value) {
+            filter = value;
+            document.querySelectorAll('.filter-btn').forEach(b => {
+                b.classList.toggle('active', b.dataset.filter === value);
             });
+            if (filterSelect) filterSelect.value = value;
+            renderSessions();
+        }
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => setFilter(btn.dataset.filter));
         });
+        if (filterSelect) {
+            filterSelect.addEventListener('change', () => setFilter(filterSelect.value));
+        }
 
         // ── Polling ──────────────────────────────────────────────────
         function startDetailPoll() {
