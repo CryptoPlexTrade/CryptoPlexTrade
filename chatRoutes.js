@@ -20,8 +20,13 @@ const logger = require('./logger');
 const { authenticateAdminToken } = require('./authMiddleware');
 const { adminOnly } = require('./adminAuthMiddleware');
 const { sendLiveChatNotification, sendAgentRequestNotification } = require('./emailService');
+const aiSupport = require('./aiSupport');
 
 const router = express.Router();
+
+const AI_GREETING = `Hi! I'm the CryptoPlex AI assistant. I can help with buying, selling, payments, KYC, security and order status. Ask me anything about CryptoPlexTrade, or tap Contact Agent to speak with a human.`;
+
+const AGENT_NOTICE = 'Connecting you to a human agent. Our support desk has been alerted and an agent will join this chat shortly. Please add your Order ID or any order details here.';
 
 // ── Ensure tables exist ────────────────────────────────────────────
 let tablesReady = false;
@@ -47,10 +52,31 @@ async function ensureTables() {
                 created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
             )
         `);
+        await db.query(`
+            ALTER TABLE chat_sessions
+            ADD COLUMN IF NOT EXISTS ai_active BOOLEAN NOT NULL DEFAULT TRUE
+        `);
         tablesReady = true;
     } catch (err) {
         logger.error('Error creating chat tables:', err);
     }
+}
+
+async function insertMessage(sessionId, sender, message) {
+    const [rows] = await db.query(
+        'INSERT INTO chat_messages (session_id, sender, message) VALUES (?, ?, ?) RETURNING id, sender, message, created_at',
+        [sessionId, sender, message]
+    );
+    return rows[0] || null;
+}
+
+async function escalateToAgent(sessionId, guestName, lastMessage) {
+    await db.query('UPDATE chat_sessions SET ai_active = FALSE, updated_at = NOW() WHERE id = ?', [sessionId]);
+    const notice = await insertMessage(sessionId, 'system', AGENT_NOTICE);
+    sendAgentRequestNotification(guestName, sessionId, lastMessage).catch(err => {
+        logger.error('Failed to send live agent request notification email:', err);
+    });
+    return notice;
 }
 
 // ═══════════════════════════════════════════════════════════════════
@@ -65,12 +91,17 @@ router.post('/session', async (req, res) => {
         if (!sessionKey) return res.status(400).json({ message: 'sessionKey is required.' });
 
         const [rows] = await db.query(
-            'SELECT id, guest_name, status FROM chat_sessions WHERE session_key = ?',
+            'SELECT id, guest_name, status, ai_active FROM chat_sessions WHERE session_key = ?',
             [sessionKey]
         );
 
         if (rows.length > 0) {
-            return res.json({ sessionId: rows[0].id, guestName: rows[0].guest_name, status: rows[0].status });
+            return res.json({
+                sessionId: rows[0].id,
+                guestName: rows[0].guest_name,
+                status: rows[0].status,
+                aiActive: rows[0].ai_active !== false
+            });
         }
 
         const name = (guestName || 'Guest').substring(0, 100);
@@ -80,18 +111,15 @@ router.post('/session', async (req, res) => {
         );
         const newId = result[0]?.id;
 
-        // Auto-greet
-        await db.query(
-            'INSERT INTO chat_messages (session_id, sender, message) VALUES (?, ?, ?)',
-            [newId, 'admin', '👋 Hi there! Welcome to CryptoPlexTrade support. How can we help you today?']
-        );
+        // Auto-greet from the AI assistant
+        await insertMessage(newId, 'ai', AI_GREETING);
 
         // Notify admin about new live chat
         sendLiveChatNotification(name, newId).catch(err => {
             logger.error('Failed to send live chat notification email:', err);
         });
 
-        res.json({ sessionId: newId, guestName: name, status: 'open' });
+        res.json({ sessionId: newId, guestName: name, status: 'open', aiActive: true });
     } catch (err) {
         logger.error('Chat /session error:', err);
         res.status(500).json({ message: 'Server error.' });
@@ -106,7 +134,7 @@ router.get('/:sessionId', async (req, res) => {
         const since = req.query.since || '1970-01-01';
 
         const [session] = await db.query(
-            'SELECT id, guest_name, status FROM chat_sessions WHERE id = ?',
+            'SELECT id, guest_name, status, ai_active FROM chat_sessions WHERE id = ?',
             [sessionId]
         );
         if (session.length === 0) return res.status(404).json({ message: 'Session not found.' });
@@ -116,7 +144,11 @@ router.get('/:sessionId', async (req, res) => {
             [sessionId, since]
         );
 
-        res.json({ status: session[0].status, messages });
+        res.json({
+            status: session[0].status,
+            aiActive: session[0].ai_active !== false,
+            messages
+        });
     } catch (err) {
         logger.error('Chat poll error:', err);
         res.status(500).json({ message: 'Server error.' });
@@ -132,20 +164,35 @@ router.post('/:sessionId/send', async (req, res) => {
         if (!message?.trim()) return res.status(400).json({ message: 'Message is required.' });
 
         const [session] = await db.query(
-            'SELECT id, status FROM chat_sessions WHERE id = ?',
+            'SELECT id, guest_name, status, ai_active FROM chat_sessions WHERE id = ?',
             [sessionId]
         );
         if (session.length === 0) return res.status(404).json({ message: 'Session not found.' });
         if (session[0].status === 'closed') return res.status(400).json({ message: 'This chat session is closed.' });
 
-        await db.query(
-            'INSERT INTO chat_messages (session_id, sender, message) VALUES (?, ?, ?)',
-            [sessionId, 'customer', message.trim().substring(0, 2000)]
-        );
+        const cleanMessage = message.trim().substring(0, 2000);
+        await insertMessage(sessionId, 'customer', cleanMessage);
+
+        let aiActive = session[0].ai_active !== false;
+        let handoffSuggested = false;
+        let reply = null;
+
+        if (aiActive) {
+            if (aiSupport.isAgentRequest(cleanMessage)) {
+                aiActive = false;
+                reply = await escalateToAgent(sessionId, session[0].guest_name || 'Guest', cleanMessage);
+            } else {
+                const result = aiSupport.generateReply(cleanMessage);
+                handoffSuggested = result.handoff;
+                if (result.answer) {
+                    reply = await insertMessage(sessionId, 'ai', result.answer);
+                }
+            }
+        }
 
         await db.query('UPDATE chat_sessions SET updated_at = NOW() WHERE id = ?', [sessionId]);
 
-        res.json({ success: true });
+        res.json({ success: true, aiActive, handoffSuggested, reply });
     } catch (err) {
         logger.error('Chat send error:', err);
         res.status(500).json({ message: 'Server error.' });
@@ -168,23 +215,9 @@ router.post('/:sessionId/request-agent', async (req, res) => {
 
         const guestName = session[0].guest_name || 'Guest';
 
-        // Add an immediate system message in chat
-        await db.query(
-            'INSERT INTO chat_messages (session_id, sender, message) VALUES (?, ?, ?)',
-            [
-                sessionId,
-                'admin',
-                '🔔 You have requested to speak with a human agent. Our support desk has been alerted via priority email and an agent is joining shortly. Please leave your specific question or trade details here.'
-            ]
-        );
-        await db.query('UPDATE chat_sessions SET updated_at = NOW() WHERE id = ?', [sessionId]);
+        const notice = await escalateToAgent(sessionId, guestName, lastMessage);
 
-        // Send high priority urgent email alert to admin(s)
-        sendAgentRequestNotification(guestName, sessionId, lastMessage).catch(err => {
-            logger.error('Failed to send live agent request notification email:', err);
-        });
-
-        res.json({ success: true, message: 'Agent requested successfully.' });
+        res.json({ success: true, aiActive: false, reply: notice });
     } catch (err) {
         logger.error('Chat request-agent error:', err);
         res.status(500).json({ message: 'Server error.' });
@@ -223,7 +256,7 @@ adminChat.get('/sessions', async (req, res) => {
     await ensureTables();
     try {
         const [sessions] = await db.query(`
-            SELECT s.id, s.guest_name, s.status, s.created_at, s.updated_at,
+            SELECT s.id, s.guest_name, s.status, s.ai_active, s.created_at, s.updated_at,
                    (SELECT COUNT(*) FROM chat_messages m WHERE m.session_id = s.id) AS message_count,
                    (SELECT message FROM chat_messages m WHERE m.session_id = s.id ORDER BY m.created_at DESC LIMIT 1) AS last_message
             FROM chat_sessions s
@@ -267,9 +300,13 @@ adminChat.post('/:sessionId/reply', async (req, res) => {
             'INSERT INTO chat_messages (session_id, sender, message) VALUES (?, ?, ?)',
             [sessionId, 'admin', message.trim().substring(0, 2000)]
         );
-        await db.query('UPDATE chat_sessions SET updated_at = NOW() WHERE id = ?', [sessionId]);
+        // A human replying takes over from the AI assistant
+        await db.query(
+            'UPDATE chat_sessions SET ai_active = FALSE, updated_at = NOW() WHERE id = ?',
+            [sessionId]
+        );
 
-        res.json({ success: true });
+        res.json({ success: true, aiActive: false });
     } catch (err) {
         logger.error('Admin chat reply error:', err);
         res.status(500).json({ message: 'Server error.' });

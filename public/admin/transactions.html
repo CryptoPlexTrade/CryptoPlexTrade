@@ -370,47 +370,21 @@
                 }
             });
 
-            // Modal: handle dropdown toggle, option select & save
+            // Modal: enable save when the native status dropdown changes
+            document.getElementById('details-modal').addEventListener('change', function(e) {
+                if (e.target.id !== 'modal-status-select') return;
+                const saveBtn = document.getElementById('modal-save-btn');
+                if (saveBtn) saveBtn.disabled = e.target.value === e.target.dataset.current;
+            });
+
+            // Modal: handle save
             document.getElementById('details-modal').addEventListener('click', async function(e) {
-                // Toggle dropdown open/close
-                if (e.target.closest('.csd-trigger')) {
-                    e.preventDefault(); e.stopPropagation();
-                    const wrapper = e.target.closest('.csd-wrapper');
-                    const isOpen = wrapper.classList.contains('csd-open');
-                    closeAllDropdowns(null);
-                    if (!isOpen) { wrapper.classList.add('csd-open'); }
-                    return;
-                }
-
-                // Select an option
-                if (e.target.closest('.csd-option')) {
-                    e.preventDefault(); e.stopPropagation();
-                    const option = e.target.closest('.csd-option');
-                    const wrapper = option.closest('.csd-wrapper');
-                    const value = option.dataset.value;
-                    const color = statusColors[value] || '#64748b';
-
-                    wrapper.querySelector('.csd-trigger .csd-label').textContent = value.replace(/_/g, ' ');
-                    wrapper.querySelector('.csd-trigger .csd-dot').style.background = color;
-                    wrapper.querySelectorAll('.csd-option').forEach(o => o.classList.remove('csd-active'));
-                    option.classList.add('csd-active');
-                    wrapper.dataset.value = value;
-
-                    // Enable save button
-                    const saveBtn = document.getElementById('modal-save-btn');
-                    if (saveBtn) saveBtn.disabled = false;
-
-                    wrapper.classList.remove('csd-open');
-                    return;
-                }
-
-                // Save button inside modal
                 if (e.target.id === 'modal-save-btn') {
                     e.preventDefault(); e.stopPropagation();
                     const saveBtn = e.target;
                     const orderId = saveBtn.dataset.orderId;
-                    const wrapper = document.getElementById('modal-status-csd');
-                    const newStatus = wrapper.dataset.value;
+                    const statusSelect = document.getElementById('modal-status-select');
+                    const newStatus = statusSelect ? statusSelect.value : '';
                     const csrfToken = getCookie('csrf-token');
 
                     saveBtn.textContent = 'Saving...';
@@ -431,7 +405,7 @@
                         fetchOrders();
                     } catch (error) {
                         saveBtn.textContent = 'Save Status';
-                        saveBtn.disabled = false;
+                        saveBtn.disabled = !statusSelect || statusSelect.value === statusSelect.dataset.current;
                         alert(`Error: ${error.message}`);
                     }
                     return;
@@ -482,23 +456,18 @@
 
                 // ── Update Status section inside modal ──
                 const optionsHTML = orderStatusOptions.map(opt => `
-                    <div class="csd-option ${order.status === opt ? 'csd-active' : ''}" data-value="${opt}">
-                        <span class="csd-dot" style="background:${statusColors[opt] || '#64748b'}"></span>
-                        ${opt.replace(/_/g, ' ')}
-                    </div>`).join('');
+                    <option value="${opt}" ${order.status === opt ? 'selected' : ''}>${opt.replace(/_/g, ' ')}</option>`).join('');
 
                 const statusSection = document.createElement('div');
                 statusSection.className = 'modal-status-section';
                 statusSection.innerHTML = `
-                    <div class="modal-status-label">Update Status</div>
+                    <label class="modal-status-label" for="modal-status-select">Update Status</label>
                     <div class="modal-status-controls">
-                        <div class="csd-wrapper" id="modal-status-csd" data-order-id="${order.id}" data-value="${order.status}">
-                            <button type="button" class="csd-trigger">
-                                <span class="csd-dot" style="background:${statusColors[order.status] || '#64748b'}"></span>
-                                <span class="csd-label">${order.status.replace(/_/g, ' ')}</span>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                            </button>
-                            <div class="csd-dropdown">${optionsHTML}</div>
+                        <div class="status-select-wrap">
+                            <select id="modal-status-select" class="status-select" data-order-id="${order.id}" data-current="${order.status}">
+                                ${optionsHTML}
+                            </select>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                         </div>
                         <button type="button" class="action-btn save-btn" id="modal-save-btn" data-order-id="${order.id}" disabled>Save Status</button>
                     </div>

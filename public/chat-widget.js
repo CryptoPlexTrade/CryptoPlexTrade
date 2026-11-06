@@ -164,7 +164,24 @@
         .chat-hdr-btn.end-btn:hover {
             background: #ef4444;
         }
+        .chat-hdr-btn.agent-btn:hover {
+            background: rgba(255,255,255,.32);
+        }
+        .chat-hdr-btn:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+        }
+        .chat-hdr-btn.agent-pulse {
+            animation: agent-pulse 1.4s ease-in-out 3;
+        }
+        @keyframes agent-pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(255,255,255,.55); }
+            50% { box-shadow: 0 0 0 5px rgba(255,255,255,0); }
+        }
         .chat-hdr-btn svg { width: 14px; height: 14px; }
+        @media (max-width: 480px) {
+            .chat-hdr-btn .hdr-btn-text { display: none; }
+        }
 
         /* ── Confirmation Overlay ─────────────────────────────────────── */
         #cpt-cust-confirm {
@@ -265,15 +282,37 @@
             border: 1px solid #e2e8f0;
             border-bottom-left-radius: 4px; align-self: flex-start;
         }
+        .chat-msg.ai {
+            background: #f2f8ff; color: #0a192f;
+            border: 1px solid #d3e6fb;
+            border-bottom-left-radius: 4px; align-self: flex-start;
+        }
+        .chat-msg.system {
+            align-self: center;
+            max-width: 92%;
+            background: #fff8e6;
+            border: 1px solid #f5e2b8;
+            color: #7a5a12;
+            font-size: 0.78rem;
+            text-align: center;
+            border-radius: 10px;
+            box-shadow: none;
+        }
         .chat-msg.customer {
             background: linear-gradient(135deg, #0052cc 0%, #0077c8 100%); color: #ffffff;
             border-bottom-right-radius: 4px; align-self: flex-end;
         }
+        .chat-msg-sender {
+            font-size: 0.65rem; font-weight: 700; letter-spacing: 0.02em;
+            color: #0052cc; margin-bottom: 3px; text-transform: uppercase;
+        }
+        .chat-msg-body { white-space: pre-wrap; }
         .chat-msg-time {
             font-size: 0.65rem; opacity: 0.6; margin-top: 4px;
             font-family: inherit;
         }
-        .chat-msg.admin .chat-msg-time { text-align: left; }
+        .chat-msg.admin .chat-msg-time,
+        .chat-msg.ai .chat-msg-time { text-align: left; }
         .chat-msg.customer .chat-msg-time { text-align: right; color: rgba(255,255,255,0.8); }
 
         /* Quick Chips (Spacious & Clean) */
@@ -352,11 +391,15 @@
                     <div class="chat-header-title">CryptoPlex Support Desk</div>
                     <div class="chat-header-sub">
                         <span class="chat-online-dot"></span>
-                        <span>Active · Replies in minutes</span>
+                        <span id="cpt-chat-mode">AI Assistant · Instant replies</span>
                     </div>
                 </div>
             </div>
             <div class="chat-header-actions">
+                <button type="button" class="chat-hdr-btn agent-btn" id="cpt-contact-agent" title="Talk to a human agent" aria-label="Talk to a human agent">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75A2.25 2.25 0 0 1 4.5 4.5h15a2.25 2.25 0 0 1 2.25 2.25v8.25a2.25 2.25 0 0 1-2.25 2.25h-6.75l-4.5 3v-3H4.5a2.25 2.25 0 0 1-2.25-2.25V6.75Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9.75h7.5M8.25 12.75h4.5"/></svg>
+                    <span class="hdr-btn-text">Agent</span>
+                </button>
                 <button type="button" class="chat-hdr-btn end-btn" id="cpt-endchat-btn" title="End conversation">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
                     <span>End</span>
@@ -401,6 +444,7 @@
             <button type="button" class="cpt-chip" data-ask="How do I sell crypto for Cedis?">💵 Sell for GHS</button>
             <button type="button" class="cpt-chip" data-ask="How long does settlement take?">⚡ Settlement Time</button>
             <button type="button" class="cpt-chip" data-ask="What are your fees?">📊 Rates &amp; Fees</button>
+            <button type="button" class="cpt-chip" data-action="agent">Talk to an Agent</button>
         </div>
         <div id="cpt-chat-input-wrap">
             <textarea id="cpt-chat-input" placeholder="Type your message…" rows="1" maxlength="2000"></textarea>
@@ -422,6 +466,8 @@
     let pollInterval = null;
     let isOpen = false;
     let isFetching = false;
+    let aiActive = true;
+    let agentRequested = false;
     const displayedMessageIds = new Set();
 
     const badge = document.getElementById('cpt-chat-badge');
@@ -433,16 +479,48 @@
     const sendBtn = document.getElementById('cpt-chat-send');
     const minimizeBtn = document.getElementById('cpt-minimize-btn');
     const endChatBtn = document.getElementById('cpt-endchat-btn');
+    const agentBtn = document.getElementById('cpt-contact-agent');
+    const chatModeEl = document.getElementById('cpt-chat-mode');
     const quickChips = document.getElementById('cpt-quick-chips');
     const custConfirm = document.getElementById('cpt-cust-confirm');
     const confNoBtn = document.getElementById('cpt-conf-no');
     const confYesBtn = document.getElementById('cpt-conf-yes');
+
+    // ── AI / human mode ────────────────────────────────────────────────
+    function setMode(isAiActive) {
+        aiActive = isAiActive !== false;
+        if (aiActive) {
+            agentRequested = false;
+            chatModeEl.textContent = 'AI Assistant · Instant replies';
+            agentBtn.disabled = false;
+            agentBtn.classList.remove('agent-pulse');
+            agentBtn.querySelector('.hdr-btn-text').textContent = 'Agent';
+            inputEl.placeholder = 'Ask about CryptoPlexTrade…';
+            quickChips.style.display = '';
+        } else {
+            agentRequested = true;
+            chatModeEl.textContent = 'Human agent requested · Joining shortly';
+            agentBtn.disabled = true;
+            agentBtn.classList.remove('agent-pulse');
+            agentBtn.querySelector('.hdr-btn-text').textContent = 'Notified';
+            inputEl.placeholder = 'Message the support agent…';
+            quickChips.style.display = 'none';
+        }
+    }
+
+    function highlightAgentButton() {
+        if (aiActive && !agentRequested) agentBtn.classList.add('agent-pulse');
+    }
 
     // ── Quick chips listener ───────────────────────────────────────────
     if (quickChips) {
         quickChips.addEventListener('click', (e) => {
             const btn = e.target.closest('.cpt-chip');
             if (!btn) return;
+            if (btn.dataset.action === 'agent') {
+                requestAgent();
+                return;
+            }
             const ask = btn.dataset.ask;
             if (ask) {
                 inputEl.value = ask;
@@ -463,8 +541,8 @@
             if (msg.sender === 'customer') {
                 const temps = messagesEl.querySelectorAll('[data-temp-id]');
                 for (const t of temps) {
-                    const body = t.firstChild ? t.firstChild.textContent : '';
-                    if (body === msg.message || body.trim() === String(msg.message).trim()) {
+                    const body = t.querySelector('.chat-msg-body');
+                    if (body && body.textContent.trim() === String(msg.message).trim()) {
                         t.removeAttribute('data-temp-id');
                         t.setAttribute('data-id', msg.id);
                         return;
@@ -473,13 +551,35 @@
             }
         }
 
+        const sender = ['customer', 'admin', 'ai', 'system'].includes(msg.sender) ? msg.sender : 'admin';
         const div = document.createElement('div');
-        div.className = 'chat-msg ' + (msg.sender || 'admin');
+        div.className = 'chat-msg ' + sender;
         if (msg.tempId) div.setAttribute('data-temp-id', msg.tempId);
 
-        div.innerHTML = `${msg.message}<div class="chat-msg-time">${fmtTime(msg.created_at || new Date())}</div>`;
+        if (sender === 'ai') {
+            const label = document.createElement('div');
+            label.className = 'chat-msg-sender';
+            label.textContent = 'CryptoPlex AI';
+            div.appendChild(label);
+        }
+
+        const body = document.createElement('div');
+        body.className = 'chat-msg-body';
+        body.textContent = msg.message == null ? '' : String(msg.message);
+        div.appendChild(body);
+
+        const time = document.createElement('div');
+        time.className = 'chat-msg-time';
+        time.textContent = fmtTime(msg.created_at || new Date());
+        div.appendChild(time);
+
         messagesEl.appendChild(div);
         if (scroll) messagesEl.scrollTop = messagesEl.scrollHeight;
+
+        if (sender === 'admin' && !aiActive) {
+            chatModeEl.textContent = 'Human agent · Connected';
+            agentBtn.querySelector('.hdr-btn-text').textContent = 'Connected';
+        }
     }
 
     function updateBadge() {
@@ -509,6 +609,7 @@
         messagesEl.innerHTML = '';
         inputEl.disabled = false;
         sendBtn.disabled = false;
+        setMode(true);
         updateBadge();
 
         // Close window cleanly — DO NOT show the name box while closed
@@ -530,11 +631,13 @@
                 return;
             }
 
+            if (typeof data.aiActive === 'boolean') setMode(data.aiActive);
+
             data.messages.forEach(m => {
                 const isNew = !m.id || !displayedMessageIds.has(m.id);
                 appendMsg(m);
                 lastMsgTime = m.created_at;
-                if (isNew && m.sender === 'admin' && !isOpen) {
+                if (isNew && m.sender !== 'customer' && !isOpen) {
                     unreadCount++;
                 }
             });
@@ -567,6 +670,7 @@
             const data = await r.json();
             sessionId = data.sessionId;
             localStorage.setItem('cpt_chat_session_id', sessionId);
+            setMode(data.aiActive !== false);
             namePrompt.style.display = 'none';
 
             await pollMessages();
@@ -640,6 +744,32 @@
         if (e.key === 'Enter') { e.preventDefault(); startBtn.click(); }
     });
 
+    // ── Contact a human agent ──────────────────────────────────────────
+    async function requestAgent() {
+        if (!sessionId || agentRequested) return;
+        agentRequested = true;
+        agentBtn.disabled = true;
+        agentBtn.classList.remove('agent-pulse');
+
+        try {
+            const r = await fetch(`/api/chat/${sessionId}/request-agent`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ lastMessage: inputEl.value.trim() })
+            });
+            if (!r.ok) throw new Error('request failed');
+            const data = await r.json().catch(() => ({}));
+            setMode(false);
+            if (data.reply) appendMsg(data.reply);
+            pollMessages();
+        } catch (_) {
+            agentRequested = false;
+            agentBtn.disabled = false;
+        }
+    }
+
+    agentBtn.addEventListener('click', requestAgent);
+
     // ── Send message ───────────────────────────────────────────────────
     async function sendMessage() {
         const msg = inputEl.value.trim();
@@ -662,6 +792,11 @@
                 resetChat();
                 return;
             }
+
+            const data = await r.json().catch(() => ({}));
+            if (typeof data.aiActive === 'boolean') setMode(data.aiActive);
+            if (data.reply) appendMsg(data.reply);
+            if (data.handoffSuggested) highlightAgentButton();
         } catch (_) { }
 
         sendBtn.disabled = false;
@@ -689,6 +824,7 @@
                     resetChat();
                     return;
                 }
+                setMode(data.aiActive !== false);
                 data.messages?.forEach(m => {
                     appendMsg(m, false);
                     lastMsgTime = m.created_at;

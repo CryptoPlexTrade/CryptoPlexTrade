@@ -107,6 +107,36 @@
         }
         .chat-back-btn { display: none; align-items: center; gap: 4px; background: none; border: 1px solid var(--border-medium); color: var(--text-secondary); border-radius: 8px; padding: 6px 10px; font-weight: 600; font-size: .8rem; cursor: pointer; margin-right: 10px; }
         .chat-send-error { padding: 8px 12px; color: #b91c1c; font-size: 0.84rem; }
+        .admin-msg.ai-side {
+            background: rgba(0, 169, 224, 0.12);
+            color: var(--text-primary);
+            border: 1px solid rgba(0, 169, 224, 0.35);
+            border-bottom-left-radius: 2px;
+            align-self: flex-start;
+        }
+        .admin-msg.system {
+            background: rgba(245, 158, 11, 0.12);
+            color: #92660a;
+            border: 1px solid rgba(245, 158, 11, 0.35);
+            align-self: center;
+            text-align: center;
+            font-size: 0.8rem;
+        }
+        .session-mode-badge {
+            font-size: 0.62rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            padding: 2px 7px;
+            border-radius: 9999px;
+            background: rgba(0, 169, 224, 0.14);
+            color: var(--secondary-color);
+            flex-shrink: 0;
+        }
+        .session-mode-badge.is-human {
+            background: rgba(245, 158, 11, 0.18);
+            color: #b7791f;
+        }
 
         /* ── Custom Confirmation Modal ────────────────── */
         .cpt-conf-overlay {
@@ -417,6 +447,7 @@
                 <div class="session-item ${s.id === activeId ? 'active' : ''}" data-id="${s.id}">
                     <div class="session-item-top">
                         <span class="session-name">${escHtml(s.guest_name)}</span>
+                        <span class="session-mode-badge ${s.ai_active === false ? 'is-human' : ''}">${s.ai_active === false ? 'Human' : 'AI'}</span>
                         <span class="session-status-badge status-${s.status}">${s.status}</span>
                     </div>
                     <div class="session-preview">${escHtml(s.last_message || 'No messages yet')}</div>
@@ -460,7 +491,7 @@
             const sess = sessions.find(s => s.id === id);
             if (sess) {
                 detailName.textContent = sess.guest_name;
-                detailSub.textContent  = `Session #${id} · ${sess.status} · Started ${fmtRelative(sess.created_at)}`;
+                detailSub.textContent  = `Session #${id} · ${sess.status} · ${sess.ai_active === false ? 'Human agent' : 'AI handling'} · Started ${fmtRelative(sess.created_at)}`;
             }
 
             await loadMessages();
@@ -498,8 +529,10 @@
 
         function appendAdminMsg(m) {
             const div = document.createElement('div');
-            div.className = 'admin-msg ' + (m.sender === 'admin' ? 'admin-side' : 'customer');
-            div.innerHTML = `${escHtml(m.message)}<div class="admin-msg-meta">${m.sender === 'admin' ? 'You' : 'Customer'} · ${fmtTime(m.created_at)}</div>`;
+            const kind = m.sender === 'admin' ? 'admin-side' : m.sender === 'ai' ? 'ai-side' : m.sender === 'system' ? 'system' : 'customer';
+            div.className = 'admin-msg ' + kind;
+            const label = m.sender === 'admin' ? 'You' : m.sender === 'ai' ? 'AI Assistant' : m.sender === 'system' ? 'System' : 'Customer';
+            div.innerHTML = `${escHtml(m.message)}<div class="admin-msg-meta">${label} · ${fmtTime(m.created_at)}</div>`;
             adminMessages.appendChild(div);
         }
 
