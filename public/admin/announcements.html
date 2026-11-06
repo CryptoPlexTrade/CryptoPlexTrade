@@ -14,13 +14,18 @@
     <style>
         .announcements-grid {
             display: grid;
-            grid-template-columns: 1.18fr 0.82fr;
+            grid-template-columns: minmax(0, 1.18fr) minmax(0, 0.82fr);
             gap: 24px;
             align-items: start;
         }
+        .ann-card,
+        .preview-pane {
+            min-width: 0;
+            max-width: 100%;
+        }
         @media (max-width: 1024px) {
             .announcements-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: minmax(0, 1fr);
             }
         }
 
@@ -273,6 +278,44 @@
             padding: 7px 16px;
             border-radius: 6px;
             text-decoration: none;
+        }
+        /* Stack the toggle text above the switch + status row on phones */
+        @media (max-width: 768px) {
+            .toggle-row-modern {
+                display: grid;
+                grid-template-columns: auto 1fr auto;
+                gap: 12px;
+                padding: 16px;
+            }
+            .toggle-left { display: contents; }
+            .toggle-desc {
+                grid-column: 1 / -1;
+                grid-row: 1;
+            }
+            .toggle-desc h4 { margin-bottom: 4px; }
+            .toggle-desc p { line-height: 1.45; }
+            .toggle-switch {
+                grid-column: 1;
+                grid-row: 2;
+                align-self: center;
+                justify-self: start;
+            }
+            .toggle-row-modern .status-pill {
+                grid-column: 3;
+                grid-row: 2;
+                align-self: center;
+                justify-self: end;
+                white-space: nowrap;
+            }
+            .ann-card { padding: 20px; }
+        }
+        @media (max-width: 360px) {
+            .toggle-row-modern { padding: 14px 12px; }
+            .toggle-row-modern .status-pill {
+                font-size: 0.68rem;
+                padding: 5px 9px;
+                letter-spacing: 0.01em;
+            }
         }
     </style>
 </head>

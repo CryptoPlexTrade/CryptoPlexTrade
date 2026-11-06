@@ -14,13 +14,18 @@
     <style>
         .maint-grid {
             display: grid;
-            grid-template-columns: 1.15fr 0.85fr;
+            grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
             gap: 24px;
             align-items: start;
         }
+        .maint-card,
+        .preview-pane {
+            min-width: 0;
+            max-width: 100%;
+        }
         @media (max-width: 1024px) {
             .maint-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: minmax(0, 1fr);
             }
         }
 
@@ -307,6 +312,10 @@
             font-family: var(--font-mono, monospace);
             color: #64748b;
             flex: 1;
+            min-width: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .sim-browser-body {
             padding: 36px 24px;
@@ -347,6 +356,44 @@
             font-weight: 700;
             padding: 5px 12px;
             border-radius: 9999px;
+        }
+        /* Stack the toggle text above the switch + status row on phones */
+        @media (max-width: 768px) {
+            .toggle-row-modern {
+                display: grid;
+                grid-template-columns: auto 1fr auto;
+                gap: 12px;
+                padding: 16px;
+            }
+            .toggle-left { display: contents; }
+            .toggle-desc {
+                grid-column: 1 / -1;
+                grid-row: 1;
+            }
+            .toggle-desc h4 { margin-bottom: 4px; }
+            .toggle-desc p { line-height: 1.45; }
+            .toggle-switch {
+                grid-column: 1;
+                grid-row: 2;
+                align-self: center;
+                justify-self: start;
+            }
+            .toggle-row-modern .status-pill {
+                grid-column: 3;
+                grid-row: 2;
+                align-self: center;
+                justify-self: end;
+                white-space: nowrap;
+            }
+            .maint-card { padding: 20px; }
+        }
+        @media (max-width: 360px) {
+            .toggle-row-modern { padding: 14px 12px; }
+            .toggle-row-modern .status-pill {
+                font-size: 0.68rem;
+                padding: 5px 9px;
+                letter-spacing: 0.01em;
+            }
         }
     </style>
 </head>
